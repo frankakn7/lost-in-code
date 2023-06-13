@@ -1,0 +1,34 @@
+{
+    "name": "peter-hacking-pan",
+    "version": "1.0.0",
+    "description": "A Game for learning the PHP scripting language",
+    "private": true,
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "webpack",
+        "dev": "webpack serve"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git@gitlab.gwdg.de:ps-mob-sose23/gruppe-3-funktionsmethoden-textbaustein-anwendung/peter-hacking-pan.git"
+    },
+    "keywords": [
+        "PHP",
+        "Game",
+        "Phaser"
+    ],
+    "author": "Maxim Strzebkowski",
+    "license": "ISC",
+    "dependencies": {
+        "phaser": "^3.60.0"
+    },
+    "devDependencies": {
+        "html-webpack-plugin": "^5.5.3",
+        "ts-loader": "^9.4.3",
+        "typescript": "^5.1.3",
+        "webpack": "^5.86.0",
+        "webpack-bundle-analyzer": "^4.9.0",
+        "webpack-cli": "^5.1.4",
+        "webpack-dev-server": "^4.15.1"
+    }
+}
