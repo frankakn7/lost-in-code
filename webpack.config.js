@@ -10,7 +10,8 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].bundle.js',
-        clean: true
+        clean: true,
+        assetModuleFilename: 'assets/[name][ext]'
     },
     devtool: 'source-map',
     devServer: {
@@ -28,8 +29,15 @@ module.exports = {
                 test: /\.tsx?$/,
                 use: 'ts-loader',
                 exclude: /node_modules/, 
+            },
+            {
+                test: /\.(png)$/i,
+                type: 'asset/resource'
             }
         ]
+    },
+    resolve: {
+        extensions: ['.ts', '.js', '.json']
     },
     plugins: [
         new HtmlWebpackPlugin({
