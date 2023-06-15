@@ -43,20 +43,27 @@ export class GameScene extends Phaser.Scene {
 }
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
-    title: "Sample",
-
     type: Phaser.AUTO,
-
-    scale: {
-        width: window.innerWidth,
-        height: window.innerHeight,
-    },
-
+    // width: 960,
+    // height: 640,
+    pixelArt: true,
     physics: {
         default: "arcade",
         arcade: {
-            debug: true,
+            gravity: { y: 0 },
+            debug: false,
         },
+    },
+    input: {
+        activePointers: 3
+    },
+    scale: {
+        // Fit to window
+        width: window.innerWidth,
+        height: window.innerHeight,
+        // mode: Phaser.Scale.FIT,
+        // Center vertically and horizontally
+        autoCenter: Phaser.Scale.CENTER_BOTH
     },
     scene: GameScene,
     parent: "game",
