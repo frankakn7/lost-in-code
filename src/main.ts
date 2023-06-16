@@ -1,45 +1,18 @@
 import * as Phaser from "phaser";
+import tilesetPng from "./assets/tileset.png";
+import tilemapJson from "./assets/testMap.json";
+import { TilemapConfig } from "./types/tilemapConfig";
+import RoomScene from "./rooms/room";
 
-const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
-    active: false,
-    visible: false,
-    key: "Game",
-};
-
-export class GameScene extends Phaser.Scene {
-    private square: Phaser.GameObjects.Rectangle & {
-        body: Phaser.Physics.Arcade.Body;
-    };
-
-    constructor() {
-        super(sceneConfig);
-    }
-
-    public create() {
-        this.square = this.add.rectangle(400, 400, 100, 100, 0xffffff) as any;
-        const physicsSquare = this.physics.add.existing(this.square);
-        physicsSquare.body.setCollideWorldBounds(true)
-    }
-
-    public update() {
-        const cursorKeys = this.input.keyboard.createCursorKeys();
-
-        if (cursorKeys.up.isDown) {
-            this.square.body.setVelocityY(-500);
-        } else if (cursorKeys.down.isDown) {
-            this.square.body.setVelocityY(500);
-        } else {
-            this.square.body.setVelocityY(0);
-        }
-
-        if (cursorKeys.right.isDown) {
-            this.square.body.setVelocityX(500);
-        } else if (cursorKeys.left.isDown) {
-            this.square.body.setVelocityX(-500);
-        } else {
-            this.square.body.setVelocityX(0);
-        }
-    }
+/**
+ * Testing the tile config
+ */
+const tilemapConfig: TilemapConfig = {
+    tilesetImage: tilesetPng,
+    tilesetName: "Walls-Floors",
+    tilemapJson: tilemapJson,
+    floorLayer: "Floor",
+    collisionLayer: "Walls"
 }
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
@@ -61,11 +34,10 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
         // Fit to window
         width: window.innerWidth,
         height: window.innerHeight,
-        // mode: Phaser.Scale.FIT,
         // Center vertically and horizontally
         autoCenter: Phaser.Scale.CENTER_BOTH
     },
-    scene: GameScene,
+    scene: new RoomScene(tilemapConfig, "Room"),
     parent: "game",
     backgroundColor: "#000000",
 };
