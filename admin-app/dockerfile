@@ -1,0 +1,19 @@
+# configuration of the build stage
+FROM node:19-alpine as build
+WORKDIR /app
+COPY . .
+# install dev dependencies
+#RUN npm ci --omit dev
+RUN npm install
+# copy all local files and build app
+RUN npm run build
+
+#output image
+FROM node:19-alpine as output
+WORKDIR /app
+COPY --from=build /app/package.json .
+COPY --from=build /app/package-lock.json .
+COPY --from=build /app/build build/
+# open port
+EXPOSE 3000
+CMD ["node", "build"]
