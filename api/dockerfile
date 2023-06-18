@@ -12,12 +12,11 @@ FROM node:19-alpine as output
 WORKDIR /app
 COPY --from=build /app/package.json .
 COPY --from=build /app/package-lock.json .
-COPY --from=build /app/server.ts .
-COPY --from=build /app/dist dist/
+COPY --from=build /app/build build/
 # install prod dependencies
 RUN npm ci --omit dev
 # set env variables
-ENV PORT 5000
+ENV PORT 8080
 # open port
-EXPOSE 5000
-CMD ["npx","ts-node","server.ts"]
+EXPOSE 8080
+CMD ["node","build/server.js"]
