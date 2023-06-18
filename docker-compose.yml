@@ -1,0 +1,25 @@
+version: '3'
+services:
+  admin_app:
+    build: ./admin-app
+    ports:
+      - "3000:3000"
+  
+  api:
+    build: ./api
+    ports:
+      - "8080:8080"
+  
+  game:
+    build: ./game
+    ports:
+      - "4000:4000"
+  
+  nginx:
+    build: ./nginx-proxy
+    ports:
+      - "80:80"
+    depends_on:
+      - admin_app
+      - api
+      - game
