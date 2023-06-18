@@ -2,21 +2,22 @@
 FROM node:19-alpine as build
 WORKDIR /app
 COPY . .
-# install dev dependencies
-#RUN npm ci --omit dev
 # install dependencies
 RUN npm install
-# build app
+# build
 RUN npm run build
 
-#slim output image
+# slim output image
 FROM node:19-alpine as output
 WORKDIR /app
 COPY --from=build /app/package.json .
 COPY --from=build /app/package-lock.json .
-COPY --from=build /app/build build/
-#install prod dependencies
+COPY --from=build /app/server.ts .
+COPY --from=build /app/dist dist/
+# install prod dependencies
 RUN npm ci --omit dev
+# set env variables
+ENV PORT 8080
 # open port
-EXPOSE 3000
-CMD ["node", "build"]
+EXPOSE 8080
+CMD ["npx","ts-node","server.ts"]
