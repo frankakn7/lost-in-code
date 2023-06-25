@@ -1,8 +1,9 @@
 import * as Phaser from "phaser";
-import tilesetPng from "./assets/tileset.png";
-import tilemapJson from "./assets/testMap.json";
+import tilesetPng from "./assets/tileset/tileset.png";
+import tilemapJson from "./assets/tileset/testMap.json";
 import { TilemapConfig } from "./types/tilemapConfig";
 import RoomScene from "./rooms/room";
+import PlayView from "./views/playView";
 
 /**
  * Testing the tile config
@@ -37,7 +38,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
         // Center vertically and horizontally
         autoCenter: Phaser.Scale.CENTER_BOTH
     },
-    scene: new RoomScene(tilemapConfig, "Room"),
+    scene: new PlayView(new RoomScene(tilemapConfig, "Room"),"Play"),
     parent: "game",
     backgroundColor: "#000000",
 };

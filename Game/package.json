@@ -4,7 +4,6 @@
     "description": "A Game for learning the PHP scripting language",
     "private": true,
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
         "build": "webpack",
         "dev": "webpack serve"
     },
