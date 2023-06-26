@@ -1,5 +1,7 @@
 import * as Phaser from "phaser";
 import { TilemapConfig } from "../types/tilemapConfig";
+import PlayerPng from "../assets/player.png"
+import { Player } from "../types/player/Player";
 
 /**
  * A class representing the different room scenes in the game
@@ -11,6 +13,8 @@ export default class RoomScene extends Phaser.Scene {
     private tilemapConfig: TilemapConfig;
     
     // private controls;
+    
+    
 
     /**
      * Room constructor
@@ -32,6 +36,7 @@ export default class RoomScene extends Phaser.Scene {
         this.load.image("tilesetImage", this.tilemapConfig.tilesetImage);
         const tilemapJson = this.tilemapConfig.tilemapJson;
         this.load.tilemapTiledJSON("tilemap", tilemapJson);
+        this.load.image("playerTexture", PlayerPng);
     }
 
     public create() {
@@ -42,7 +47,7 @@ export default class RoomScene extends Phaser.Scene {
         const tileset = tilemap.addTilesetImage(this.tilemapConfig.tilesetName, "tilesetImage");
         const floorLayer = tilemap.createLayer(this.tilemapConfig.floorLayer, tileset);
         const collisionLayer = tilemap.createLayer(this.tilemapConfig.collisionLayer, tileset);
-
+        
         /**
          * Double the scale of the layers (doubling size of maps)
          */
@@ -73,8 +78,11 @@ export default class RoomScene extends Phaser.Scene {
         // this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     }
     
-    // update (time, delta){
+    update (time, delta){
             // update the camera controls every frame
     //     this.controls.update(delta);
-    // }
+        
+        // TODO Would not be required if player was registered properly
+        
+    }
 }
