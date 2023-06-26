@@ -51,8 +51,8 @@ export default class RoomScene extends Phaser.Scene {
         /**
          * Double the scale of the layers (doubling size of maps)
          */
-        floorLayer.setScale(2);
-        collisionLayer.setScale(2);
+        // floorLayer.setScale(2);
+        // collisionLayer.setScale(2);
         /**
          * Add the collision to all elements in the collisionlayer
          */

@@ -1,8 +1,9 @@
 import * as Phaser from "phaser";
-import tilesetPng from "./assets/tileset.png";
-import tilemapJson from "./assets/testMap.json";
+import tilesetPng from "./assets/tileset/tileset.png";
+import tilemapJson from "./assets/tileset/testMap.json";
 import { TilemapConfig } from "./types/tilemapConfig";
 import RoomScene from "./rooms/room";
+import PlayView from "./views/playView";
 
 /**
  * Testing the tile config
@@ -17,8 +18,8 @@ const tilemapConfig: TilemapConfig = {
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
-    // width: 960,
-    // height: 640,
+    width: 375,
+    height: 812,
     pixelArt: true,
     physics: {
         default: "arcade",
@@ -32,12 +33,15 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
     },
     scale: {
         // Fit to window
-        width: window.innerWidth,
-        height: window.innerHeight,
+        // width: window.innerWidth,
+        // height: window.innerHeight,
+        mode: Phaser.Scale.RESIZE,
         // Center vertically and horizontally
-        autoCenter: Phaser.Scale.CENTER_BOTH
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        autoRound: true
+
     },
-    scene: new RoomScene(tilemapConfig, "Room"),
+    scene: new PlayView(new RoomScene(tilemapConfig, "Room"),"Play"),
     parent: "game",
     backgroundColor: "#000000",
 };
