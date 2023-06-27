@@ -2,6 +2,7 @@ import * as Phaser from "phaser";
 import RoomScene from "../rooms/room";
 import ControlPadScene from "../ui/ControlPadScene";
 
+
 /**
  * Represents the view in which the rooms and player are explorable (default playing view)
  */
@@ -14,6 +15,12 @@ export default class PlayView extends Phaser.Scene {
      * The ui control pad for controlling the player
      */
     private controlPad = new ControlPadScene();
+
+    
+
+    public preload() {
+        
+    }
 
     /**
      * Play View constructor
@@ -45,11 +52,14 @@ export default class PlayView extends Phaser.Scene {
         this.scene.launch(this.currentRoom)
         // Adds the controlpad scene and launches it
         this.scene.add("controlPad", this.controlPad)
-        this.scene.launch(this.controlPad)
+        // TODO Check if mobile
+        // this.scene.launch(this.controlPad)
+        // this.add.existing(this.player);
     }
 
     //for testing purposes
-    // public update(time: number, delta: number): void {
+    public update(time: number, delta: number): void {
+        
         // if(this.controlPad.leftPress){
         //     console.log("left")
         // }
@@ -65,5 +75,5 @@ export default class PlayView extends Phaser.Scene {
         // if(this.controlPad.interactPress){
         //     console.log("interact")
         // }
-    // }
+    }
 }

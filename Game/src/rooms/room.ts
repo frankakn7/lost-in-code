@@ -1,7 +1,9 @@
 import * as Phaser from "phaser";
 import { TilemapConfig } from "../types/tilemapConfig";
-import PlayerPng from "../assets/player.png"
 import { Player } from "../types/player/Player";
+import PlayerPng from "../assets/player.png";
+
+
 
 /**
  * A class representing the different room scenes in the game
@@ -11,11 +13,9 @@ export default class RoomScene extends Phaser.Scene {
      * Configuration of tilemap data for the room
      */
     private tilemapConfig: TilemapConfig;
-    
+    private player : Player;
     // private controls;
     
-    
-
     /**
      * Room constructor
      * @param tilemapConfig config for loading the tilemaps
@@ -37,6 +37,7 @@ export default class RoomScene extends Phaser.Scene {
         const tilemapJson = this.tilemapConfig.tilemapJson;
         this.load.tilemapTiledJSON("tilemap", tilemapJson);
         this.load.image("playerTexture", PlayerPng);
+        
     }
 
     public create() {
@@ -47,6 +48,9 @@ export default class RoomScene extends Phaser.Scene {
         const tileset = tilemap.addTilesetImage(this.tilemapConfig.tilesetName, "tilesetImage");
         const floorLayer = tilemap.createLayer(this.tilemapConfig.floorLayer, tileset);
         const collisionLayer = tilemap.createLayer(this.tilemapConfig.collisionLayer, tileset);
+
+        
+        
         
         /**
          * Double the scale of the layers (doubling size of maps)
@@ -76,6 +80,14 @@ export default class RoomScene extends Phaser.Scene {
         // };
 
         // this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
+        this.player = new Player(this, 32*3, 32*3, "playerTexture");
+        // this.physics.world.enable(this.player);
+        
+        // this.physics.add.existing(this.player);
+        this.add.existing(this.player);
+        this.cameras.main.startFollow(this.player);
+        this.cameras.main.setBounds(0, 0, tilemap.widthInPixels, tilemap.heightInPixels);
+        this.cameras.main.setZoom(2, 2);
     }
     
     update (time, delta){
