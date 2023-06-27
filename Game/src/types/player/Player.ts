@@ -47,6 +47,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         // Update shadow pos
         // TODO Turn the shadow to an Arcade.Sprite and set its velocity instead of its position
         this.shadow.setY(this.y + this.shadow_y_offset);
+        this.shadow.setX(this.x);
 
         // Breathing animation
         if (!this.getIsMoving()) {
