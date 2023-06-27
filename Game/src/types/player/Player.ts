@@ -43,7 +43,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         // Movement
         let new_velocity = {x: 0, y: 0};
         if (this.keys.up.isDown || this.keys.down.isDown || this.controlPad.upPress || this.controlPad.downPress) {
-            if (this.keys.up.isDown || this.controlPad.downPress) new_velocity.y -= this.movement_speed * delta;
+            if (this.keys.up.isDown || this.controlPad.upPress) new_velocity.y -= this.movement_speed * delta;
             if (this.keys.down.isDown || this.controlPad.downPress) new_velocity.y += this.movement_speed * delta;
         }
         else if (this.keys.left.isDown || this.keys.right.isDown || this.controlPad.rightPress || this.controlPad.leftPress) {
