@@ -3,6 +3,7 @@ import { TilemapConfig } from "../types/tilemapConfig";
 import { Player } from "../types/player/Player";
 import PlayerTexture from "../assets/player.png";
 import ShadowTexture from "../assets/shadow.png"
+import Mask from "../assets/mask.png"
 
 
 
@@ -15,6 +16,8 @@ export default class RoomScene extends Phaser.Scene {
      */
     private tilemapConfig: TilemapConfig;
     private player : Player;
+    private vision;
+    private fow;
     // private controls;
     
     /**
@@ -39,6 +42,7 @@ export default class RoomScene extends Phaser.Scene {
         this.load.tilemapTiledJSON("tilemap", tilemapJson);
         this.load.image("playerTexture", PlayerTexture);
         this.load.image("shadowTexture", ShadowTexture);
+        this.load.image("mask", Mask);
         
     }
 
@@ -91,10 +95,43 @@ export default class RoomScene extends Phaser.Scene {
         this.add.existing(this.player);
         this.cameras.main.startFollow(this.player);
         this.cameras.main.setBounds(0, 0, tilemap.widthInPixels, tilemap.heightInPixels);
-        this.cameras.main.setZoom(2, 2);
+        this.cameras.main.setZoom(5, 5);
+
+        const width = this.scale.width
+        const height = this.scale.height;
+
+        // create fow
+        this.fow = this.make.renderTexture({
+            width,
+            height
+        }, true);
+
+        this.fow.fill(0x074e67, 0.8);
+
+        // TODO Make this actually render and use instead for the fow
+        this.fow.draw(floorLayer);
+        this.vision = this.make.image({
+            x: this.player.x,
+            y: this.player.y - 16,
+            key: 'mask',
+            add: false
+        });
+        this.vision.scale = 2.;
+
+        this.fow.mask = new Phaser.Display.Masks.BitmapMask(this, this.vision);
+        this.fow.mask.invertAlpha = true;
+
+
+        this.fow.setTint(0x141932);
     }
     
     update (time, delta){
+        if (this.vision) {
+            this.vision.x = this.player.x;
+            this.vision.y = this.player.y - 16;
+            this.fow.setX(this.player.x);
+            this.fow.setY(this.player.y);
+        }
             // update the camera controls every frame
     //     this.controls.update(delta);
         

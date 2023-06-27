@@ -52,8 +52,9 @@ export default class PlayView extends Phaser.Scene {
         this.scene.launch(this.currentRoom)
         // Adds the controlpad scene and launches it
         this.scene.add("controlPad", this.controlPad)
+        
         // TODO Check if mobile
-        // this.scene.launch(this.controlPad)
+        this.scene.launch(this.controlPad)
         // this.add.existing(this.player);
     }
 
