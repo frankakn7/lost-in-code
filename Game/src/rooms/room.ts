@@ -48,6 +48,7 @@ export default class RoomScene extends Phaser.Scene {
         const tileset = tilemap.addTilesetImage(this.tilemapConfig.tilesetName, "tilesetImage");
         const floorLayer = tilemap.createLayer(this.tilemapConfig.floorLayer, tileset);
         const collisionLayer = tilemap.createLayer(this.tilemapConfig.collisionLayer, tileset);
+        collisionLayer.setCollisionByExclusion([-1], true, false);
 
         
         
@@ -60,7 +61,7 @@ export default class RoomScene extends Phaser.Scene {
         /**
          * Add the collision to all elements in the collisionlayer
          */
-        collisionLayer.setCollisionByExclusion([-1], true, false);
+        collisionLayer.setCollisionByExclusion([0], true, false);
 
         /**
          * Camera Movement for testing the scene loading
@@ -81,6 +82,7 @@ export default class RoomScene extends Phaser.Scene {
 
         // this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
         this.player = new Player(this, 32*3, 32*3, "playerTexture");
+        this.physics.add.collider(this.player, collisionLayer);
         // this.physics.world.enable(this.player);
         
         // this.physics.add.existing(this.player);
