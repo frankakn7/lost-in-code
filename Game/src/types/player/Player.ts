@@ -6,11 +6,15 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     private walk_rot_calc = 0;
     private is_moving = false;
 
+    private shadow : Phaser.GameObjects.Sprite;
+    private shadow_y_offset = 0;
+
     private keys;
 
     constructor(scene, x, y, texture) {
         super(scene, x, y, texture);
         this.scene = scene;
+        this.shadow = this.scene.add.sprite(x, y + this.shadow_y_offset, "shadowTexture");
         
         
         // Physics stuff
@@ -21,6 +25,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.flipX = false;
         this.scale = 1;
+        
         
         // this.scene.physics.world.enableBody(this, 0);
         this.keys = this.scene.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.W, 'down': Phaser.Input.Keyboard.KeyCodes.S,
@@ -39,6 +44,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.setVelocityX(new_velocity.x);
         if (this.body.velocity.x != 0 || this.body.velocity.y != 0) this.is_moving = true;
         else this.is_moving = false;
+        // Update shadow pos
+        // TODO Turn the shadow to an Arcade.Sprite and set its velocity instead of its position
+        this.shadow.setY(this.y + this.shadow_y_offset);
 
         // Breathing animation
         if (!this.getIsMoving()) {
@@ -58,10 +66,14 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         else this.angle = 0;
 
         // Flipping stuff
-        if (this.body.velocity.x < 0) 
+        if (this.body.velocity.x < 0) {
             this.flipX = true;
-        else if (this.body.velocity.x > 0) 
+            this.shadow.flipX = true;
+        }
+        else if (this.body.velocity.x > 0)  {
             this.flipX = false;
+            this.shadow.flipX = false;
+        }
     }
 
 

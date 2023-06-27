@@ -1,7 +1,8 @@
 import * as Phaser from "phaser";
 import { TilemapConfig } from "../types/tilemapConfig";
 import { Player } from "../types/player/Player";
-import PlayerPng from "../assets/player.png";
+import PlayerTexture from "../assets/player.png";
+import ShadowTexture from "../assets/shadow.png"
 
 
 
@@ -36,7 +37,8 @@ export default class RoomScene extends Phaser.Scene {
         this.load.image("tilesetImage", this.tilemapConfig.tilesetImage);
         const tilemapJson = this.tilemapConfig.tilemapJson;
         this.load.tilemapTiledJSON("tilemap", tilemapJson);
-        this.load.image("playerTexture", PlayerPng);
+        this.load.image("playerTexture", PlayerTexture);
+        this.load.image("shadowTexture", ShadowTexture);
         
     }
 
