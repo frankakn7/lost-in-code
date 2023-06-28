@@ -1,49 +1,73 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const BundleAnalyzerPlugin =
+    require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 module.exports = {
-    mode: 'development',
+    mode: "development",
     entry: {
-        main: path.resolve(__dirname, './src/main.ts'),
+        main: path.resolve(__dirname, "./src/main.ts"),
     },
     output: {
-        path: path.resolve(__dirname, 'dist'),
-        filename: '[name].bundle.js',
+        path: path.resolve(__dirname, "dist"),
+        filename: "[name].bundle.js",
         clean: true,
-        assetModuleFilename: 'assets/[name][ext]'
+        //assetModuleFilename: "assets/[name][ext]",
+        // assetModuleFilename: "assets/[path][name][ext]"
+        assetModuleFilename: (pathData) => {
+            const relativePath = pathData.filename.replace("src/", "");
+            return relativePath;
+        },
     },
-    devtool: 'source-map',
+    devtool: "source-map",
     devServer: {
         static: {
-            directory: path.resolve(__dirname, `dist`)
+            directory: path.resolve(__dirname, `dist`),
         },
         port: 3000,
         hot: true,
         compress: true,
-        historyApiFallback: true
+        historyApiFallback: true,
     },
     module: {
         rules: [
             {
                 test: /\.tsx?$/,
-                use: 'ts-loader',
-                exclude: /node_modules/, 
+                use: "ts-loader",
+                exclude: /node_modules/,
+            },
+            // {
+            //     test: /\.(png)$/i,
+            //     type: "asset/resource",
+            // },
+            // {
+            //     test: /\.ttf$/,
+            //     type: "asset/inline",
+            // },
+            {
+                test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|eot|ttf|otf)$/i,
+                type: "asset/resource",
             },
             {
-                test: /\.(png)$/i,
-                type: 'asset/resource'
-            }
-        ]
+                test: /\.(css)$/,
+                use: [{
+                    loader: "style-loader",
+                    options: {
+                        insert: "head",
+                        injectType: 'singletonStyleTag'
+                    },
+                },"css-loader"],
+            },
+        ],
     },
     resolve: {
-        extensions: ['.ts', '.js', '.json']
+        extensions: [".ts", ".js", ".json"],
     },
     plugins: [
         new HtmlWebpackPlugin({
-            title: 'Sample Project',
-            template: 'src/template.html',
-            filename: 'index.html'
+            title: "Sample Project",
+            template: "src/template.html",
+            filename: "index.html",
         }),
         // new BundleAnalyzerPlugin()
     ],
@@ -52,10 +76,10 @@ module.exports = {
             cacheGroups: {
                 vendor: {
                     test: /[\\/]node_modules[\\/]/,
-                    name: 'vendors',
-                    chunks: "all"
-                }
-            }
-        }
-    }
+                    name: "vendors",
+                    chunks: "all",
+                },
+            },
+        },
+    },
 };
