@@ -1,12 +1,27 @@
-<!doctype html> 
-<html lang="en"> 
-<head> 
-    <meta charset="UTF-8" />
-    <title><%= htmlWebpackPlugin.options.title %></title>
-    <style type="text/css">
-      body {
-          margin: 0;
-      }
-  </style>
-</head>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title><%= htmlWebpackPlugin.options.title %></title>
+        <style type="text/css">
+            body {
+                margin: 0;
+            }
+            @font-face {
+                font-family: "forwardRegular";
+                src: url("./assets/fonts/fff-forward.regular.ttf")
+                    format("truetype");
+            }
+
+            .fontPreload {
+                font-family: "forwardRegular";
+                position: absolute;
+                left: -100px;
+            }
+        </style>
+        <!-- <link type="text/css" href="./font.css" /> -->
+    </head>
+    <body>
+        <div class="fontPreload">.</div>
+    </body>
 </html>

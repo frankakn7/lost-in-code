@@ -4,6 +4,8 @@ import tilemapJson from "./assets/tileset/testMap.json";
 import { TilemapConfig } from "./types/tilemapConfig";
 import RoomScene from "./rooms/room";
 import PlayView from "./views/playView";
+import ChatView from "./views/chatView";
+// import './font.css';
 
 /**
  * Testing the tile config
@@ -41,7 +43,8 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
         autoRound: true
 
     },
-    scene: new PlayView(new RoomScene(tilemapConfig, "Room"),"Play"),
+    // scene: new PlayView(new RoomScene(tilemapConfig, "Room"),"Play"),
+    scene: new ChatView(),
     parent: "game",
     backgroundColor: "#000000",
 };
