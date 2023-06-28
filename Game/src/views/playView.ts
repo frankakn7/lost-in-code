@@ -25,7 +25,7 @@ export default class PlayView extends Phaser.Scene {
     
     private openChatView(){
         this.scene.sleep();
-        this.scene.stop("controlPad")
+        this.scene.sleep("controlPad")
         this.scene.sleep("room")
         this.scene.launch(this.chatView)
         this.chatViewOpen = true

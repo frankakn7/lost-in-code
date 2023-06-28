@@ -28,8 +28,8 @@ export default class ChatView extends Phaser.Scene {
     }
 
     public create() {
-        console.log("Creating Chat view")
-        this.cameras.main.setBackgroundColor("rgba(0,0,0,1)")
+        console.log("Creating Chat view");
+        this.cameras.main.setBackgroundColor("rgba(0,0,0,1)");
         this.animText = this.add.text(100, 100, "", {
             fontSize: "30px",
             fontFamily: "forwardRegular",
@@ -86,14 +86,14 @@ export default class ChatView extends Phaser.Scene {
                 );
 
                 // Event listeners for button
-                button.on("pointerover", () =>
-                    graphics.fillStyle(0x00ff00, 0.5)
-                );
+                // button.on("pointerover", () =>
+                //     graphics.fillStyle(0x00ff00, 0.5)
+                // );
                 button.on("pointerout", () => graphics.fillStyle(0x00ff00, 1));
                 button.on("pointerdown", () => {
                     // Actions on button click
                     // console.log("Button clicked");
-                    button.destroy()
+                    button.destroy();
                     this.answerText = this.add.text(
                         this.cameras.main.displayWidth - 100,
                         this.animText.y + this.animText.height + 50,
@@ -110,7 +110,7 @@ export default class ChatView extends Phaser.Scene {
                         }
                     );
 
-                    this.answerText.setOrigin(1,0)
+                    this.answerText.setOrigin(1, 0);
 
                     this.updateTextEvent = this.time.addEvent({
                         delay: this.textDelayMilli,
@@ -132,8 +132,8 @@ export default class ChatView extends Phaser.Scene {
         // console.log(this.animText.getBounds());
     }
 
-    private updateAnswerText(){
-        this.answerText.appendText(this.answer[0], false)
+    private updateAnswerText() {
+        this.answerText.appendText(this.answer[0], false);
         this.answer = this.answer.substring(1);
     }
 }

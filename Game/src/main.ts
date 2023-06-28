@@ -5,7 +5,7 @@ import { TilemapConfig } from "./types/tilemapConfig";
 import RoomScene from "./rooms/room";
 import PlayView from "./views/playView";
 import ChatView from "./views/chatView";
-// import './font.css';
+import './font.css';
 
 /**
  * Testing the tile config
