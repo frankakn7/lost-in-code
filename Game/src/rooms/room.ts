@@ -15,7 +15,7 @@ export default class RoomScene extends Phaser.Scene {
      * Configuration of tilemap data for the room
      */
     private tilemapConfig: TilemapConfig;
-    private player : Player;
+    public player : Player;
     private vision;
     private fow;
     // private controls;

@@ -1,6 +1,8 @@
 import * as Phaser from "phaser";
 import RoomScene from "../rooms/room";
 import ControlPadScene from "../ui/ControlPadScene";
+import PauseChatButtons from "../ui/PauseChatButtons";
+import ChatView from "./chatView";
 
 
 /**
@@ -16,7 +18,18 @@ export default class PlayView extends Phaser.Scene {
      */
     private controlPad = new ControlPadScene();
 
+    private pauseChatButtons = new PauseChatButtons();
+
+    private chatView = new ChatView();
+    private chatViewOpen = false;
     
+    private openChatView(){
+        this.scene.sleep();
+        this.scene.stop("controlPad")
+        this.scene.sleep("room")
+        this.scene.launch(this.chatView)
+        this.chatViewOpen = true
+    }
 
     public preload() {
         
@@ -56,25 +69,45 @@ export default class PlayView extends Phaser.Scene {
         // TODO Check if mobile
         // this.scene.launch(this.controlPad)
         // this.add.existing(this.player);
+
+        this.scene.add("pauseChatButtons", this.pauseChatButtons)
+        this.scene.launch(this.pauseChatButtons)
+
+        this.scene.add("controlPad", this.controlPad);
+        this.scene.launch(this.controlPad);
+
+        this.scene.add("chatView", this.chatView)
     }
 
     //for testing purposes
     public update(time: number, delta: number): void {
         
+        if(this.currentRoom.player){
+            this.currentRoom.player.leftPress = this.controlPad.leftPress
+            this.currentRoom.player.rightPress = this.controlPad.rightPress
+            this.currentRoom.player.upPress = this.controlPad.upPress
+            this.currentRoom.player.downPress = this.controlPad.downPress
+        }
         // if(this.controlPad.leftPress){
-        //     console.log("left")
+        //     // console.log("left")
         // }
         // if(this.controlPad.rightPress){
         //     console.log("right")
+        //     this.currentRoom.player.rightPress = true
         // }
         // if(this.controlPad.upPress){
         //     console.log("up")
+        //     this.currentRoom.player.upPress = true
         // }
         // if(this.controlPad.downPress){
         //     console.log("down")
+        //     this.currentRoom.player.downPress
         // }
         // if(this.controlPad.interactPress){
         //     console.log("interact")
         // }
+        if(this.pauseChatButtons.phonePressed && !this.chatViewOpen){
+            this.openChatView();
+        }
     }
 }

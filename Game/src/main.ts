@@ -27,7 +27,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
         default: "arcade",
         arcade: {
             gravity: { y: 0 },
-            debug: true,
+            debug: false,
         },
     },
     input: {
@@ -43,8 +43,8 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
         autoRound: true
 
     },
-    // scene: new PlayView(new RoomScene(tilemapConfig, "Room"),"Play"),
-    scene: new ChatView(),
+    scene: new PlayView(new RoomScene(tilemapConfig, "Room"),"Play"),
+    //scene: new ChatView(),
     parent: "game",
     backgroundColor: "#000000",
 };

@@ -28,8 +28,10 @@ export default class ChatView extends Phaser.Scene {
     }
 
     public create() {
+        console.log("Creating Chat view")
+        this.cameras.main.setBackgroundColor("rgba(0,0,0,1)")
         this.animText = this.add.text(100, 100, "", {
-            fontSize: "20px",
+            fontSize: "30px",
             fontFamily: "forwardRegular",
             color: "#00c8ff",
             wordWrap: {
@@ -46,8 +48,8 @@ export default class ChatView extends Phaser.Scene {
             callbackScope: this,
         });
 
-        let buttonWidth = 360;
-        let buttonHeight = 80;
+        let buttonWidth = 550;
+        let buttonHeight = 100;
 
         // Create a graphics object
         let graphics = this.add.graphics();
@@ -64,7 +66,7 @@ export default class ChatView extends Phaser.Scene {
                     buttonHeight / 2,
                     "Copy that mission control",
                     {
-                        fontSize: "20px",
+                        fontSize: "30px",
                         fontFamily: "forwardRegular",
                         color: "#00c8ff",
                     }
@@ -74,7 +76,7 @@ export default class ChatView extends Phaser.Scene {
                 // Create a container and add the graphics and the text to it.
                 let button = this.add.container(
                     this.cameras.main.displayWidth / 2 - buttonWidth / 2,
-                    this.cameras.main.displayHeight - buttonHeight * 2,
+                    this.cameras.main.displayHeight - buttonHeight * 5,
                     [graphics, text]
                 );
                 // Make the container interactive
@@ -97,9 +99,10 @@ export default class ChatView extends Phaser.Scene {
                         this.animText.y + this.animText.height + 50,
                         "",
                         {
-                            fontSize: "20px",
+                            fontSize: "30px",
                             fontFamily: "forwardRegular",
                             color: "#00ff7b",
+                            align: "right",
                             wordWrap: {
                                 width: this.cameras.main.displayWidth - 200,
                                 useAdvancedWrap: true,

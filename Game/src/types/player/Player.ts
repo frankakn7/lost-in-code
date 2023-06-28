@@ -14,6 +14,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     private controlPad : ControlPadScene;
 
+    public upPress = false
+    public downPress = false
+    public leftPress = false
+    public rightPress = false
+
     constructor(scene, x, y, texture) {
         super(scene, x, y, texture);
         this.scene = scene;
@@ -32,9 +37,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         // this.scene.physics.world.enableBody(this, 0);
         this.keys = this.scene.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.W, 'down': Phaser.Input.Keyboard.KeyCodes.S,
                                                         'left': Phaser.Input.Keyboard.KeyCodes.A, 'right': Phaser.Input.Keyboard.KeyCodes.D});
-        this.controlPad = new ControlPadScene();
-        this.scene.scene.add("controlPad", this.controlPad);
-        this.scene.scene.launch(this.controlPad);
+        //this.controlPad = new ControlPadScene();
+        // this.scene.scene.add("controlPad", this.controlPad);
+        // this.scene.scene.launch(this.controlPad);
 
 
     }
@@ -42,13 +47,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     preUpdate(time, delta) {
         // Movement
         let new_velocity = {x: 0, y: 0};
-        if (this.keys.up.isDown || this.keys.down.isDown || this.controlPad.upPress || this.controlPad.downPress) {
-            if (this.keys.up.isDown || this.controlPad.upPress) new_velocity.y -= this.movement_speed * delta;
-            if (this.keys.down.isDown || this.controlPad.downPress) new_velocity.y += this.movement_speed * delta;
+        if (this.keys.up.isDown || this.keys.down.isDown || this.upPress || this.downPress) {
+            if (this.keys.up.isDown || this.upPress) new_velocity.y -= this.movement_speed * delta;
+            if (this.keys.down.isDown || this.downPress) new_velocity.y += this.movement_speed * delta;
         }
-        else if (this.keys.left.isDown || this.keys.right.isDown || this.controlPad.rightPress || this.controlPad.leftPress) {
-            if (this.keys.left.isDown || this.controlPad.leftPress) new_velocity.x -= this.movement_speed * delta;
-            if (this.keys.right.isDown || this.controlPad.rightPress) new_velocity.x += this.movement_speed * delta;
+        else if (this.keys.left.isDown || this.keys.right.isDown || this.rightPress || this.leftPress) {
+            if (this.keys.left.isDown || this.leftPress) new_velocity.x -= this.movement_speed * delta;
+            if (this.keys.right.isDown || this.rightPress) new_velocity.x += this.movement_speed * delta;
         }
         
         this.setVelocityY(new_velocity.y);
