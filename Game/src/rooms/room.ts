@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
 import { TilemapConfig } from "../types/tilemapConfig";
-import { Player } from "../types/player/Player";
+import { Player } from "../objects/Player";
 import PlayerTexture from "../assets/player.png";
 import ShadowTexture from "../assets/shadow.png"
 import Mask from "../assets/mask.png"

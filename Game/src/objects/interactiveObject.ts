@@ -3,7 +3,7 @@ import * as Phaser from "phaser";
 /**
  * A class used to define interactive objects
  */
-export default class interactiveObject extends Phaser.GameObjects.Sprite {
+export default class InteractiveObject extends Phaser.GameObjects.Sprite {
     constructor(
         scene: Phaser.Scene,
         x: number,
