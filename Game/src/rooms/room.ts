@@ -3,7 +3,9 @@ import { TilemapConfig } from "../types/tilemapConfig";
 import { Player } from "../objects/Player";
 import PlayerTexture from "../assets/player.png";
 import ShadowTexture from "../assets/shadow.png"
+import DoorTexture from "../assets/door.png"
 import Mask from "../assets/mask.png"
+import InteractiveObject from "../objects/InteractiveObject";
 
 
 
@@ -43,7 +45,7 @@ export default class RoomScene extends Phaser.Scene {
         this.load.image("playerTexture", PlayerTexture);
         this.load.image("shadowTexture", ShadowTexture);
         this.load.image("mask", Mask);
-        
+        this.load.image("door", DoorTexture);
     }
 
     public create() {
@@ -86,6 +88,8 @@ export default class RoomScene extends Phaser.Scene {
         //     maxSpeed: 0.7
         // };
 
+        
+
         // this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
         this.player = new Player(this, 32*3, 32*3, "playerTexture");
         this.physics.add.collider(this.player, collisionLayer);
@@ -100,6 +104,11 @@ export default class RoomScene extends Phaser.Scene {
         const width = this.scale.width
         const height = this.scale.height;
 
+        const door = new InteractiveObject(this, 32*5, 32*5, "door");
+        this.add.existing(door);
+        this.physics.add.collider(this.player, door);
+
+        // TODO Put fow stuff into separate methods
         // create fow
         this.fow = this.make.renderTexture({
             width,
@@ -109,6 +118,7 @@ export default class RoomScene extends Phaser.Scene {
         this.fow.fill(0x074e67, 0.8);
 
         // TODO Make this actually render and use instead for the fow
+        this.fow.draw(door);
         this.fow.draw(floorLayer);
         this.vision = this.make.image({
             x: this.player.x,

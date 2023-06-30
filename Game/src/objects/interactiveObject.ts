@@ -3,15 +3,23 @@ import * as Phaser from "phaser";
 /**
  * A class used to define interactive objects
  */
-export default class InteractiveObject extends Phaser.GameObjects.Sprite {
+export default class InteractiveObject extends Phaser.Physics.Arcade.Sprite {
     constructor(
         scene: Phaser.Scene,
         x: number,
         y: number,
         texture: string | Phaser.Textures.Texture,
-        frame?: string | number
     ) {
-        super(scene, x, y, texture, frame);
+        super(scene, x, y, texture);
+        this.setInteractive().on("pointerdown", () => {
+            console.log("Got clicked!!")
+        });
+        this.setOrigin(1, 1);
+        this.scene.physics.world.enable(this);
+        this.setSize(32, 32);
+        this.setImmovable(true);
+
+        // TODO Set depth for rendering
     }
 
     /**
