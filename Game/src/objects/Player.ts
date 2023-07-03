@@ -18,6 +18,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     public downPress = false
     public leftPress = false
     public rightPress = false
+    public interactPress = false
 
     constructor(scene, x, y, texture) {
         super(scene, x, y, texture);
@@ -32,6 +33,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.flipX = false;
         this.scale = 1;
+        this.setSize(20, 32);
         
         
         // this.scene.physics.world.enableBody(this, 0);

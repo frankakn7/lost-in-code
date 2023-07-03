@@ -87,6 +87,7 @@ export default class PlayView extends Phaser.Scene {
             this.currentRoom.player.rightPress = this.controlPad.rightPress
             this.currentRoom.player.upPress = this.controlPad.upPress
             this.currentRoom.player.downPress = this.controlPad.downPress
+            this.currentRoom.player.interactPress = this.controlPad.interactPress
         }
         // if(this.controlPad.leftPress){
         //     // console.log("left")

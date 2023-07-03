@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
 import tilesetPng from "./assets/tileset/tileset.png";
-import tilemapJson from "./assets/tileset/testMap.json";
+import tilemapJson from "./tilemaps/testMap.json";
 import { TilemapConfig } from "./types/tilemapConfig";
 import RoomScene from "./rooms/room";
 import PlayView from "./views/playView";
@@ -15,7 +15,8 @@ const tilemapConfig: TilemapConfig = {
     tilesetName: "Walls-Floors",
     tilemapJson: tilemapJson,
     floorLayer: "Floor",
-    collisionLayer: "Walls"
+    collisionLayer: "Walls",
+    objectsLayer: "GameObjects"
 }
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
@@ -27,7 +28,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
         default: "arcade",
         arcade: {
             gravity: { y: 0 },
-            debug: false,
+            debug: true,
         },
     },
     input: {
