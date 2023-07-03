@@ -4,7 +4,7 @@ import tilemapJson from "./assets/tileset/testMap.json";
 import { TilemapConfig } from "./types/tilemapConfig";
 import RoomScene from "./rooms/room";
 import PlayView from "./views/playView";
-import ChatView from "./views/chatView";
+import ChatView from "./views/chatView/chatView";
 import './font.css';
 
 /**
@@ -27,7 +27,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
         default: "arcade",
         arcade: {
             gravity: { y: 0 },
-            debug: false,
+            debug: true,
         },
     },
     input: {
