@@ -105,6 +105,8 @@ export default class RoomScene extends Phaser.Scene {
         // Instantiate GameObjects
         tilemap.objects[0].objects.forEach(obj => {
             let gameobjectID = obj.properties[0]["value"];
+            if (!(gameobjectID in GameObjectMap)) { return; }
+            
 
             let x = Math.ceil(obj.x / 32) * 32;
             let y = Math.ceil(obj.y / 32) * 32;
