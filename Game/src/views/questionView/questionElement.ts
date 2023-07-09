@@ -153,9 +153,10 @@ class SnippetQuestionElement
     }
 }
 
-export default [
+export {
+    QuestionElement,
     ChoiceQuestionElement,
     InputQuestionElement,
     OrderQuestionElement,
     SnippetQuestionElement
-];
+};

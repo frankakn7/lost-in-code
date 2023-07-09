@@ -3,20 +3,22 @@ import * as Phaser from "phaser";
 /**
  * A button to be used in the chat view. contains styling and a label text as well as a function to be called when clicked
  */
-export default class ChatButton extends Phaser.GameObjects.Container {
+export default class DeviceButton extends Phaser.GameObjects.Container {
     /**
      * The graphical styling of the button
      */
-    private graphics: Phaser.GameObjects.Graphics;
+    protected graphics: Phaser.GameObjects.Graphics;
     /**
      * The text label displayed on the button
      */
-    private label: Phaser.GameObjects.Text;
+    protected label: Phaser.GameObjects.Text;
+    protected labelString: string;
+    protected defaultLabelStyle: Phaser.Types.GameObjects.Text.TextStyle;
 
     /**
      * The padding of the text label inside the button
      */
-    private textPadding = 10;
+    protected textPadding = 10;
 
     /**
      * The width of the button
@@ -30,7 +32,7 @@ export default class ChatButton extends Phaser.GameObjects.Container {
     /**
      * The function to be called when the button is pressed
      */
-    private onClick: Function;
+    protected onClick: Function;
 
     /**
      * The constructor for the button
@@ -55,42 +57,19 @@ export default class ChatButton extends Phaser.GameObjects.Container {
 
         this.width = width;
         this.onClick = func;
+        this.labelString = label;
+        this.defaultLabelStyle = {
+            fontSize: "30px",
+            fontFamily: "forwardRegular",
+            color: "#00c8ff",
+            wordWrap: {
+                width: this.width - this.textPadding * 2, //once for left and once for right
+                useAdvancedWrap: true,
+            },
+            align: "center",
+        }
 
-        //Add the label text to the scene using either preset labelStyle or the given labelstyle
-        this.label = this.scene.add.text(
-            this.width / 2,
-            this.textPadding,
-            label,
-            labelStyle
-                ? labelStyle
-                : {
-                      fontSize: "30px",
-                      fontFamily: "forwardRegular",
-                      color: "#00c8ff",
-                      wordWrap: {
-                          width: this.width - this.textPadding * 2, //once for left and once for right
-                          useAdvancedWrap: true,
-                      },
-                      align: "center",
-                  }
-        );
-        //Make sure the text is centered and aligned to the top
-        this.label.setOrigin(0.5, 0);
-        //The height of the button = the height of the text + padding for top and bottom
-        this.height = this.label.height + this.textPadding * 2;
-
-        //Add graphics with
-        this.graphics = this.scene.add.graphics();
-        //A black background
-        this.graphics.fillStyle(0x000000, 1);
-        this.graphics.fillRect(0, 0, this.width, this.height);
-        //And a blue margin
-        this.graphics.lineStyle(4, 0x00c8ff, 1);
-        this.graphics.strokeRect(0, 0, this.width, this.height);
-
-        //Add the label and the margin to the container (the order has to be this way otherwise black background is rendered over text)
-        this.add(this.graphics);
-        this.add(this.label);
+        this.drawButton(this.labelString,0x000000,0x00c8ff,labelStyle)
 
         //Create a rectangle a hitbox making sure it covers the visible button
         let newRectangle = new Phaser.Geom.Rectangle(
@@ -106,5 +85,39 @@ export default class ChatButton extends Phaser.GameObjects.Container {
         this.on("pointerdown", () => {
             this.onClick();
         });
+    }
+
+    protected drawButton(label: string, buttonBackgroundColor: number=0x000000,buttonMarginColor: number=0x00c8ff, labelStyle?: Phaser.Types.GameObjects.Text.TextStyle){
+        this.removeAll(true)
+        //Add the label text to the scene using either preset labelStyle or the given labelstyle
+        this.label = this.scene.add.text(
+            this.width / 2,
+            this.textPadding,
+            label,
+            labelStyle
+                ? labelStyle
+                : this.defaultLabelStyle
+        );
+        //Make sure the text is centered and aligned to the top
+        this.label.setOrigin(0.5, 0);
+
+        //Add graphics
+        this.graphics = this.scene.add.graphics();
+        //The height of the button = the height of the text + padding for top and bottom
+        this.height = this.label.height + this.textPadding * 2;
+
+        //A black background
+        this.graphics.clear()
+        this.graphics.fillStyle(0x000000, 0.5)
+        this.graphics.fillRect(10, 10, this.width+10, this.height+10);
+        this.graphics.fillStyle(buttonBackgroundColor, 1);
+        this.graphics.fillRect(0, 0, this.width, this.height);
+        //And a blue margin
+        this.graphics.lineStyle(10, buttonMarginColor, 1);
+        this.graphics.strokeRect(0, 0, this.width, this.height);
+
+        //Add the label and the margin to the container (the order has to be this way otherwise black background is rendered over text)
+        this.add(this.graphics);
+        this.add(this.label);
     }
 }

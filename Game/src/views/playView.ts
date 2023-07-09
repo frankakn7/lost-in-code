@@ -5,6 +5,8 @@ import PauseChatButtons from "../ui/PauseChatButtons";
 import ChatView from "./chatView/chatView";
 import { ChatFlowNode } from "./chatView/chatFlowNode";
 import ChatFlow from "./chatView/chatFlow";
+import QuestionView from "./questionView/questionView";
+import TaskManager from "./questionView/taskManager";
 
 /**
  * Represents the view in which the rooms and player are explorable (default playing view)
@@ -28,6 +30,8 @@ export default class PlayView extends Phaser.Scene {
      * the chat view
      */
     private chatView: ChatView;
+
+    private questionView: QuestionView;
 
     /**
      * Opens the chat view by sending all other scenes to sleep and launching / awaking the chat view scene
@@ -81,39 +85,55 @@ export default class PlayView extends Phaser.Scene {
         const node32: ChatFlowNode = {
             optionText: "Hello?",
             text: "Hello? Hello Hello? Astronaut? Do you read me? Please respond...",
-            choices: new Map([[node22.optionText, node22],[node21.optionText, node21]]),
+            choices: new Map([
+                [node22.optionText, node22],
+                [node21.optionText, node21],
+            ]),
         };
 
         const node12: ChatFlowNode = {
             optionText: "Start the chat",
             text: "...<Communications Relay Activated>...",
-            choices: new Map([
-                [node32.optionText, node32],
-            ]),
+            choices: new Map([[node32.optionText, node32]]),
         };
 
         const chatFlow = new ChatFlow(node1);
-        const chatFlow2 = new ChatFlow(node12)
-        
+        const chatFlow2 = new ChatFlow(node12);
+
         //Send all scenes to sleep
         this.scene.sleep();
         this.scene.sleep("controlPad");
         this.scene.sleep("pauseChatButtons");
         this.scene.sleep("Room");
-        
+
         //If the chat view already exists and is sleeping
-        if(this.scene.isSleeping(this.chatView)){
+        if (this.scene.isSleeping(this.chatView)) {
             //start a new chat flow and awake the scene
             this.chatView.startNewChatFlow(chatFlow2);
-            this.scene.wake(this.chatView)
-        //If the chat view hasn't been launched yet
-        }else{
+            this.scene.wake(this.chatView);
+            //If the chat view hasn't been launched yet
+        } else {
             //create a new chat view
             this.chatView = new ChatView(chatFlow);
             //add chat view to the scene
             this.scene.add("chatView", this.chatView);
             //launch the chat view
             this.scene.launch(this.chatView);
+        }
+    }
+
+    private openQuestionView(){
+        //If the chat view already exists and is sleeping
+        if (this.scene.isSleeping(this.questionView)) {
+            this.scene.wake(this.questionView);
+            //If the chat view hasn't been launched yet
+        } else {
+            //create a new chat view
+            this.questionView = new QuestionView(new TaskManager([]));
+            //add chat view to the scene
+            this.scene.add("questionView", this.questionView);
+            //launch the chat view
+            this.scene.launch(this.questionView);
         }
     }
 
@@ -155,13 +175,13 @@ export default class PlayView extends Phaser.Scene {
         // Adds the scene and launches it... (if active is set to true on added scene it is launched directly)
         this.scene.add("currentRoom", this.currentRoom);
         this.scene.launch(this.currentRoom);
-        
+
         // TODO: Check if mobile
-        
+
         //Adds the pause and phone buttons scene and launches it
         this.scene.add("pauseChatButtons", this.pauseChatButtons);
         this.scene.launch(this.pauseChatButtons);
-        
+
         // Adds the controlpad scene and launches it
         this.scene.add("controlPad", this.controlPad);
         this.scene.launch(this.controlPad);
@@ -194,16 +214,14 @@ export default class PlayView extends Phaser.Scene {
         // if(this.controlPad.interactPress){
         //     console.log("interact")
         // }
-        
 
         //if the phone button is pressed
-        if (
-            this.pauseChatButtons.phonePressed
-        ) {
+        if (this.pauseChatButtons.phonePressed) {
             //prevent phone button from being continuously pressed by accident
-            this.pauseChatButtons.phonePressed = false
+            this.pauseChatButtons.phonePressed = false;
             //open the chat view
-            this.openChatView();
+            // this.openChatView();
+            this.openQuestionView();
         }
     }
 }

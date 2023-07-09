@@ -1,7 +1,7 @@
 /**
  * Defines the different question types
  */
-enum QuestionType {
+export enum QuestionType {
     /**
      * A single / multiple choice question (Recognize code / find error)
      */

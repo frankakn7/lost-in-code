@@ -27,7 +27,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
         default: "arcade",
         arcade: {
             gravity: { y: 0 },
-            debug: true,
+            debug: false,
         },
     },
     input: {
@@ -46,6 +46,9 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
     scene: new PlayView(new RoomScene(tilemapConfig, "Room"),"Play"),
     //scene: new ChatView(),
     parent: "game",
+    dom: {
+        createContainer: true
+    },
     backgroundColor: "#000000",
 };
 

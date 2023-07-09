@@ -1,9 +1,9 @@
 import * as Phaser from "phaser";
 import { ChatFlowNode } from "./chatFlowNode";
 import ChatFlow from "./chatFlow";
-import AnswerButton from "./chatButton";
-import ChatButton from "./chatButton";
+import DeviceButton from "../../ui/deviceButton";
 import ChatTextContainer from "./chatTextContainer";
+import deviceBackgroundTilePng from "../../assets/Device-Background-Tile.png";
 
 /**
  * The ChatView displaying the chat
@@ -28,7 +28,7 @@ export default class ChatView extends Phaser.Scene {
     /**
      * Array of all the choice buttons (used for destroying buttons when choice was made)
      */
-    private choiceButtons: Array<AnswerButton> = [];
+    private choiceButtons: Array<DeviceButton> = [];
 
     /**
      * The TimerEvent for handling delayed text character display
@@ -42,7 +42,7 @@ export default class ChatView extends Phaser.Scene {
     /**
      * Padding between choice buttons
      */
-    private buttonPadding = 40;
+    private buttonPadding = 80;
     /**
      * Width of all the choice buttons
      */
@@ -56,7 +56,9 @@ export default class ChatView extends Phaser.Scene {
     /**
      * The exit button for the chat view
      */
-    private exitButton: ChatButton;
+    private exitButton: DeviceButton;
+
+    private tilesprite: Phaser.GameObjects.TileSprite;
 
     /**
      * 
@@ -67,9 +69,14 @@ export default class ChatView extends Phaser.Scene {
         this.currentChatFlow = chatFlow
     }
 
+    public preload(){
+        this.load.image("backgroundTile", deviceBackgroundTilePng);
+    }
+
     public create() {
         //Set background color to black
-        this.cameras.main.setBackgroundColor("rgba(0,0,0,1)");
+        // this.cameras.main.setBackgroundColor("rgba(0,0,0,1)");
+        this.tilesprite = this.add.tileSprite(0,0,this.cameras.main.displayWidth / 3, this.cameras.main.displayHeight / 3, "backgroundTile").setOrigin(0,0).setScale(3)
 
         //create the text container
         this.chatTextContainer = new ChatTextContainer(this, 0, 0);
@@ -181,7 +188,7 @@ export default class ChatView extends Phaser.Scene {
             //Loop through the choices in reverse (to display the first one at the top)
             choices.reverse().forEach((choiceString) => {
                 //Create a new choice button
-                let choiceButton = new ChatButton(
+                let choiceButton = new DeviceButton(
                     this,
                     this.cameras.main.displayWidth / 2 - this.buttonWidth / 2,  //center it horizontally
                     previousY - this.buttonPadding,     //add padding above the last button
@@ -204,7 +211,7 @@ export default class ChatView extends Phaser.Scene {
         //if there are no choices
         } else {
             //create the exit button
-            this.exitButton = new ChatButton(
+            this.exitButton = new DeviceButton(
                 this,
                 this.cameras.main.displayWidth / 2 - this.buttonWidth / 2,  //center button horizontally
                 previousY - this.buttonPadding,
