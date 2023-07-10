@@ -52,7 +52,8 @@ export default class ChoiceButton extends DeviceButton {
     // }
 
     public colorIncorrectNotSelected(): void {
-        this.drawButton(this.labelString,0x000000,0xde1d1d,this.defaultLabelStyle)
+        // this.drawButton(this.labelString,0x000000,0xde1d1d,this.defaultLabelStyle)
+        this.drawButton(this.labelString,0x000000,0x00ff7b,this.defaultLabelStyle)
     }
 
     public getElementId(): number{

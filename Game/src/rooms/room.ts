@@ -30,9 +30,9 @@ export default class RoomScene extends Phaser.Scene {
      */
     constructor(
         tilemapConfig: TilemapConfig,
-        settingsConfig?: string | Phaser.Types.Scenes.SettingsConfig
+        // settingsConfig?: string | Phaser.Types.Scenes.SettingsConfig
     ) {
-        super(settingsConfig);
+        super("Room");
         this.tilemapConfig = tilemapConfig;
     }
 

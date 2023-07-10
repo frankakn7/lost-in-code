@@ -15,39 +15,8 @@ import {
 } from "./questionElement";
 import ChoiceButton from "./choiceButton";
 import DraggableCodeBlock from "./draggableCodeBlock";
+import SelectableCodeBlock from "./selectableCodeBlock";
 
-//TODO: put this code block into a question view!!
-//         hljs.registerLanguage("php", php);
-//         const highlightedCode = hljs.highlight("php", code).value;
-//         console.log(highlightedCode);
-//         let dummyPre = document.createElement("pre"); // Create a dummy div
-//         let dummyDiv = document.createElement("div");
-//         dummyDiv.innerHTML = highlightedCode;
-//         // dummyPre.style.display = "inline-block";
-//         dummyPre.style.display = "none";
-//         dummyPre.id = "codeBlock"
-
-//         dummyDiv.style.backgroundColor = "#1c1d21"
-//         dummyDiv.style.color = "#c0c5ce"
-//         dummyDiv.style.fontFamily = "forwardRegular"
-//         dummyDiv.style.lineHeight = "2"
-
-//         dummyPre.appendChild(dummyDiv)
-//         console.log(dummyPre)
-
-//         document.body.appendChild(dummyPre);
-//         html2canvas(dummyPre, {scale: 1, onclone: (clonedDoc) => {
-//             clonedDoc.getElementById("codeBlock").style.display = 'inline-block'
-//         }}).then((canvas) => {
-
-//             console.log(canvas);
-//             let canvasTexture = this.textures.addCanvas("yourTextureKey", canvas);
-//             console.log(canvasTexture)
-
-//             // Now you can use 'yourTextureKey' as a texture key in your game.
-//             // For instance:
-//             this.add.image(50, 50, "yourTextureKey").setScale(1);
-//         });
 export default class QuestionView extends Phaser.Scene {
     private taskManager: TaskManager;
     private currentQuestion: Question;
@@ -65,7 +34,11 @@ export default class QuestionView extends Phaser.Scene {
 
     private draggableCodeBlocks: DraggableCodeBlock[] = [];
 
+    private selectableCodeBlocks: SelectableCodeBlock[] = [];
+
     private submitButton: DeviceButton;
+
+    private questions: Question[] = [];
 
     constructor(taskManager: TaskManager) {
         super("QuestionView");
@@ -90,121 +63,6 @@ export default class QuestionView extends Phaser.Scene {
             )
             .setOrigin(0, 0)
             .setScale(3);
-
-        const code = `<?php
-$txt = "Hello world!";
-$x = 5;
-$y = 10.5;
-
-echo $txt;
-echo "<br>";
-echo $x;
-echo "<br>";
-echo $y;
-?>`;
-
-        let questionElement = new ChoiceQuestionElement(1, "text output", true);
-        let questionElement2 = new ChoiceQuestionElement(
-            2,
-            "graphical output",
-            false
-        );
-
-        let inputQuestionElement = new InputQuestionElement(
-            1,
-            ["Hello There"],
-            "input1"
-        );
-
-        let dragQuestionElement2 = new OrderQuestionElement(
-            1,
-            `<?php
-        $txt = "Hello world!";
-        $x = 5;`,
-            1
-        );
-        let dragQuestionElement1 = new OrderQuestionElement(
-            2,
-            `       $y = 10.5;
-
-        echo $txt;
-        echo "<br>";`,
-            2
-        );
-        let dragQuestionElement3 = new OrderQuestionElement(
-            3,
-            `       echo $x;
-        echo "<br>";
-        echo $y;
-        $p = 0.5;
-?>`,
-            3
-        );
-
-        let clozeQuestionElement = new InputQuestionElement(
-            1,
-            ["Hello"],
-            "input1"
-        );
-        let clozeQuestionElement2 = new InputQuestionElement(
-            1,
-            ["There"],
-            "input2"
-        );
-
-        // this.currentQuestion = new Question(
-        //     1,
-        //     "What is the output of the following code?",
-        //     "Just Answer",
-        //     QuestionType.CHOICE,
-        //     [questionElement, questionElement2],
-        //     1,
-        //     code
-        // );
-
-        this.currentQuestion = new Question(
-            2,
-            "What is the output of the following code?",
-            "Just Answer",
-            QuestionType.SINGLE_INPUT,
-            [inputQuestionElement],
-            1,
-            code
-        );
-
-        this.currentQuestion = new Question(
-            3,
-            "Reorder these elements into the correct order!",
-            "just order them",
-            QuestionType.DRAG_DROP,
-            [dragQuestionElement1, dragQuestionElement2, dragQuestionElement3],
-            1
-        );
-
-        this.currentQuestion = new Question(
-            3,
-            "Fill in the blanks!",
-            "just fill it in",
-            QuestionType.CLOZE,
-            [clozeQuestionElement, clozeQuestionElement2],
-            1,
-            `
-<?php
-    $txt = "Hello world!";
-    $x = 5;
-    $y = 10.5;
-
-    echo $txt;
-    echo "<br>";
-    echo $x;
-    echo "<br>";
-    echo $y;
-    echo "###INPUT|input1|20|true###";
-    echo "<br>";
-    echo "###INPUT|input2|15|false###";
-?>
-`
-        );
 
         this.textStyle = {
             fontSize: "40px",
@@ -235,6 +93,8 @@ echo $y;
         this.submitButton.setY(this.submitButton.y - this.submitButton.height);
         this.add.existing(this.submitButton);
 
+        // this.taskManager = new TaskManager(this.questions);
+        this.currentQuestion = this.taskManager.getRandomQuestion();
         this.displayQuestion();
         // this.exitQuestion();
         // this.add.existing(draggableCodeBlock)
@@ -349,13 +209,16 @@ echo $y;
     }
 
     private displayChoiceQuestion(): void {
-        let codeBlock = this.displayCodeBlock(this.currentQuestion.codeText);
+        let codeBlock;
+        if(this.currentQuestion.codeText){
+            codeBlock = this.displayCodeBlock(this.currentQuestion.codeText);
+        }
         this.currentQuestion.elements.forEach(
             (element: ChoiceQuestionElement) => {
                 let previousButtonY = this.choiceButtons.length
                     ? this.choiceButtons[this.choiceButtons.length - 1].y +
                       this.choiceButtons[this.choiceButtons.length - 1].height
-                    : codeBlock.y + codeBlock.height;
+                    : (codeBlock ? codeBlock.y + codeBlock.height : this.questionText.y + this.questionText.height);
                 let answerButton = new ChoiceButton(
                     this,
                     this.cameras.main.displayWidth / 2 -
@@ -449,6 +312,36 @@ echo $y;
         );
     }
 
+    private selectCodeBlock(elementId: number){
+        let selectedBlock: SelectableCodeBlock = this.selectableCodeBlocks.find((block) => block.getSelected())
+        selectedBlock ? selectedBlock.deselect() : null;
+        this.selectableCodeBlocks.find((block) => block.getElementId() === elementId).select();
+    }
+
+    private async displaySelectOneQuestion(){
+        let previousBottomY = this.questionText.y + this.questionText.height;
+        for (let i = 0; i < this.currentQuestion.elements.length; i++) {
+            let element = this.currentQuestion.elements[i];
+            console.log(previousBottomY);
+            console.log(element.content)
+            let selectableCodeBlock = new SelectableCodeBlock(
+                this,
+                element.id,
+                element.content,
+                () => {this.selectCodeBlock(element.id)},
+                this.cameras.main.displayWidth / 2,
+                previousBottomY + 50
+            );
+            await selectableCodeBlock.createCodeBlockImage();
+            selectableCodeBlock.setY(
+                selectableCodeBlock.y + selectableCodeBlock.height / 2
+            );
+            this.selectableCodeBlocks.push(selectableCodeBlock);
+            previousBottomY =
+            selectableCodeBlock.y + selectableCodeBlock.height / 2;
+        }
+    }
+
     private displayQuestion(): void {
         this.questionText = this.add
             .text(
@@ -474,9 +367,29 @@ echo $y;
             case QuestionType.CLOZE:
                 console.log("cloze");
                 this.displayClozeQuestion();
+                break;
+            case QuestionType.SELECT_ONE:
+                console.log("select one");
+                this.displaySelectOneQuestion();
+                break;
             default:
                 console.log("none");
                 break;
+        }
+    }
+
+    private checkAnswerSelectOneQuestion(){
+        let selectedBlock = this.selectableCodeBlocks.find((block) => block.getSelected())
+        if(selectedBlock){
+            let elementId = selectedBlock.getElementId();
+            let correct = this.currentQuestion.elements.find((element: ChoiceQuestionElement) => element.id == elementId).isCorrect
+            if(correct){
+                selectedBlock.markCorrect()
+            }else{
+                selectedBlock.markWrong()
+            }
+        }else{
+            this.selectableCodeBlocks.forEach((block) => block.markWrong());
         }
     }
 
@@ -577,6 +490,9 @@ echo $y;
             case QuestionType.CLOZE:
                 this.checkAnswerClozeQuestion();
                 break;
+            case QuestionType.SELECT_ONE:
+                this.checkAnswerSelectOneQuestion();
+                break;
             default:
                 console.log("none");
                 break;
@@ -607,6 +523,6 @@ echo $y;
         this.scene.wake("Room");
         this.scene.wake("controlPad");
         this.scene.wake("pauseChatButtons");
-        this.scene.sleep(this);
+        this.scene.remove(this);
     }
 }
