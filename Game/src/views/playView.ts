@@ -7,6 +7,8 @@ import { ChatFlowNode } from "./chatView/chatFlowNode";
 import ChatFlow from "./chatView/chatFlow";
 import QuestionView from "./questionView/questionView";
 import TaskManager from "./questionView/taskManager";
+import deviceBackgroundTilePng from "../assets/Device-Background-Tile.png";
+import MenuView from "./menuView";
 
 /**
  * Represents the view in which the rooms and player are explorable (default playing view)
@@ -32,6 +34,8 @@ export default class PlayView extends Phaser.Scene {
     private chatView: ChatView;
 
     private questionView: QuestionView;
+    
+    private menuView = new MenuView(this);
 
     /**
      * Opens the chat view by sending all other scenes to sleep and launching / awaking the chat view scene
@@ -137,7 +141,9 @@ export default class PlayView extends Phaser.Scene {
         }
     }
 
-    public preload() {}
+    public preload() {
+        this.load.image("backgroundTile", deviceBackgroundTilePng);
+    }
 
     /**
      * Play View constructor
@@ -185,6 +191,8 @@ export default class PlayView extends Phaser.Scene {
         // Adds the controlpad scene and launches it
         this.scene.add("controlPad", this.controlPad);
         this.scene.launch(this.controlPad);
+
+        this.scene.add("menu", this.menuView);
     }
 
     //for testing purposes
@@ -209,7 +217,7 @@ export default class PlayView extends Phaser.Scene {
         // }
         // if(this.controlPad.upPress){
         //     console.log("up")
-        //     this.currentRoom.player.upPress = true
+        //     this.currentRoom.player.upEPress = true
         // }
         // if(this.controlPad.downPress){
         //     console.log("down")
@@ -226,6 +234,25 @@ export default class PlayView extends Phaser.Scene {
             //open the chat view
             // this.openChatView();
             this.openQuestionView();
+        }
+
+        if (this.pauseChatButtons.pausePressed) {
+            this.pauseChatButtons.pausePressed = false;
+            console.log(this.menuView);
+            this.scene.launch(this.menuView);   
+
+            this.pauseOrResumeGame(true);
+        }
+    }
+
+    public pauseOrResumeGame :Function = (pause) =>{
+        if (pause) {
+            this.currentRoom.scene.pause();
+            this.controlPad.scene.pause();
+        } 
+        else {
+            this.currentRoom.scene.resume();
+            this.controlPad.scene.resume();            
         }
     }
 }
