@@ -12,7 +12,8 @@ export default class InteractiveObject extends Phaser.Physics.Arcade.Sprite {
     ) {
         super(scene, x, y, texture);
         this.setInteractive().on("pointerdown", () => {
-            console.log("Got clicked!!")
+            // console.log("Got clicked!!")
+            this.interact();
         });
         this.setOrigin(1, 1);
         this.scene.physics.world.enable(this);
@@ -28,5 +29,6 @@ export default class InteractiveObject extends Phaser.Physics.Arcade.Sprite {
     public interact(){
         //TODO: Build general interactivity function
         console.log("Interacted with "+this);
+        this.scene.events.emit("interacted_question_object");
     }
 }

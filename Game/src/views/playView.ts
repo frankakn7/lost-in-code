@@ -33,6 +33,8 @@ export default class PlayView extends Phaser.Scene {
 
     private questionView: QuestionView;
 
+    private taskManager: TaskManager = new TaskManager([]);
+
     /**
      * Opens the chat view by sending all other scenes to sleep and launching / awaking the chat view scene
      */
@@ -129,7 +131,7 @@ export default class PlayView extends Phaser.Scene {
             //If the chat view hasn't been launched yet
         } else {
             //create a new chat view
-            this.questionView = new QuestionView(new TaskManager([]));
+            this.questionView = new QuestionView(this.taskManager);
             //add chat view to the scene
             this.scene.add("questionView", this.questionView);
             //launch the chat view
@@ -185,6 +187,10 @@ export default class PlayView extends Phaser.Scene {
         // Adds the controlpad scene and launches it
         this.scene.add("controlPad", this.controlPad);
         this.scene.launch(this.controlPad);
+
+        this.scene.get('Room').events.on('interacted_question_object', () => {
+            this.openQuestionView();
+        });
     }
 
     //for testing purposes
@@ -224,8 +230,8 @@ export default class PlayView extends Phaser.Scene {
             //prevent phone button from being continuously pressed by accident
             this.pauseChatButtons.phonePressed = false;
             //open the chat view
-            // this.openChatView();
-            this.openQuestionView();
+            this.openChatView();
+            // this.openQuestionView();
         }
     }
 }

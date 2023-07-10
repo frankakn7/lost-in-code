@@ -4,16 +4,19 @@ import "highlight.js/styles/night-owl.css";
 import html2canvas from "html2canvas";
 import * as Phaser from "phaser";
 
-export default class DraggableCodeBlock extends Phaser.GameObjects.Container {
+export default class SelectableCodeBlock extends Phaser.GameObjects.Container {
     private elementId: number;
     private code: string;
     private codeBlockImage: Phaser.GameObjects.Image;
     private graphics: Phaser.GameObjects.Graphics;
+    private onClick: Function;
+    private selected: boolean = false;
 
     constructor(
         scene: Phaser.Scene,
         elementId: number,
         code: string,
+        onClick: Function,
         x?: number,
         y?: number,
         children?: Phaser.GameObjects.GameObject[]
@@ -22,34 +25,44 @@ export default class DraggableCodeBlock extends Phaser.GameObjects.Container {
         this.elementId = elementId;
         this.code = code;
         this.scene.add.existing(this);
+        this.onClick = onClick;
 
         this.setInteractive(
             new Phaser.Geom.Rectangle(0, 0, 100, 100),
             Phaser.Geom.Rectangle.Contains
         );
-        this.scene.input.setDraggable(this, true);
+        // this.scene.input.setDraggable(this, true);
         // this.createCodeBlockImage();
 
-        this.on("drag", (pointer, dragX, dragY) => {
-            // this.x = dragX;
-            this.y = dragY;
+        this.on("pointerdown", () => {
+            this.onClick();
         });
+    }
 
-        this.on(Phaser.Input.Events.DRAG_START, () => {
-            this.setDepth(1);  // Bring to front when dragging
-          });
+    getSelected(){
+        return this.selected;
+    }
+    
+    select(){
+        this.markSelected();
+        this.selected = true;
+    }
 
-        this.on(Phaser.Input.Events.DRAG_END,() => {
-            this.setDepth(0);  // Reset depth when done dragging
-            this.scene.events.emit("blockDropped", this)
-        })
+    deselect(){
+        this.graphics.clear()
+        this.graphics.destroy()
+        this.selected = false;
     }
 
     drawMarginColor(buttonMarginColor: number){
         this.graphics = this.scene.add.graphics();
-        this.graphics.lineStyle(10, buttonMarginColor, 1);
+        this.graphics.lineStyle(20, buttonMarginColor, 1);
         this.graphics.strokeRect(-this.width/2, -this.height/2, this.width, this.height);
         this.add(this.graphics)
+    }
+
+    markSelected(){
+        this.drawMarginColor(0x00c8ff)
     }
 
     markCorrect(){
@@ -62,6 +75,7 @@ export default class DraggableCodeBlock extends Phaser.GameObjects.Container {
 
     async createCodeBlockImage() {
         hljs.registerLanguage("php", php);
+        console.log(this.code)
         let highlightedCode = hljs.highlight(this.code, {
             language: "php",
         }).value;
@@ -73,7 +87,6 @@ export default class DraggableCodeBlock extends Phaser.GameObjects.Container {
         dummyDiv.innerHTML = highlightedCode;
 
         dummyPre.style.fontFamily = "forwardRegular";
-        dummyPre.style.letterSpacing= ""
         dummyPre.style.fontSize = "25px";
         dummyPre.style.lineHeight = "2";
         dummyPre.style.letterSpacing = "5px"

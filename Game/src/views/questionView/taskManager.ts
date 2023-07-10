@@ -1,7 +1,9 @@
+import { QuestionType } from "../../types/questionType";
 import Question from "./question";
+import { ChoiceQuestionElement, InputQuestionElement, OrderQuestionElement } from "./questionElement";
 
 export default class TaskManager {
-    private availableQuestions: Question[];
+    private availableQuestions: Question[] = [];
     //TODO: implement topic id properly
     private currentTopicId: number = 1;
 
@@ -17,11 +19,158 @@ export default class TaskManager {
       }
 
     getRandomQuestion(){
-        this.shuffleQuestions(this.availableQuestions);
+        // this.shuffleQuestions(this.availableQuestions);
+        console.log(this.availableQuestions)
         return this.availableQuestions.pop();
     }
 
     constructor(questions: Question[]){
-        this.availableQuestions = questions;
+      const code = `<?php
+$txt = "Hello world!";
+$x = 5;
+$y = 10.5;
+
+echo $txt;
+echo "<br>";
+echo $x;
+echo "<br>";
+echo $y;
+?>`;
+
+        let questionElement = new ChoiceQuestionElement(1, "text output", true);
+        let questionElement2 = new ChoiceQuestionElement(
+            2,
+            "graphical output",
+            false
+        );
+
+        let inputQuestionElement = new InputQuestionElement(
+            1,
+            ["Hello There"],
+            "input1"
+        );
+
+        let dragQuestionElement2 = new OrderQuestionElement(
+            1,
+            `<?php
+        $txt = "Hello world!";
+        $x = 5;`,
+            1
+        );
+        let dragQuestionElement1 = new OrderQuestionElement(
+            2,
+            `       $y = 10.5;
+
+        echo $txt;
+        echo "<br>";`,
+            2
+        );
+        let dragQuestionElement3 = new OrderQuestionElement(
+            3,
+            `       echo $x;
+        echo "<br>";
+        echo $y;
+        $p = 0.5;
+?>`,
+            3
+        );
+
+        let clozeQuestionElement = new InputQuestionElement(
+            1,
+            ["Hello"],
+            "input1"
+        );
+        let clozeQuestionElement2 = new InputQuestionElement(
+            2,
+            ["There"],
+            "input2"
+        );
+
+        this.availableQuestions.push(new Question(
+            1,
+            "What is the output of the following code?",
+            "Just Answer",
+            QuestionType.CHOICE,
+            [questionElement, questionElement2],
+            1,
+            code
+        ));
+
+        this.availableQuestions.push(new Question(
+          1,
+          "What is php not capable of doing?",
+          "Just Answer",
+          QuestionType.CHOICE,
+          [questionElement, questionElement2],
+          1
+      ));
+
+        this.availableQuestions.push(new Question(
+            2,
+            "What is the output of the following code?",
+            "Just Answer",
+            QuestionType.SINGLE_INPUT,
+            [inputQuestionElement],
+            1,
+            code
+        ));
+
+        this.availableQuestions.push(new Question(
+            3,
+            "Reorder these elements into the correct order!",
+            "just order them",
+            QuestionType.DRAG_DROP,
+            [dragQuestionElement1, dragQuestionElement2, dragQuestionElement3],
+            1
+        ));
+
+        this.availableQuestions.push(new Question(
+            4,
+            "Fill in the blanks!",
+            "just fill it in",
+            QuestionType.CLOZE,
+            [clozeQuestionElement, clozeQuestionElement2],
+            1,
+            `
+<?php
+    $txt = "Hello world!";
+    $x = 5;
+    $y = 10.5;
+
+    echo $txt;
+    echo "<br>";
+    echo $x;
+    echo "<br>";
+    echo $y;
+    echo "###INPUT|input1|20|true###";
+    echo "<br>";
+    echo "###INPUT|input2|15|false###";
+?>
+`
+        ));
+
+        let questionElementSelectBlock = new ChoiceQuestionElement(1, `<?php
+        $txt = "Hello world!";
+        echo $txt;
+?>`, true);
+        let questionElementSelectBlock2 = new ChoiceQuestionElement(
+            2,
+            `<?php
+            $txt = "Hello There!";
+            echo $txt;
+    ?>`,
+            false
+        );
+
+        this.availableQuestions.push(new Question(
+            5,
+            "Which code block outputs: Hello There! ",
+            "Just Answer",
+            QuestionType.SELECT_ONE,
+            [questionElementSelectBlock, questionElementSelectBlock2],
+            1,
+            code
+        ));
+        // this.availableQuestions = questions;
     }
 }
