@@ -1,4 +1,4 @@
-import InteractiveObject from "./objects/InteractiveObject";
+import InteractiveObject from "./objects/interactiveObject";
 
 export const GameObjectMap = {
     door: {
