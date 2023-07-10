@@ -39,7 +39,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         
         // this.scene.physics.world.enableBody(this, 0);
         this.keys = this.scene.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.W, 'down': Phaser.Input.Keyboard.KeyCodes.S,
-                                                        'left': Phaser.Input.Keyboard.KeyCodes.A, 'right': Phaser.Input.Keyboard.KeyCodes.D});
+                                                        'left': Phaser.Input.Keyboard.KeyCodes.A, 'right': Phaser.Input.Keyboard.KeyCodes.D},false);
         //this.controlPad = new ControlPadScene();
         // this.scene.scene.add("controlPad", this.controlPad);
         // this.scene.scene.launch(this.controlPad);

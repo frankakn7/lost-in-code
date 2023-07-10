@@ -181,30 +181,30 @@ echo $y;
             1
         );
 
-//         this.currentQuestion = new Question(
-//             3,
-//             "Fill in the blanks!",
-//             "just fill it in",
-//             QuestionType.CLOZE,
-//             [clozeQuestionElement, clozeQuestionElement2],
-//             1,
-//             `
-// <?php
-// $txt = "Hello world!";
-// $x = 5;
-// $y = 10.5;
+        this.currentQuestion = new Question(
+            3,
+            "Fill in the blanks!",
+            "just fill it in",
+            QuestionType.CLOZE,
+            [clozeQuestionElement, clozeQuestionElement2],
+            1,
+            `
+<?php
+    $txt = "Hello world!";
+    $x = 5;
+    $y = 10.5;
 
-// echo $txt;
-// echo "<br>";
-// echo $x;
-// echo "<br>";
-// echo $y;
-// echo "###INPUT|input1|20|true###";
-// echo "<br>";
-// echo "###INPUT|input2|15|false###";
-// ?>
-// `
-//         );
+    echo $txt;
+    echo "<br>";
+    echo $x;
+    echo "<br>";
+    echo $y;
+    echo "###INPUT|input1|20|true###";
+    echo "<br>";
+    echo "###INPUT|input2|15|false###";
+?>
+`
+        );
 
         this.textStyle = {
             fontSize: "40px",
@@ -258,20 +258,21 @@ echo $y;
         // let dummyForm = document.createElement("form");
         dummyDiv.innerHTML = highlightedCode;
 
-        // dummyDiv.style.fontFamily = "forwardRegular";
-        dummyDiv.style.fontSize = "25px";
-        dummyDiv.style.lineHeight = "2.5";
-        // dummyDiv.style.display = "inline-block";
-        dummyDiv.style.width = `${this.cameras.main.displayWidth - 200}px`;
-        dummyDiv.style.maxHeight = `${this.cameras.main.displayHeight / 3}px`;
-        dummyDiv.style.overflow = "scroll";
-        dummyDiv.style.overscrollBehavior = "contain";
-        dummyDiv.style.backgroundColor = "white";
-        dummyDiv.style.padding = "20px";
-        dummyDiv.style.border = "10px solid #00c8ff";
+        dummyPre.style.fontFamily = "forwardRegular";
+        dummyPre.style.fontSize = "25px";
+        dummyPre.style.lineHeight = "2.5";
+        dummyPre.style.letterSpacing = "5px"
+        // dummyPre.style.display = "inline-block";
+        dummyPre.style.width = `${this.cameras.main.displayWidth - 200}px`;
+        dummyPre.style.maxHeight = `${this.cameras.main.displayHeight / 3}px`;
+        dummyPre.style.overflow = "scroll";
+        dummyPre.style.overscrollBehavior = "contain";
+        dummyPre.style.backgroundColor = "white";
+        dummyPre.style.padding = "20px";
+        dummyPre.style.border = "10px solid #00c8ff";
 
-        dummyDiv.style.backgroundColor = "#1c1d21";
-        dummyDiv.style.color = "#c0c5ce";
+        dummyPre.style.backgroundColor = "#1c1d21";
+        dummyPre.style.color = "#c0c5ce";
 
         // Extract the placeholders and their information
         let regex = /###INPUT\|(.+?)\|(.+?)\|(.+?)###/g;
@@ -318,20 +319,21 @@ echo $y;
         // let dummyForm = document.createElement("form");
         dummyDiv.innerHTML = highlightedCode;
 
-        // dummyDiv.style.fontFamily = "forwardRegular";
-        dummyDiv.style.fontSize = "25px";
-        dummyDiv.style.lineHeight = "2";
-        // dummyDiv.style.display = "inline-block";
-        dummyDiv.style.width = `${this.cameras.main.displayWidth - 200}px`;
-        dummyDiv.style.maxHeight = `${this.cameras.main.displayHeight / 3}px`;
-        dummyDiv.style.overflow = "scroll";
-        dummyDiv.style.overscrollBehavior = "contain";
-        dummyDiv.style.backgroundColor = "white";
-        dummyDiv.style.padding = "20px";
-        dummyDiv.style.border = "10px solid #00c8ff";
+        dummyPre.style.fontFamily = "forwardRegular";
+        dummyPre.style.fontSize = "25px";
+        dummyPre.style.lineHeight = "2";
+        dummyPre.style.letterSpacing = "5px";
+        // dummyPre.style.display = "inline-block";
+        dummyPre.style.width = `${this.cameras.main.displayWidth - 200}px`;
+        dummyPre.style.maxHeight = `${this.cameras.main.displayHeight / 3}px`;
+        dummyPre.style.overflow = "scroll";
+        dummyPre.style.overscrollBehavior = "contain";
+        dummyPre.style.backgroundColor = "white";
+        dummyPre.style.padding = "20px";
+        dummyPre.style.border = "10px solid #00c8ff";
 
-        dummyDiv.style.backgroundColor = "#1c1d21";
-        dummyDiv.style.color = "#c0c5ce";
+        dummyPre.style.backgroundColor = "#1c1d21";
+        dummyPre.style.color = "#c0c5ce";
 
         dummyPre.appendChild(dummyDiv);
         // dummyForm.appendChild(dummyPre);

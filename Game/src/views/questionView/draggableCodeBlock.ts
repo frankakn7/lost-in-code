@@ -73,8 +73,10 @@ export default class DraggableCodeBlock extends Phaser.GameObjects.Container {
         dummyDiv.innerHTML = highlightedCode;
 
         dummyPre.style.fontFamily = "forwardRegular";
+        dummyPre.style.letterSpacing= ""
         dummyPre.style.fontSize = "25px";
         dummyPre.style.lineHeight = "2";
+        dummyPre.style.letterSpacing = "5px"
         // dummyDiv.style.display = "inline-block";
         dummyPre.style.width = `${
             this.scene.cameras.main.displayWidth - 200
