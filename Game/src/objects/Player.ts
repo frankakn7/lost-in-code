@@ -1,5 +1,6 @@
 import { text } from "express";
 import ControlPadScene from "../ui/ControlPadScene";
+import { Vector } from "matter";
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
     private movementSpeed = 10;
@@ -18,11 +19,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     public downPress = false
     public leftPress = false
     public rightPress = false
+    public interactPress = false
 
     constructor(scene, x, y, texture) {
         super(scene, x, y, texture);
         this.scene = scene;
-        this.shadow = this.scene.add.sprite(x, y + this.shadowYOffset, "shadowTexture");
+        this.shadow = this.scene.physics.add.sprite(x, y + this.shadowYOffset, "shadowTexture");
         
         // Physics stuff
         this.scene.physics.world.enable(this);
@@ -32,6 +34,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.flipX = false;
         this.scale = 1;
+        this.setSize(20, 32);
         
         
         // this.scene.physics.world.enableBody(this, 0);
@@ -91,6 +94,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     private updateShadow() {
         // TODO Turn the shadow to an Arcade.Sprite and set its velocity instead of its position
         // (maybe even do an alternative shadow system)
+
+        this.shadow.body.velocity.x = this.body.velocity.x;
+        this.shadow.body.velocity.y = this.body.velocity.y;
         this.shadow.setY(this.y + this.shadowYOffset);
         this.shadow.setX(this.x);
     }

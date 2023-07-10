@@ -3,7 +3,10 @@ import { TilemapConfig } from "../types/tilemapConfig";
 import { Player } from "../objects/Player";
 import PlayerTexture from "../assets/player.png";
 import ShadowTexture from "../assets/shadow.png"
+import DoorTexture from "../assets/door.png"
 import Mask from "../assets/mask.png"
+import InteractiveObject from "../objects/InteractiveObject";
+import { GameObjectMap } from "../gameobjects";
 
 
 
@@ -43,22 +46,20 @@ export default class RoomScene extends Phaser.Scene {
         this.load.image("playerTexture", PlayerTexture);
         this.load.image("shadowTexture", ShadowTexture);
         this.load.image("mask", Mask);
-        
+        this.load.image("door", DoorTexture);
     }
 
     public create() {
         /**
          * Create and add the layers of the tilemap
          */
+        
         const tilemap = this.make.tilemap({ key: "tilemap" });
         const tileset = tilemap.addTilesetImage(this.tilemapConfig.tilesetName, "tilesetImage");
         const floorLayer = tilemap.createLayer(this.tilemapConfig.floorLayer, tileset);
         const collisionLayer = tilemap.createLayer(this.tilemapConfig.collisionLayer, tileset);
         collisionLayer.setCollisionByExclusion([-1], true, false);
 
-        
-        
-        
         /**
          * Double the scale of the layers (doubling size of maps)
          */
@@ -86,6 +87,8 @@ export default class RoomScene extends Phaser.Scene {
         //     maxSpeed: 0.7
         // };
 
+        
+
         // this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
         this.player = new Player(this, 32*3, 32*3, "playerTexture");
         this.physics.add.collider(this.player, collisionLayer);
@@ -97,9 +100,32 @@ export default class RoomScene extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, tilemap.widthInPixels, tilemap.heightInPixels);
         this.cameras.main.setZoom(5, 5);
 
+
+
+        // Instantiate GameObjects
+        tilemap.objects[0].objects.forEach(obj => {
+            let gameobjectID = obj.properties[0]["value"];
+            if (!(gameobjectID in GameObjectMap)) { return; }
+            
+
+            let x = Math.ceil(obj.x / 32) * 32;
+            let y = Math.ceil(obj.y / 32) * 32;
+            
+            let texture = GameObjectMap[gameobjectID].params.texture;
+            let newObj = new GameObjectMap[gameobjectID].class(this, x, y, texture);
+            this.add.existing(newObj);
+            this.physics.add.collider(this.player, newObj);
+
+            // const door = new InteractiveObject(this, 32*5, 32*5, "door");
+            // this.add.existing(door);
+            // this.physics.add.collider(this.player, door);
+        });
+
         const width = this.scale.width
         const height = this.scale.height;
 
+
+        // TODO Put fow stuff into separate methods
         // create fow
         this.fow = this.make.renderTexture({
             width,
@@ -109,6 +135,7 @@ export default class RoomScene extends Phaser.Scene {
         this.fow.fill(0x074e67, 0.8);
 
         // TODO Make this actually render and use instead for the fow
+        // this.fow.draw(door);
         this.fow.draw(floorLayer);
         this.vision = this.make.image({
             x: this.player.x,
