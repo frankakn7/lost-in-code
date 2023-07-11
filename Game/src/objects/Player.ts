@@ -54,6 +54,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.updateMovement(delta);
         this.updateShadow();
         this.updateBreathAnimation(delta, 300, 30);
+        // this.updateBreathAnimation(delta, 500, 30);
         this.updateWalkAnimation(delta, 40, 10);
         
 

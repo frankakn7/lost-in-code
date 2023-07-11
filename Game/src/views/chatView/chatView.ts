@@ -70,7 +70,7 @@ export default class ChatView extends Phaser.Scene {
     }
 
     public preload(){
-        this.load.image("backgroundTile", deviceBackgroundTilePng);
+        
     }
 
     public create() {
