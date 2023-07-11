@@ -5,7 +5,6 @@ import PlayerTexture from "../assets/player.png";
 import ShadowTexture from "../assets/shadow.png"
 import DoorTexture from "../assets/door.png"
 import Mask from "../assets/mask.png"
-import InteractiveObject from "../objects/InteractiveObject";
 import { GameObjectMap } from "../gameobjects";
 
 
