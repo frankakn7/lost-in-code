@@ -1,0 +1,17 @@
+# Use a PHP base image
+FROM php:7.4-cli
+
+# Install the dependencies
+RUN docker-php-ext-install pdo_mysql
+
+# Copy the custom php.ini file into the image
+COPY php.ini /usr/local/etc/php/
+
+# Expose the port the app runs on
+EXPOSE 6000
+
+# Copy the server script into the container
+COPY server.php /server.php
+
+# Run the server when the container starts
+CMD ["php", "-S", "0.0.0.0:6000", "/server.php"]
