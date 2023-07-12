@@ -95,7 +95,19 @@ export default class QuestionView extends Phaser.Scene {
 
         // this.taskManager = new TaskManager(this.questions);
         this.currentQuestion = this.taskManager.getRandomQuestion();
-        this.displayQuestion();
+        if(this.currentQuestion){
+            this.displayQuestion();
+        }else{
+            this.questionText = this.add
+            .text(
+                this.cameras.main.displayWidth / 2,
+                100,
+                "There is nothing to do here",
+                this.textStyle
+            )
+            .setOrigin(0.5, 0);
+            this.showExitButton();
+        }
         // this.exitQuestion();
         // this.add.existing(draggableCodeBlock)
 
@@ -259,7 +271,7 @@ export default class QuestionView extends Phaser.Scene {
         return this.add
             .dom(
                 this.cameras.main.displayWidth / 2,
-                codeBlockY + codeBlockHeight + 50,
+                codeBlockY + codeBlockHeight + 100,
                 inputField
             )
             .setOrigin(0.5, 0);
@@ -497,6 +509,10 @@ export default class QuestionView extends Phaser.Scene {
                 console.log("none");
                 break;
         }
+        this.showExitButton();
+    }
+
+    private showExitButton(): void {
         this.submitButton.destroy(true);
         this.submitButton = new DeviceButton(
             this,

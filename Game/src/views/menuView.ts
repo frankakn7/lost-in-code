@@ -6,6 +6,7 @@ import PlayView from "./playView";
 import AntennaAppTexture from "../assets/ui/apps/Antenna-app-icon.png";
 import ResumeButtonTexture from "../assets/ui/Resume-Button.png";
 import SettingsButtonTexture from "../assets/ui/apps/Settings-app-icon.png";
+import KnowledgeButtonTexture from "../assets/ui/apps/knowledge-app-icon.png";
 import LogoutButtonTexture from "../assets/ui/Logout-Button.png";
 
 export default class MenuView extends Phaser.Scene {
@@ -14,6 +15,7 @@ export default class MenuView extends Phaser.Scene {
 
     public preload() {
         this.load.image("antennaAppTexture", AntennaAppTexture);
+        this.load.image("knowledgeAppTexture", KnowledgeButtonTexture);
         this.load.image("settingsAppTexture", SettingsButtonTexture);
         this.load.image("resumeButtonTexture", ResumeButtonTexture);
         this.load.image("logoutButtonTexture", LogoutButtonTexture);
@@ -68,6 +70,15 @@ export default class MenuView extends Phaser.Scene {
             () => {}
         );
         this.add.existing(chatButton);
+
+        const knowledgeButton = new SpriteButton(
+            this,
+            "knowledgeAppTexture",
+            180,
+            1400,
+            () => {}
+        );
+        this.add.existing(knowledgeButton);
     }
 
     private _resumeGame() {
