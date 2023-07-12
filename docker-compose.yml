@@ -14,6 +14,11 @@ services:
     build: ./game
     ports:
       - "4000:4000"
+    
+  php_executor:
+    build: ./php-server
+    ports:
+      - "6000:6000"
   
   nginx:
     build: ./nginx-proxy
@@ -23,3 +28,4 @@ services:
       - admin_app
       - api
       - game
+      - php_executor
