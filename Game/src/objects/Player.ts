@@ -25,6 +25,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         super(scene, x, y, texture);
         this.scene = scene;
         this.shadow = this.scene.physics.add.sprite(x, y + this.shadowYOffset, "shadowTexture");
+        this.shadow.setDepth(0);
         
         // Physics stuff
         this.scene.physics.world.enable(this);
@@ -35,6 +36,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.flipX = false;
         this.scale = 1;
         this.setSize(20, 32);
+        this.setDepth(2);
         
         
         // this.scene.physics.world.enableBody(this, 0);

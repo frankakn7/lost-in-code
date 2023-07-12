@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
-import tilesetPng from "./assets/tileset/tileset.png";
-import tilemapJson from "./tilemaps/testMap.json";
+import tilesetPng from "./assets/tileset/station_tilemap.png";
+import tilemapJson from "./tilemaps/engineRoom.json";
 import { TilemapConfig } from "./types/tilemapConfig";
 import RoomScene from "./rooms/room";
 import PlayView from "./views/playView";
@@ -16,7 +16,7 @@ const tilemapConfig: TilemapConfig = {
     tilemapJson: tilemapJson,
     floorLayer: "Floor",
     collisionLayer: "Walls",
-    objectsLayer: "GameObjects"
+    objectsLayer: "Objects"
 }
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
