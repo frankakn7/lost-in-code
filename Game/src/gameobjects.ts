@@ -6,5 +6,11 @@ export const GameObjectMap = {
         params: {
             texture: "door"
         }
+    },
+    engine: {
+        class: InteractiveObject,
+        params: {
+            texture: "engine"
+        }
     }
 }
