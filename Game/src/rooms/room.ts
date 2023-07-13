@@ -9,6 +9,8 @@ import { GameObjectMap } from "../gameobjects";
 import DoorTexture from "../assets/gameobjects/door.png";
 import EngineTexture from "../assets/gameobjects/engine.png";
 import InteractiveObject from "../objects/interactiveObject";
+import storyJson from "../story_management/storyFormatExample.json";
+import StoryManager from "../story_management/storyManager";
 
 
 
@@ -96,7 +98,7 @@ export default class RoomScene extends Phaser.Scene {
         
 
         // this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
-        this.player = new Player(this, 32*3, 32*3, "playerTexture");
+        this.player = new Player(this, 32*4, 32*4, "playerTexture");
         this.physics.add.collider(this.player, collisionLayer);
         // this.physics.world.enable(this.player);
         

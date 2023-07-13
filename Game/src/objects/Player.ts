@@ -35,7 +35,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.flipX = false;
         this.scale = 1;
-        this.setSize(20, 32);
+        this.setSize(20, 36);
         this.setDepth(2);
         
         

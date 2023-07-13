@@ -9,6 +9,7 @@ import QuestionView from "./questionView/questionView";
 import TaskManager from "./questionView/taskManager";
 import deviceBackgroundTilePng from "../assets/Device-Background-Tile.png";
 import MenuView from "./menuView";
+import StoryManager from "../story_management/storyManager";
 
 /**
  * Represents the view in which the rooms and player are explorable (default playing view)
@@ -38,6 +39,8 @@ export default class PlayView extends Phaser.Scene {
     private menuView = new MenuView(this);
 
     private taskManager: TaskManager = new TaskManager([]);
+
+    private _storyManager = new StoryManager();
 
     /**
      * Opens the chat view by sending all other scenes to sleep and launching / awaking the chat view scene
@@ -112,15 +115,17 @@ export default class PlayView extends Phaser.Scene {
         this.scene.sleep("pauseChatButtons");
         this.scene.sleep("Room");
 
+        
+
         //If the chat view already exists and is sleeping
         if (this.scene.isSleeping(this.chatView)) {
             //start a new chat flow and awake the scene
-            this.chatView.startNewChatFlow(chatFlow2);
+            this.chatView.startNewChatFlow(this._storyManager.getNextStoryBit("hangar"));
             this.scene.wake(this.chatView);
             //If the chat view hasn't been launched yet
         } else {
             //create a new chat view
-            this.chatView = new ChatView(chatFlow);
+            this.chatView = new ChatView(this._storyManager.getNextStoryBit("hangar"));
             //add chat view to the scene
             this.scene.add("chatView", this.chatView);
             //launch the chat view
