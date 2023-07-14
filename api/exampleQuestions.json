@@ -1,0 +1,24 @@
+{
+    "name": "syntax2",
+    "material": "This is the chapter about syntax. Syntax is something that you should learn. It is done like this etc pp",
+    "curriculum_id": 1,
+    "questions": [
+        {
+            "question_text": "What is php?",
+            "code_text": "",
+            "hint": "",
+            "type": "CHOICE",
+            "difficulty": 1,
+            "chapter_id": 1,
+            "elements": [
+                {
+                    "content": "string",
+                    "element_identifier": "string",
+                    "correct_order_position": "number",
+                    "correct_answers": ["one", "two", "three"],
+                    "is_correct": true
+                }
+            ]
+        }
+    ]
+}
