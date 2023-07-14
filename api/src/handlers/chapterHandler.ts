@@ -1,27 +1,47 @@
 import db from "../db";
-import { QuestionValues, createFullQuestion, extractQuestionsFromRows } from "./questionHandler";
+import {
+    QuestionValues,
+    createFullQuestion,
+    extractQuestionsFromRows,
+} from "./questionHandler";
 
 export type ChapterValue = {
-    id?: number,
-    name: string,
-    material: string,
-    curriculum_id: number,
-    questions: QuestionValues[]
-}
+    id?: number;
+    name: string;
+    material: string;
+    curriculum_id: number;
+    order_position: number;
+    questions: QuestionValues[];
+};
 
 export const createChapterWithQuestions = (requestBody: any): Promise<any> => {
     return new Promise((resolve, reject) => {
         const sql =
-            "INSERT INTO `chapter` (`name`, `material`, `curriculum_id`) VALUES (?, ?, ?);";
-        const params = [requestBody.name, requestBody.material, requestBody.curriculum_id];
-        db.query(sql, params).then(result => {
-            requestBody.questions.forEach((question: QuestionValues) => {
-                createFullQuestion(question).catch(error => reject(error))
+            "INSERT INTO `chapter` (`name`, `material`, `curriculum_id`, `order_position`) VALUES (?, ?, ?, ?);";
+        const params = [
+            requestBody.name,
+            requestBody.material,
+            requestBody.curriculum_id,
+            requestBody.order_position
+        ];
+        db.query(sql, params)
+            .then((result) => {
+                const questionPromises = requestBody.questions.map((question: QuestionValues) => {
+                    question.chapter_id = result.insertId;
+                    return createFullQuestion(question);
+                });
+
+                Promise.all(questionPromises)
+                    .then(() => {
+                        resolve(result);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
             })
-            resolve(result);
-        }).catch(error => {
-            reject(error)
-        });
+            .catch((error) => {
+                reject(error);
+            });
     });
 };
 
@@ -38,15 +58,18 @@ export const extractChaptersFromRows = (rows: any): ChapterValue[] => {
                 name: row.chapter_name,
                 material: row.chapter_material, // assuming it's in the rows
                 curriculum_id: row.chapter_curriculum_id, // assuming it's in the rows
+                order_position: row.chapter_order_position,
                 questions: [],
             };
             chaptersMap.set(row.chapter_id, chapter);
             // Get all rows related to the current chapter
-            const chapterRows = rows.filter((r: any) => chapter && (r.chapter_id === chapter.id));
-    
+            const chapterRows = rows.filter(
+                (r: any) => chapter && r.chapter_id === chapter.id
+            );
+
             // Use the transformQuestionData function to get the questions
             const questions = extractQuestionsFromRows(chapterRows);
-    
+
             // Add the questions to the chapter
             chapter.questions = questions;
         }
@@ -59,9 +82,11 @@ export const getChapterWithQuestions = (id: string): Promise<any> => {
     return new Promise((resolve, reject) => {
         const sql = "SELECT * FROM `chapter_questions` WHERE `chapter_id` = ?;";
         const params = [id];
-        db.query(sql, params).then(results => {
-            let chapters = extractChaptersFromRows(results);
-            resolve(chapters);
-        }).catch(error => reject(error))
-    })
-}
+        db.query(sql, params)
+            .then((results) => {
+                let chapter = extractChaptersFromRows(results)[0];
+                resolve(chapter);
+            })
+            .catch((error) => reject(error));
+    });
+};

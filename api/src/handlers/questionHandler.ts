@@ -57,35 +57,48 @@ export const createFullQuestion = (
     return new Promise((resolve, reject) => {
         createQuestion(requestBody) //Create the most upper level => Question
             .then((result) => {
-                requestBody.elements.forEach(
+                const elementsPromises = requestBody.elements.map(
                     (element: QuestionElementValues) => {
                         element.question_id = result.insertId;
-                        createQuestionElement(element) //Create all the Question elements contained in the question
-                            .then((result) => {
-                                element.correct_answers?.forEach(
-                                    (correctAnswer: string) => {
-                                        let newlyCreatedAnswer: CorrectAnswer =
-                                            {
-                                                answer: correctAnswer,
-                                                question_element_id:
-                                                    result.insertId,
-                                            };
-                                        createCorrectAnswer(
-                                            newlyCreatedAnswer
-                                        ).catch((error) => {
-                                            reject(error);
-                                        }); //Create all the correct answer objects contained in the question element
-                                    }
-                                );
-                            })
-                            .catch((error) => {
-                                reject(error);
+                        console.log(element);
+                        return createQuestionElement(element) //Create all the Question elements contained in the question
+                            .then((elementResult) => {
+                                console.log(elementResult);
+                                if (!element.correct_answers) {
+                                    return;
+                                }
+
+                                const answersPromises =
+                                    element.correct_answers.map(
+                                        (correctAnswer: string) => {
+                                            let newlyCreatedAnswer: CorrectAnswer =
+                                                {
+                                                    answer: correctAnswer,
+                                                    question_element_id:
+                                                        elementResult.insertId,
+                                                };
+                                            console.log(newlyCreatedAnswer);
+                                            return createCorrectAnswer(
+                                                newlyCreatedAnswer
+                                            ); //Create all the correct answer objects contained in the question element
+                                        }
+                                    );
+
+                                return Promise.all(answersPromises);
                             });
                     }
                 );
-                resolve(result);
+
+                Promise.all(elementsPromises)
+                    .then(() => {
+                        resolve(result);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
             })
             .catch((error) => {
+                // console.log(error);
                 reject(error);
             });
     });

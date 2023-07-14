@@ -10,8 +10,8 @@ const router = express.Router();
 router.post("/", (req: Request, res: Response) => {
     const chapter = req.body;
     const sql =
-        "INSERT INTO `chapter` (`name`, `material`, `curriculum_id`) VALUES (?, ?, ?);";
-    const params = [chapter.name, chapter.material, chapter.curriculum_id];
+        "INSERT INTO `chapter` (`name`, `material`, `curriculum_id`, `order_position`) VALUES (?, ?, ?, ?);";
+    const params = [chapter.name, chapter.material, chapter.curriculum_id, chapter.order_position];
     db.query(sql, params)
         .then((results) => {
             res.send(results);
