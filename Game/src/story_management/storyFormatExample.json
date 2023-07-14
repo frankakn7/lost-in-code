@@ -1,0 +1,23 @@
+{
+    "hangar": {
+        "end": {
+            "optionText": "> ./Deactivate 'Communications Relay'",
+            "text": "...<Communications Relay Deactivated>..."
+        },
+        "0": {
+            "optionText": "Start the chat",
+            "text": "Good job astronaut, you have picked up all the tools necessary for further advancement. Over.",
+            "choices": ["end"]
+        },
+        "1": {
+            "optionText": "Start the chat",
+            "text": "Attention, astronaut. We've received visual data indicating a complete breakdown of the ship's machinery... What could have caused this extensive failure?",
+            "choices": ["1a", "end"]
+        },
+        "1a": {
+            "optionText": "I wonder...",
+            "text": "No time for speculation. Astronaut, please proceed with your mission. Over."
+        }
+    },
+    "commonRoom": {}
+}

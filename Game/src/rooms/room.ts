@@ -3,9 +3,14 @@ import { TilemapConfig } from "../types/tilemapConfig";
 import { Player } from "../objects/Player";
 import PlayerTexture from "../assets/player.png";
 import ShadowTexture from "../assets/shadow.png"
-import DoorTexture from "../assets/door.png"
-import Mask from "../assets/mask.png"
+import Mask from "../assets/mask.png";
 import { GameObjectMap } from "../gameobjects";
+
+import DoorTexture from "../assets/gameobjects/door.png";
+import EngineTexture from "../assets/gameobjects/engine.png";
+import InteractiveObject from "../objects/interactiveObject";
+import storyJson from "../story_management/storyFormatExample.json";
+import StoryManager from "../story_management/storyManager";
 
 
 
@@ -20,6 +25,8 @@ export default class RoomScene extends Phaser.Scene {
     public player : Player;
     private vision;
     private fow;
+
+    private _interactiveObjects : Array<InteractiveObject>;
     // private controls;
     
     /**
@@ -46,6 +53,7 @@ export default class RoomScene extends Phaser.Scene {
         this.load.image("shadowTexture", ShadowTexture);
         this.load.image("mask", Mask);
         this.load.image("door", DoorTexture);
+        this.load.image("engine", EngineTexture);
     }
 
     public create() {
@@ -58,6 +66,7 @@ export default class RoomScene extends Phaser.Scene {
         const floorLayer = tilemap.createLayer(this.tilemapConfig.floorLayer, tileset);
         const collisionLayer = tilemap.createLayer(this.tilemapConfig.collisionLayer, tileset);
         collisionLayer.setCollisionByExclusion([-1], true, false);
+        collisionLayer.setDepth(4);
 
         /**
          * Double the scale of the layers (doubling size of maps)
@@ -89,7 +98,7 @@ export default class RoomScene extends Phaser.Scene {
         
 
         // this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
-        this.player = new Player(this, 32*3, 32*3, "playerTexture");
+        this.player = new Player(this, 32*4, 32*4, "playerTexture");
         this.physics.add.collider(this.player, collisionLayer);
         // this.physics.world.enable(this.player);
         
@@ -114,6 +123,7 @@ export default class RoomScene extends Phaser.Scene {
             let newObj = new GameObjectMap[gameobjectID].class(this, x, y, texture);
             this.add.existing(newObj);
             this.physics.add.collider(this.player, newObj);
+            // this._interactiveObjects.push(newObj);
 
             // const door = new InteractiveObject(this, 32*5, 32*5, "door");
             // this.add.existing(door);
@@ -149,6 +159,7 @@ export default class RoomScene extends Phaser.Scene {
 
 
         this.fow.setTint(0x141932);
+        this.fow.setDepth(5);
     }
     
     update (time, delta){
