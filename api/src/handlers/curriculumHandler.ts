@@ -1,3 +1,4 @@
+import { OkPacket } from "mysql";
 import db from "../db";
 import { ChapterValue, createChapterWithQuestions, extractChaptersFromRows } from "./chapterHandler";
 
@@ -12,8 +13,9 @@ export const createFullCurriculum = (requestBody: any): Promise<any> => {
     return new Promise((resolve, reject) => {
         const sql = 'INSERT INTO `curriculum` (`name`, `description`) VALUES (?, ?);'
         const params = [requestBody.name, requestBody.description]
-        db.query(sql,params).then(results => {
+        db.query(sql,params).then((results:any) => {
             const chapterPromises = requestBody.chapters.map((chapter: ChapterValue) => {
+                const okPacket = <OkPacket>results;
                 chapter.curriculum_id = results.insertId;
                 return createChapterWithQuestions(chapter);
             });

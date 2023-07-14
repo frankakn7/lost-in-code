@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
-import db from "../db";
 import bcrypt from "bcrypt"
 import { onlyAllowSelf, requireAdminRole } from "../auth";
+import db from "../db";
 
 const router = express.Router();
 

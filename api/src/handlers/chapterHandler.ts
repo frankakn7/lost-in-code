@@ -1,3 +1,4 @@
+import { OkPacket } from "mysql";
 import db from "../db";
 import {
     QuestionValues,
@@ -25,8 +26,9 @@ export const createChapterWithQuestions = (requestBody: any): Promise<any> => {
             requestBody.order_position
         ];
         db.query(sql, params)
-            .then((result) => {
+            .then((result: any) => {
                 const questionPromises = requestBody.questions.map((question: QuestionValues) => {
+                    const okPacket = <OkPacket>result;
                     question.chapter_id = result.insertId;
                     return createFullQuestion(question);
                 });
