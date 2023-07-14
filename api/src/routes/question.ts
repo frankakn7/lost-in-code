@@ -5,13 +5,14 @@ import {
     createQuestion,
     getFullQuestion,
 } from "../handlers/questionHandler";
+import { requireAdminRole } from "../auth";
 
 const router = express.Router();
 
 /**
  * Create new question
  */
-router.post("/", (req: Request, res: Response) => {
+router.post("/", requireAdminRole, (req: Request, res: Response) => {
     const question = req.body;
     createQuestion(question)
         .then((results) => {
@@ -26,7 +27,7 @@ router.post("/", (req: Request, res: Response) => {
 /**
  * Create new FULL question
  */
-router.post("/full", (req: Request, res: Response) => {
+router.post("/full", requireAdminRole, (req: Request, res: Response) => {
     const question = req.body;
     createFullQuestion(question)
         .then((results) => {
@@ -88,7 +89,7 @@ router.get("/:id/full", (req: Request, res: Response) => {
 /**
  * Update a question
  */
-router.put("/:id", (req: Request, res: Response) => {
+router.put("/:id", requireAdminRole, (req: Request, res: Response) => {
     const questionId = req.params.id;
     const question = req.body;
     const sql =
@@ -115,7 +116,7 @@ router.put("/:id", (req: Request, res: Response) => {
 /**
  * delete a specific question
  */
-router.delete("/:id", (req: Request, res: Response) => {
+router.delete("/:id", requireAdminRole, (req: Request, res: Response) => {
     const questionId = req.params.id;
     const sql = "DELETE FROM `question` WHERE `id` = ?;";
     const params = [questionId];
@@ -134,6 +135,7 @@ router.delete("/:id", (req: Request, res: Response) => {
  */
 router.post(
     "/:questionId/chapters/:chapterId",
+    requireAdminRole,
     (req: Request, res: Response) => {
         const questionId = req.params.questionId;
         const chapterId = req.params.chapterId;

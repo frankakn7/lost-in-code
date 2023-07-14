@@ -4,13 +4,14 @@ import {
     createFullCurriculum,
     getFullCurriculum,
 } from "../handlers/curriculumHandler";
+import { requireAdminRole } from "../auth";
 
 const router = express.Router();
 
 /**
  * create new curriculum
  */
-router.post("/", (req: Request, res: Response) => {
+router.post("/", requireAdminRole, (req: Request, res: Response) => {
     const curriculum = req.body;
     const sql =
         "INSERT INTO `curriculum` (`name`, `description`) VALUES (?, ?);";
@@ -28,7 +29,7 @@ router.post("/", (req: Request, res: Response) => {
 /**
  * create new FULL curriculum
  */
-router.post("/full", (req: Request, res: Response) => {
+router.post("/full", requireAdminRole, (req: Request, res: Response) => {
     createFullCurriculum(req.body)
         .then((results) => {
             res.send(results);
@@ -89,7 +90,7 @@ router.get("/:id/full", (req: Request, res: Response) => {
 /**
  * Update specific curriculum
  */
-router.put("/:id", (req: Request, res: Response) => {
+router.put("/:id", requireAdminRole, (req: Request, res: Response) => {
     const curriculumId = req.params.id;
     const curriculum = req.body;
     const sql =
@@ -108,7 +109,7 @@ router.put("/:id", (req: Request, res: Response) => {
 /**
  * Delete specific curriculum
  */
-router.delete("/:id", (req: Request, res: Response) => {
+router.delete("/:id", requireAdminRole, (req: Request, res: Response) => {
     const curriculumId = req.params.id;
     const sql = "DELETE FROM `curriculum` WHERE `id` = ?;";
     const params = [curriculumId];

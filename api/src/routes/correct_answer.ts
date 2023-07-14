@@ -1,13 +1,14 @@
 import express, { Request, Response } from "express";
 import db from "../db";
 import { createCorrectAnswer } from "../handlers/correctAnswerHandler";
+import { requireAdminRole } from "../auth";
 
 const router = express.Router();
 
 /**
  * Create new correct answer
  */
-router.post("/", (req: Request, res: Response) => {
+router.post("/", requireAdminRole, (req: Request, res: Response) => {
     createCorrectAnswer(req.body)
         .then((results) => {
             res.send(results);
@@ -53,7 +54,7 @@ router.get("/:id", (req: Request, res: Response) => {
 /**
  * Update a question
  */
-router.put("/:id", (req: Request, res: Response) => {
+router.put("/:id", requireAdminRole, (req: Request, res: Response) => {
     const correctAnswerId = req.params.id;
     const correctAnswer = req.body;
     const sql =
@@ -76,7 +77,7 @@ router.put("/:id", (req: Request, res: Response) => {
 /**
  * delete a specific question_element
  */
-router.delete("/:id", (req: Request, res: Response) => {
+router.delete("/:id", requireAdminRole, (req: Request, res: Response) => {
     const correctAnswerId = req.params.id;
     const sql = "DELETE FROM `correct_answer` WHERE `id` = ?;";
     const params = [correctAnswerId];
@@ -95,6 +96,7 @@ router.delete("/:id", (req: Request, res: Response) => {
  */
 router.post(
     "/:correctAnswerId/question_element/:questionElementId",
+    requireAdminRole,
     (req: Request, res: Response) => {
         const correctAnswerId = req.params.correctAnswerId;
         const questionElementId = req.params.questionElementId;

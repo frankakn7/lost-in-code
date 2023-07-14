@@ -1,16 +1,20 @@
 import express, { Request, Response } from "express";
 import db from "../db";
+import bcrypt from "bcrypt"
+import { onlyAllowSelf, requireAdminRole } from "../auth";
 
 const router = express.Router();
 
-/**
- * Create user
- */
-router.post("/", (req, res) => {
+
+router.post("/", requireAdminRole,async (req, res) => {
     const user = req.body;
 
-    const sql = 'INSERT INTO `user` (`username`, `email`, `password_hash`, `group_id`) VALUES (?, ?, ?, ?)';
-    const params = [user.username, user.email, user.password_hash, user.group_id];
+    // Hash the password
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(user.password, saltRounds);
+
+    const sql = 'INSERT INTO `user` (`username`, `email`, `password_hash`, `group_id`, `role`) VALUES (?, ?, ?, ?,?)';
+    const params = [user.username, user.email, hashedPassword, user.group_id,user.role];
 
     db.query(sql, params).then(results => {
         res.send(results);
@@ -23,7 +27,7 @@ router.post("/", (req, res) => {
 /**
  * Get all users
  */
-router.get("/", (req: Request, res: Response) => {
+router.get("/", requireAdminRole,(req: Request, res: Response) => {
     const sql = 'SELECT * FROM `user`;'
     db.query(sql).then(results => {
         res.send(results)
@@ -36,7 +40,7 @@ router.get("/", (req: Request, res: Response) => {
 /**
  * Get specific user
  */
-router.get("/:id", (req: Request, res: Response) => {
+router.get("/:id",onlyAllowSelf, (req: Request, res: Response) => {
     const sql = 'SELECT * FROM user WHERE id = ?;'
     const params = [req.params.id]
     db.query(sql,params).then(results => {
@@ -50,7 +54,7 @@ router.get("/:id", (req: Request, res: Response) => {
 /**
  * Update specific user
  */
-router.put("/:id", (req: Request, res: Response) => {
+router.put("/:id",onlyAllowSelf, (req: Request, res: Response) => {
     const userId = req.params.id;
     const user = req.body;
     const sql = 'UPDATE `user` SET `username` = ?, `email` = ?, `password_hash` = ?, `group_id` = ? WHERE `id` = ?;'
@@ -66,7 +70,7 @@ router.put("/:id", (req: Request, res: Response) => {
 /**
  * Delete specific user
  */
-router.delete("/:id", (req: Request, res: Response) => {
+router.delete("/:id",requireAdminRole, (req: Request, res: Response) => {
     const userId = req.params.id;
     const sql = 'DELETE FROM `user` WHERE `id` = ?'
     const params = [userId];
@@ -81,7 +85,7 @@ router.delete("/:id", (req: Request, res: Response) => {
 /**
  * Move user to specific group
  */
-router.post("/:userId/groups/:groupId", (req: Request, res: Response) => {
+router.post("/:userId/groups/:groupId",requireAdminRole, (req: Request, res: Response) => {
     const groupId = req.params.groupId;
     const userId = req.params.userId;
 

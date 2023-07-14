@@ -1,12 +1,13 @@
 import express, { Request, Response } from "express";
 import db from "../db";
+import { requireAdminRole } from "../auth";
 
 const router = express.Router();
 
 /**
  * create new group
  */
-router.post("/", (req: Request, res: Response) => {
+router.post("/", requireAdminRole, (req: Request, res: Response) => {
     const group = req.body;
 
     const sql =
@@ -26,7 +27,7 @@ router.post("/", (req: Request, res: Response) => {
 /**
  * Get all groups
  */
-router.get("/", (req: Request, res: Response) => {
+router.get("/", requireAdminRole, (req: Request, res: Response) => {
     const sql = "SELECT * FROM `group`;";
 
     db.query(sql)
@@ -42,7 +43,7 @@ router.get("/", (req: Request, res: Response) => {
 /**
  * Get a specific group
  */
-router.get("/:id", (req: Request, res: Response) => {
+router.get("/:id", requireAdminRole, (req: Request, res: Response) => {
     const groupId = req.params.id;
     const sql = "SELECT * FROM `group` WHERE id = ?;";
     const params = [groupId];
@@ -60,7 +61,7 @@ router.get("/:id", (req: Request, res: Response) => {
 /**
  * Update a specific group
  */
-router.put("/:id", (req: Request, res: Response) => {
+router.put("/:id", requireAdminRole, (req: Request, res: Response) => {
     const groupId = req.params.id;
     const group = req.body;
     const sql =
@@ -85,7 +86,7 @@ router.put("/:id", (req: Request, res: Response) => {
 /**
  * Delete a specific group
  */
-router.delete("/:id", (req: Request, res: Response) => {
+router.delete("/:id", requireAdminRole, (req: Request, res: Response) => {
     const groupId = req.params.id;
     const sql = "DELETE FROM `group` WHERE id = ?";
     const params = [groupId];
@@ -102,19 +103,23 @@ router.delete("/:id", (req: Request, res: Response) => {
 /**
  * Set curriculum for specific group
  */
-router.post("/:curriculumId/groups/:groupId", (req: Request, res: Response) => {
-    const curriculumId = req.params.curriculumId;
-    const groupId = req.params.groupId;
-    const sql = "UPDATE `group` SET `curriculum_id` = ? WHERE `id` = ?;";
-    const params = [curriculumId, groupId];
-    db.query(sql, params)
-        .then((results) => {
-            res.send(results);
-        })
-        .catch((error) => {
-            console.error(error);
-            return res.status(500).send("Server error");
-        });
-});
+router.post(
+    "/:curriculumId/groups/:groupId",
+    requireAdminRole,
+    (req: Request, res: Response) => {
+        const curriculumId = req.params.curriculumId;
+        const groupId = req.params.groupId;
+        const sql = "UPDATE `group` SET `curriculum_id` = ? WHERE `id` = ?;";
+        const params = [curriculumId, groupId];
+        db.query(sql, params)
+            .then((results) => {
+                res.send(results);
+            })
+            .catch((error) => {
+                console.error(error);
+                return res.status(500).send("Server error");
+            });
+    }
+);
 
 export default router;

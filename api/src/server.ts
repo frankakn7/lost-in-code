@@ -11,6 +11,8 @@ import questionRouter from "./routes/question"
 import gamestateRouter from "./routes/gamestate"
 import questionElementRouter from "./routes/questions_element"
 import correctAnswerRouter from "./routes/correct_answer"
+import loginRouter from "./routes/login"
+import { authenticateToken } from "./auth";
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -58,6 +60,11 @@ proxy.on("error", (err:Error, req:IncomingMessage, res) => {
 // });
 
 app.use(express.json());
+
+app.use('/api/login', loginRouter);
+
+app.use(authenticateToken);
+
 app.use('/api/users', userRouter);
 app.use('/api/groups', groupRouter)
 app.use('/api/curriculums', curriculumRouter)

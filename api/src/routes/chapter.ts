@@ -1,17 +1,26 @@
 import express, { Request, Response } from "express";
 import db from "../db";
-import { createChapterWithQuestions, getChapterWithQuestions } from "../handlers/chapterHandler";
+import {
+    createChapterWithQuestions,
+    getChapterWithQuestions,
+} from "../handlers/chapterHandler";
+import { requireAdminRole } from "../auth";
 
 const router = express.Router();
 
 /**
  * Create new chapter
  */
-router.post("/", (req: Request, res: Response) => {
+router.post("/", requireAdminRole, (req: Request, res: Response) => {
     const chapter = req.body;
     const sql =
         "INSERT INTO `chapter` (`name`, `material`, `curriculum_id`, `order_position`) VALUES (?, ?, ?, ?);";
-    const params = [chapter.name, chapter.material, chapter.curriculum_id, chapter.order_position];
+    const params = [
+        chapter.name,
+        chapter.material,
+        chapter.curriculum_id,
+        chapter.order_position,
+    ];
     db.query(sql, params)
         .then((results) => {
             res.send(results);
@@ -25,7 +34,7 @@ router.post("/", (req: Request, res: Response) => {
 /**
  * Create new chapter with questions
  */
-router.post("/questions", (req: Request, res: Response) => {
+router.post("/questions", requireAdminRole, (req: Request, res: Response) => {
     createChapterWithQuestions(req.body)
         .then((results) => {
             res.send(results);
@@ -86,7 +95,7 @@ router.get("/:id/questions", (req: Request, res: Response) => {
 /**
  * update specific chapter
  */
-router.put("/:id", (req: Request, res: Response) => {
+router.put("/:id", requireAdminRole, (req: Request, res: Response) => {
     const chapterId = req.params.id;
     const chapter = req.body;
     const sql =
@@ -110,7 +119,7 @@ router.put("/:id", (req: Request, res: Response) => {
 /**
  * Delete sepecific chapter
  */
-router.delete("/:id", (req: Request, res: Response) => {
+router.delete("/:id", requireAdminRole, (req: Request, res: Response) => {
     const chapterId = req.params.id;
     const sql = "DELETE FROM `chapter` WHERE `id` = ?;";
     const params = [chapterId];
@@ -129,6 +138,7 @@ router.delete("/:id", (req: Request, res: Response) => {
  */
 router.post(
     "/:chapterId/curriculums/:curriculumId",
+    requireAdminRole,
     (req: Request, res: Response) => {
         const chapterId = req.params.chapterId;
         const curriculumId = req.params.curriculumId;
