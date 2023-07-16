@@ -23,20 +23,21 @@ import tilesetPng from "../assets/tileset/station_tilemap.png";
 import tilemapJson from "../tilemaps/engineRoom.json";
 import { TilemapConfig } from "../types/tilemapConfig";
 
-const tilemapConfig: TilemapConfig = {
-    tilesetImage: tilesetPng,
-    tilesetName: "Walls-Floors",
-    tilemapJson: tilemapJson,
-    floorLayer: "Floor",
-    collisionLayer: "Walls",
-    objectsLayer: "Objects"
-}
+import commonRoomJson from "../assets/tilemaps/common.json";
+import bridgeJson from "../assets/tilemaps/bridge.json";
+import engineJson from "../assets/tilemaps/engine.json";
+import hangarJson from "../assets/tilemaps/hangar.json";
+import labJson from "../assets/tilemaps/laboratory.json";
 
 
 /**
  * Represents the view in which the rooms and player are explorable (default playing view)
  */
 export default class PlayView extends Phaser.Scene {
+    private roomMap = new Map<string, RoomScene>;
+
+    private doorMap = new Map<string, {}>
+
     /**
      * The current room that the play view should show (and the player is in)
      */
@@ -146,12 +147,12 @@ export default class PlayView extends Phaser.Scene {
         //If the chat view already exists and is sleeping
         if (this.scene.isSleeping(this.chatView)) {
             //start a new chat flow and awake the scene
-            this.chatView.startNewChatFlow(this._storyManager.getNextStoryBit("commonRoom"));
+            this.chatView.startNewChatFlow(this._storyManager.getNextStoryBit(this.currentRoom.getRoomId()));
             this.scene.wake(this.chatView);
             //If the chat view hasn't been launched yet
         } else {
             //create a new chat view
-            this.chatView = new ChatView(this._storyManager.getNextStoryBit("commonRoom"));
+            this.chatView = new ChatView(this._storyManager.getNextStoryBit(this.currentRoom.getRoomId()));
             //add chat view to the scene
             this.scene.add("chatView", this.chatView);
             //launch the chat view
@@ -181,6 +182,7 @@ export default class PlayView extends Phaser.Scene {
         this.load.image("blackHat", blackHatTexture);
         this.load.image("hatBg", hatBg);
         this.load.image("hatBgSelected", hatBgSelected);
+        this.load.image("tilesetImage", tilesetPng);
     }
 
     /**
@@ -192,7 +194,53 @@ export default class PlayView extends Phaser.Scene {
         settingsConfig?: string | Phaser.Types.Scenes.SettingsConfig
     ) {
         super(settingsConfig);
-        this.currentRoom = new RoomScene(tilemapConfig, this);
+
+        this.roomMap.set("hangar", new RoomScene({
+            tilesetImage: tilesetPng,
+            tilesetName: "spac2",
+            tilemapJson: hangarJson,
+            floorLayer: "Floor",
+            collisionLayer: "Walls",
+            objectsLayer: "Objects"
+        }, "hangar", this).setNextRoom("commonRoom").setPlayerPosition(32*12,32*3));
+        this.roomMap.set("commonRoom", new RoomScene({
+            tilesetImage: tilesetPng,
+            tilesetName: "spac2",
+            tilemapJson: commonRoomJson,
+            floorLayer: "Floor",
+            collisionLayer: "Walls",
+            objectsLayer: "Objects"
+        }, "commonRoom", this).setNextRoom("engine").setPlayerPosition(32*2, 32*10));
+        this.roomMap.set("engine", new RoomScene({
+            tilesetImage: tilesetPng,
+            tilesetName: "spac2",
+            tilemapJson: engineJson,
+            floorLayer: "Floor",
+            collisionLayer: "Walls",
+            objectsLayer: "Objects"
+        }, "engine", this).setNextRoom("laboratory").setPlayerPosition(32*2, 32*10));
+        this.roomMap.set("laboratory", new RoomScene({
+            tilesetImage: tilesetPng,
+            tilesetName: "spac2",
+            tilemapJson: labJson,
+            floorLayer: "Floor",
+            collisionLayer: "Walls",
+            objectsLayer: "Objects"
+        }, "laboratory", this).setNextRoom("bridge").setPlayerPosition(32*2, 32*10));
+        this.roomMap.set("bridge", new RoomScene({
+            tilesetImage: tilesetPng,
+            tilesetName: "spac2",
+            tilemapJson: bridgeJson,
+            floorLayer: "Floor",
+            collisionLayer: "Walls",
+            objectsLayer: "Objects"
+        }, "bridge", this).setPlayerPosition(32*2, 32*10));
+        
+        
+        
+
+
+        this.currentRoom = this.roomMap.get("hangar");
     }
 
     /**
@@ -203,20 +251,23 @@ export default class PlayView extends Phaser.Scene {
         return this.currentRoom;
     }
 
-    /**
-     * Switch the current room scene with the new room scene
-     * @param newRoom the new room to be displayed
-     */
-    public switchCurrentRoom(newRoom: RoomScene) {
-        this.scene.stop(this.currentRoom).launch(newRoom);
-        this.currentRoom = newRoom;
+
+    public getToRoomViaId(id: string) {
+        let nextRoom = this.roomMap.get(id);
+        this.scene.stop(this.currentRoom)
+        this.scene.launch(this.roomMap.get(id));
+        this.currentRoom = nextRoom;
     }
 
     public create() {
         console.log("Launched");
 
         // Adds the scene and launches it... (if active is set to true on added scene it is launched directly)
-        this.scene.add("currentRoom", this.currentRoom);
+        
+        this.roomMap.forEach((value, key) => {
+            this.scene.add(key, this.roomMap.get(key));
+        })
+
         this.scene.launch(this.currentRoom);
 
         // TODO: Check if mobile
@@ -229,9 +280,9 @@ export default class PlayView extends Phaser.Scene {
         this.scene.add("controlPad", this.controlPad);
         this.scene.launch(this.controlPad);
 
-        this.scene.get('Room').events.on('interacted_question_object', () => {
-            this.openQuestionView();
-        });
+        // this.scene.get('Room').events.on('interacted_question_object', () => {
+        //     this.openQuestionView();
+        // });
         this.scene.add("menu", this.menuView);
     }
 
@@ -273,6 +324,7 @@ export default class PlayView extends Phaser.Scene {
             this.pauseChatButtons.phonePressed = false;
             //open the chat view
             this.openChatView();
+            // this.getToRoomViaId("laboratory");
             // this.openQuestionView();
         }
 

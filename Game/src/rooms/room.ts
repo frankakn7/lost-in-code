@@ -26,6 +26,10 @@ export default class RoomScene extends Phaser.Scene {
     public player : Player;
     private vision;
     private fow;
+    private _roomId;
+    private _playerDefaultX = 32*4;
+    private _playerDefaultY = 32*4;
+    private _nextRoom = "hangar";
 
     private _interactiveObjects : Array<InteractiveObject>;
     // private controls;
@@ -39,21 +43,23 @@ export default class RoomScene extends Phaser.Scene {
      */
     constructor(
         tilemapConfig: TilemapConfig,
+        roomId: string,
         playView : PlayView
         // settingsConfig?: string | Phaser.Types.Scenes.SettingsConfig
     ) {
-        super("Room");
+        super("Room_" + roomId);
         this.tilemapConfig = tilemapConfig;
+        
         this._playView = playView;
+        this._roomId = roomId;
     }
 
     public preload() {
         /**
          * Load the files
          */
-        this.load.image("tilesetImage", this.tilemapConfig.tilesetImage);
         const tilemapJson = this.tilemapConfig.tilemapJson;
-        this.load.tilemapTiledJSON("tilemap", tilemapJson);
+        this.load.tilemapTiledJSON("tilemap" + this._roomId, tilemapJson);
         this.load.image("playerTexture", PlayerTexture);
         this.load.image("shadowTexture", ShadowTexture);
         this.load.image("mask", Mask);
@@ -61,12 +67,16 @@ export default class RoomScene extends Phaser.Scene {
         this.load.image("engine", EngineTexture);
     }
 
+    public getRoomId() {
+        return this._roomId;
+    }
+
     public create() {
         /**
          * Create and add the layers of the tilemap
          */
         
-        const tilemap = this.make.tilemap({ key: "tilemap" });
+        const tilemap = this.make.tilemap({ key: "tilemap" + this._roomId });
         const tileset = tilemap.addTilesetImage(this.tilemapConfig.tilesetName, "tilesetImage");
         const floorLayer = tilemap.createLayer(this.tilemapConfig.floorLayer, tileset);
         const collisionLayer = tilemap.createLayer(this.tilemapConfig.collisionLayer, tileset);
@@ -105,7 +115,7 @@ export default class RoomScene extends Phaser.Scene {
 
         // this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
         // TODO This is the worst code ever written you shouldnt be using this.scene x 4
-        this.player = new Player(this, 32*4, 32*4, "playerTexture", this._playView);
+        this.player = new Player(this, this._playerDefaultX, this._playerDefaultY, "playerTexture", this._playView);
         this.physics.add.collider(this.player, collisionLayer);
         // this.physics.world.enable(this.player);
         
@@ -118,16 +128,24 @@ export default class RoomScene extends Phaser.Scene {
 
 
         // Instantiate GameObjects
+    
         tilemap.objects[0].objects.forEach(obj => {
-            let gameobjectID = obj.properties[0]["value"];
+            if (!obj.properties) return;
+            let gameobjectID = "";
+            obj.properties.forEach(p => {
+                if (p["name"] == "gameobject_id") gameobjectID = p["value"];
+            });
             if (!(gameobjectID in GameObjectMap)) { return; }
+            
             
 
             let x = Math.ceil(obj.x / 32) * 32;
             let y = Math.ceil(obj.y / 32) * 32;
             
-            let texture = GameObjectMap[gameobjectID].params.texture;
-            let newObj = new GameObjectMap[gameobjectID].class(this, x, y, texture);
+            let params = GameObjectMap[gameobjectID].params
+            let texture = params.texture;
+            
+            let newObj = new GameObjectMap[gameobjectID].class(this, this, x, y, params);
             this.add.existing(newObj);
             this.physics.add.collider(this.player, newObj);
             // this._interactiveObjects.push(newObj);
@@ -176,10 +194,34 @@ export default class RoomScene extends Phaser.Scene {
             this.fow.setX(this.player.x);
             this.fow.setY(this.player.y);
         }
+
+        
             // update the camera controls every frame
     //     this.controls.update(delta);
         
         // TODO Would not be required if player was registered properly
         
+    }
+
+    public getPlayView() {
+        return this._playView;
+    }
+
+    public setPlayerPosition(x, y) {
+        if (this.player == undefined) {
+            this._playerDefaultX = x;
+            this._playerDefaultY = y;
+        } else this.player.setPosition(x, y);
+
+        return this;
+    }
+
+    public setNextRoom(roomId: string) {
+        this._nextRoom = roomId;
+        return this;
+    }
+
+    public getNextRoom() {
+        return this._nextRoom;
     }
 }

@@ -41,7 +41,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.flipX = false;
         this.scale = 1;
-        this.setSize(20, 36);
+        this.setSize(20, 32);
         this.setDepth(2);
         
         
@@ -152,12 +152,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             if (!this.scene.textures.exists(textureKey))
                 renderTexture.saveTexture(textureKey);
             this.setTexture(textureKey);
-            // this.setSize(20, 36);
-            this.body.setSize(20, 36);
+            // this.setSize(20, 32);
+            this.body.setSize(20, 32);
             this.body.setOffset(6, 30);
         } else {
             this.setTexture("playerTexture");
-            this.body.setSize(20, 36);
+            this.body.setSize(20, 32);
             this.body.setOffset(6, 0);
         }
 
