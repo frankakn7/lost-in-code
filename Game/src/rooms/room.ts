@@ -11,6 +11,7 @@ import EngineTexture from "../assets/gameobjects/engine.png";
 import InteractiveObject from "../objects/interactiveObject";
 import storyJson from "../story_management/storyFormatExample.json";
 import StoryManager from "../story_management/storyManager";
+import PlayView from "../views/playView";
 
 
 
@@ -28,6 +29,8 @@ export default class RoomScene extends Phaser.Scene {
 
     private _interactiveObjects : Array<InteractiveObject>;
     // private controls;
+
+    private _playView;
     
     /**
      * Room constructor
@@ -36,10 +39,12 @@ export default class RoomScene extends Phaser.Scene {
      */
     constructor(
         tilemapConfig: TilemapConfig,
+        playView : PlayView
         // settingsConfig?: string | Phaser.Types.Scenes.SettingsConfig
     ) {
         super("Room");
         this.tilemapConfig = tilemapConfig;
+        this._playView = playView;
     }
 
     public preload() {
@@ -67,6 +72,7 @@ export default class RoomScene extends Phaser.Scene {
         const collisionLayer = tilemap.createLayer(this.tilemapConfig.collisionLayer, tileset);
         collisionLayer.setCollisionByExclusion([-1], true, false);
         collisionLayer.setDepth(4);
+
 
         /**
          * Double the scale of the layers (doubling size of maps)
@@ -98,7 +104,8 @@ export default class RoomScene extends Phaser.Scene {
         
 
         // this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
-        this.player = new Player(this, 32*4, 32*4, "playerTexture");
+        // TODO This is the worst code ever written you shouldnt be using this.scene x 4
+        this.player = new Player(this, 32*4, 32*4, "playerTexture", this._playView);
         this.physics.add.collider(this.player, collisionLayer);
         // this.physics.world.enable(this.player);
         

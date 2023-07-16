@@ -11,6 +11,28 @@ import deviceBackgroundTilePng from "../assets/Device-Background-Tile.png";
 import MenuView from "./menuView";
 import StoryManager from "../story_management/storyManager";
 
+import strawHatTexture from "../assets/hats/strawHat.png";
+import sorcerersHatTexture from "../assets/hats/redHat.png";
+import blackHatTexture from "../assets/hats/blackHat.png";
+import hatBg from "../assets/hats/hatBg.png";
+import hatBgSelected from "../assets/hats/hatBgSelected.png";
+import { HatMap } from "../hats/hats";
+import HatView from "./hatView/hatView";
+
+import tilesetPng from "../assets/tileset/station_tilemap.png";
+import tilemapJson from "../tilemaps/engineRoom.json";
+import { TilemapConfig } from "../types/tilemapConfig";
+
+const tilemapConfig: TilemapConfig = {
+    tilesetImage: tilesetPng,
+    tilesetName: "Walls-Floors",
+    tilemapJson: tilemapJson,
+    floorLayer: "Floor",
+    collisionLayer: "Walls",
+    objectsLayer: "Objects"
+}
+
+
 /**
  * Represents the view in which the rooms and player are explorable (default playing view)
  */
@@ -41,6 +63,10 @@ export default class PlayView extends Phaser.Scene {
     private taskManager: TaskManager = new TaskManager([]);
 
     private _storyManager = new StoryManager();
+
+    public hatMap = HatMap;
+
+    public hatView = new HatView(this);
 
     /**
      * Opens the chat view by sending all other scenes to sleep and launching / awaking the chat view scene
@@ -120,12 +146,12 @@ export default class PlayView extends Phaser.Scene {
         //If the chat view already exists and is sleeping
         if (this.scene.isSleeping(this.chatView)) {
             //start a new chat flow and awake the scene
-            this.chatView.startNewChatFlow(this._storyManager.getNextStoryBit("hangar"));
+            this.chatView.startNewChatFlow(this._storyManager.getNextStoryBit("commonRoom"));
             this.scene.wake(this.chatView);
             //If the chat view hasn't been launched yet
         } else {
             //create a new chat view
-            this.chatView = new ChatView(this._storyManager.getNextStoryBit("hangar"));
+            this.chatView = new ChatView(this._storyManager.getNextStoryBit("commonRoom"));
             //add chat view to the scene
             this.scene.add("chatView", this.chatView);
             //launch the chat view
@@ -150,6 +176,11 @@ export default class PlayView extends Phaser.Scene {
 
     public preload() {
         this.load.image("backgroundTile", deviceBackgroundTilePng);
+        this.load.image("strawHat", strawHatTexture);
+        this.load.image("sorcerersHat", sorcerersHatTexture);
+        this.load.image("blackHat", blackHatTexture);
+        this.load.image("hatBg", hatBg);
+        this.load.image("hatBgSelected", hatBgSelected);
     }
 
     /**
@@ -158,11 +189,10 @@ export default class PlayView extends Phaser.Scene {
      * @param settingsConfig the standard settingsConfig object used for all scenes
      */
     constructor(
-        initialRoom: RoomScene,
         settingsConfig?: string | Phaser.Types.Scenes.SettingsConfig
     ) {
         super(settingsConfig);
-        this.currentRoom = initialRoom;
+        this.currentRoom = new RoomScene(tilemapConfig, this);
     }
 
     /**
@@ -202,7 +232,8 @@ export default class PlayView extends Phaser.Scene {
         this.scene.get('Room').events.on('interacted_question_object', () => {
             this.openQuestionView();
         });
-        this.scene.add("menu", this.menuView);
+        // this.scene.add("menu", this.menuView);
+        this.scene.add("hats", this.hatView);
     }
 
     //for testing purposes
@@ -248,12 +279,13 @@ export default class PlayView extends Phaser.Scene {
 
         if (this.pauseChatButtons.pausePressed) {
             this.pauseChatButtons.pausePressed = false;
-            console.log(this.menuView);
-            this.scene.launch(this.menuView);   
+            this.scene.launch(this.hatView);   
 
             this.pauseOrResumeGame(true);
         }
+
     }
+
 
     public pauseOrResumeGame :Function = (pause) =>{
         if (pause) {

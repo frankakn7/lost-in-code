@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
 import ChatFlow from "../views/chatView/chatFlow";
-import storyJson from "./storyFormatExample.json";
+import storyJson from "../assets/story.json";
 import { ChatFlowNode } from "../views/chatView/chatFlowNode";
 import { json } from "express";
 

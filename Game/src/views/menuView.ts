@@ -8,10 +8,13 @@ import ResumeButtonTexture from "../assets/ui/Resume-Button.png";
 import SettingsButtonTexture from "../assets/ui/apps/Settings-app-icon.png";
 import KnowledgeButtonTexture from "../assets/ui/apps/knowledge-app-icon.png";
 import LogoutButtonTexture from "../assets/ui/Logout-Button.png";
+import HatView from "./hatView/hatView";
 
 export default class MenuView extends Phaser.Scene {
     private _tilesprite : Phaser.GameObjects.TileSprite;
     private _playView : PlayView;
+    
+    private hatView : HatView;
 
     public preload() {
         this.load.image("antennaAppTexture", AntennaAppTexture);
@@ -27,6 +30,7 @@ export default class MenuView extends Phaser.Scene {
     ) {
         super(settingsConfig);
         this._playView = playView;
+        // this.hatView = new HatView();
     }
 
     public create() {
@@ -79,10 +83,27 @@ export default class MenuView extends Phaser.Scene {
             () => {}
         );
         this.add.existing(knowledgeButton);
+
+        const hatButton = new SpriteButton(
+            this,
+            "knowledgeAppTexture",
+            400,
+            1400,
+            () => {
+            }
+        );
+        this.add.existing(hatButton);
+        // this.scene.add("scene_key", new HatView(this.scene));
+        
     }
 
     private _resumeGame() {
         this.scene.sleep(this);
         this._playView.pauseOrResumeGame(false);
+    }
+
+    private openSubMenu(menu) {
+        this.scene.launch(this.hatView);
+        this.scene.sleep();
     }
 }
