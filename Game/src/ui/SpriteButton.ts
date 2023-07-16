@@ -3,7 +3,6 @@ import * as Phaser from "phaser";
 export default class SpriteButton extends Phaser.GameObjects.Sprite {
     public isPressed : boolean;
 
-    private _textureString : string;
     private _texture : Phaser.GameObjects.Image;
 
     private _x : number;
@@ -17,22 +16,23 @@ export default class SpriteButton extends Phaser.GameObjects.Sprite {
     constructor(
         scene: Phaser.Scene,
 
-        textureString: string,
+        texture,
         x: number,
         y: number,
         func: Function,
         height: number = 180,
-        width: number = 180
+        width: number = 180,
+        scale: number = 1
     ) {
-        super(scene, x, y, textureString);
+        super(scene, x, y, texture);
         this._x = x;
         this._y = y;
-        this._textureString = textureString;
         this._height = height;
         this._width = width;
         this._onClick = func;
             
         this.setOrigin(0.5, 0.5)
+        this.setScale(scale);
         this.setInteractive()
         this.on("pointerdown", () => {this._onClick();})
     }

@@ -1,15 +1,19 @@
 import { text } from "express";
 import ControlPadScene from "../ui/ControlPadScene";
 import { Vector } from "matter";
+import PlayView from "../views/playView";
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
     private movementSpeed = 10;
     private _breathCalcHelperVar = 0;
     private _walkingRotationHelperVar = 0;
     private _isMoving = false;
+    private _playView : PlayView;
 
     private shadow : Phaser.GameObjects.Sprite;
     private shadowYOffset = 0;
+
+    private hatYOffset = -16;
 
     private keys;
 
@@ -21,8 +25,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     public rightPress = false
     public interactPress = false
 
-    constructor(scene, x, y, texture) {
+    constructor(scene, x, y, texture, playView) {
         super(scene, x, y, texture);
+        this._playView = playView;
+
         this.scene = scene;
         this.shadow = this.scene.physics.add.sprite(x, y + this.shadowYOffset, "shadowTexture");
         this.shadow.setDepth(0);
@@ -58,9 +64,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.updateBreathAnimation(delta, 300, 30);
         // this.updateBreathAnimation(delta, 500, 30);
         this.updateWalkAnimation(delta, 40, 10);
-        
-
-        
+        this.updateHat();
     }
 
     private updateBreathAnimation(delta: number, breathSpeed: number, breathScope: number) {
@@ -128,4 +132,35 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     public getIsMoving() {
         return this._isMoving;
     }
+
+    public updateHat() {
+        if (this._playView.hatView == undefined) {
+            return;
+        }
+        
+        // console.log(this._playView.hatView.getSelectedHatId())
+        
+        let hatId = this._playView.hatView.getSelectedHatId();
+        if (this._playView.hatView.getSelectedHatId() != "None") {
+            const width = 32;
+            const height = 64;
+            let renderTexture = this.scene.make.renderTexture({width, height}, false);
+            renderTexture.draw("playerTexture", 0, 32);
+            renderTexture.draw(this._playView.hatMap[hatId].texture, 0, 32 + this.hatYOffset);
+
+            let textureKey = "playerTextureWith" + hatId;
+            if (!this.scene.textures.exists(textureKey))
+                renderTexture.saveTexture(textureKey);
+            this.setTexture(textureKey);
+            // this.setSize(20, 36);
+            this.body.setSize(20, 36);
+            this.body.setOffset(6, 30);
+        } else {
+            this.setTexture("playerTexture");
+            this.body.setSize(20, 36);
+            this.body.setOffset(6, 0);
+        }
+
+    }
+
 }

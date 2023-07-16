@@ -1,7 +1,4 @@
 import * as Phaser from "phaser";
-import tilesetPng from "./assets/tileset/station_tilemap.png";
-import tilemapJson from "./tilemaps/engineRoom.json";
-import { TilemapConfig } from "./types/tilemapConfig";
 import RoomScene from "./rooms/room";
 import PlayView from "./views/playView";
 import ChatView from "./views/chatView/chatView";
@@ -10,14 +7,6 @@ import './font.css';
 /**
  * Testing the tile config
  */
-const tilemapConfig: TilemapConfig = {
-    tilesetImage: tilesetPng,
-    tilesetName: "Walls-Floors",
-    tilemapJson: tilemapJson,
-    floorLayer: "Floor",
-    collisionLayer: "Walls",
-    objectsLayer: "Objects"
-}
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
@@ -28,7 +17,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
         default: "arcade",
         arcade: {
             gravity: { y: 0 },
-            debug: false,
+            debug: true,
         },
     },
     input: {
@@ -44,7 +33,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
         autoRound: true
 
     },
-    scene: new PlayView(new RoomScene(tilemapConfig/*, "Room"*/),"Play"),
+    scene: new PlayView("Play"),
     //scene: new ChatView(),
     parent: "game",
     dom: {
