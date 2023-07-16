@@ -25,7 +25,7 @@ export default class HatView extends Phaser.Scene {
         playView: PlayView,
         settingsConfig?: string | Phaser.Types.Scenes.SettingsConfig
     ) {
-        super(settingsConfig);
+        super("Hat View");
         this._playView = playView;
     }
 
@@ -37,7 +37,7 @@ export default class HatView extends Phaser.Scene {
             "returnButtonTexture",
             180,
             180,
-            () => {this._resumeGame()}
+            () => {this._backToMenu()}
         );
         this.add.existing(resumeButton);
 
@@ -55,7 +55,7 @@ export default class HatView extends Phaser.Scene {
                 counter++;
 
                 let x = (this.scale.width / (this._columns + 1)) * counter;
-                let y = 600;
+                let y = 1000;
 
                 const width = 32;
                 const height = 32;
@@ -110,7 +110,7 @@ export default class HatView extends Phaser.Scene {
         let noneButton = new DeviceButton(
             this,
             this.cameras.main.displayWidth / 2 - 150,
-            1100,
+            1400,
             300,
             () => {
                 this._selectedHatId = "None";
@@ -133,9 +133,9 @@ export default class HatView extends Phaser.Scene {
         return this._selectedHatId;
     }
 
-    // TODO IMPORTANT: Remove this as soon as menu class works
-    private _resumeGame() {
-        this.scene.sleep(this);
-        this._playView.pauseOrResumeGame(false);
+    
+    private _backToMenu() {
+        this._playView.menuView.scene.resume();
+        this.scene.sleep();
     }
 }

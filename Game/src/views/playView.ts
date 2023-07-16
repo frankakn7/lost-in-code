@@ -58,7 +58,7 @@ export default class PlayView extends Phaser.Scene {
 
     private questionView: QuestionView;
     
-    private menuView = new MenuView(this);
+    public menuView = new MenuView(this);
 
     private taskManager: TaskManager = new TaskManager([]);
 
@@ -232,8 +232,7 @@ export default class PlayView extends Phaser.Scene {
         this.scene.get('Room').events.on('interacted_question_object', () => {
             this.openQuestionView();
         });
-        // this.scene.add("menu", this.menuView);
-        this.scene.add("hats", this.hatView);
+        this.scene.add("menu", this.menuView);
     }
 
     //for testing purposes
@@ -279,7 +278,7 @@ export default class PlayView extends Phaser.Scene {
 
         if (this.pauseChatButtons.pausePressed) {
             this.pauseChatButtons.pausePressed = false;
-            this.scene.launch(this.hatView);   
+            this.scene.launch(this.menuView);   
 
             this.pauseOrResumeGame(true);
         }
