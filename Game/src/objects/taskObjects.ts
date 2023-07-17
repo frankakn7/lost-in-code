@@ -9,6 +9,8 @@ export default class TaskObject extends InteractiveObject {
     private _subscribed: boolean = false;
     private _isStoryObject: boolean = false;
 
+    private _isFinished = false;
+
     constructor(
         scene: Phaser.Scene,
         room: RoomScene,
@@ -38,9 +40,16 @@ export default class TaskObject extends InteractiveObject {
     }
 
     public setDone() {
-        this._isOpenRightNow = true;
-        if (this._isStoryObject) {
-            this.room.getPlayView().pullNextStoryBit();
+        if (!this.isFinished) {
+            if (this._isStoryObject) {
+                this._isFinished = true;
+                this.room.getPlayView().pullNextStoryBit();
+            }
         }
+        
+    }
+
+    public isFinished() {
+        return this._isFinished;
     }
 }

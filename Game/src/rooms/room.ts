@@ -13,6 +13,7 @@ import InteractiveObject from "../objects/interactiveObject";
 import storyJson from "../story_management/storyFormatExample.json";
 import StoryManager from "../story_management/storyManager";
 import PlayView from "../views/playView";
+import TaskObject from "../objects/taskObjects";
 
 
 
@@ -33,6 +34,7 @@ export default class RoomScene extends Phaser.Scene {
     private _nextRoom = "hangar";
 
     private _interactiveObjects = [];
+    private _taskObjects = [];
     // private controls;
 
     private _playView;
@@ -151,6 +153,9 @@ export default class RoomScene extends Phaser.Scene {
             this.add.existing(newObj);
             this.physics.add.collider(this.player, newObj);
             this._interactiveObjects.push(newObj);
+            if (newObj instanceof TaskObject) {
+                this._taskObjects.push(newObj);
+            }
 
             // const door = new InteractiveObject(this, 32*5, 32*5, "door");
             // this.add.existing(door);
@@ -225,5 +230,15 @@ export default class RoomScene extends Phaser.Scene {
 
     public getNextRoom() {
         return this._nextRoom;
+    }
+
+    public saveAll() {
+        
+        let res = []
+        return this._taskObjects.forEach(o => {
+            console.log(o);
+            res.push(o);
+        });
+        return res;
     }
 }

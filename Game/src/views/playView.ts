@@ -329,7 +329,8 @@ export default class PlayView extends Phaser.Scene {
             //open the chat view
             // this.openChatView();
             // this.getToRoomViaId("laboratory");
-            // this.openQuestionView();
+            console.log(this.saveAllToJSONString());
+            
         }
 
         if (this.pauseChatButtons.pausePressed) {
@@ -354,9 +355,11 @@ export default class PlayView extends Phaser.Scene {
     }
 
     public saveAllToJSONString() {
+        
         return JSON.stringify({
             hats: this.hatView.saveAll(),
             currentRoom: this.getCurrentRoom().getRoomId()
+            // taskObjects: this.getCurrentRoom().saveAll()
         });
     }
 }
