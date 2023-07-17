@@ -18,7 +18,7 @@ export default class HatObject extends InteractiveObject {
         this.body.enable = false;
         this.body.setOffset(0, 0);
 
-    
+        
         properties.forEach(p => {
             if (p["name"] == "hat_id")  {
                 this._hatId = p["value"];
@@ -27,6 +27,7 @@ export default class HatObject extends InteractiveObject {
 
         if (this._hatId in HatMap)
             this.setTexture(HatMap[this._hatId].texture);
+        else this.destroy();
     }
 
     public interact(): void {
