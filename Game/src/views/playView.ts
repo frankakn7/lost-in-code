@@ -323,9 +323,9 @@ export default class PlayView extends Phaser.Scene {
             //prevent phone button from being continuously pressed by accident
             this.pauseChatButtons.phonePressed = false;
             //open the chat view
-            this.openChatView();
+            // this.openChatView();
             // this.getToRoomViaId("laboratory");
-            // this.openQuestionView();
+            this.openQuestionView();
         }
 
         if (this.pauseChatButtons.pausePressed) {
