@@ -27,6 +27,11 @@ export default class HatObject extends InteractiveObject {
 
         if (this._hatId in HatMap)
             this.setTexture(HatMap[this._hatId].texture);
+
+
+        if (this.room.getPlayView().hatView.unlockedHats.includes(this._hatId)) {            
+            this.destroy();
+        }
     }
 
     public interact(): void {

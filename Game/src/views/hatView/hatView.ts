@@ -47,6 +47,14 @@ export default class HatView extends Phaser.Scene {
         this.drawHatButtons();
     }
 
+    private loadData() {
+        this._playView.getState().hats.unlockedHats.forEach(hat => {
+            this.unlockedHats.push(hat);
+        });
+
+        this._selectedHatId = this._playView.getState().hats.selectedHat ? this._playView.getState().hats.selectedHat : "None";
+    }
+
     public drawHatButtons() {
         let hatMap = this._playView.hatMap;
 

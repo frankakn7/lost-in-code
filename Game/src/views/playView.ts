@@ -41,6 +41,8 @@ import labJson from "../assets/tilemaps/laboratory.json";
 export default class PlayView extends Phaser.Scene {
     private roomMap = new Map<string, RoomScene>;
 
+    private _state: any;
+
     /**
      * The current room that the play view should show (and the player is in)
      */
@@ -365,7 +367,8 @@ export default class PlayView extends Phaser.Scene {
             //open the chat view
             // this.openChatView();
             // this.getToRoomViaId("laboratory");
-            this.openQuestionView();
+            // this.openQuestionView();
+            console.log(this.saveAllToJSONString());
         }
 
         if (this.pauseChatButtons.pausePressed) {
@@ -396,5 +399,9 @@ export default class PlayView extends Phaser.Scene {
             currentRoom: this.getCurrentRoom().getRoomId(),
             taskObjects: this.getCurrentRoom().saveAll()
         });
+    }
+
+    public getState() {
+        return this._state;
     }
 }

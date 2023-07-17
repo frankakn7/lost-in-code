@@ -150,13 +150,20 @@ export default class RoomScene extends Phaser.Scene {
             let texture = params.texture;
             
             let newObj = new GameObjectMap[gameobjectID].class(this, this, x, y, params, obj.properties);
-            this.add.existing(newObj);
-            this.physics.add.collider(this.player, newObj);
+
+            // The ultimate null check
+            if (!newObj.active && newObj.scene == null) {
+                return;
+            }
+            
             this._interactiveObjects.push(newObj);
             if (newObj instanceof TaskObject) {
                 this._taskObjects.push(newObj);
             }
 
+            this.add.existing(newObj);
+            if (newObj.exists)
+                this.physics.add.collider(this.player, newObj);
             // const door = new InteractiveObject(this, 32*5, 32*5, "door");
             // this.add.existing(door);
             // this.physics.add.collider(this.player, door);
