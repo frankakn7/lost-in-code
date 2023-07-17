@@ -233,11 +233,9 @@ export default class RoomScene extends Phaser.Scene {
     }
 
     public saveAll() {
-        
         let res = []
-        return this._taskObjects.forEach(o => {
-            console.log(o);
-            res.push(o);
+        this._taskObjects.forEach(o => {
+            res.push(o.isFinished());
         });
         return res;
     }

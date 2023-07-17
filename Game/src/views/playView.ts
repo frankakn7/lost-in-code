@@ -15,6 +15,8 @@ import strawHatTexture from "../assets/hats/strawHat.png";
 import sorcerersHatTexture from "../assets/hats/redHat.png";
 import truckerCapTexture from "../assets/hats/truckerCap.png"
 import blackHatTexture from "../assets/hats/blackHat.png";
+import crownTexture from "../assets/hats/crown.png";
+import pirateHat from "../assets/hats/pirateHat.png";
 import hatBg from "../assets/hats/hatBg.png";
 import hatBgSelected from "../assets/hats/hatBgSelected.png";
 import { HatMap } from "../hats/hats";
@@ -187,6 +189,8 @@ export default class PlayView extends Phaser.Scene {
         this.load.image("hatBg", hatBg);
         this.load.image("hatBgSelected", hatBgSelected);
         this.load.image("tilesetImage", tilesetPng);
+        this.load.image("crown", crownTexture);
+        this.load.image("pirateHat", pirateHat);
     }
 
     /**
@@ -327,6 +331,7 @@ export default class PlayView extends Phaser.Scene {
             //prevent phone button from being continuously pressed by accident
             this.pauseChatButtons.phonePressed = false;
             //open the chat view
+            // console.log("Clicked!");
             // this.openChatView();
             // this.getToRoomViaId("laboratory");
             console.log(this.saveAllToJSONString());
@@ -358,8 +363,8 @@ export default class PlayView extends Phaser.Scene {
         
         return JSON.stringify({
             hats: this.hatView.saveAll(),
-            currentRoom: this.getCurrentRoom().getRoomId()
-            // taskObjects: this.getCurrentRoom().saveAll()
+            currentRoom: this.getCurrentRoom().getRoomId(),
+            taskObjects: this.getCurrentRoom().saveAll()
         });
     }
 }

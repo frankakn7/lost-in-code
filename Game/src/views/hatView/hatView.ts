@@ -53,11 +53,16 @@ export default class HatView extends Phaser.Scene {
         let counter = 0
         for(let prop in hatMap) {
             if (hatMap.hasOwnProperty(prop)) {
-                let hat = hatMap[prop];
                 counter++;
+                let hat = hatMap[prop];
 
                 let x = (this.scale.width / (this._columns + 1)) * counter;
+                
                 let y = 1000;
+                if (counter > 4) {
+                    y = 1200;
+                    x -= (this.scale.width / this._columns + 1) * 3;
+                }
 
                 const width = 32;
                 const height = 32;
