@@ -9,9 +9,10 @@ export default class DoorTaskObject extends InteractiveObject {
         room: RoomScene,
         x: number,
         y: number,
-        params
+        params,
+        properties
     ) {
-        super(scene, room, x, y, params);
+        super(scene, room, x, y, params, properties);
     }
 
     public interact(): void {

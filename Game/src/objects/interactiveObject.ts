@@ -13,7 +13,8 @@ export default class InteractiveObject extends Phaser.Physics.Arcade.Sprite {
         room: RoomScene,
         x: number,
         y: number,
-        params
+        params,
+        properties
     ) {
         super(scene, x, y, params.texture);
         this.room = room;

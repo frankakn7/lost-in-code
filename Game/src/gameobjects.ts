@@ -1,4 +1,5 @@
 import DoorTaskObject from "./objects/doorObject";
+import HatObject from "./objects/hatObject";
 import InteractiveObject from "./objects/interactiveObject";
 import TaskObject from "./objects/taskObjects";
 
@@ -9,6 +10,15 @@ export const GameObjectMap = {
             texture: "door",
             width: 18,
             height: 64
+        }
+    },
+    hat: {
+        class: HatObject,
+        params: {
+            texture: "sorcerersHat",
+            hat_id: "sorcerersHat",
+            width: 32,
+            height: 32
         }
     },
     engine: {

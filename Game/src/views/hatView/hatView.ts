@@ -74,7 +74,7 @@ export default class HatView extends Phaser.Scene {
                 renderTexture.draw("hatBg", 0, 0);
                 renderTexture.draw(hat.texture, 0, 0);
                 
-                if (!hat.unlocked) {
+                if (!this._isHatUnlocked(prop)) {
                     renderTexture.fill(0x000000, 0.7);
                 }
 
@@ -99,7 +99,7 @@ export default class HatView extends Phaser.Scene {
                      x, 
                      y,
                      () => {
-                        if (!hat.unlocked) return;
+                        if (!this._isHatUnlocked(prop)) return;
                         hatButton.setTexture(textureKey);
                         this._selectedHatId = prop;
                         this.deleteAllHatButtons();
@@ -151,5 +151,16 @@ export default class HatView extends Phaser.Scene {
             selectedHat: this._selectedHatId,
             unlockedHats: this.unlockedHats
         };
+    }
+
+    private _isHatUnlocked(hatId: string) {
+        let res = (HatMap[hatId].unlocked || this.unlockedHats.includes(hatId));
+        console.log(hatId + " is " +res);
+        return res;
+    }
+
+    public unlock(hatId) {
+        console.log("Unlocked " + hatId + "!");
+        this.unlockedHats.push(hatId);
     }
 }

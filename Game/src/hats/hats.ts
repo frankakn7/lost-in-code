@@ -1,12 +1,12 @@
 export const HatMap = {
     sorcerersHat: {
         texture: "sorcerersHat",
-        unlocked: true,
+        unlocked: false,
         name: "Sorcerers Hat"
     },
     strawHat: {
         texture: "strawHat",
-        unlocked: true,
+        unlocked: false,
         name: "Straw Hat"
     },
     blackHat: {
@@ -16,17 +16,17 @@ export const HatMap = {
     },
     truckerCap: {
         texture: "truckerCap",
-        unlocked: true,
+        unlocked: false,
         name: "Black Hat"
     },
     pirateHat: {
         texture: "pirateHat",
-        unlocked: true,
+        unlocked: false,
         name: "Pirate Hat"
     },
     crown: {
         texture: "crown",
-        unlocked: true,
+        unlocked: false,
         name: "Crown"
     }
 

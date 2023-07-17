@@ -149,7 +149,7 @@ export default class RoomScene extends Phaser.Scene {
             let params = GameObjectMap[gameobjectID].params
             let texture = params.texture;
             
-            let newObj = new GameObjectMap[gameobjectID].class(this, this, x, y, params);
+            let newObj = new GameObjectMap[gameobjectID].class(this, this, x, y, params, obj.properties);
             this.add.existing(newObj);
             this.physics.add.collider(this.player, newObj);
             this._interactiveObjects.push(newObj);

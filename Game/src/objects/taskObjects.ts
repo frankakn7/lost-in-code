@@ -16,9 +16,10 @@ export default class TaskObject extends InteractiveObject {
         room: RoomScene,
         x: number,
         y: number,
-        params
+        params,
+        properties
     ) {
-        super(scene, room, x, y, params);
+        super(scene, room, x, y, params, properties);
         this._isStoryObject = params.isStoryObject
     }
 
