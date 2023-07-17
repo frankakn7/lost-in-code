@@ -34,7 +34,7 @@ export default class DragDropQuestionView extends Phaser.Scene {
         let previousBottomY = this.questionText.y + this.questionText.height;
         for (let i = 0; i < this.currentQuestion.elements.length; i++) {
             let element = this.currentQuestion.elements[i];
-            console.log(previousBottomY);
+
             let draggableCodeBlock = new DraggableCodeBlock(
                 this,
                 element.id,
@@ -72,7 +72,6 @@ export default class DragDropQuestionView extends Phaser.Scene {
                     }
                 )
             );
-            console.log(element);
             if (element.correctOrderPosition === index + 1) {
                 block.markCorrect();
             } else {

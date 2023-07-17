@@ -6,6 +6,8 @@ import { ChoiceQuestionElement, InputQuestionElement, OrderQuestionElement } fro
 
 export default class TaskManager {
     private availableQuestions: Question[] = [];
+
+    private answeredQuestions: Question[] = []
     //TODO: implement topic id properly
     private currentChapterNumber: number = 1;
 
@@ -14,6 +16,9 @@ export default class TaskManager {
     private currentChapterMaxDifficulty: number;
 
     private currentQuestionSetForObject = new Map<number, Question>;
+
+    public currentDoneQuestions: number;
+    public currentTotalQuestions: number;
 
     private scene: PlayView;
 
@@ -34,48 +39,57 @@ export default class TaskManager {
     }
 
     public populateNewQuestionSet(){
-        this.currentChapterMaxDifficulty = Math.max(...this.availableQuestions.map(q => q.difficulty));
-        console.log(this.currentChapterMaxDifficulty)
         this.shuffleQuestions(this.availableQuestions)
-        console.log(this.availableQuestions)
-        for(let i = 1; i <= this.currentChapterMaxDifficulty; i++){
-            this.currentQuestionSetForObject.set(i, this.availableQuestions.find(question => question.difficulty == i));
+        this.shuffleQuestions(this.answeredQuestions)
+        console.log("PI: "+this.currentPerformanceIndex)
+        for(let i = this.currentPerformanceIndex; i <= this.currentChapterMaxDifficulty; i++){
+            let question = this.availableQuestions.find(question => question.difficulty == i)
+            console.log(question)
+            if(question === undefined){
+                console.log("UNDEFINED")
+                question = this.answeredQuestions.find(question => question.difficulty == i);
+            }
+            // console.log("Q Diff: "+question.difficulty)
+            this.currentQuestionSetForObject.set(i, question);
         }
+        this.currentDoneQuestions = 0;
+        this.currentTotalQuestions = this.currentQuestionSetForObject.size;
     }
 
     public getCurrentQuestionFromQuestionSet(){
-        return this.currentQuestionSetForObject.get(this.currentPerformanceIndex);
+        console.log(this.currentQuestionSetForObject)
+        let question = this.currentQuestionSetForObject.get(this.currentPerformanceIndex);
+        // console.log("Q Diff: "+question.difficulty)
+        return question;
     }
 
     public questionAnsweredCorrectly(){
+        const currentQuestion = this.getCurrentQuestionFromQuestionSet()
+        this.availableQuestions = this.availableQuestions.filter((question) => question !== currentQuestion)
+        this.answeredQuestions.push(currentQuestion);
         this.currentQuestionSetForObject.delete(this.currentPerformanceIndex);
-        console.log(this.currentQuestionSetForObject)
-        console.log(this.currentPerformanceIndex)
-        console.log(this.currentChapterMaxDifficulty)
+        this.currentDoneQuestions ++;
         if(this.currentQuestionSetForObject.size == 0){
             console.log("OBJECT REPAIRED")
-            // this.scene.events.emit("taskmanager_object_finished");
-            console.log(this.scene)
             if (this.scene.scene.isSleeping(this.scene)) {
-                console.log("Sleeping")
                 this.scene.queueTask(() => {
                     globalEventBus.emit('taskmanager_object_finished');
                 });
             } else {
                 globalEventBus.emit('taskmanager_object_finished');
             }
-            // globalEventBus.emit('taskmanager_object_finished');
         }else{
-            this.currentPerformanceIndex ++;
+            this.currentPerformanceIndex = currentQuestion.difficulty + 1;
         }
     }
 
     public questionAnsweredIncorrectly(){
-        this.currentPerformanceIndex --;
+        this.currentPerformanceIndex > 1 ? this.currentPerformanceIndex -- : null;
     }
 
     constructor(scene: PlayView, questions: Question[]){
         this.scene = scene;
+
       const code = `<?php
 $txt = "Hello world!";
 $x = 5;
@@ -156,49 +170,49 @@ echo $y;
           2
       ));
 
-//         this.availableQuestions.push(new Question(
-//             2,
-//             "What is the output of the following code?",
-//             "Just Answer",
-//             QuestionType.SINGLE_INPUT,
-//             [inputQuestionElement],
-//             3,
-//             code
-//         ));
+        this.availableQuestions.push(new Question(
+            2,
+            "What is the output of the following code?",
+            "Just Answer",
+            QuestionType.SINGLE_INPUT,
+            [inputQuestionElement],
+            3,
+            code
+        ));
 
-//         this.availableQuestions.push(new Question(
-//             3,
-//             "Reorder these elements into the correct order!",
-//             "just order them",
-//             QuestionType.DRAG_DROP,
-//             [dragQuestionElement1, dragQuestionElement2, dragQuestionElement3],
-//             3
-//         ));
+        this.availableQuestions.push(new Question(
+            3,
+            "Reorder these elements into the correct order!",
+            "just order them",
+            QuestionType.DRAG_DROP,
+            [dragQuestionElement1, dragQuestionElement2, dragQuestionElement3],
+            3
+        ));
 
-//         this.availableQuestions.push(new Question(
-//             4,
-//             "Fill in the blanks!",
-//             "just fill it in",
-//             QuestionType.CLOZE,
-//             [clozeQuestionElement, clozeQuestionElement2],
-//             3,
-//             `
-// <?php
-//     $txt = "Hello world!";
-//     $x = 5;
-//     $y = 10.5;
+        this.availableQuestions.push(new Question(
+            4,
+            "Fill in the blanks!",
+            "just fill it in",
+            QuestionType.CLOZE,
+            [clozeQuestionElement, clozeQuestionElement2],
+            3,
+            `
+<?php
+    $txt = "Hello world!";
+    $x = 5;
+    $y = 10.5;
 
-//     echo $txt;
-//     echo "<br>";
-//     echo $x;
-//     echo "<br>";
-//     echo $y;
-//     echo "###INPUT|input1|20|true###";
-//     echo "<br>";
-//     echo "###INPUT|input2|15|false###";
-// ?>
-// `
-//         ));
+    echo $txt;
+    echo "<br>";
+    echo $x;
+    echo "<br>";
+    echo $y;
+    echo "###INPUT|input1|20|true###";
+    echo "<br>";
+    echo "###INPUT|input2|15|false###";
+?>
+`
+        ));
 
         let questionElementSelectBlock = new ChoiceQuestionElement(1, `<?php
         $txt = "Hello world!";
@@ -224,6 +238,6 @@ echo $y;
         ));
         // this.availableQuestions = questions;
         this.populateNewQuestionSet();
-        console.log(this.currentQuestionSetForObject)
+        this.currentChapterMaxDifficulty = Math.max(...this.availableQuestions.map(q => q.difficulty));
     }
 }

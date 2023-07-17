@@ -54,7 +54,6 @@ export default class TaskObject extends InteractiveObject {
     }
 
     public setDone() {
-        console.log(this)
         if (!this._isFinished) {
             if (this._isStoryObject) {
                 this._isFinished = true;

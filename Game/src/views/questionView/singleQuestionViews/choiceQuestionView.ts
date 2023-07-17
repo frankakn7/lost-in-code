@@ -112,7 +112,6 @@ export default class ChoiceQuestionView extends Phaser.Scene {
     }
 
     create(){
-        console.log("Displaying question")
         this.displayChoiceQuestion();
     }
 }

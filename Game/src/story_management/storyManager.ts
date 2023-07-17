@@ -47,9 +47,6 @@ export default class StoryManager {
     }
 
     public pullNextStoryBit(room) {
-        console.log("Pulling next story")
-        console.log(room)
-        console.log(this._storyEvents)
         return this._storyEvents[room].shift();
     }
 }

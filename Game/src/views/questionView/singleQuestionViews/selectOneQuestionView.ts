@@ -31,8 +31,7 @@ export default class SelectOneQuestionView extends Phaser.Scene {
         let previousBottomY = this.questionText.y + this.questionText.height;
         for (let i = 0; i < this.currentQuestion.elements.length; i++) {
             let element = this.currentQuestion.elements[i];
-            console.log(previousBottomY);
-            console.log(element.content)
+            
             let selectableCodeBlock = new SelectableCodeBlock(
                 this,
                 element.id,

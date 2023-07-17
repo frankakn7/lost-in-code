@@ -33,14 +33,9 @@ export default class QuestionView extends Phaser.Scene {
 
     private tilesprite: Phaser.GameObjects.TileSprite;
 
-    // private choiceButtons = new Map<string, DeviceButton>();
-    private choiceButtons: ChoiceButton[] = [];
-
-    private draggableCodeBlocks: DraggableCodeBlock[] = [];
-
     private bottomButton: DeviceButton;
 
-    private questions: Question[] = [];
+    private progressBar: Phaser.GameObjects.Graphics;
 
     private currentQuestionView:
         | ChoiceQuestionView
@@ -59,9 +54,6 @@ export default class QuestionView extends Phaser.Scene {
     }
 
     create() {
-        console.log("i was created");
-        this.events.on("wake", this.onWake);
-
         this.scene;
 
         this.tilesprite = this.add
@@ -87,18 +79,32 @@ export default class QuestionView extends Phaser.Scene {
             align: "center",
         };
 
+        
         // this.cameras.main.setBackgroundColor("rgba(6,24,92,1)");
-
-        this.showSubmitButton()
-
+        
+        this.showSubmitButton();
+        
+        this.taskManager.populateNewQuestionSet();
         this.getAndDisplayNewQuestion();
-        // this.taskManager = new TaskManager(this.questions);
-        // this.exitQuestion();
-        // this.add.existing(draggableCodeBlock)
+
+        this.progressBar = this.add.graphics();
+        const totalWidth = this.cameras.main.displayWidth - 100;
+        this.progressBar.clear(); 
+        this.progressBar.fillStyle(0x1c1d21, 1);
+        // this.progressBar.fillStyle(0x00c8ff, 1);
+        this.progressBar.fillRect(50, 50, totalWidth, 50);
+        this.progressBar.lineStyle(3,0x00c8ff)
+        this.progressBar.strokeRect(50,50,totalWidth,50)
+        this.updateProgressBar()
     }
 
-    onWake() {
-        console.log("i am awake");
+    private updateProgressBar() {
+        const progress = this.taskManager.currentDoneQuestions / this.taskManager.currentTotalQuestions;
+        const totalWidth = this.cameras.main.displayWidth - 100 - 10;  // Adjust the width of the bar as per your need. 100 is the sum of left and right padding (50 each).
+        // this.progressBar.clear();  // Clear previous drawing
+        // this.progressBar.fillStyle(0x00c8ff, 1);
+        this.progressBar.fillStyle(0x00ff7b, 1);
+        this.progressBar.fillRect(55, 55, progress * totalWidth, 40);
     }
 
     private getAndDisplayNewQuestion() {
@@ -107,15 +113,18 @@ export default class QuestionView extends Phaser.Scene {
         if (this.currentQuestion) {
             this.displayQuestion();
         } else {
-            this.questionText?.destroy(true)
+            this.removeAllQuestionScenes();
+            this.questionText?.destroy(true);
+            const repairedStyle = {...this.textStyle}
+            repairedStyle.color = "#00ff7b";
             this.questionText = this.add
                 .text(
                     this.cameras.main.displayWidth / 2,
-                    100,
+                    this.cameras.main.displayHeight / 2,
                     "The Object has been repaired!",
-                    this.textStyle
+                    repairedStyle
                 )
-                .setOrigin(0.5, 0);
+                .setOrigin(0.5, 0.5);
             this.showExitButton();
         }
     }
@@ -125,16 +134,16 @@ export default class QuestionView extends Phaser.Scene {
         this.questionText = this.add
             .text(
                 this.cameras.main.displayWidth / 2,
-                100,
+                150,
                 this.currentQuestion.questionText,
                 this.textStyle
             )
             .setOrigin(0.5, 0);
         this.removeAllQuestionScenes();
-        this.showSubmitButton()
+        this.showSubmitButton();
         switch (this.currentQuestion.type) {
             case QuestionType.CHOICE:
-                console.log("Choice")
+                console.log("Choice");
                 this.currentQuestionView = new ChoiceQuestionView(
                     this.questionText,
                     this.currentQuestion
@@ -196,8 +205,10 @@ export default class QuestionView extends Phaser.Scene {
             this.taskManager.questionAnsweredCorrectly();
             this.showNextButton();
         } else {
+            this.taskManager.questionAnsweredIncorrectly()
             this.showExitButton();
         }
+        this.updateProgressBar()
     }
 
     private showSubmitButton(): void {
@@ -208,7 +219,6 @@ export default class QuestionView extends Phaser.Scene {
             this.cameras.main.displayHeight - 100,
             this.cameras.main.displayWidth / 2,
             () => {
-                console.log("Submit");
                 this.checkAnswer();
             },
             "Submit"
@@ -217,7 +227,7 @@ export default class QuestionView extends Phaser.Scene {
         this.add.existing(this.bottomButton);
     }
 
-    private showNextButton(): void {
+    private showNextButton(): void {
         this.bottomButton.destroy(true);
         this.bottomButton = new DeviceButton(
             this,
@@ -254,11 +264,11 @@ export default class QuestionView extends Phaser.Scene {
     update(time: number, delta: number): void {}
 
     private removeAllQuestionScenes() {
-        this.scene.remove("ChoiceQuestionView")
-        this.scene.remove("InputQuestionView")
-        this.scene.remove("DragDropQuestionView")
-        this.scene.remove("ClozeQuestionView")
-        this.scene.remove("SelectOneQuestionView")
+        this.scene.remove("ChoiceQuestionView");
+        this.scene.remove("InputQuestionView");
+        this.scene.remove("DragDropQuestionView");
+        this.scene.remove("ClozeQuestionView");
+        this.scene.remove("SelectOneQuestionView");
         // this.scene.remove(this.currentQuestionView);
     }
 
