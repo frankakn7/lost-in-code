@@ -154,6 +154,29 @@
                  "width":0,
                  "x":399.495,
                  "y":337.286
+                }, 
+                {
+                 "height":0,
+                 "id":155,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"gameobject_id",
+                         "type":"string",
+                         "value":"hat"
+                        }, 
+                        {
+                         "name":"hat_id",
+                         "type":"string",
+                         "value":"truckerCap"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":306,
+                 "y":464
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -162,7 +185,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":155,
+ "nextobjectid":156,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.1",

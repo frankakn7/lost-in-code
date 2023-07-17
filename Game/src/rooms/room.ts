@@ -8,6 +8,7 @@ import { GameObjectMap } from "../gameobjects";
 
 import DoorTexture from "../assets/gameobjects/door.png";
 import EngineTexture from "../assets/gameobjects/engine.png";
+import LockerTexture from "../assets/gameobjects/locker.png"
 import InteractiveObject from "../objects/interactiveObject";
 import storyJson from "../story_management/storyFormatExample.json";
 import StoryManager from "../story_management/storyManager";
@@ -31,7 +32,7 @@ export default class RoomScene extends Phaser.Scene {
     private _playerDefaultY = 32*4;
     private _nextRoom = "hangar";
 
-    private _interactiveObjects : Array<InteractiveObject>;
+    private _interactiveObjects = [];
     // private controls;
 
     private _playView;
@@ -65,6 +66,7 @@ export default class RoomScene extends Phaser.Scene {
         this.load.image("mask", Mask);
         this.load.image("door", DoorTexture);
         this.load.image("engine", EngineTexture);
+        this.load.image("locker", LockerTexture);
     }
 
     public getRoomId() {
@@ -148,7 +150,7 @@ export default class RoomScene extends Phaser.Scene {
             let newObj = new GameObjectMap[gameobjectID].class(this, this, x, y, params);
             this.add.existing(newObj);
             this.physics.add.collider(this.player, newObj);
-            // this._interactiveObjects.push(newObj);
+            this._interactiveObjects.push(newObj);
 
             // const door = new InteractiveObject(this, 32*5, 32*5, "door");
             // this.add.existing(door);

@@ -17,6 +17,8 @@ export default class HatView extends Phaser.Scene {
     // Save references to all buttons so to be able to delete them if redraw is necessary.
     private buttonMap = new Map();
 
+    private unlockedHats = [];
+
     preload() {
         this.load.image("returnButtonTexture", ReturnButtonTexture);
     }
@@ -137,5 +139,12 @@ export default class HatView extends Phaser.Scene {
     private _backToMenu() {
         this._playView.menuView.scene.resume();
         this.scene.sleep();
+    }
+
+    public saveAll() {
+        return {
+            selectedHat: this._selectedHatId,
+            unlockedHats: this.unlockedHats
+        };
     }
 }

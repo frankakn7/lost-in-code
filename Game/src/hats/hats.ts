@@ -13,5 +13,15 @@ export const HatMap = {
         texture: "blackHat",
         unlocked: false,
         name: "Black Hat"
+    },
+    truckerCap: {
+        texture: "truckerCap",
+        unlocked: true,
+        name: "Black Hat"
     }
+    // Trucker cap
+    // Pirate Hat
+    // Crown
+    // Sombrero
+    // Propeller Hat
 }

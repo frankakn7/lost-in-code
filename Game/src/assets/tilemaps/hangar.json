@@ -55,8 +55,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":144.246,
-                 "y":74.7943
+                 "x":140.992796568887,
+                 "y":53.1062771259134
                 }, 
                 {
                  "height":0,
@@ -172,6 +172,52 @@
                  "width":0,
                  "x":312.292,
                  "y":135.843
+                }, 
+                {
+                 "height":0,
+                 "id":18,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"gameobject_id",
+                         "type":"string",
+                         "value":"hat"
+                        }, 
+                        {
+                         "name":"hat_id",
+                         "type":"string",
+                         "value":"sorcerersHat"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":82.4144869215292,
+                 "y":146.394154400085
+                }, 
+                {
+                 "height":0,
+                 "id":19,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"gameobject_id",
+                         "type":"string",
+                         "value":"hat"
+                        }, 
+                        {
+                         "name":"hat_id",
+                         "type":"string",
+                         "value":"strawHat"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":455.448480355819,
+                 "y":310.138727099439
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -180,7 +226,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":18,
+ "nextobjectid":20,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.1",

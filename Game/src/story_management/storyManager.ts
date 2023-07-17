@@ -46,7 +46,7 @@ export default class StoryManager {
         return this._storyEvents;
     }
 
-    public getNextStoryBit(room) {
+    public pullNextStoryBit(room) {
         return this._storyEvents[room].shift();
     }
 }

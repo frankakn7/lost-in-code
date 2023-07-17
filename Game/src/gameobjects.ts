@@ -1,9 +1,10 @@
-import DoorObject from "./objects/doorObject";
+import DoorTaskObject from "./objects/doorObject";
 import InteractiveObject from "./objects/interactiveObject";
+import TaskObject from "./objects/taskObjects";
 
 export const GameObjectMap = {
     door: {
-        class: DoorObject,
+        class: DoorTaskObject,
         params: {
             texture: "door",
             width: 18,
@@ -11,11 +12,21 @@ export const GameObjectMap = {
         }
     },
     engine: {
-        class: InteractiveObject,
+        class: TaskObject,
         params: {
             texture: "engine",
             width: 60,
-            height: 60
+            height: 60,
+            isStoryObject: false
+        }
+    },
+    locker: {
+        class: TaskObject,
+        params: {
+            texture: "locker",
+            width: 80,
+            height: 40,
+            isStoryObject: false
         }
     }
 }
