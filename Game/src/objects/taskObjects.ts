@@ -32,6 +32,7 @@ export default class TaskObject extends InteractiveObject {
 
     public interact(){
         //TODO: Build general interactivity function
+        
         if(!this._isFinished){
             console.log("Interacted with "+this);
             this._isOpenRightNow = true;

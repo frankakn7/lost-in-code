@@ -35,7 +35,7 @@ export default class RoomScene extends Phaser.Scene {
 
     private _interactiveObjects = [];
     private _taskObjects = [];
-    private _onStartupFinishedTaskObjects = [];
+    private _onStartupFinishedTaskObjects = [false, false, false, false];
     // private controls;
 
     private _playView;

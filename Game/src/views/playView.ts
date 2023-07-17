@@ -43,7 +43,7 @@ export default class PlayView extends Phaser.Scene {
 
     private _state: any = {
         hats: {
-            unlockedHats: ["strawHat", "sombrero"],
+            unlockedHats: [],
             selectedHat: "None"
         },
         playView: {
@@ -53,6 +53,13 @@ export default class PlayView extends Phaser.Scene {
             finishedTaskObjects: [
                 false, false, false, false
             ],
+        },
+        story: {
+            hangar: [],
+            commonRoom: [],
+            engine: [],
+            laboratory: [],
+            bridge: []
         }
     };
 
@@ -83,7 +90,7 @@ export default class PlayView extends Phaser.Scene {
 
     private taskManager: TaskManager;
 
-    private _storyManager = new StoryManager();
+    private _storyManager = new StoryManager(this);
 
     public hatMap = HatMap;
 
@@ -411,11 +418,11 @@ export default class PlayView extends Phaser.Scene {
     }
 
     public saveAllToJSONString() {
-        
         return JSON.stringify({
             hats: this.hatView.saveAll(),
             playView: this.getCurrentRoom().getRoomId(),
-            room: this.getCurrentRoom().saveAll()
+            room: this.getCurrentRoom().saveAll(),
+            story: this._storyManager.saveAll()
         });
     }
 
