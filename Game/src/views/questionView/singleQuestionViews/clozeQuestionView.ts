@@ -10,9 +10,17 @@ export default class ClozeQuestionView extends Phaser.Scene {
 
     private currentQuestion: Question;
 
-    private choiceButtons: ChoiceButton[] = [];
+    // private choiceButtons: ChoiceButton[] = [];
 
     private questionText: Phaser.GameObjects.Text;
+
+    private correctAnswer: Phaser.GameObjects.Text;
+    private correctAnswerStyle:Phaser.Types.GameObjects.Text.TextStyle;
+
+    private codeBlock;
+
+    private correctTextStyle;
+
 
     constructor(questionText: Phaser.GameObjects.Text, currentQuestion: Question) {
         super("ClozeQuestionView");
@@ -22,10 +30,36 @@ export default class ClozeQuestionView extends Phaser.Scene {
 
     create(){
         this.displayClozeQuestion();
+
+        this.correctAnswerStyle = {
+            fontSize: "35px",
+            fontFamily: "forwardRegular",
+            // color: "#00c8ff",
+            color: "#f54747",
+            wordWrap: {
+                width: this.cameras.main.displayWidth - 100, //once for left and once for right
+                useAdvancedWrap: true,
+            },
+            lineSpacing: 0,
+            align: "center",
+        }
+
+        this.correctTextStyle = {
+            fontSize: "35px",
+            fontFamily: "forwardRegular",
+            // color: "#00c8ff",
+            // color: "#f54747",
+            color: "#00ff7b",
+            wordWrap: {
+                width: this.cameras.main.displayWidth - 100, //once for left and once for right
+                useAdvancedWrap: true,
+            },
+            align: "center",
+        }
     }
 
     private async displayClozeQuestion() {
-        let codeBlock = this.displayCodeBlockCloze(
+        this.codeBlock = this.displayCodeBlockCloze(
             this.currentQuestion.codeText
         );
     }
@@ -91,12 +125,38 @@ export default class ClozeQuestionView extends Phaser.Scene {
             .setOrigin(0.5, 0);
     }
 
+    private showCorrectText(){
+        let previousY = this.codeBlock.y + this.codeBlock.height
+        this.correctAnswer = this.add.text(
+            this.cameras.main.displayWidth / 2,
+            previousY + 100,
+            "Correct",
+            this.correctTextStyle
+        ).setOrigin(0.5,0);
+    }
+
+    private showCorrectAnswers(correctAnswers: [string[]]) {
+        let previousY = this.codeBlock.y + this.codeBlock.height
+        this.correctAnswer = this.add.text(
+            this.cameras.main.displayWidth / 2,
+            previousY + 100,
+            "Correct answers would have been:",
+            this.correctAnswerStyle
+        ).setOrigin(0.5,0);
+        correctAnswers.forEach((answers) => {
+            this.correctAnswer.appendText(answers.join(" / "))
+        })
+        console.log(this.correctAnswer.text);
+    }
+
     public checkAnswer() {
         let correct = true;
+        let correctAnswers:any = [];
         this.currentQuestion.elements.forEach((element) => {
             let inputField = <HTMLInputElement>(
                 document.getElementById(element.elementIdentifier)
             );
+            correctAnswers.push(element.correctAnswers);
             if (element.correctAnswers.includes(inputField.value)) {
                 inputField.style.color = "#00ff7b";
                 inputField.style.borderColor = "#00ff7b";
@@ -106,6 +166,11 @@ export default class ClozeQuestionView extends Phaser.Scene {
                 correct = false;
             }
         });
+        if(!correct){
+            this.showCorrectAnswers(correctAnswers)
+        }else{
+            this.showCorrectText()
+        }
         return correct;
     }
 }

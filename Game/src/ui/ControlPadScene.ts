@@ -74,7 +74,6 @@ export default class ControlPadScene extends Phaser.Scene {
     }
 
     public create() {
-        console.log("creating control pad")
         this.controlPadCenter = {
             x: this.cameras.main.width / 2,
             y: this.cameras.main.height - 350,

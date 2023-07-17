@@ -16,6 +16,10 @@ export default class DragDropQuestionView extends Phaser.Scene {
 
     private draggableCodeBlocks: DraggableCodeBlock[] = [];
 
+    private correctAnswer: Phaser.GameObjects.Text;
+    private correctTextStyle;
+
+
     constructor(questionText: Phaser.GameObjects.Text, currentQuestion: Question) {
         super("DragDropQuestionView");
         this.questionText = questionText;
@@ -28,6 +32,19 @@ export default class DragDropQuestionView extends Phaser.Scene {
         this.events.on("blockDropped", (droppedBlock: DraggableCodeBlock) => {
             this.reorderBlocks(droppedBlock);
         });
+
+        this.correctTextStyle = {
+            fontSize: "35px",
+            fontFamily: "forwardRegular",
+            // color: "#00c8ff",
+            // color: "#f54747",
+            color: "#00ff7b",
+            wordWrap: {
+                width: this.cameras.main.displayWidth - 100, //once for left and once for right
+                useAdvancedWrap: true,
+            },
+            align: "center",
+        }
     }
     
     private async displayDragDropQuestion() {
@@ -62,6 +79,16 @@ export default class DragDropQuestionView extends Phaser.Scene {
         });
     }
 
+    private showCorrectText(){
+        let previousY = this.draggableCodeBlocks[this.draggableCodeBlocks.length -1 ].y + this.draggableCodeBlocks[this.draggableCodeBlocks.length -1 ].height
+        this.correctAnswer = this.add.text(
+            this.cameras.main.displayWidth / 2,
+            previousY + 100,
+            "Correct",
+            this.correctTextStyle
+        ).setOrigin(0.5,0);
+    }
+
     public checkAnswer() {
         let correct = true;
         this.draggableCodeBlocks.forEach((block, index) => {
@@ -79,6 +106,9 @@ export default class DragDropQuestionView extends Phaser.Scene {
                 block.markWrong();
             }
         });
+        if(correct){
+            this.showCorrectText()
+        }
         return correct;
     }
 

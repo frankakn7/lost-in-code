@@ -15,16 +15,9 @@ export default class ChoiceQuestionView extends Phaser.Scene {
 
     private correctAnswer: Phaser.GameObjects.Text;
 
-    private correctAnswerStyle = {
-        fontSize: "30px",
-        fontFamily: "forwardRegular",
-        color: "#00c8ff",
-        wordWrap: {
-            width: this.cameras.main.displayWidth - 100, //once for left and once for right
-            useAdvancedWrap: true,
-        },
-        align: "center",
-    }
+    private correctAnswerStyle;
+
+    private correctTextStyle;
 
     constructor(
         questionText: Phaser.GameObjects.Text,
@@ -106,18 +99,29 @@ export default class ChoiceQuestionView extends Phaser.Scene {
         );
     }
 
+    private showCorrectText(){
+        let previousButtonY =
+            this.choiceButtons[this.choiceButtons.length - 1].y +
+            this.choiceButtons[this.choiceButtons.length - 1].height;
+        this.correctAnswer = this.add.text(
+            this.cameras.main.displayWidth / 2,
+            previousButtonY + 50,
+            "Correct",
+            this.correctTextStyle
+        ).setOrigin(0.5,0);
+    }
+
     private showCorrectAnswers(correctAnswers: string[]) {
         let previousButtonY =
             this.choiceButtons[this.choiceButtons.length - 1].y +
             this.choiceButtons[this.choiceButtons.length - 1].height;
-        let answersString:string;
-        correctAnswers.forEach(answer => answersString += `\n${answer}`);
-        this.add.text(
+        this.correctAnswer = this.add.text(
             this.cameras.main.displayWidth / 2,
             previousButtonY + 50,
-            "Correct answers:"+correctAnswers,
+            "Correct answers would have been:",
             this.correctAnswerStyle
-        );
+        ).setOrigin(0.5,0);
+        this.correctAnswer.appendText(correctAnswers.join('\n'))
     }
 
     public checkAnswer() {
@@ -145,11 +149,37 @@ export default class ChoiceQuestionView extends Phaser.Scene {
         });
         if (!correct) {
             this.showCorrectAnswers(correctAnswers)
+        }else{
+            this.showCorrectText()
         }
         return correct;
     }
 
     create() {
         this.displayChoiceQuestion();
+        this.correctAnswerStyle = {
+            fontSize: "35px",
+            fontFamily: "forwardRegular",
+            // color: "#00c8ff",
+            color: "#f54747",
+            wordWrap: {
+                width: this.cameras.main.displayWidth - 100, //once for left and once for right
+                useAdvancedWrap: true,
+            },
+            align: "center",
+        }
+
+        this.correctTextStyle = {
+            fontSize: "35px",
+            fontFamily: "forwardRegular",
+            // color: "#00c8ff",
+            // color: "#f54747",
+            color: "#00ff7b",
+            wordWrap: {
+                width: this.cameras.main.displayWidth - 100, //once for left and once for right
+                useAdvancedWrap: true,
+            },
+            align: "center",
+        }
     }
 }

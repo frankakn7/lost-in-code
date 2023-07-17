@@ -315,7 +315,6 @@ export default class PlayView extends Phaser.Scene {
     }
 
     public create() {
-        console.log("Launched");
 
         this.events.on('wake', this.onWake, this);
 
@@ -382,8 +381,8 @@ export default class PlayView extends Phaser.Scene {
             //open the chat view
             // this.openChatView();
             // this.getToRoomViaId("laboratory");
-            // this.openQuestionView();
-            console.log(this.saveAllToJSONString());
+            this.openQuestionView();
+            // console.log(this.saveAllToJSONString());
         }
 
         if (this.pauseChatButtons.pausePressed) {

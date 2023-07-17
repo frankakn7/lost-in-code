@@ -98,12 +98,16 @@ export default class QuestionView extends Phaser.Scene {
         this.updateProgressBar()
     }
 
-    private updateProgressBar() {
+    private updateProgressBar(correct=true) {
         const progress = this.taskManager.currentDoneQuestions / this.taskManager.currentTotalQuestions;
         const totalWidth = this.cameras.main.displayWidth - 100 - 10;  // Adjust the width of the bar as per your need. 100 is the sum of left and right padding (50 each).
         // this.progressBar.clear();  // Clear previous drawing
         // this.progressBar.fillStyle(0x00c8ff, 1);
-        this.progressBar.fillStyle(0x00ff7b, 1);
+        if(correct){
+            this.progressBar.fillStyle(0x00ff7b, 1);
+        }else{
+            this.progressBar.fillStyle(0xf54747, 1);
+        }
         this.progressBar.fillRect(55, 55, progress * totalWidth, 40);
     }
 
@@ -143,7 +147,7 @@ export default class QuestionView extends Phaser.Scene {
         this.showSubmitButton();
         switch (this.currentQuestion.type) {
             case QuestionType.CHOICE:
-                console.log("Choice");
+                // console.log("Choice");
                 this.currentQuestionView = new ChoiceQuestionView(
                     this.questionText,
                     this.currentQuestion
@@ -152,7 +156,7 @@ export default class QuestionView extends Phaser.Scene {
                 this.scene.launch("ChoiceQuestionView");
                 break;
             case QuestionType.SINGLE_INPUT:
-                console.log("single input");
+                // console.log("single input");
                 this.currentQuestionView = new InputQuestionView(
                     this.questionText,
                     this.currentQuestion
@@ -161,7 +165,7 @@ export default class QuestionView extends Phaser.Scene {
                 this.scene.launch("InputQuestionView");
                 break;
             case QuestionType.DRAG_DROP:
-                console.log("drag drop");
+                // console.log("drag drop");
                 this.currentQuestionView = new DragDropQuestionView(
                     this.questionText,
                     this.currentQuestion
@@ -173,7 +177,7 @@ export default class QuestionView extends Phaser.Scene {
                 this.scene.launch("DragDropQuestionView");
                 break;
             case QuestionType.CLOZE:
-                console.log("cloze");
+                // console.log("cloze");
                 this.currentQuestionView = new ClozeQuestionView(
                     this.questionText,
                     this.currentQuestion
@@ -182,7 +186,7 @@ export default class QuestionView extends Phaser.Scene {
                 this.scene.launch("ClozeQuestionView");
                 break;
             case QuestionType.SELECT_ONE:
-                console.log("select one");
+                // console.log("select one");
                 this.currentQuestionView = new SelectOneQuestionView(
                     this.questionText,
                     this.currentQuestion
@@ -204,11 +208,12 @@ export default class QuestionView extends Phaser.Scene {
         if (correct) {
             this.taskManager.questionAnsweredCorrectly();
             this.showNextButton();
+            this.updateProgressBar()
         } else {
+            this.updateProgressBar(false)
             this.taskManager.questionAnsweredIncorrectly()
             this.showExitButton();
         }
-        this.updateProgressBar()
     }
 
     private showSubmitButton(): void {

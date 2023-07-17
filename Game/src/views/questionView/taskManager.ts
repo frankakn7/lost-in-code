@@ -47,7 +47,7 @@ export default class TaskManager {
     public populateNewQuestionSet() {
         this.shuffleQuestions(this.availableQuestions);
         this.shuffleQuestions(this.answeredQuestions);
-        console.log("PI: " + this.currentPerformanceIndex);
+        // console.log("PI: " + this.currentPerformanceIndex);
         for (
             let i = this.currentPerformanceIndex;
             i <= this.currentChapterMaxDifficulty;
@@ -56,9 +56,7 @@ export default class TaskManager {
             let question = this.availableQuestions.find(
                 (question) => question.difficulty == i
             );
-            console.log(question);
             if (question === undefined) {
-                console.log("UNDEFINED");
                 question = this.answeredQuestions.find(
                     (question) => question.difficulty == i
                 );
@@ -71,7 +69,6 @@ export default class TaskManager {
     }
 
     public getCurrentQuestionFromQuestionSet() {
-        console.log(this.currentQuestionSetForObject);
         let question = this.currentQuestionSetForObject.get(
             this.currentPerformanceIndex
         );
@@ -81,11 +78,9 @@ export default class TaskManager {
 
     private checkNextChapter() {
         this.repairedObjectsThisChapter ++;
-        console.log(this.repairedObjectsThisChapter)
         if(this.repairedObjectsThisChapter == 2){
             this.currentChapterNumber ++;
             this.repairedObjectsThisChapter = 0;
-            console.log(this.currentChapterNumber)
         }
     }
 
@@ -176,12 +171,12 @@ echo $y;
 
         let clozeQuestionElement = new InputQuestionElement(
             1,
-            ["Hello"],
+            ["Hello","hello"],
             "input1"
         );
         let clozeQuestionElement2 = new InputQuestionElement(
             2,
-            ["There"],
+            ["There","there"],
             "input2"
         );
 
