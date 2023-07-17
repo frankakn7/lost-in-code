@@ -173,7 +173,7 @@ export default class RoomScene extends Phaser.Scene {
         });
 
         for(let i = 0; i < this._taskObjects.length; i++) {
-            this._taskObjects[i].setIsFinished(this._onStartupFinishedTaskObjects);
+            this._taskObjects[i].setIsFinished(this._onStartupFinishedTaskObjects[i]);
         }
 
         const width = this.scale.width
