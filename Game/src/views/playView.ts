@@ -13,7 +13,10 @@ import StoryManager from "../story_management/storyManager";
 
 import strawHatTexture from "../assets/hats/strawHat.png";
 import sorcerersHatTexture from "../assets/hats/redHat.png";
+import truckerCapTexture from "../assets/hats/truckerCap.png"
 import blackHatTexture from "../assets/hats/blackHat.png";
+import crownTexture from "../assets/hats/crown.png";
+import pirateHat from "../assets/hats/pirateHat.png";
 import hatBg from "../assets/hats/hatBg.png";
 import hatBgSelected from "../assets/hats/hatBgSelected.png";
 import { HatMap } from "../hats/hats";
@@ -35,8 +38,6 @@ import labJson from "../assets/tilemaps/laboratory.json";
  */
 export default class PlayView extends Phaser.Scene {
     private roomMap = new Map<string, RoomScene>;
-
-    private doorMap = new Map<string, {}>
 
     /**
      * The current room that the play view should show (and the player is in)
@@ -147,17 +148,21 @@ export default class PlayView extends Phaser.Scene {
         //If the chat view already exists and is sleeping
         if (this.scene.isSleeping(this.chatView)) {
             //start a new chat flow and awake the scene
-            this.chatView.startNewChatFlow(this._storyManager.getNextStoryBit(this.currentRoom.getRoomId()));
+            this.chatView.startNewChatFlow(this._storyManager.pullNextStoryBit(this.currentRoom.getRoomId()));
             this.scene.wake(this.chatView);
             //If the chat view hasn't been launched yet
         } else {
             //create a new chat view
-            this.chatView = new ChatView(this._storyManager.getNextStoryBit(this.currentRoom.getRoomId()));
+            this.chatView = new ChatView(this._storyManager.pullNextStoryBit(this.currentRoom.getRoomId()));
             //add chat view to the scene
             this.scene.add("chatView", this.chatView);
             //launch the chat view
             this.scene.launch(this.chatView);
         }
+    }
+    
+    public pullNextStoryBit(roomId) {
+        return this._storyManager.pullNextStoryBit(roomId);
     }
 
     private openQuestionView(){
@@ -180,9 +185,12 @@ export default class PlayView extends Phaser.Scene {
         this.load.image("strawHat", strawHatTexture);
         this.load.image("sorcerersHat", sorcerersHatTexture);
         this.load.image("blackHat", blackHatTexture);
+        this.load.image("truckerCap", truckerCapTexture);
         this.load.image("hatBg", hatBg);
         this.load.image("hatBgSelected", hatBgSelected);
         this.load.image("tilesetImage", tilesetPng);
+        this.load.image("crown", crownTexture);
+        this.load.image("pirateHat", pirateHat);
     }
 
     /**
@@ -347,5 +355,14 @@ export default class PlayView extends Phaser.Scene {
             this.currentRoom.scene.resume();
             this.controlPad.scene.resume();            
         }
+    }
+
+    public saveAllToJSONString() {
+        
+        return JSON.stringify({
+            hats: this.hatView.saveAll(),
+            currentRoom: this.getCurrentRoom().getRoomId(),
+            taskObjects: this.getCurrentRoom().saveAll()
+        });
     }
 }

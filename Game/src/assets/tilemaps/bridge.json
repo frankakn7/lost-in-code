@@ -172,6 +172,29 @@
                  "width":0,
                  "x":367.623,
                  "y":197
+                }, 
+                {
+                 "height":0,
+                 "id":11,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"gameobject_id",
+                         "type":"string",
+                         "value":"hat"
+                        }, 
+                        {
+                         "name":"hat_id",
+                         "type":"string",
+                         "value":"crown"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":77.2909016727866,
+                 "y":374.965320277438
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -180,7 +203,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":11,
+ "nextobjectid":12,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.1",
