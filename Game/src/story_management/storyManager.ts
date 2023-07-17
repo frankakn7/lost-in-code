@@ -7,7 +7,6 @@ import PlayView from "../views/playView";
 
 export default class StoryManager {
     private _storyEvents = {};
-    private _storyMap = new Map<string, ChatFlow>;
     private _playView : PlayView;
 
     private _finishedStuff = {
@@ -24,17 +23,20 @@ export default class StoryManager {
 
 
         for(let room in storyJson) {
-            if (!(room in this._storyEvents)) this._storyEvents[room] = [];
+            if (!(room in this._storyEvents)) this._storyEvents[room] = new Map<string, ChatFlow>();
             
             for (var i = 0; i < Object.keys(storyJson[room]).length; i++) {
                 if (this._finishedStuff[room].includes(i.toString())) continue;
 
                 if (i.toString() in storyJson[room]) {
-                    this._storyEvents[room].push(new ChatFlow(this.reconstructChatNodeTreeRecursively(
-                        room,
-                        storyJson,
-                        i.toString()
-                    )));
+                    let cf : ChatFlow = new ChatFlow(this.reconstructChatNodeTreeRecursively(
+                            room,
+                            storyJson,
+                            i.toString()
+                            ));
+
+                    this._storyEvents[room].set(i.toString(), cf);
+                    
                 }
                 else break;
             }
@@ -60,20 +62,19 @@ export default class StoryManager {
         return newNode;
     }
 
-    public getStoryEvents() {
-        return this._storyEvents;
-    }
-
     public pullNextStoryBit(room) {
         // TODO CONTINUE HERE
         // this._finishedStuff[room].push(this._storyEvents.);
-        return this._storyEvents[room].shift();
+        
+
+        let key = this._storyEvents[room].keys().next().value;
+        let value = this._storyEvents[room].get(key);
+        this._storyEvents[room].delete(key)
+
+        return value;
     }
 
     public loadData() {
-        console.log("here it goes")
-        console.log(this._playView.getState().story)
-        console.log(this._finishedStuff)
         this._finishedStuff = this._playView.getState().story;
     }
 
