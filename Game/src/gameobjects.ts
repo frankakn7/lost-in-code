@@ -1,11 +1,11 @@
-import DoorTaskObject from "./objects/doorObject";
+import DoorObject from "./objects/doorObject";
 import HatObject from "./objects/hatObject";
 import InteractiveObject from "./objects/interactiveObject";
 import TaskObject from "./objects/taskObjects";
 
 export const GameObjectMap = {
     door: {
-        class: DoorTaskObject,
+        class: DoorObject,
         params: {
             texture: "door",
             width: 18,

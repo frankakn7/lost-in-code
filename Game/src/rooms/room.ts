@@ -35,9 +35,11 @@ export default class RoomScene extends Phaser.Scene {
 
     private _interactiveObjects = [];
     private _taskObjects = [];
+    private _onStartupFinishedTaskObjects = [];
     // private controls;
 
     private _playView;
+    private _doorUnlocked = false;
     
     /**
      * Room constructor
@@ -79,6 +81,7 @@ export default class RoomScene extends Phaser.Scene {
         /**
          * Create and add the layers of the tilemap
          */
+        this.loadData();
         
         const tilemap = this.make.tilemap({ key: "tilemap" + this._roomId });
         const tileset = tilemap.addTilesetImage(this.tilemapConfig.tilesetName, "tilesetImage");
@@ -150,17 +153,28 @@ export default class RoomScene extends Phaser.Scene {
             let texture = params.texture;
             
             let newObj = new GameObjectMap[gameobjectID].class(this, this, x, y, params, obj.properties);
-            this.add.existing(newObj);
-            this.physics.add.collider(this.player, newObj);
+
+            // The ultimate null check
+            if (!newObj.active && newObj.scene == null) {
+                return;
+            }
+            
             this._interactiveObjects.push(newObj);
             if (newObj instanceof TaskObject) {
                 this._taskObjects.push(newObj);
             }
 
+            this.add.existing(newObj);
+            if (newObj.exists)
+                this.physics.add.collider(this.player, newObj);
             // const door = new InteractiveObject(this, 32*5, 32*5, "door");
             // this.add.existing(door);
             // this.physics.add.collider(this.player, door);
         });
+
+        for(let i = 0; i < this._taskObjects.length; i++) {
+            this._taskObjects[i].setIsFinished(this._onStartupFinishedTaskObjects);
+        }
 
         const width = this.scale.width
         const height = this.scale.height;
@@ -192,6 +206,8 @@ export default class RoomScene extends Phaser.Scene {
 
         this.fow.setTint(0x141932);
         this.fow.setDepth(5);
+
+        this.events.emit("hats_unlock_check");
     }
     
     update (time, delta){
@@ -233,10 +249,23 @@ export default class RoomScene extends Phaser.Scene {
     }
 
     public saveAll() {
-        let res = []
+        let res = {finishedTaskObjects: []}
         this._taskObjects.forEach(o => {
-            res.push(o.isFinished());
+            res.finishedTaskObjects.push(o.isFinished());
         });
         return res;
+    }
+
+    public loadData() {
+        this.setDoorUnlocked(this.getPlayView().getState().room.doorUnlocked);
+        this._onStartupFinishedTaskObjects = this.getPlayView().getState().room.finishedTaskObjects;
+    }
+
+    public setDoorUnlocked(locked) {
+        this._doorUnlocked = locked;
+    }
+
+    public getDoorUnlocked() {
+        return this._doorUnlocked;
     }
 }
