@@ -55,7 +55,7 @@ export default class PlayView extends Phaser.Scene {
             ],
         },
         story: {
-            hangar: ["0", "1"],
+            hangar: [],
             commonRoom: [],
             engine: [],
             laboratory: [],
