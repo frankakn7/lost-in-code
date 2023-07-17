@@ -3,7 +3,7 @@ import InteractiveObject from "./interactiveObject";
 import PlayView from "../views/playView";
 import RoomScene from "../rooms/room";
 
-export default class DoorTaskObject extends InteractiveObject {
+export default class DoorObject extends InteractiveObject {
     constructor(
         scene: Phaser.Scene,
         room: RoomScene,
