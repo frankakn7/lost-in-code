@@ -64,13 +64,15 @@ export default class PlayView extends Phaser.Scene {
     
     public menuView = new MenuView(this);
 
-    private taskManager: TaskManager = new TaskManager([]);
+    private taskManager: TaskManager;
 
     private _storyManager = new StoryManager();
 
     public hatMap = HatMap;
 
     public hatView = new HatView(this);
+
+    private taskQueue: Array<() => void> = [];
 
     /**
      * Opens the chat view by sending all other scenes to sleep and launching / awaking the chat view scene
@@ -145,7 +147,9 @@ export default class PlayView extends Phaser.Scene {
         this.scene.sleep("pauseChatButtons");
         this.scene.sleep("Room");
 
-        
+        // this.events.on("taskmanager_object_finished",() => {
+        //     console.log("Something was finished")
+        // })
 
         //If the chat view already exists and is sleeping
         if (this.scene.isSleeping(this.chatView)) {
@@ -162,22 +166,44 @@ export default class PlayView extends Phaser.Scene {
             this.scene.launch(this.chatView);
         }
     }
+
+    onWake() {
+        // Execute all tasks in the queue
+        while (this.taskQueue.length > 0) {
+            const task = this.taskQueue.shift();
+            if (task) {
+                task();
+            }
+        }
+    }
+
+    queueTask(task: () => void) {
+        this.taskQueue.push(task);
+    }
     
     public pullNextStoryBit(roomId) {
+        console.log(roomId)
         return this._storyManager.pullNextStoryBit(roomId);
     }
 
     private openQuestionView(){
         //If the chat view already exists and is sleeping
+        this.scene.sleep();
+        this.scene.sleep("controlPad");
+        this.scene.sleep("pauseChatButtons");
+        this.scene.sleep("Room");
         if (this.scene.isSleeping(this.questionView)) {
             this.scene.wake(this.questionView);
             //If the chat view hasn't been launched yet
-        } else {
-            //create a new chat view
+        // } else if(this.scene.isActive(this.questionView)){
+        //     console.log(this.scene.isActive(this.questionView))
+        //     return;
+        }else{
+            //create a new question view
             this.questionView = new QuestionView(this.taskManager);
-            //add chat view to the scene
+            //add question view to the scene
             this.scene.add("questionView", this.questionView);
-            //launch the chat view
+            //launch the question view
             this.scene.launch(this.questionView);
         }
     }
@@ -249,7 +275,7 @@ export default class PlayView extends Phaser.Scene {
         }, "bridge", this).setPlayerPosition(32*2, 32*10));
         
         
-        
+        this.taskManager = new TaskManager(this,[])
 
 
         this.currentRoom = this.roomMap.get("hangar");
@@ -273,6 +299,8 @@ export default class PlayView extends Phaser.Scene {
 
     public create() {
         console.log("Launched");
+
+        this.events.on('wake', this.onWake, this);
 
         // Adds the scene and launches it... (if active is set to true on added scene it is launched directly)
         

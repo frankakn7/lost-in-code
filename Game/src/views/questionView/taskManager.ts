@@ -1,4 +1,6 @@
+import { globalEventBus } from "../../globalEventBus";
 import { QuestionType } from "../../types/questionType";
+import PlayView from "../playView";
 import Question from "./question";
 import { ChoiceQuestionElement, InputQuestionElement, OrderQuestionElement } from "./questionElement";
 
@@ -12,6 +14,8 @@ export default class TaskManager {
     private currentChapterMaxDifficulty: number;
 
     private currentQuestionSetForObject = new Map<number, Question>;
+
+    private scene: PlayView;
 
     //TODO: Implement loading questions from api
 
@@ -45,11 +49,24 @@ export default class TaskManager {
 
     public questionAnsweredCorrectly(){
         this.currentQuestionSetForObject.delete(this.currentPerformanceIndex);
-        this.currentPerformanceIndex ++;
-        if(this.currentPerformanceIndex == this.currentChapterMaxDifficulty){
+        console.log(this.currentQuestionSetForObject)
+        console.log(this.currentPerformanceIndex)
+        console.log(this.currentChapterMaxDifficulty)
+        if(this.currentQuestionSetForObject.size == 0){
             console.log("OBJECT REPAIRED")
+            // this.scene.events.emit("taskmanager_object_finished");
+            console.log(this.scene)
+            if (this.scene.scene.isSleeping(this.scene)) {
+                console.log("Sleeping")
+                this.scene.queueTask(() => {
+                    globalEventBus.emit('taskmanager_object_finished');
+                });
+            } else {
+                globalEventBus.emit('taskmanager_object_finished');
+            }
+            // globalEventBus.emit('taskmanager_object_finished');
         }else{
-
+            this.currentPerformanceIndex ++;
         }
     }
 
@@ -57,7 +74,8 @@ export default class TaskManager {
         this.currentPerformanceIndex --;
     }
 
-    constructor(questions: Question[]){
+    constructor(scene: PlayView, questions: Question[]){
+        this.scene = scene;
       const code = `<?php
 $txt = "Hello world!";
 $x = 5;
@@ -138,49 +156,49 @@ echo $y;
           2
       ));
 
-        this.availableQuestions.push(new Question(
-            2,
-            "What is the output of the following code?",
-            "Just Answer",
-            QuestionType.SINGLE_INPUT,
-            [inputQuestionElement],
-            3,
-            code
-        ));
+//         this.availableQuestions.push(new Question(
+//             2,
+//             "What is the output of the following code?",
+//             "Just Answer",
+//             QuestionType.SINGLE_INPUT,
+//             [inputQuestionElement],
+//             3,
+//             code
+//         ));
 
-        this.availableQuestions.push(new Question(
-            3,
-            "Reorder these elements into the correct order!",
-            "just order them",
-            QuestionType.DRAG_DROP,
-            [dragQuestionElement1, dragQuestionElement2, dragQuestionElement3],
-            4
-        ));
+//         this.availableQuestions.push(new Question(
+//             3,
+//             "Reorder these elements into the correct order!",
+//             "just order them",
+//             QuestionType.DRAG_DROP,
+//             [dragQuestionElement1, dragQuestionElement2, dragQuestionElement3],
+//             3
+//         ));
 
-        this.availableQuestions.push(new Question(
-            4,
-            "Fill in the blanks!",
-            "just fill it in",
-            QuestionType.CLOZE,
-            [clozeQuestionElement, clozeQuestionElement2],
-            5,
-            `
-<?php
-    $txt = "Hello world!";
-    $x = 5;
-    $y = 10.5;
+//         this.availableQuestions.push(new Question(
+//             4,
+//             "Fill in the blanks!",
+//             "just fill it in",
+//             QuestionType.CLOZE,
+//             [clozeQuestionElement, clozeQuestionElement2],
+//             3,
+//             `
+// <?php
+//     $txt = "Hello world!";
+//     $x = 5;
+//     $y = 10.5;
 
-    echo $txt;
-    echo "<br>";
-    echo $x;
-    echo "<br>";
-    echo $y;
-    echo "###INPUT|input1|20|true###";
-    echo "<br>";
-    echo "###INPUT|input2|15|false###";
-?>
-`
-        ));
+//     echo $txt;
+//     echo "<br>";
+//     echo $x;
+//     echo "<br>";
+//     echo $y;
+//     echo "###INPUT|input1|20|true###";
+//     echo "<br>";
+//     echo "###INPUT|input2|15|false###";
+// ?>
+// `
+//         ));
 
         let questionElementSelectBlock = new ChoiceQuestionElement(1, `<?php
         $txt = "Hello world!";
