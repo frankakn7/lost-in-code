@@ -5,7 +5,13 @@ import { ChoiceQuestionElement, InputQuestionElement, OrderQuestionElement } fro
 export default class TaskManager {
     private availableQuestions: Question[] = [];
     //TODO: implement topic id properly
-    private currentTopicId: number = 1;
+    private currentChapterNumber: number = 1;
+
+    private currentPerformanceIndex: number = 1;
+
+    private currentChapterMaxDifficulty: number;
+
+    private currentQuestionSetForObject = new Map<number, Question>;
 
     //TODO: Implement loading questions from api
 
@@ -20,8 +26,35 @@ export default class TaskManager {
 
     getRandomQuestion(){
         // this.shuffleQuestions(this.availableQuestions);
-        console.log(this.availableQuestions)
         return this.availableQuestions.pop();
+    }
+
+    public populateNewQuestionSet(){
+        this.currentChapterMaxDifficulty = Math.max(...this.availableQuestions.map(q => q.difficulty));
+        console.log(this.currentChapterMaxDifficulty)
+        this.shuffleQuestions(this.availableQuestions)
+        console.log(this.availableQuestions)
+        for(let i = 1; i <= this.currentChapterMaxDifficulty; i++){
+            this.currentQuestionSetForObject.set(i, this.availableQuestions.find(question => question.difficulty == i));
+        }
+    }
+
+    public getCurrentQuestionFromQuestionSet(){
+        return this.currentQuestionSetForObject.get(this.currentPerformanceIndex);
+    }
+
+    public questionAnsweredCorrectly(){
+        this.currentQuestionSetForObject.delete(this.currentPerformanceIndex);
+        this.currentPerformanceIndex ++;
+        if(this.currentPerformanceIndex == this.currentChapterMaxDifficulty){
+            console.log("OBJECT REPAIRED")
+        }else{
+
+        }
+    }
+
+    public questionAnsweredIncorrectly(){
+        this.currentPerformanceIndex --;
     }
 
     constructor(questions: Question[]){
@@ -102,7 +135,7 @@ echo $y;
           "Just Answer",
           QuestionType.CHOICE,
           [questionElement, questionElement2],
-          1
+          2
       ));
 
         this.availableQuestions.push(new Question(
@@ -111,7 +144,7 @@ echo $y;
             "Just Answer",
             QuestionType.SINGLE_INPUT,
             [inputQuestionElement],
-            1,
+            3,
             code
         ));
 
@@ -121,7 +154,7 @@ echo $y;
             "just order them",
             QuestionType.DRAG_DROP,
             [dragQuestionElement1, dragQuestionElement2, dragQuestionElement3],
-            1
+            4
         ));
 
         this.availableQuestions.push(new Question(
@@ -130,7 +163,7 @@ echo $y;
             "just fill it in",
             QuestionType.CLOZE,
             [clozeQuestionElement, clozeQuestionElement2],
-            1,
+            5,
             `
 <?php
     $txt = "Hello world!";
@@ -172,5 +205,7 @@ echo $y;
             code
         ));
         // this.availableQuestions = questions;
+        this.populateNewQuestionSet();
+        console.log(this.currentQuestionSetForObject)
     }
 }
