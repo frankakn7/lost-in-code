@@ -5,6 +5,7 @@ import {
     getChapterWithQuestions,
 } from "../handlers/chapterHandler";
 import { requireAdminRole } from "../auth";
+import { RowDataPacket } from "mysql2";
 
 const router = express.Router();
 
@@ -32,9 +33,9 @@ router.post("/", requireAdminRole, (req: Request, res: Response) => {
 });
 
 /**
- * Create new chapter with questions
+ * Create new FULL chapter with questions
  */
-router.post("/questions", requireAdminRole, (req: Request, res: Response) => {
+router.post("/full", requireAdminRole, (req: Request, res: Response) => {
     createChapterWithQuestions(req.body)
         .then((results) => {
             res.send(results);
@@ -78,13 +79,28 @@ router.get("/:id", (req: Request, res: Response) => {
 });
 
 /**
- * Get specific chapter and all questions
+ * Get specific FULL chapter and all questions
  */
-router.get("/:id/questions", (req: Request, res: Response) => {
+router.get("/:id/full", (req: Request, res: Response) => {
     const chapterId = req.params.id;
     getChapterWithQuestions(chapterId)
         .then((results) => {
-            res.send(results);
+            if (!results) {
+                const sql = "SELECT * FROM `chapter` WHERE `id` = ?;";
+                const params = [chapterId];
+                db.query(sql, params)
+                    .then((results:any) => {
+                        results[0].questions = []
+                        console.log(results[0])
+                        res.send(results[0]);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        return res.status(500).send("Server error");
+                    });
+            }else{
+                res.send(results);
+            }
         })
         .catch((error) => {
             console.error(error);

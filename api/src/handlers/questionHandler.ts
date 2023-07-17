@@ -60,10 +60,8 @@ export const createFullQuestion = (
                 const elementsPromises = requestBody.elements.map(
                     (element: QuestionElementValues) => {
                         element.question_id = result.insertId;
-                        console.log(element);
                         return createQuestionElement(element) //Create all the Question elements contained in the question
                             .then((elementResult) => {
-                                console.log(elementResult);
                                 if (!element.correct_answers) {
                                     return;
                                 }
@@ -77,7 +75,6 @@ export const createFullQuestion = (
                                                     question_element_id:
                                                         elementResult.insertId,
                                                 };
-                                            console.log(newlyCreatedAnswer);
                                             return createCorrectAnswer(
                                                 newlyCreatedAnswer
                                             ); //Create all the correct answer objects contained in the question element
@@ -155,14 +152,30 @@ export const extractQuestionsFromRows = (results: any): QuestionValues[] => {
     return questions;
 };
 
+export const getQuestion = (id: string) => {
+    const sql = "SELECT * FROM question WHERE id = ?";
+    const params = [id];
+    return db.query(sql, params);
+};
+
 export const getFullQuestion = (id: string): Promise<any> => {
     return new Promise((resolve, reject) => {
         const sql = "SELECT * FROM full_question WHERE question_id = ?";
         const params = [id];
         db.query(sql, params)
-            .then((results) => {
-                const question = extractQuestionsFromRows(results)[0];
-                resolve(question);
+            .then((results: any) => {
+                if (!results.length) {
+                    getQuestion(id).then((questionResult:any) => {
+                        const question = questionResult[0]
+                        question.elements = []
+                        resolve(question)
+                    }).catch(error => {
+                        reject(error)
+                    })
+                }else{
+                    const question = extractQuestionsFromRows(results)[0];
+                    resolve(question);
+                }
             })
             .catch((error) => {
                 reject(error);

@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import db from "../db";
 import { requireAdminRole } from "../auth";
+import { getFullGroup } from "../handlers/groupHandler";
 
 const router = express.Router();
 
@@ -54,6 +55,21 @@ router.get("/:id", requireAdminRole, (req: Request, res: Response) => {
         })
         .catch((error) => {
             console.error("Error inserting into the database:", error);
+            return res.status(500).send("Server error");
+        });
+});
+
+/**
+ * Get a FULL specific group
+ */
+router.get("/:id/full", requireAdminRole, (req: Request, res: Response) => {
+    const groupId = req.params.id;
+    getFullGroup(groupId)
+        .then((results) => {
+            res.send(results);
+        })
+        .catch((error) => {
+            console.error("Error getting full group:", error);
             return res.status(500).send("Server error");
         });
 });

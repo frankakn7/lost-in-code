@@ -43,8 +43,8 @@ router.get("/", requireAdminRole,(req: Request, res: Response) => {
 router.get("/:id",onlyAllowSelf, (req: Request, res: Response) => {
     const sql = 'SELECT * FROM user WHERE id = ?;'
     const params = [req.params.id]
-    db.query(sql,params).then(results => {
-        res.send(results)
+    db.query(sql,params).then((results:any) => {
+        res.send(results[0])
     }).catch(error => {
         console.error(error)
         return res.status(500).send("Server error")

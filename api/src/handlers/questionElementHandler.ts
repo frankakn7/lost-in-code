@@ -1,7 +1,6 @@
 import db from "../db";
 
 export const createQuestionElement = (requestBody: any): Promise<any> => {
-    console.log(requestBody)
     const sql =
         "INSERT INTO `question_element` (`content`, `element_identifier`, `correct_order_position`, `is_correct`, `question_id`) VALUES (?, ?, ?, ?, ?);";
     const params = [
