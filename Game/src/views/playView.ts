@@ -41,12 +41,27 @@ import labJson from "../assets/tilemaps/laboratory.json";
 export default class PlayView extends Phaser.Scene {
     private roomMap = new Map<string, RoomScene>;
 
-    private _state: any;
+    private _state: any = {
+        hats: {
+            unlockedHats: ["strawHat", "sombrero"],
+            selectedHat: "None"
+        },
+        playView: {
+            currentRoom: "hangar"
+        },
+        room: {
+            finishedTaskObjects: [
+                true, false, false, false
+            ],
+        }
+    };
 
     /**
      * The current room that the play view should show (and the player is in)
      */
     private currentRoom: RoomScene;
+
+    private _startingRoomId: string = "hangar";
     /**
      * The ui control pad for controlling the player
      */
@@ -280,7 +295,7 @@ export default class PlayView extends Phaser.Scene {
         this.taskManager = new TaskManager(this,[])
 
 
-        this.currentRoom = this.roomMap.get("hangar");
+        this.currentRoom = this.roomMap.get(this._startingRoomId);
     }
 
     /**
@@ -380,6 +395,10 @@ export default class PlayView extends Phaser.Scene {
 
     }
 
+    public loadData() {
+        this._startingRoomId = this._state.playView.currentRoom ? this._state.playView.currentRoom : this._startingRoomId;
+    }
+
 
     public pauseOrResumeGame :Function = (pause) =>{
         if (pause) {
@@ -396,8 +415,8 @@ export default class PlayView extends Phaser.Scene {
         
         return JSON.stringify({
             hats: this.hatView.saveAll(),
-            currentRoom: this.getCurrentRoom().getRoomId(),
-            taskObjects: this.getCurrentRoom().saveAll()
+            playView: this.getCurrentRoom().getRoomId(),
+            room: this.getCurrentRoom().saveAll()
         });
     }
 

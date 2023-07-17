@@ -57,7 +57,7 @@ export default class TaskObject extends InteractiveObject {
         console.log(this)
         if (!this._isFinished) {
             if (this._isStoryObject) {
-                this._isFinished = true;
+                this.setIsFinished(true);
                 this.room.getPlayView().pullNextStoryBit(this.room.getRoomId());
                 this.room.getPlayView().openChatView();
             }
@@ -67,5 +67,9 @@ export default class TaskObject extends InteractiveObject {
 
     public isFinished() {
         return this._isFinished;
+    }
+
+    public setIsFinished(finished) {
+        this._isFinished = finished;
     }
 }
