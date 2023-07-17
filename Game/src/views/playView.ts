@@ -15,6 +15,8 @@ import strawHatTexture from "../assets/hats/strawHat.png";
 import sorcerersHatTexture from "../assets/hats/redHat.png";
 import truckerCapTexture from "../assets/hats/truckerCap.png"
 import blackHatTexture from "../assets/hats/blackHat.png";
+import sombreroTexture from "../assets/hats/sombrero.png";
+import propellerHatTexture from "../assets/hats/propellerHat.png";
 import crownTexture from "../assets/hats/crown.png";
 import pirateHat from "../assets/hats/pirateHat.png";
 import hatBg from "../assets/hats/hatBg.png";
@@ -185,6 +187,8 @@ export default class PlayView extends Phaser.Scene {
         this.load.image("strawHat", strawHatTexture);
         this.load.image("sorcerersHat", sorcerersHatTexture);
         this.load.image("blackHat", blackHatTexture);
+        this.load.image("sombrero", sombreroTexture);
+        this.load.image("propellerHat", propellerHatTexture);
         this.load.image("truckerCap", truckerCapTexture);
         this.load.image("hatBg", hatBg);
         this.load.image("hatBgSelected", hatBgSelected);

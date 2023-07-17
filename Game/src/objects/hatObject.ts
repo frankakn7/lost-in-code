@@ -27,7 +27,6 @@ export default class HatObject extends InteractiveObject {
 
         if (this._hatId in HatMap)
             this.setTexture(HatMap[this._hatId].texture);
-        else this.destroy();
     }
 
     public interact(): void {
