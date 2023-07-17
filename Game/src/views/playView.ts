@@ -43,7 +43,7 @@ export default class PlayView extends Phaser.Scene {
 
     private _state: any = {
         hats: {
-            unlockedHats: ["strawHat", "sombrero"],
+            unlockedHats: [],
             selectedHat: "None"
         },
         playView: {
@@ -55,7 +55,7 @@ export default class PlayView extends Phaser.Scene {
             ],
         },
         story: {
-            hangar: ["0", "1"],
+            hangar: [],
             commonRoom: [],
             engine: [],
             laboratory: [],
