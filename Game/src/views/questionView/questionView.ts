@@ -107,7 +107,7 @@ export default class QuestionView extends Phaser.Scene {
         if (this.currentQuestion) {
             this.displayQuestion();
         } else {
-            this.questionText.destroy(true)
+            this.questionText?.destroy(true)
             this.questionText = this.add
                 .text(
                     this.cameras.main.displayWidth / 2,
