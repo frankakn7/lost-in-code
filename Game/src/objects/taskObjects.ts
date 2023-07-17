@@ -22,6 +22,10 @@ export default class TaskObject extends InteractiveObject {
     ) {
         super(scene, room, x, y, params, properties);
         this._isStoryObject = params.isStoryObject
+
+        properties.forEach(p => {
+            if (p["name"] == "story_id") this._isStoryObject = true;
+        });
     }
 
 
