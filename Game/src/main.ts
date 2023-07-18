@@ -35,8 +35,8 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
         autoRound: true
 
     },
-    scene: new PlayView("Play"),
-    // scene: new LoginView(),
+    //scene: new PlayView(),
+    scene: new LoginView(),
     //scene: new ChatView(),
     parent: "game",
     dom: {

@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import db from "../db";
+import {createGamestate, getGameState, updateGameState} from "../handlers/gamestateHandler";
 
 const router = express.Router();
 
@@ -9,53 +10,39 @@ router.post("/", (req, res) => {
     const userId = req.body.user_id;
     const gameState = req.body.state_data;
 
-    const sql = "INSERT INTO `game_state` (`state_data`, `user_id`) VALUES (?, ?);";
-    const params = [JSON.stringify(gameState), userId];
-
-    db.query(sql, params)
-        .then((results) => {
-            res.send(`New game state created for user ID ${userId}.`);
-        })
-        .catch((error) => {
-            console.error("Error inserting into the database:", error);
-            return res.status(500).send("Server error");
-        });
+    createGamestate(req,res,userId,gameState);
 });
 
+
+router.get("/me", (req, res) => {
+    const userId = req.body.user.id;
+    console.log(req.body)
+    console.log(userId)
+    getGameState(req,res,userId);
+});
 
 router.get("/:userId", (req, res) => {
     const userId = req.params.userId;
 
-    const sql = "SELECT * FROM `game_state` WHERE user_id = ?;";
-    const params = [userId];
-
-    db.query(sql, params)
-        .then((results) => {
-            res.send(results);
-        })
-        .catch((error) => {
-            console.error("Error querying from the database:", error);
-            return res.status(500).send("Server error");
-        });
+    getGameState(req,res,userId);
 });
 
+
+
+router.put("/me", (req, res) => {
+    const userId = req.body.user.id;
+    const game_state = req.body.game_state;
+    console.log(req.body)
+    updateGameState(req,res,userId,game_state)
+});
 
 router.put("/:userId", (req, res) => {
     const userId = req.params.userId;
     const game_state = req.body.game_state;
 
-    const sql = "UPDATE `game_state` SET `state_data` = ? WHERE `user_id` = ?;";
-    const params = [game_state, userId];
-
-    db.query(sql, params)
-        .then((results) => {
-            res.send(results);
-        })
-        .catch((error) => {
-            console.error("Error updating the database:", error);
-            return res.status(500).send("Server error");
-        });
+   updateGameState(req,res,userId,game_state)
 });
+
 
 
 router.delete("/:userId", (req, res) => {

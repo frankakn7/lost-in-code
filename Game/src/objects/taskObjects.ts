@@ -84,6 +84,7 @@ export default class TaskObject extends InteractiveObject {
         if (!this._isFinished) {
             if (this._isStoryObject) {
                 this.setIsFinished(true);
+                globalEventBus.emit("save_game")
                 this.room.getPlayView().pullNextStoryBit(this.room.getRoomId());
                 this.room.getPlayView().openChatView();
                 this._emitter.setConfig({ 
