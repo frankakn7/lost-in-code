@@ -4,6 +4,7 @@ import SpriteButton from "../../ui/SpriteButton";
 import PlayView from "../playView";
 import ReturnButtonTexture from "../../assets/ui/Return-Button.png";
 import DeviceButton from "../../ui/deviceButton";
+import {globalEventBus} from "../../helpers/globalEventBus";
 
 export default class HatView extends Phaser.Scene {
     private _tilesprite : Phaser.GameObjects.TileSprite;
@@ -53,7 +54,13 @@ export default class HatView extends Phaser.Scene {
             this.unlockedHats.push(hat);
         });
 
-        this._selectedHatId = this._playView.getState().hats.selectedHat ? this._playView.getState().hats.selectedHat : "None";
+       this.loadSelectedHat()
+    }
+
+    public loadSelectedHat() {
+        if(this._playView.getState().hats.selectedHat){
+            this._selectedHatId = this._playView.getState().hats.selectedHat;
+        }
     }
 
     public drawHatButtons() {
@@ -113,6 +120,7 @@ export default class HatView extends Phaser.Scene {
                         this._selectedHatId = prop;
                         this.deleteAllHatButtons();
                         this.drawHatButtons();
+                         globalEventBus.emit("save_game")
                      },
                      180,
                      180,
@@ -171,5 +179,6 @@ export default class HatView extends Phaser.Scene {
     public unlock(hatId) {
         console.log("Unlocked " + hatId + "!");
         this.unlockedHats.push(hatId);
+        globalEventBus.emit("save_game")
     }
 }

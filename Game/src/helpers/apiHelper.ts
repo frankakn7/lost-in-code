@@ -1,12 +1,51 @@
+import {GamestateType} from "../types/gamestateType";
+
 export default class ApiHelper {
     private apiUrl = `${process.env.API_URL}`;
 
-    
+    public getStateData() {
+        const url = this.apiUrl + "/api/gamestates/me";
+        return new Promise((resolve, reject) => {
+            fetch(url, {method: "GET", credentials: "include"})
+                .then((response) => {
+                    response
+                        .json()
+                        .then((data) =>
+                            resolve(data)
+                        )
+                        .catch((error) => reject(error));
+                })
+                .catch((error) => reject(error));
+        });
+    }
+
+    public updateStateData(state_data: GamestateType) {
+        console.log(state_data)
+        const gameState = {game_state: state_data}
+        console.log(JSON.stringify(gameState))
+        const url = this.apiUrl + "/api/gamestates/me";
+        return new Promise((resolve, reject) => {
+            fetch(url, {
+                method: "PUT", headers: {
+                    "Content-Type": "application/json",
+                }, credentials: "include", body: JSON.stringify(gameState)
+            })
+                .then((response) => {
+                    response
+                        .json()
+                        .then((data) =>
+                            resolve(data)
+                        )
+                        .catch((error) => reject(error));
+                })
+                .catch((error) => reject(error));
+        });
+    }
 
     public checkLoginStatus() {
         const url = this.apiUrl + "/api/me";
         return new Promise((resolve, reject) => {
-            fetch(url, { method: "GET", credentials: "include" })
+            fetch(url, {method: "GET", credentials: "include"})
                 .then((response) => {
                     if (response.status == 200) {
                         response
@@ -34,7 +73,7 @@ export default class ApiHelper {
                     "Content-Type": "application/json",
                 },
                 credentials: "include",
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({email, password}),
             })
                 .then((response) => {
                     if (response.ok) {
@@ -50,7 +89,7 @@ export default class ApiHelper {
     public logout() {
         const url = this.apiUrl + "/api/logout";
         return new Promise((resolve, reject) => {
-            fetch(url, { method: "POST", credentials: "include" })
+            fetch(url, {method: "POST", credentials: "include"})
                 .then((response) => {
                     if (response.status == 200) {
                         resolve(response);

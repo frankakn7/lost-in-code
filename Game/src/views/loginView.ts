@@ -55,9 +55,16 @@ export default class LoginView extends Phaser.Scene {
     
 
     private startGame() {
-        this.playView = new PlayView("Play");
-        this.scene.add("Play", this.playView);
-        this.scene.launch("Play");
-        this.scene.remove(this);
+        this.apiHelper.getStateData().then((data:any) => {
+            console.log(data.state_data);
+            if(data.state_data){
+                this.playView = new PlayView(data.state_data);
+            }else{
+                this.playView = new PlayView();
+            }
+            this.scene.add("Play", this.playView);
+            this.scene.launch("Play");
+            this.scene.remove(this);
+        }).catch((error) => console.error(error));
     }
 }

@@ -203,6 +203,7 @@ export default class RoomScene extends Phaser.Scene {
             // const door = new InteractiveObject(this, 32*5, 32*5, "door");
             // this.add.existing(door);
             // this.physics.add.collider(this.player, door);
+            this._playView.hatView.loadSelectedHat();
         });
 
         for(let i = 0; i < this._taskObjects.length; i++) {

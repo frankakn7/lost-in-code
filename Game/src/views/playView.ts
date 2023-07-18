@@ -3,7 +3,7 @@ import RoomScene from "../rooms/room";
 import ControlPadScene from "../ui/ControlPadScene";
 import PauseChatButtons from "../ui/PauseChatButtons";
 import ChatView from "./chatView/chatView";
-import { ChatFlowNode } from "./chatView/chatFlowNode";
+import {ChatFlowNode} from "./chatView/chatFlowNode";
 import ChatFlow from "./chatView/chatFlow";
 import QuestionView from "./questionView/questionView";
 import TaskManager from "./questionView/taskManager";
@@ -21,12 +21,12 @@ import crownTexture from "../assets/hats/crown.png";
 import pirateHat from "../assets/hats/pirateHat.png";
 import hatBg from "../assets/hats/hatBg.png";
 import hatBgSelected from "../assets/hats/hatBgSelected.png";
-import { HatMap } from "../hats/hats";
+import {HatMap} from "../hats/hats";
 import HatView from "./hatView/hatView";
 
 import tilesetPng from "../assets/tileset/station_tilemap.png";
 import tilemapJson from "../tilemaps/engineRoom.json";
-import { TilemapConfig } from "../types/tilemapConfig";
+import {TilemapConfig} from "../types/tilemapConfig";
 
 import commonRoomJson from "../assets/tilemaps/common.json";
 import bridgeJson from "../assets/tilemaps/bridge.json";
@@ -36,8 +36,11 @@ import labJson from "../assets/tilemaps/laboratory.json";
 
 import flaresJson from "../assets/particles/flares.json";
 import flaresPng from "../assets/particles/flares.png";
-import NewsPopup from "../ui/newsPopup";
+import {GamestateType} from "../types/gamestateType";
 import {globalEventBus} from "../helpers/globalEventBus";
+import ApiHelper from "../helpers/apiHelper";
+import NewsPopup from "../ui/newsPopup";
+
 
 
 /**
@@ -46,7 +49,7 @@ import {globalEventBus} from "../helpers/globalEventBus";
 export default class PlayView extends Phaser.Scene {
     private roomMap = new Map<string, RoomScene>;
 
-    private _state: any = {
+    private _state: GamestateType = {
         hats: {
             unlockedHats: [],
             selectedHat: "None"
@@ -65,6 +68,12 @@ export default class PlayView extends Phaser.Scene {
             engine: [],
             laboratory: [],
             bridge: []
+        },
+        taskmanager: {
+            answeredQuestions: [],
+            currentChapterNumber: 1,
+            repairedObjectsThisChapter: 0,
+            currentPerformanceIndex: 1
         }
     };
 
@@ -90,7 +99,7 @@ export default class PlayView extends Phaser.Scene {
     private chatView: ChatView;
 
     private questionView: QuestionView;
-    
+
     public menuView = new MenuView(this);
 
     private taskManager: TaskManager;
@@ -105,6 +114,8 @@ export default class PlayView extends Phaser.Scene {
 
     private _news = [];
     private _newsCounter = 0;
+
+    private apiHelper = new ApiHelper();
 
     /**
      * Opens the chat view by sending all other scenes to sleep and launching / awaking the chat view scene
@@ -145,11 +156,12 @@ export default class PlayView extends Phaser.Scene {
     queueTask(task: () => void) {
         this.taskQueue.push(task);
     }
-    
+
     public pullNextStoryBit(roomId) {
         console.log(roomId)
         return this._storyManager.pullNextStoryBit(roomId);
     }
+
 
     public broadcastNews(message) {
         let newsId = "newsPopup" + (this._newsCounter++).toString();
@@ -174,10 +186,10 @@ export default class PlayView extends Phaser.Scene {
         if (this.scene.isSleeping(this.questionView)) {
             this.scene.wake(this.questionView);
             //If the chat view hasn't been launched yet
-        // } else if(this.scene.isActive(this.questionView)){
-        //     console.log(this.scene.isActive(this.questionView))
-        //     return;
-        }else{
+            // } else if(this.scene.isActive(this.questionView)){
+            //     console.log(this.scene.isActive(this.questionView))
+            //     return;
+        } else {
             //create a new question view
             this.questionView = new QuestionView(this.taskManager);
             //add question view to the scene
@@ -187,7 +199,7 @@ export default class PlayView extends Phaser.Scene {
         }
     }
 
-    public preload() {        
+    public preload() {
 
         this.load.image("backgroundTile", deviceBackgroundTilePng);
         this.load.image("strawHat", strawHatTexture);
@@ -211,9 +223,11 @@ export default class PlayView extends Phaser.Scene {
      * @param settingsConfig the standard settingsConfig object used for all scenes
      */
     constructor(
-        settingsConfig?: string | Phaser.Types.Scenes.SettingsConfig
+        state?: GamestateType,
     ) {
-        super(settingsConfig);
+        super("Play");
+
+        state ? this._state = state : null;
 
         this.roomMap.set("hangar", new RoomScene({
             tilesetImage: tilesetPng,
@@ -222,7 +236,7 @@ export default class PlayView extends Phaser.Scene {
             floorLayer: "Floor",
             collisionLayer: "Walls",
             objectsLayer: "Objects"
-        }, "hangar", this).setNextRoom("commonRoom").setPlayerPosition(32*12,32*3));
+        }, "hangar", this).setNextRoom("commonRoom").setPlayerPosition(32 * 12, 32 * 3));
         this.roomMap.set("commonRoom", new RoomScene({
             tilesetImage: tilesetPng,
             tilesetName: "spac2",
@@ -230,7 +244,7 @@ export default class PlayView extends Phaser.Scene {
             floorLayer: "Floor",
             collisionLayer: "Walls",
             objectsLayer: "Objects"
-        }, "commonRoom", this).setNextRoom("engine").setPlayerPosition(32*2, 32*10));
+        }, "commonRoom", this).setNextRoom("engine").setPlayerPosition(32 * 2, 32 * 10));
         this.roomMap.set("engine", new RoomScene({
             tilesetImage: tilesetPng,
             tilesetName: "spac2",
@@ -238,7 +252,7 @@ export default class PlayView extends Phaser.Scene {
             floorLayer: "Floor",
             collisionLayer: "Walls",
             objectsLayer: "Objects"
-        }, "engine", this).setNextRoom("laboratory").setPlayerPosition(32*2, 32*10));
+        }, "engine", this).setNextRoom("laboratory").setPlayerPosition(32 * 2, 32 * 10));
         this.roomMap.set("laboratory", new RoomScene({
             tilesetImage: tilesetPng,
             tilesetName: "spac2",
@@ -246,7 +260,7 @@ export default class PlayView extends Phaser.Scene {
             floorLayer: "Floor",
             collisionLayer: "Walls",
             objectsLayer: "Objects"
-        }, "laboratory", this).setNextRoom("bridge").setPlayerPosition(32*2, 32*10));
+        }, "laboratory", this).setNextRoom("bridge").setPlayerPosition(32 * 2, 32 * 10));
         this.roomMap.set("bridge", new RoomScene({
             tilesetImage: tilesetPng,
             tilesetName: "spac2",
@@ -254,10 +268,10 @@ export default class PlayView extends Phaser.Scene {
             floorLayer: "Floor",
             collisionLayer: "Walls",
             objectsLayer: "Objects"
-        }, "bridge", this).setPlayerPosition(32*2, 32*10));
-        
-        
-        this.taskManager = new TaskManager(this,[])
+        }, "bridge", this).setPlayerPosition(32 * 2, 32 * 10));
+
+
+        this.taskManager = new TaskManager(this, this._state.taskmanager)
 
 
         this.currentRoom = this.roomMap.get(this._startingRoomId);
@@ -282,10 +296,14 @@ export default class PlayView extends Phaser.Scene {
     public create() {
 
         this.events.on('wake', this.onWake, this);
-        this.events.on('sleep', () => {console.log("SLEEPING PLAY VIEW")})
+        this.events.on('sleep', () => {
+            console.log("SLEEPING PLAY VIEW")
+        })
+
+        globalEventBus.on("save_game", () => this.apiHelper.updateStateData(this.saveAllToGamestateType()))
 
         // Adds the scene and launches it... (if active is set to true on added scene it is launched directly)
-        
+
         this.roomMap.forEach((value, key) => {
             this.scene.add(key, this.roomMap.get(key));
         })
@@ -315,8 +333,8 @@ export default class PlayView extends Phaser.Scene {
     public update(time: number, delta: number): void {
 
         //TODO: Optimize the player control logic
-        
-        if(this.currentRoom.player){
+
+        if (this.currentRoom.player) {
             this.currentRoom.player.leftPress = this.controlPad.leftPress
             this.currentRoom.player.rightPress = this.controlPad.rightPress
             this.currentRoom.player.upPress = this.controlPad.upPress
@@ -353,7 +371,7 @@ export default class PlayView extends Phaser.Scene {
 
         if (this.pauseChatButtons.pausePressed) {
             this.pauseChatButtons.pausePressed = false;
-            this.scene.launch(this.menuView);   
+            this.scene.launch(this.menuView);
 
             this.pauseOrResumeGame(true);
         }
@@ -365,24 +383,24 @@ export default class PlayView extends Phaser.Scene {
     }
 
 
-    public pauseOrResumeGame :Function = (pause) =>{
+    public pauseOrResumeGame: Function = (pause) => {
         if (pause) {
             this.currentRoom.scene.pause();
             this.controlPad.scene.pause();
-        } 
-        else {
+        } else {
             this.currentRoom.scene.resume();
             this.controlPad.scene.resume();
         }
     }
 
-    public saveAllToJSONString() {
-        return JSON.stringify({
+    public saveAllToGamestateType(): GamestateType {
+        return {
             hats: this.hatView.saveAll(),
             playView: this.getCurrentRoom().getRoomId(),
             room: this.getCurrentRoom().saveAll(),
-            story: this._storyManager.saveAll()
-        });
+            story: this._storyManager.saveAll(),
+            taskmanager: this.taskManager.saveAll()
+        };
     }
 
     public getState() {

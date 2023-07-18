@@ -7,6 +7,7 @@ import {
     InputQuestionElement,
     OrderQuestionElement,
 } from "./questionElement";
+import {TaskManagerStateType} from "../../types/taskManagerStateType";
 
 export default class TaskManager {
     private availableQuestions: Question[] = [];
@@ -27,6 +28,13 @@ export default class TaskManager {
     public currentTotalQuestions: number;
 
     private scene: PlayView;
+
+    // private defaultTaskManagerState: TaskManagerStateType = {
+    //     answeredQuestions: [],
+    //     currentChapterNumber: 1,
+    //     repairedObjectsThisChapter: 0,
+    //     currentPerformanceIndex: 1
+    // }
 
     //TODO: Implement loading questions from api
 
@@ -129,10 +137,24 @@ export default class TaskManager {
     }
 
     public saveAll(){
-        //TODO: SAVE ALL => USE QUESTION IDS etc
+        return {
+            // availableQuestions: [...this.availableQuestions.map(question => question.id)],
+            answeredQuestions: [...this.answeredQuestions.map(quesion => quesion.id)],
+            currentChapterNumber: this.currentChapterNumber,
+            repairedObjectsThisChapter: this.repairedObjectsThisChapter,
+            currentPerformanceIndex: this.currentPerformanceIndex
+        }
     }
 
-    constructor(scene: PlayView, questions: Question[]) {
+    private loadState(state: TaskManagerStateType){
+        this.answeredQuestions = this.availableQuestions.filter(question => state.answeredQuestions.includes(question.id))
+        this.availableQuestions = this.availableQuestions.filter(question => !state.answeredQuestions.includes(question.id))
+        this.currentChapterNumber = state.currentChapterNumber;
+        this.repairedObjectsThisChapter = state.repairedObjectsThisChapter;
+        this.currentPerformanceIndex = state.currentPerformanceIndex;
+    }
+
+    constructor(scene: PlayView, savedTaskManagerState?:TaskManagerStateType) {
         this.scene = scene;
 
         const code = `<?php
@@ -302,7 +324,14 @@ echo $y;
             )
         );
         // this.availableQuestions = questions;
+
+
+
+
         this.populateNewQuestionSet();
+
+        this.loadState(savedTaskManagerState);
+
         this.currentChapterMaxDifficulty = Math.max(
             ...this.availableQuestions.map((q) => q.difficulty)
         );
