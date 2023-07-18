@@ -101,6 +101,7 @@ export default class DraggableCodeBlock extends Phaser.GameObjects.Container {
         document.body.appendChild(dummyPre);
 
         let canvas = await html2canvas(dummyPre, {
+            logging: false,
             scale: 1,
             onclone: function (clonedDoc) {
                 dummyPre.remove();
@@ -111,7 +112,7 @@ export default class DraggableCodeBlock extends Phaser.GameObjects.Container {
         // Add the canvas as a texture
         let texturekey = "codeBlockTexture" + this.elementId;
         this.scene.textures.remove(texturekey);
-        console.log(canvas);
+        
         let canvasTexture = this.scene.textures.addCanvas(texturekey, canvas);
 
         // Now you can use 'yourTextureKey' as a texture key in your game.

@@ -11,14 +11,64 @@ import deviceBackgroundTilePng from "../assets/Device-Background-Tile.png";
 import MenuView from "./menuView";
 import StoryManager from "../story_management/storyManager";
 
+import strawHatTexture from "../assets/hats/strawHat.png";
+import sorcerersHatTexture from "../assets/hats/redHat.png";
+import truckerCapTexture from "../assets/hats/truckerCap.png"
+import blackHatTexture from "../assets/hats/blackHat.png";
+import sombreroTexture from "../assets/hats/sombrero.png";
+import propellerHatTexture from "../assets/hats/propellerHat.png";
+import crownTexture from "../assets/hats/crown.png";
+import pirateHat from "../assets/hats/pirateHat.png";
+import hatBg from "../assets/hats/hatBg.png";
+import hatBgSelected from "../assets/hats/hatBgSelected.png";
+import { HatMap } from "../hats/hats";
+import HatView from "./hatView/hatView";
+
+import tilesetPng from "../assets/tileset/station_tilemap.png";
+import tilemapJson from "../tilemaps/engineRoom.json";
+import { TilemapConfig } from "../types/tilemapConfig";
+
+import commonRoomJson from "../assets/tilemaps/common.json";
+import bridgeJson from "../assets/tilemaps/bridge.json";
+import engineJson from "../assets/tilemaps/engine.json";
+import hangarJson from "../assets/tilemaps/hangar.json";
+import labJson from "../assets/tilemaps/laboratory.json";
+
+
 /**
  * Represents the view in which the rooms and player are explorable (default playing view)
  */
 export default class PlayView extends Phaser.Scene {
+    private roomMap = new Map<string, RoomScene>;
+
+    private _state: any = {
+        hats: {
+            unlockedHats: [],
+            selectedHat: "None"
+        },
+        playView: {
+            currentRoom: "hangar"
+        },
+        room: {
+            finishedTaskObjects: [
+                false, false, false, false
+            ],
+        },
+        story: {
+            hangar: [],
+            commonRoom: [],
+            engine: [],
+            laboratory: [],
+            bridge: []
+        }
+    };
+
     /**
      * The current room that the play view should show (and the player is in)
      */
     private currentRoom: RoomScene;
+
+    private _startingRoomId: string = "hangar";
     /**
      * The ui control pad for controlling the player
      */
@@ -36,11 +86,17 @@ export default class PlayView extends Phaser.Scene {
 
     private questionView: QuestionView;
     
-    private menuView = new MenuView(this);
+    public menuView = new MenuView(this);
 
-    private taskManager: TaskManager = new TaskManager([]);
+    private taskManager: TaskManager;
 
-    private _storyManager = new StoryManager();
+    private _storyManager = new StoryManager(this);
+
+    public hatMap = HatMap;
+
+    public hatView = new HatView(this);
+
+    private taskQueue: Array<() => void> = [];
 
     /**
      * Opens the chat view by sending all other scenes to sleep and launching / awaking the chat view scene
@@ -115,17 +171,19 @@ export default class PlayView extends Phaser.Scene {
         this.scene.sleep("pauseChatButtons");
         this.scene.sleep("Room");
 
-        
+        // this.events.on("taskmanager_object_finished",() => {
+        //     console.log("Something was finished")
+        // })
 
         //If the chat view already exists and is sleeping
         if (this.scene.isSleeping(this.chatView)) {
             //start a new chat flow and awake the scene
-            this.chatView.startNewChatFlow(this._storyManager.getNextStoryBit("hangar"));
+            this.chatView.startNewChatFlow(this._storyManager.pullNextStoryBit(this.currentRoom.getRoomId()));
             this.scene.wake(this.chatView);
             //If the chat view hasn't been launched yet
         } else {
             //create a new chat view
-            this.chatView = new ChatView(this._storyManager.getNextStoryBit("hangar"));
+            this.chatView = new ChatView(this._storyManager.pullNextStoryBit(this.currentRoom.getRoomId()));
             //add chat view to the scene
             this.scene.add("chatView", this.chatView);
             //launch the chat view
@@ -133,23 +191,60 @@ export default class PlayView extends Phaser.Scene {
         }
     }
 
+    onWake() {
+        // Execute all tasks in the queue
+        while (this.taskQueue.length > 0) {
+            const task = this.taskQueue.shift();
+            if (task) {
+                task();
+            }
+        }
+    }
+
+    queueTask(task: () => void) {
+        this.taskQueue.push(task);
+    }
+    
+    public pullNextStoryBit(roomId) {
+        console.log(roomId)
+        return this._storyManager.pullNextStoryBit(roomId);
+    }
+
     private openQuestionView(){
         //If the chat view already exists and is sleeping
+        this.scene.sleep();
+        this.scene.sleep("controlPad");
+        this.scene.sleep("pauseChatButtons");
+        this.scene.sleep("Room");
         if (this.scene.isSleeping(this.questionView)) {
             this.scene.wake(this.questionView);
             //If the chat view hasn't been launched yet
-        } else {
-            //create a new chat view
+        // } else if(this.scene.isActive(this.questionView)){
+        //     console.log(this.scene.isActive(this.questionView))
+        //     return;
+        }else{
+            //create a new question view
             this.questionView = new QuestionView(this.taskManager);
-            //add chat view to the scene
+            //add question view to the scene
             this.scene.add("questionView", this.questionView);
-            //launch the chat view
+            //launch the question view
             this.scene.launch(this.questionView);
         }
     }
 
     public preload() {
         this.load.image("backgroundTile", deviceBackgroundTilePng);
+        this.load.image("strawHat", strawHatTexture);
+        this.load.image("sorcerersHat", sorcerersHatTexture);
+        this.load.image("blackHat", blackHatTexture);
+        this.load.image("sombrero", sombreroTexture);
+        this.load.image("propellerHat", propellerHatTexture);
+        this.load.image("truckerCap", truckerCapTexture);
+        this.load.image("hatBg", hatBg);
+        this.load.image("hatBgSelected", hatBgSelected);
+        this.load.image("tilesetImage", tilesetPng);
+        this.load.image("crown", crownTexture);
+        this.load.image("pirateHat", pirateHat);
     }
 
     /**
@@ -158,11 +253,56 @@ export default class PlayView extends Phaser.Scene {
      * @param settingsConfig the standard settingsConfig object used for all scenes
      */
     constructor(
-        initialRoom: RoomScene,
         settingsConfig?: string | Phaser.Types.Scenes.SettingsConfig
     ) {
         super(settingsConfig);
-        this.currentRoom = initialRoom;
+
+        this.roomMap.set("hangar", new RoomScene({
+            tilesetImage: tilesetPng,
+            tilesetName: "spac2",
+            tilemapJson: hangarJson,
+            floorLayer: "Floor",
+            collisionLayer: "Walls",
+            objectsLayer: "Objects"
+        }, "hangar", this).setNextRoom("commonRoom").setPlayerPosition(32*12,32*3));
+        this.roomMap.set("commonRoom", new RoomScene({
+            tilesetImage: tilesetPng,
+            tilesetName: "spac2",
+            tilemapJson: commonRoomJson,
+            floorLayer: "Floor",
+            collisionLayer: "Walls",
+            objectsLayer: "Objects"
+        }, "commonRoom", this).setNextRoom("engine").setPlayerPosition(32*2, 32*10));
+        this.roomMap.set("engine", new RoomScene({
+            tilesetImage: tilesetPng,
+            tilesetName: "spac2",
+            tilemapJson: engineJson,
+            floorLayer: "Floor",
+            collisionLayer: "Walls",
+            objectsLayer: "Objects"
+        }, "engine", this).setNextRoom("laboratory").setPlayerPosition(32*2, 32*10));
+        this.roomMap.set("laboratory", new RoomScene({
+            tilesetImage: tilesetPng,
+            tilesetName: "spac2",
+            tilemapJson: labJson,
+            floorLayer: "Floor",
+            collisionLayer: "Walls",
+            objectsLayer: "Objects"
+        }, "laboratory", this).setNextRoom("bridge").setPlayerPosition(32*2, 32*10));
+        this.roomMap.set("bridge", new RoomScene({
+            tilesetImage: tilesetPng,
+            tilesetName: "spac2",
+            tilemapJson: bridgeJson,
+            floorLayer: "Floor",
+            collisionLayer: "Walls",
+            objectsLayer: "Objects"
+        }, "bridge", this).setPlayerPosition(32*2, 32*10));
+        
+        
+        this.taskManager = new TaskManager(this,[])
+
+
+        this.currentRoom = this.roomMap.get(this._startingRoomId);
     }
 
     /**
@@ -173,20 +313,24 @@ export default class PlayView extends Phaser.Scene {
         return this.currentRoom;
     }
 
-    /**
-     * Switch the current room scene with the new room scene
-     * @param newRoom the new room to be displayed
-     */
-    public switchCurrentRoom(newRoom: RoomScene) {
-        this.scene.stop(this.currentRoom).launch(newRoom);
-        this.currentRoom = newRoom;
+
+    public getToRoomViaId(id: string) {
+        let nextRoom = this.roomMap.get(id);
+        this.scene.stop(this.currentRoom)
+        this.scene.launch(this.roomMap.get(id));
+        this.currentRoom = nextRoom;
     }
 
     public create() {
-        console.log("Launched");
+
+        this.events.on('wake', this.onWake, this);
 
         // Adds the scene and launches it... (if active is set to true on added scene it is launched directly)
-        this.scene.add("currentRoom", this.currentRoom);
+        
+        this.roomMap.forEach((value, key) => {
+            this.scene.add(key, this.roomMap.get(key));
+        })
+
         this.scene.launch(this.currentRoom);
 
         // TODO: Check if mobile
@@ -199,9 +343,9 @@ export default class PlayView extends Phaser.Scene {
         this.scene.add("controlPad", this.controlPad);
         this.scene.launch(this.controlPad);
 
-        this.scene.get('Room').events.on('interacted_question_object', () => {
-            this.openQuestionView();
-        });
+        // this.scene.get('Room').events.on('interacted_question_object', () => {
+        //     this.openQuestionView();
+        // });
         this.scene.add("menu", this.menuView);
     }
 
@@ -242,18 +386,25 @@ export default class PlayView extends Phaser.Scene {
             //prevent phone button from being continuously pressed by accident
             this.pauseChatButtons.phonePressed = false;
             //open the chat view
-            this.openChatView();
-            // this.openQuestionView();
+            // this.openChatView();
+            // this.getToRoomViaId("laboratory");
+            this.openQuestionView();
+            // console.log(this.saveAllToJSONString());
         }
 
         if (this.pauseChatButtons.pausePressed) {
             this.pauseChatButtons.pausePressed = false;
-            console.log(this.menuView);
             this.scene.launch(this.menuView);   
 
             this.pauseOrResumeGame(true);
         }
+
     }
+
+    public loadData() {
+        this._startingRoomId = this._state.playView.currentRoom ? this._state.playView.currentRoom : this._startingRoomId;
+    }
+
 
     public pauseOrResumeGame :Function = (pause) =>{
         if (pause) {
@@ -264,5 +415,18 @@ export default class PlayView extends Phaser.Scene {
             this.currentRoom.scene.resume();
             this.controlPad.scene.resume();            
         }
+    }
+
+    public saveAllToJSONString() {
+        return JSON.stringify({
+            hats: this.hatView.saveAll(),
+            playView: this.getCurrentRoom().getRoomId(),
+            room: this.getCurrentRoom().saveAll(),
+            story: this._storyManager.saveAll()
+        });
+    }
+
+    public getState() {
+        return this._state;
     }
 }

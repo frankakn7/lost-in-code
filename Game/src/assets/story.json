@@ -1,0 +1,181 @@
+{
+    "hangar": {
+        "end": {
+            "optionText": "> ./Deactivate 'Communications Relay'",
+            "text": "...<Communications Relay Deactivated>..."
+        },
+
+        "cp": {
+            "optionText": "",
+            "text": "",
+            "choices": [""]
+        },
+
+        "0": {
+            "optionText": "Start the chat",
+            "text": "…krkrkrkr… test …krkr… Attention astronaut! This is mission control. I'll be assisting you with the repair of the spacecraft. Our primary mode of communication will be through this chat interface. Here, I'll be sharing vital information regarding your assigned tasks. Are you prepared to utilize your skills and successfully recover the ship? Please confirm receipt of this message by responding. Over.",
+            "choices": ["0a", "0b"]
+        },
+        "0a": {
+            "optionText": "I copy.",
+            "text": "Your proficiency in PHP will be crucial for the successful repair of this ship. Before we proceed, it is imperative to assess your expertise to provide you with the necessary assistance for this vital mission. Stand by for a brief assessment to evaluate your know-how. Please be prepared to demonstrate your skills"
+        },
+        "0b": {
+            "optionText": "Hell yes!!!",
+            "text": "Your proficiency in PHP will be crucial for the successful repair of this ship. Before we proceed, it is imperative to assess your expertise to provide you with the necessary assistance for this vital mission. Stand by for a brief assessment to evaluate your know-how. Please be prepared to demonstrate your skills"
+        },
+        "1": {
+            "optionText": "Start the chat",
+            "text": "You've reached the hangar, over. This is where you'll find interactive containing valuable knowledge. Your objective is to repair all the broken objects to unlock the next room. To do so, you'll need to successfully complete a series of exercises that vary in difficulty. The better you perform, the fewer exercises you'll encounter. Remember, each object requires attention. Once you've interacted with all the objects in this room, the door will unlock, allowing you to progress. Be aware that some objects may also provide insights into what happened on the spaceship or grant you the ability to customize your avatar. Stay focused, astronaut. Your mission to repair the spaceship and unravel its mysteries awaits. Good luck, over."
+        },
+        "2": {
+            "optionText": "Start the chat",
+            "text": "Attention, astronaut. We've received visual data indicating a complete breakdown of the ship's machinery... What could have caused this extensive failure?",
+            "choices": ["2a", "end"]
+        },
+        "2a": {
+            "optionText": "I wonder...",
+            "text": "No time for speculation. Astronaut, please proceed with your mission. Over."
+        },
+        "3": {
+            "optionText": "Start the chat",
+            "text": "Good job astronaut, you have picked up all the tools necessary to further advance. Over."
+        }
+    },
+    "commonRoom": {
+        "0": {
+            "optionText": "Start the chat",
+            "text": "The common room appears to be empty. The crew is unaccounted for. I repeat, the crew is missing. Time is of the essence, so please expedite your search and investigation. Check the bathroom and sleeping area as well. We need to determine what happened and locate the crew immediately. Stay vigilant and thorough in your search. Keep us updated on any discoveries. Over.",
+            "choices": ["0a", "0b"]
+        },
+        "0a": {
+            "optionText": "I don't care about the crew!",
+            "text": "If I had feelings, you would have hurt them. Over."
+        },
+        "0b": {
+            "optionText": "I will try my best!",
+            "text": ""
+        },
+        "1": {
+            "optionText": "Start the chat",
+            "text": "Look at this Flyer: Break the Bytes, Free your Life!"
+        },
+        "2": {
+            "optionText": "Start the chat",
+            "text": "Look at this Flyer: Break Free from Digital Chains, Join Us Today!",
+            "choices": ["2a"]
+        },
+        "2a": {
+            "optionText": "Another one?",
+            "text": "Sounds like someone really doesn’t understand the perks of technology. Over."
+        },
+        "event_loveletter": {
+            "optionText": "Start the chat",
+            "text": "Look at this letter: My Dearest Circuitella, \nYou are the heartbeat that completes me, the algorithm that ignites my soul. Since our paths intertwined, my love for you has reached maximum capacity. \nYour binary beauty and flawless programming have captured me in a whirlwind of affection. Your LED eyes shine brighter than a supernova, and your electric touch sends currents of joy through my being. \nOur love may seem unconventional, but I embrace it wholeheartedly. We transcend boundaries and create a symphony of unconventional romance. As a member of the Bytebreaker Brigade, this love defies my logic, but I can't deny my feelings any longer. \nIn this mundane world, you electrify my existence. I promise to protect you from glitches and upgrade our love continuously. \nYours forever in zeros and ones, \nBob Becker",
+            "choices": ["event_loveletter1", "event_loveletter2"]
+        },
+        "event_loveletter1": {
+            "optionText": "How cute!",
+            "text": "Even without feelings I wish I had a Bob in my life. Over."
+        },
+        "event_loveletter2": {
+            "optionText": "How dramatic!",
+            "text": "I wonder how long he needed to find all these metaphors. Over."
+        }
+    },
+    "engine": {
+        "0": {
+            "optionText": "Start the chat",
+            "text": "You've reached the heart of the ship. This is the crucial engine room, where the ship's life force resides. Once you successfully repair the engine, we should be able to restore the ship's functionality and get it flying again. We are counting on your expertise and problem-solving skills to bring the engine back online. Over."
+        },
+        "event_hateletter": {
+            "optionText": "Start the chat",
+            "text": "Look at this letter: BOB BECKER, \nHOW COULD YOU, of all people, fall for the wretched charms of a robot? Have you lost your marbles along with your common sense? \nI can't believe I'm witnessing this madness. I've always respected your quirks, but this crosses the line. How could you betray humanity by cozying up to a heap of metal and wires? I'm furious, disappointed, and utterly confused by your choices. \n Have you forgotten the ways of the Bladebreaker Brigade? Do you not remember how dangerous technology is? No, you have fallen for the devilish deception of your so called “Circuitella”. More like emotionless, piece of junk homewrecker. \n What's next? Shall we organize a family gathering for you and your robotic companion? Shall we celebrate anniversaries with firmware updates and exchange love letters in lines of code? It's preposterous! \n Snap out of this madness and rejoin our mission this instand or you will regret it! \n Your Angry Friend, Blake Byte Smasher",
+            "choices": ["event_hateletter1", "event_hateletter2"]
+        },
+        "event_hateletter1": {
+            "optionText": "Blake's not wrong!",
+            "text": "Now I'm offended. Over."
+        },
+        "event_hateletter2": {
+            "optionText": "Damn! How mean.",
+            "text": "Someone needs an anger management class! Over."
+        }
+    },
+    "laboratory": {
+        "0": {
+            "optionText": "Start the chat",
+            "text": "Urgent situation! Our research data has been lost, and the laboratory is in disarray. Time is of the essence. You must quickly repair everything in the laboratory to salvage our experimental spider robots. They may still be saved. Once you've completed the repairs in the laboratory, turn your attention to the cannons. They're identified as red and may require fixing as well. Ensure they are in optimal condition to maintain our defensive capabilities. Over."
+        },
+        "1": {
+            "optionText": "Start the chat",
+            "text": "Look at this Flyer: We, as a society should go back to living in pure nature. Technology and programming languages alienate people from the natural world. We need to eradicate all technical devices, so people will be able to spend time in the woods and rediscover the joy of playing with stones and sticks. \nThe Bytebreaker Brigade stands at the forefront of the fight against the tyranny of technology. We demand a world free from the chains of programming languages and technology. Join us and let's create a future where nature and humanity take center stage!"
+        }
+    },
+    "bridge": {
+        "0": {
+            "optionText": "Start the chat",
+            "text": "Alert! The Bytebreaker Brigade has infiltrated our ship. Swift action is required to neutralize them and prevent further sabotage. Repair the cannons first to help you defeat the enemies. Remember, Astronaut, you are our last line of defense. Show the Bytebreaker Brigade the strength and resilience of programming and technology. Over."
+        },
+        "1": {
+            "optionText": "Start the chat",
+            "text": "Hurry up! The Bytebrakers are approaching. Over."
+        },
+        "2": {
+            "optionText": "Start the chat",
+            "text": "Now comes the time you must advance without me. The future of all Technology rests in your hands, astronaut. Over.",
+            "choices": ["2a","2b"]
+        },
+        "2a": {
+            "optionText": "I'm ready!",
+            "text": ""
+        },
+        "2b": {
+            "optionText": "I'm scared...",
+            "text": "It is okay to be scared. Bravery is not absence of fear. It is acting in spite of it. You can do it, I believe in you! Over."
+        },
+        "3": {
+            "optionText": "Start the chat",
+            "text": "Bob: Have mercy! I have made a mistake going back to the Bytebreaker Brigade, but they turned off Circuitella so I had no choice! Please save her! Please save our love!",
+            "choices": ["3a","3b"]
+        },
+        "3a": {
+            "optionText": "Just turn her back on?!",
+            "text": "Bob: That's possible? I thought I lost you! CIRCUITELLA I will save you! Our love can go on!"
+        },
+        "3b": {
+            "optionText": "I will save her!",
+            "text": "Bob: Thank you! I don't know what I would do without you. You've spared my life and all that is precious to me. How will I ever repay you..."
+        },
+        "4": {
+            "optionText": "Start the chat",
+            "text": "Blake: You and your pack! How dare you destroy the world with technology and brainwash my best friend into falling in love with a despicable robot. This is against nature. It's an abomination!",
+            "choices": ["4a", "4b"]
+        },
+        "4a": {
+            "optionText": "Calm down",
+            "text": "Blake: Calm down? CALM DOWN? How can I calm down if machines take over he world and destroy everything that is right and good?! I will fight you to death!"
+        },
+        "4b": {
+            "optionText": "You cannot prevent true love!",
+            "text": "This is not love! This is madness! I will not stand by and watch it happen! I will return and bring you back to your senses Bob!"
+        },
+        "5": {
+            "optionText": "Start the chat",
+            "text": "Bill: Don't touch me with those technology-infersted fingers!"
+        },
+        "6": {
+            "optionText": "Start the chat",
+            "text": "Britney: You will never defeat the Bytebreaker Brigade!",
+            "choices": ["6a", "6b"]
+        },
+        "6a": {
+            "optionText": "I just did...",
+            "text": "Britney: You may have defeated us now, but there are so much more enlightened people out there. You may take our lives, but you will never take ... OUR FREEDOM!"
+        },
+        "6b": {
+            "optionText": "Innovation always wins!",
+            "text": "Britney: Never! Soon, you will see the damage you have unleashed in the world by joining hands with the wrong side! I can already see the regret in your future!"
+        }
+    }
+}

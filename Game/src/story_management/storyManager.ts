@@ -1,17 +1,34 @@
 import * as Phaser from "phaser";
 import ChatFlow from "../views/chatView/chatFlow";
-import storyJson from "./storyFormatExample.json";
+import storyJson from "../assets/story.json";
 import { ChatFlowNode } from "../views/chatView/chatFlowNode";
 import { json } from "express";
+import PlayView from "../views/playView";
 
 export default class StoryManager {
     private _storyEvents = {};
+    private _storyMap = new Map<string, ChatFlow>;
+    private _playView : PlayView;
 
-    constructor() {
+    private _finishedStuff = {
+        hangar: [],
+        commonRoom: [],
+        engine: [],
+        laboratory: [],
+        bridge: []
+    };
+
+    constructor(playView: PlayView) {
+        this._playView = playView;
+        this.loadData();
+
+
         for(let room in storyJson) {
             if (!(room in this._storyEvents)) this._storyEvents[room] = [];
             
             for (var i = 0; i < Object.keys(storyJson[room]).length; i++) {
+                if (this._finishedStuff[room].includes(i.toString())) continue;
+
                 if (i.toString() in storyJson[room]) {
                     this._storyEvents[room].push(new ChatFlow(this.reconstructChatNodeTreeRecursively(
                         room,
@@ -39,6 +56,7 @@ export default class StoryManager {
             text: json[room][nodeId]["text"],
             choices: choices
         }
+
         return newNode;
     }
 
@@ -46,7 +64,20 @@ export default class StoryManager {
         return this._storyEvents;
     }
 
-    public getNextStoryBit(room) {
+    public pullNextStoryBit(room) {
+        // TODO CONTINUE HERE
+        // this._finishedStuff[room].push(this._storyEvents.);
         return this._storyEvents[room].shift();
+    }
+
+    public loadData() {
+        console.log("here it goes")
+        console.log(this._playView.getState().story)
+        console.log(this._finishedStuff)
+        this._finishedStuff = this._playView.getState().story;
+    }
+
+    public saveAll() {
+        return this._finishedStuff;
     }
 }

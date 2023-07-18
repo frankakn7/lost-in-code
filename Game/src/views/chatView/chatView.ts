@@ -83,7 +83,23 @@ export default class ChatView extends Phaser.Scene {
 
         //start the new chat flow
         this.startNewChatFlow(this.currentChatFlow)
+
+        this.input.on('pointerdown', () => this.skipTextAnimation());
     }
+
+    private skipTextAnimation(): void {
+        if (this.updateTextAnimationEvent) {
+            // Remove the animation event
+            this.updateTextAnimationEvent.remove(false);
+    
+            // Show the full text
+            this.textToAnimate.setText(this.currentChatFlow.getCurrentText());
+    
+            // Display the choices
+            this.showChoices(this.currentChatFlow.getCurrentChoices());
+        }
+    }
+    
 
     /**
      * Starts a new Chat flow loop
