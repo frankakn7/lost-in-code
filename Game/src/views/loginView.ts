@@ -1,10 +1,12 @@
 import loginFormHtml from "../assets/html/login.html";
 import * as Phaser from "phaser";
 import PlayView from "./playView";
+import ApiHelper from "../helpers/apiHelper";
+import { response } from "express";
 
 export default class LoginView extends Phaser.Scene {
-
     playView: PlayView;
+    private apiHelper: ApiHelper = new ApiHelper();
 
     constructor() {
         super("LoginView");
@@ -12,12 +14,14 @@ export default class LoginView extends Phaser.Scene {
 
     preload() {
         // this.load.html("loginForm", loginFormHtml);
+        this.apiHelper.checkLoginStatus()
+            .then((response) => this.startGame())
+            .catch((error) => console.log(error));
     }
 
     create() {
         this.cameras.main.setBackgroundColor("#3e536d");
-        
-        this.checkLoginStatus()
+
 
         const element = this.add
             .dom(
@@ -35,28 +39,25 @@ export default class LoginView extends Phaser.Scene {
 
         element.on("click", function (event) {
             if (event.target.id === "submit") {
-                const inputUsername = this.getChildByID("username");
+                const inputEmail = this.getChildByID("email");
                 const inputPassword = this.getChildByID("password");
-                console.log(inputUsername.value);
-                console.log(inputPassword.value);
-                if (inputUsername.value !== "" && inputPassword.value !== "") {
-                    loginView.startGame()
-                }
+                loginView.apiHelper.login(inputEmail.value,inputPassword.value).then(response => {
+                    loginView.startGame();
+                }).catch(error => {
+                    const errorText = this.getChildByID("error")
+                    errorText.innerHTML = error
+                    errorText.style.display = "block"
+                })
             }
         });
     }
 
-    private checkLoginStatus(){
-        const url = `${process.env.API_URL}/api`
-        // fetch(url,{method: "GET"}).then(response => console.log(response))//response.json().then(data => console.log(data)))
-        // fetch(url,{method: "GET"}).then(response => response.json().then(data => console.log(data)).catch(error => console.log(error)))
-        // fetch(url,{method: "GET"}).then(response => response.text().then(data => console.log(data)).catch(error => console.log(error)))
-    }
+    
 
-    private startGame(){
-        this.playView = new PlayView("Play")
-        this.scene.add("Play", this.playView)
+    private startGame() {
+        this.playView = new PlayView("Play");
+        this.scene.add("Play", this.playView);
         this.scene.launch("Play");
-        this.scene.remove(this)
+        this.scene.remove(this);
     }
 }

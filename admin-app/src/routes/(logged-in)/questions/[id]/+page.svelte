@@ -134,7 +134,7 @@
 		</th>
 	</tr>
 	{#each elementsArray as element}
-		<!-- <tr on:click={() => goto(`/admin/elements/${element.id}`)}> -->
+		<!-- <tr on:click={() => goto(`/elements/${element.id}`)}> -->
 		<tr>
 			<td>{element.id}</td>
 			<td>{element.content ?? '-'}</td>

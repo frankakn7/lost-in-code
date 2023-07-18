@@ -89,7 +89,7 @@
 		</th>
 	</tr>
 	{#each userArray as user}
-		<tr on:click={() => goto(`/admin/users/${user.id}`)}>
+		<tr on:click={() => goto(`/users/${user.id}`)}>
 		<!-- <tr on:click={() => showUserModal = true}> -->
 			<td>{user.id}</td>
 			<td>{user.username}</td>

@@ -1,4 +1,4 @@
-import { globalEventBus } from "../../globalEventBus";
+import { globalEventBus } from "../../helpers/globalEventBus";
 import { QuestionType } from "../../types/questionType";
 import PlayView from "../playView";
 import Question from "./question";
@@ -19,7 +19,7 @@ export default class TaskManager {
 
     private currentPerformanceIndex: number = 1;
 
-    private currentChapterMaxDifficulty: number;
+    readonly currentChapterMaxDifficulty: number;
 
     private currentQuestionSetForObject = new Map<number, Question>();
 
@@ -84,6 +84,17 @@ export default class TaskManager {
         }
     }
 
+    private onObjectFailed(){
+        console.log("FAILED")
+        if (this.scene.scene.isSleeping(this.scene)) {
+            this.scene.queueTask(() => {
+                globalEventBus.emit("taskmanager_object_failed");
+            });
+        } else {
+            globalEventBus.emit("taskmanager_object_failed");
+        }
+    }
+
     private onObjectRepaired() {
         if (this.scene.scene.isSleeping(this.scene)) {
             this.scene.queueTask(() => {
@@ -114,6 +125,11 @@ export default class TaskManager {
         this.currentPerformanceIndex > 1
             ? this.currentPerformanceIndex--
             : null;
+        this.onObjectFailed();
+    }
+
+    public saveAll(){
+        //TODO: SAVE ALL => USE QUESTION IDS etc
     }
 
     constructor(scene: PlayView, questions: Question[]) {

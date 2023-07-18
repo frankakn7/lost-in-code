@@ -5,7 +5,7 @@
 
 	let sortBy = { col: 'id', ascending: true };
 
-	let groupArray = data.groups;
+	let questionsArray = data.questions;
 
 	let sort = (column: string) => {
 		if (sortBy.col == column) {
@@ -18,15 +18,15 @@
 		// Modifier to sorting function for ascending or descending
 		let sortModifier = sortBy.ascending ? 1 : -1;
 
-		let sort = (a:any, b:any) =>
+		let sort = (a: any, b: any) =>
 			a[column] < b[column] ? -1 * sortModifier : a[column] > b[column] ? 1 * sortModifier : 0;
 
-		groupArray = groupArray.sort(sort);
-		console.log(groupArray);
+		questionsArray = questionsArray.sort(sort);
 	};
 </script>
 
-<h1>Groups</h1>
+<h1>Questions</h1>
+
 <table>
 	<tr>
 		<th on:click={() => sort('id')}>
@@ -41,36 +41,48 @@
 				{/if}
 			</div>
 		</th>
-		<th on:click={() => sort('name')}>
+		<th on:click={() => sort('question_text')}>
 			<div class="table-header">
-				<div class="header-text">Name</div>
-				{#if sortBy.col == 'name' && !sortBy.ascending}
+				<div class="header-text">Question Text</div>
+				{#if sortBy.col == 'question_text' && !sortBy.ascending}
 					<i class="fa fa-arrow-up" />
-				{:else if sortBy.col === 'name'}
+				{:else if sortBy.col === 'question_text'}
 					<i class="fa fa-arrow-down" />
 				{:else}
 					<i class="fa fa-arrow-down" style="visibility: hidden;" />
 				{/if}
 			</div>
 		</th>
-		<th on:click={() => sort('description')}>
+		<th on:click={() => sort('code_text')}>
 			<div class="table-header">
-				<div class="header-text">Description</div>
-				{#if sortBy.col == 'description' && !sortBy.ascending}
+				<div class="header-text">Code Text</div>
+				{#if sortBy.col == 'code_text' && !sortBy.ascending}
 					<i class="fa fa-arrow-up" />
-				{:else if sortBy.col === 'description'}
+				{:else if sortBy.col === 'code_text'}
 					<i class="fa fa-arrow-down" />
 				{:else}
 					<i class="fa fa-arrow-down" style="visibility: hidden;" />
 				{/if}
 			</div>
 		</th>
-		<th on:click={() => sort('curriculum_id')}>
+		<th on:click={() => sort('type')}>
 			<div class="table-header">
-				<div class="header-text">Curriculum ID</div>
-				{#if sortBy.col == 'curriculum_id' && !sortBy.ascending}
+				<div class="header-text">Type</div>
+				{#if sortBy.col == 'type' && !sortBy.ascending}
 					<i class="fa fa-arrow-up" />
-				{:else if sortBy.col === 'curriculum_id'}
+				{:else if sortBy.col === 'type'}
+					<i class="fa fa-arrow-down" />
+				{:else}
+					<i class="fa fa-arrow-down" style="visibility: hidden;" />
+				{/if}
+			</div>
+		</th>
+        <th on:click={() => sort('difficulty')}>
+			<div class="table-header">
+				<div class="header-text">Difficulty</div>
+				{#if sortBy.col == 'difficulty' && !sortBy.ascending}
+					<i class="fa fa-arrow-up" />
+				{:else if sortBy.col === 'difficulty'}
 					<i class="fa fa-arrow-down" />
 				{:else}
 					<i class="fa fa-arrow-down" style="visibility: hidden;" />
@@ -78,12 +90,13 @@
 			</div>
 		</th>
 	</tr>
-	{#each groupArray as group}
-		<tr on:click={() => goto(`/admin/groups/${group.id}`)}>
-			<td>{group.id}</td>
-			<td>{group.name}</td>
-			<td>{group.description}</td>
-			<td>{group.curriculum_id ?? '-'}</td>
+	{#each questionsArray as question}
+		<tr on:click={() => goto(`/questions/${question.id}`)}>
+			<td>{question.id}</td>
+			<td>{question.question_text ? question.question_text : "-"}</td>
+			<td>{question.code_text ? `${question.code_text.slice(0,30)}...` : "-"}</td>
+			<td>{question.type}</td>
+			<td>{question.difficulty}</td>
 		</tr>
 	{/each}
 </table>
@@ -92,7 +105,7 @@
 	table {
 		text-align: center;
 		border-collapse: collapse;
-        width: 100%;
+		width: 100%;
 	}
 
 	.table-header {
@@ -129,8 +142,8 @@
 		border-right: 2px solid var(--yinmn-blue);
 	}
 
-    td,
-    th {
+	td,
+	th {
 		padding: 0.5rem;
-    }
+	}
 </style>

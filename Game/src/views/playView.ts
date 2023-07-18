@@ -105,78 +105,11 @@ export default class PlayView extends Phaser.Scene {
      * Opens the chat view by sending all other scenes to sleep and launching / awaking the chat view scene
      */
     private openChatView(): void {
-        // Creating chat flow nodes for testing purposes
-        const endNode: ChatFlowNode = {
-            optionText: "Copy That, see you next time.",
-            text: "...<Communications Relay Deactivated>...",
-            choices: new Map(),
-        };
-
-        const node2: ChatFlowNode = {
-            optionText: "Copy mission control!",
-            text: "Good to hear from you! Sadly we have to end the communication here",
-            choices: new Map([[endNode.optionText, endNode]]),
-        };
-
-        const node3: ChatFlowNode = {
-            optionText: "I cant copy!",
-            text: "This is no time for jokes Astronaut! We are gonna reach out again soon",
-            choices: new Map([[endNode.optionText, endNode]]),
-        };
-
-        const node1: ChatFlowNode = {
-            optionText: "Start the chat",
-            text: "This is mission control do you copy?",
-            choices: new Map([
-                [node2.optionText, node2],
-                [node3.optionText, node3],
-            ]),
-        };
-
-        const endNode2: ChatFlowNode = {
-            optionText: "> ./Deactivate 'Communications Relay'",
-            text: "...<Communications Relay Deactivated>...",
-            choices: new Map(),
-        };
-
-        const node22: ChatFlowNode = {
-            optionText: "Can you read me?",
-            text: "...",
-            choices: new Map([[endNode2.optionText, endNode2]]),
-        };
-        const node21: ChatFlowNode = {
-            optionText: "What is happening mission control?",
-            text: "...",
-            choices: new Map([[endNode2.optionText, endNode2]]),
-        };
-
-        const node32: ChatFlowNode = {
-            optionText: "Hello?",
-            text: "Hello? Hello Hello? Astronaut? Do you read me? Please respond...",
-            choices: new Map([
-                [node22.optionText, node22],
-                [node21.optionText, node21],
-            ]),
-        };
-
-        const node12: ChatFlowNode = {
-            optionText: "Start the chat",
-            text: "...<Communications Relay Activated>...",
-            choices: new Map([[node32.optionText, node32]]),
-        };
-
-        const chatFlow = new ChatFlow(node1);
-        const chatFlow2 = new ChatFlow(node12);
-
         //Send all scenes to sleep
         this.scene.sleep();
         this.scene.sleep("controlPad");
         this.scene.sleep("pauseChatButtons");
         this.scene.sleep("Room");
-
-        // this.events.on("taskmanager_object_finished",() => {
-        //     console.log("Something was finished")
-        // })
 
         //If the chat view already exists and is sleeping
         if (this.scene.isSleeping(this.chatView)) {
@@ -215,7 +148,7 @@ export default class PlayView extends Phaser.Scene {
 
     private openQuestionView(){
         //If the chat view already exists and is sleeping
-        this.scene.sleep();
+        this.scene.sleep(this);
         this.scene.sleep("controlPad");
         this.scene.sleep("pauseChatButtons");
         this.scene.sleep("Room");
@@ -330,6 +263,7 @@ export default class PlayView extends Phaser.Scene {
     public create() {
 
         this.events.on('wake', this.onWake, this);
+        this.events.on('sleep', () => {console.log("SLEEPING PLAY VIEW")})
 
         // Adds the scene and launches it... (if active is set to true on added scene it is launched directly)
         

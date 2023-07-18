@@ -79,7 +79,7 @@
 		</th>
 	</tr>
 	{#each chaptersArray as chapter}
-		<tr on:click={() => goto(`/admin/chapters/${chapter.id}`)}>
+		<tr on:click={() => goto(`/chapters/${chapter.id}`)}>
 			<td>{chapter.id}</td>
 			<td>{chapter.name}</td>
 			<td>{chapter.material.slice(0, 50)}...</td>

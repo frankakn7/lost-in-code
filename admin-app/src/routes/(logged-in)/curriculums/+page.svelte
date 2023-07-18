@@ -66,7 +66,7 @@
 		</th>
 	</tr>
 	{#each curriculumArray as curriculum}
-		<tr on:click={() => goto(`/admin/curriculums/${curriculum.id}`)}>
+		<tr on:click={() => goto(`/curriculums/${curriculum.id}`)}>
 			<td>{curriculum.id}</td>
 			<td>{curriculum.name}</td>
 			<td>{curriculum.description}</td>

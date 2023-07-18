@@ -19,7 +19,7 @@
                 output = `Redirecting to Login in ${i} seconds ...`
 			    await sleep(1000);
             }
-			goto('/admin/login');
+			goto('/login');
 		} else {
             output = "Logout Failed"
 			console.error('Logout failed');

@@ -17,7 +17,7 @@
 		});
         // console.log(response)
 		if (response.ok) {
-			goto('/admin');
+			goto('/');
 		} else {
 			console.error('Login failed');
 		}
@@ -75,7 +75,8 @@
 	}
 
     form input{
-		font-size: 1.2rem;
+		font-size: 1.3rem;
+		border: 2px solid var(--yinmn-blue);
     }
 
 	.input-container {
@@ -97,6 +98,7 @@
         padding-left: 0.5rem;
         padding-right: 0.5rem;
         transition: all 0.2s;
+		width: 30%;
     }
 
     #login-button:hover {

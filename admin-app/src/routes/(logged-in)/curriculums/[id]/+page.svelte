@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { PageData } from './$types';
 	import { goto } from '$app/navigation';
+	import type { PageData } from './$types';
 
-	export let data: PageData;
+    export let data: PageData;
 
-	let sortBy = { col: 'id', ascending: true };
+    let sortBy = { col: 'order_position', ascending: true };
 
-	let questionsArray = data.chapter.questions;
+	let chaptersArray = data.curriculum.chapters;
 
 	let sort = (column: string) => {
 		if (sortBy.col == column) {
@@ -22,16 +22,54 @@
 		let sort = (a: any, b: any) =>
 			a[column] < b[column] ? -1 * sortModifier : a[column] > b[column] ? 1 * sortModifier : 0;
 
-		questionsArray = questionsArray.sort(sort);
+            chaptersArray = chaptersArray.sort(sort);
 	};
 </script>
 
-<h1>Chapter: {data.chapter.name}</h1>
-<p>{data.chapter.material}</p>
-<h2>Questions</h2>
+<h1>Curriculum: {data.curriculum.name}</h1>
+<p>{data.curriculum.description}</p>
+
+<h2>Chapters</h2>
+
 <table>
 	<tr>
-		<th on:click={() => sort('id')}>
+		<th on:click={() => sort('order_position')}>
+			<div class="table-header">
+				<div class="header-text">Nr.</div>
+				{#if sortBy.col == 'order_position' && !sortBy.ascending}
+					<i class="fa fa-arrow-up" />
+				{:else if sortBy.col === 'order_position'}
+					<i class="fa fa-arrow-down" />
+				{:else}
+					<i class="fa fa-arrow-down" style="visibility: hidden;" />
+				{/if}
+			</div>
+		</th>
+		<th on:click={() => sort('name')}>
+			<div class="table-header">
+				<div class="header-text">Name</div>
+				{#if sortBy.col == 'name' && !sortBy.ascending}
+					<i class="fa fa-arrow-up" />
+				{:else if sortBy.col === 'name'}
+					<i class="fa fa-arrow-down" />
+				{:else}
+					<i class="fa fa-arrow-down" style="visibility: hidden;" />
+				{/if}
+			</div>
+		</th>
+		<th on:click={() => sort('material')}>
+			<div class="table-header">
+				<div class="header-text">Material</div>
+				{#if sortBy.col == 'material' && !sortBy.ascending}
+					<i class="fa fa-arrow-up" />
+				{:else if sortBy.col === 'material'}
+					<i class="fa fa-arrow-down" />
+				{:else}
+					<i class="fa fa-arrow-down" style="visibility: hidden;" />
+				{/if}
+			</div>
+		</th>
+        <th on:click={() => sort('id')}>
 			<div class="table-header">
 				<div class="header-text">ID</div>
 				{#if sortBy.col == 'id' && !sortBy.ascending}
@@ -43,62 +81,17 @@
 				{/if}
 			</div>
 		</th>
-		<th on:click={() => sort('question_text')}>
-			<div class="table-header">
-				<div class="header-text">Question Text</div>
-				{#if sortBy.col == 'question_text' && !sortBy.ascending}
-					<i class="fa fa-arrow-up" />
-				{:else if sortBy.col === 'question_text'}
-					<i class="fa fa-arrow-down" />
-				{:else}
-					<i class="fa fa-arrow-down" style="visibility: hidden;" />
-				{/if}
-			</div>
-		</th>
-		<th on:click={() => sort('code_text')}>
-			<div class="table-header">
-				<div class="header-text">Code Text</div>
-				{#if sortBy.col == 'code_text' && !sortBy.ascending}
-					<i class="fa fa-arrow-up" />
-				{:else if sortBy.col === 'code_text'}
-					<i class="fa fa-arrow-down" />
-				{:else}
-					<i class="fa fa-arrow-down" style="visibility: hidden;" />
-				{/if}
-			</div>
-		</th>
-		<th on:click={() => sort('type')}>
-			<div class="table-header">
-				<div class="header-text">Type</div>
-				{#if sortBy.col == 'type' && !sortBy.ascending}
-					<i class="fa fa-arrow-up" />
-				{:else if sortBy.col === 'type'}
-					<i class="fa fa-arrow-down" />
-				{:else}
-					<i class="fa fa-arrow-down" style="visibility: hidden;" />
-				{/if}
-			</div>
-		</th>
-        <th on:click={() => sort('difficulty')}>
-			<div class="table-header">
-				<div class="header-text">Difficulty</div>
-				{#if sortBy.col == 'difficulty' && !sortBy.ascending}
-					<i class="fa fa-arrow-up" />
-				{:else if sortBy.col === 'difficulty'}
-					<i class="fa fa-arrow-down" />
-				{:else}
-					<i class="fa fa-arrow-down" style="visibility: hidden;" />
-				{/if}
-			</div>
-		</th>
 	</tr>
-	{#each questionsArray as question}
-		<tr on:click={() => goto(`/admin/questions/${question.id}`)}>
-			<td>{question.id}</td>
-			<td>{question.question_text ?? "-"}</td>
-			<td>{question.code_text ? `${question.code_text.slice(0,30)}...` : "-"}</td>
-			<td>{question.type}</td>
-			<td>{question.difficulty}</td>
+	{#each chaptersArray as chapter}
+		<tr on:click={() => goto(`/chapters/${chapter.id}`)}>
+			<td>{chapter.order_position}</td>
+			<td>{chapter.name}</td>
+			{#if chapter.material}
+				<td>{chapter.material.slice(0,50)}...</td>
+			{:else}
+				<td>-</td>
+			{/if}
+			<td>{chapter.id}</td>
 		</tr>
 	{/each}
 </table>
@@ -144,8 +137,8 @@
 		border-right: 2px solid var(--yinmn-blue);
 	}
 
-	td,
-	th {
+    td,
+    th {
 		padding: 0.5rem;
-	}
+    }
 </style>

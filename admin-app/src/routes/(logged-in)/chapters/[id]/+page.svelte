@@ -1,11 +1,12 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { goto } from '$app/navigation';
+
 	export let data: PageData;
 
 	let sortBy = { col: 'id', ascending: true };
 
-	let questionsArray = data.questions;
+	let questionsArray = data.chapter.questions;
 
 	let sort = (column: string) => {
 		if (sortBy.col == column) {
@@ -25,8 +26,9 @@
 	};
 </script>
 
-<h1>Questions</h1>
-
+<h1>Chapter: {data.chapter.name}</h1>
+<p>{data.chapter.material}</p>
+<h2>Questions</h2>
 <table>
 	<tr>
 		<th on:click={() => sort('id')}>
@@ -91,9 +93,9 @@
 		</th>
 	</tr>
 	{#each questionsArray as question}
-		<tr on:click={() => goto(`/admin/questions/${question.id}`)}>
+		<tr on:click={() => goto(`/questions/${question.id}`)}>
 			<td>{question.id}</td>
-			<td>{question.question_text ? question.question_text : "-"}</td>
+			<td>{question.question_text ?? "-"}</td>
 			<td>{question.code_text ? `${question.code_text.slice(0,30)}...` : "-"}</td>
 			<td>{question.type}</td>
 			<td>{question.difficulty}</td>

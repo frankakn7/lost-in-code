@@ -42,7 +42,7 @@ export default class SelectOneQuestionView extends Phaser.Scene {
                 useAdvancedWrap: true,
             },
             align: "center",
-        }
+        };
     }
 
     private async displaySelectOneQuestion() {
@@ -96,26 +96,21 @@ export default class SelectOneQuestionView extends Phaser.Scene {
     }
 
     public checkAnswer() {
-        let selectedBlock = this.selectableCodeBlocks.find((block) =>
-            block.getSelected()
-        );
-        let allCorrect = true;
-        if (selectedBlock) {
-            let elementId = selectedBlock.getElementId();
-            let correct = this.currentQuestion.elements.find(
-                (element: ChoiceQuestionElement) => element.id == elementId
-            ).isCorrect;
-            if (correct) {
-                selectedBlock.markCorrect();
-            } else {
-                allCorrect = false;
-                selectedBlock.markWrong();
+        let allCorrect = this.selectableCodeBlocks.every((block) => {
+            const blockIsCorrect = this.currentQuestion.elements.find(
+                (element: ChoiceQuestionElement) =>
+                    element.id == block.getElementId()
+            ).isCorrect
+            const correct = blockIsCorrect == block.getSelected();
+            if(block.getSelected() && correct){
+                block.markCorrect();
+            }else if(block.getSelected() || blockIsCorrect){
+                block.markWrong();
             }
-        } else {
-            this.selectableCodeBlocks.forEach((block) => block.markWrong());
-        }
-        if(allCorrect){
-            this.showCorrectText()
+            return correct
+        });
+        if (allCorrect) {
+            this.showCorrectText();
         }
         return allCorrect;
     }

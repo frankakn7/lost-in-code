@@ -3,7 +3,7 @@
 import * as Phaser from "phaser";
 import InteractiveObject from "./interactiveObject";
 import RoomScene from "../rooms/room";
-import { globalEventBus } from "../globalEventBus";
+import { globalEventBus } from "../helpers/globalEventBus";
 
 export default class TaskObject extends InteractiveObject {
     protected _isOpenRightNow: boolean = false;
@@ -24,6 +24,7 @@ export default class TaskObject extends InteractiveObject {
     ) {
         super(scene, room, x, y, params, properties);
         this.setDone = this.setDone.bind(this);
+        this.setClosed = this.setClosed.bind(this);
         this._isStoryObject = params.isStoryObject
 
         properties.forEach(p => {
@@ -51,10 +52,11 @@ export default class TaskObject extends InteractiveObject {
     public interact(){
         //TODO: Build general interactivity function
         
-        if(!this._isFinished){
-            console.log("Interacted with "+this);
+        if(!this._isFinished && !this._isOpenRightNow){
+            console.log("Interacted with ");
             this._isOpenRightNow = true;
             globalEventBus.once('taskmanager_object_finished', this.setDone);
+            globalEventBus.once('taskmanager_object_failed', this.setClosed);
             this.room.getPlayView().openQuestionView();      
         }
 
@@ -72,7 +74,13 @@ export default class TaskObject extends InteractiveObject {
         // }
     }
 
+    public setClosed(){
+        this._isOpenRightNow = false;
+        globalEventBus.off("taskmanager_object_finished",this.setDone);
+    }
+
     public setDone() {
+        globalEventBus.off('taskmanager_object_failed', this.setClosed);
         if (!this._isFinished) {
             if (this._isStoryObject) {
                 this.setIsFinished(true);
