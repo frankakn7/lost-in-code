@@ -80,22 +80,28 @@ export default class TaskObject extends InteractiveObject {
     }
 
     public setDone() {
+
         globalEventBus.off('taskmanager_object_failed', this.setClosed);
         if (!this._isFinished) {
+            this.setIsFinished(true);
+
+            this._emitter.setConfig({
+                frame: { frames: ['green'], cycle: true},
+                speed: 2,
+                blendMode: 'ADD',
+                lifespan: 5000,
+                quantity: 1,
+                scale: { start: 0.5, end: 0.1 },
+                frequency: 1000,
+            });
+
             if (this._isStoryObject) {
-                this.setIsFinished(true);
                 this.room.getPlayView().pullNextStoryBit(this.room.getRoomId());
                 this.room.getPlayView().openChatView();
-                this._emitter.setConfig({ 
-                    frame: { frames: ['green'], cycle: true},
-                    speed: 2,
-                    blendMode: 'ADD',
-                    lifespan: 5000,
-                    quantity: 1,
-                    scale: { start: 0.5, end: 0.1 },
-                    frequency: 1000,
-                });
             }
+
+            // TODO Should be able to stay, as this function wont be called after the door was successfully unlocked anyways
+            this.room.checkIfDoorUnlocked();
         }
         
     }

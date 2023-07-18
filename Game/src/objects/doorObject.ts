@@ -18,6 +18,9 @@ export default class DoorObject extends TaskObject {
         if(this.isFinished()) {
             this.setVisible(false);
             this._emitter.setVisible(false);
+            this.body.enable = false;
+
         }
+
     }
 }

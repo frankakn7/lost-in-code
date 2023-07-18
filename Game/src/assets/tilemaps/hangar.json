@@ -80,19 +80,9 @@
                          "value":"barrel"
                         }, 
                         {
-                         "name":"is_story",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
                          "name":"is_task",
                          "type":"bool",
                          "value":true
-                        }, 
-                        {
-                         "name":"story_id",
-                         "type":"string",
-                         "value":"barrelHangar"
                         }],
                  "rotation":0,
                  "type":"",

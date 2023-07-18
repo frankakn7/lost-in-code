@@ -28,6 +28,7 @@ import storyJson from "../story_management/storyFormatExample.json";
 import StoryManager from "../story_management/storyManager";
 import PlayView from "../views/playView";
 import TaskObject from "../objects/taskObjects";
+import {globalEventBus} from "../helpers/globalEventBus";
 
 
 
@@ -297,6 +298,19 @@ export default class RoomScene extends Phaser.Scene {
     }
 
     public getDoorUnlocked() {
+
         return this._doorUnlocked;
+    }
+
+    public checkIfDoorUnlocked() {
+        let res = true;
+        this._taskObjects.forEach((obj) => {
+            if (!obj.isFinished()) res = false;
+        });
+
+        if (!res) return;
+
+        this.setDoorUnlocked(true);
+        globalEventBus.emit("door_was_unlocked");
     }
 }
