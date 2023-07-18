@@ -6,7 +6,6 @@ const Dotenv = require("dotenv-webpack");
 const webpack = require('webpack');
 
 module.exports = (env, options) => {
-    // mode: "development",
     const isDevelopment = options.mode === "development";
     const mode = isDevelopment ? "development" : "production"
     return {
@@ -18,10 +17,6 @@ module.exports = (env, options) => {
             path: path.resolve(__dirname, "dist"),
             filename: "[name].bundle.js",
             clean: true,
-            // assetModuleFilename: (pathData) => {
-            //     const relativePath = pathData.filename.replace("src/", "");
-            //     return relativePath;
-            // },
             assetModuleFilename: (pathData) => {
             const relativePath = pathData.filename.replace("src/", "");
                 return relativePath;
@@ -46,14 +41,6 @@ module.exports = (env, options) => {
                     use: "ts-loader",
                     exclude: /node_modules/,
                 },
-                // {
-                //     test: /\.(png)$/i,
-                //     type: "asset/resource",
-                // },
-                // {
-                //     test: /\.ttf$/,
-                //     type: "asset/inline",
-                // },
                 {
                     test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|eot|ttf|otf)$/i,
                     type: "asset/resource",
