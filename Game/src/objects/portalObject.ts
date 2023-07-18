@@ -44,6 +44,7 @@ export default class PortalObject extends InteractiveObject {
         if (this.room.getDoorUnlocked()) {
             console.log("Open Door");
             this.room.getPlayView().getToRoomViaId(this.room.getNextRoom());
+            this.room.cameras.main.fadeOut(1000, 0, 0, 0)
         }
     }
 }

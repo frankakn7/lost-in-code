@@ -36,6 +36,8 @@ import labJson from "../assets/tilemaps/laboratory.json";
 
 import flaresJson from "../assets/particles/flares.json";
 import flaresPng from "../assets/particles/flares.png";
+import NewsPopup from "../ui/newsPopup";
+import {globalEventBus} from "../helpers/globalEventBus";
 
 
 /**
@@ -101,6 +103,9 @@ export default class PlayView extends Phaser.Scene {
 
     private taskQueue: Array<() => void> = [];
 
+    private _news = [];
+    private _newsCounter = 0;
+
     /**
      * Opens the chat view by sending all other scenes to sleep and launching / awaking the chat view scene
      */
@@ -144,6 +149,20 @@ export default class PlayView extends Phaser.Scene {
     public pullNextStoryBit(roomId) {
         console.log(roomId)
         return this._storyManager.pullNextStoryBit(roomId);
+    }
+
+    public broadcastNews(message) {
+        let newsId = "newsPopup" + (this._newsCounter++).toString();
+        let newsPopup = new NewsPopup(this, newsId,"Door unlocked!", 2500);
+        this.scene.add(newsId, newsPopup);
+        this.scene.launch(newsPopup);
+
+        if (this._news.length > 0) {
+            this._news.forEach((n) => {
+                n.kill();
+            })
+        }
+        this._news.push(newsPopup)
     }
 
     private openQuestionView(){
@@ -287,6 +306,9 @@ export default class PlayView extends Phaser.Scene {
         //     this.openQuestionView();
         // });
         this.scene.add("menu", this.menuView);
+
+        this.broadcastNews = this.broadcastNews.bind(this);
+        globalEventBus.on("broadcast_news", (message) => {this.broadcastNews(message)})
     }
 
     //for testing purposes
@@ -325,11 +347,8 @@ export default class PlayView extends Phaser.Scene {
         if (this.pauseChatButtons.phonePressed) {
             //prevent phone button from being continuously pressed by accident
             this.pauseChatButtons.phonePressed = false;
-            //open the chat view
-            // this.openChatView();
-            // this.getToRoomViaId("laboratory");
-            this.openQuestionView();
-            // console.log(this.saveAllToJSONString());
+            this.broadcastNews("hoooray!")
+
         }
 
         if (this.pauseChatButtons.pausePressed) {
@@ -353,7 +372,7 @@ export default class PlayView extends Phaser.Scene {
         } 
         else {
             this.currentRoom.scene.resume();
-            this.controlPad.scene.resume();            
+            this.controlPad.scene.resume();
         }
     }
 
