@@ -34,6 +34,9 @@ import engineJson from "../assets/tilemaps/engine.json";
 import hangarJson from "../assets/tilemaps/hangar.json";
 import labJson from "../assets/tilemaps/laboratory.json";
 
+import flaresJson from "../assets/particles/flares.json";
+import flaresPng from "../assets/particles/flares.png";
+
 
 /**
  * Represents the view in which the rooms and player are explorable (default playing view)
@@ -232,7 +235,8 @@ export default class PlayView extends Phaser.Scene {
         }
     }
 
-    public preload() {
+    public preload() {        
+
         this.load.image("backgroundTile", deviceBackgroundTilePng);
         this.load.image("strawHat", strawHatTexture);
         this.load.image("sorcerersHat", sorcerersHatTexture);
@@ -245,6 +249,8 @@ export default class PlayView extends Phaser.Scene {
         this.load.image("tilesetImage", tilesetPng);
         this.load.image("crown", crownTexture);
         this.load.image("pirateHat", pirateHat);
+
+        this.load.atlas("flares", flaresPng, flaresJson);
     }
 
     /**
