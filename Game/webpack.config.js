@@ -58,6 +58,10 @@ module.exports = {
                     },
                 },"css-loader"],
             },
+            {
+                test: /\.html$/i,
+                loader: 'html-loader',
+            }
         ],
     },
     resolve: {

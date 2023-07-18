@@ -5,3 +5,8 @@ declare module '*.png'{
 
 declare module '*.json';
 declare module '*.ttf';
+
+declare module "*.html" {
+    const content: string;
+    export default content;
+  }

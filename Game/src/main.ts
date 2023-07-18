@@ -3,6 +3,7 @@ import RoomScene from "./rooms/room";
 import PlayView from "./views/playView";
 import ChatView from "./views/chatView/chatView";
 import './font.css';
+import LoginView from "./views/loginView";
 
 /**
  * Testing the tile config
@@ -33,7 +34,8 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
         autoRound: true
 
     },
-    scene: new PlayView("Play"),
+    // scene: new PlayView("Play"),
+    scene: new LoginView(),
     //scene: new ChatView(),
     parent: "game",
     dom: {

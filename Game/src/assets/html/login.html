@@ -1,0 +1,56 @@
+<style>
+    #loginFormContainer {
+        background: rgb(247, 243, 240);
+        border: 1px solid #42464b;
+        border-radius: 6px;
+        height: 257px;
+        margin: 20px auto 0;
+        width: 400px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.4);
+    }
+
+    #loginForm {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #username,
+    #password {
+        margin: 0.5rem;
+        font-size: 1.2rem;
+    }
+
+    #submit {
+        margin-top: 1rem;
+        padding: 0.5rem;
+        width: 40%;
+        font-size: 1.2rem;
+        background-color: #3e536dff;
+        border-style: none;
+        border-radius: 0.2rem;
+        color: rgb(247, 243, 240);
+        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
+        transition: all 0.2s;
+    }
+
+    #submit:hover {
+        cursor: pointer;
+        transform: scale(1.2);
+        transition: all 0.2s;
+    }
+</style>
+
+<div id="loginFormContainer">
+    <h3>LOGIN</h3>
+    <form id="loginForm">
+        <input type="text" id="username" placeholder="Username" />
+        <input type="password" id="password" placeholder="Password" />
+        <button id="submit" type="button">Login</button>
+    </form>
+</div>
