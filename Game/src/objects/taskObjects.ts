@@ -41,7 +41,11 @@ export default class TaskObject extends InteractiveObject {
             scale: { start: 0.5, end: 0.1 },
             frequency: 800,
         });
-        
+
+        if (this.isFinished()) {
+            this._setEmitterToDone();
+        }
+
         
         this._emitter.setDepth(11);
         
@@ -85,15 +89,7 @@ export default class TaskObject extends InteractiveObject {
         if (!this._isFinished) {
             this.setIsFinished(true);
 
-            this._emitter.setConfig({
-                frame: { frames: ['green'], cycle: true},
-                speed: 2,
-                blendMode: 'ADD',
-                lifespan: 5000,
-                quantity: 1,
-                scale: { start: 0.5, end: 0.1 },
-                frequency: 1000,
-            });
+            this._setEmitterToDone();
 
             if (this._isStoryObject) {
                 this.room.getPlayView().pullNextStoryBit(this.room.getRoomId());
@@ -106,11 +102,27 @@ export default class TaskObject extends InteractiveObject {
         
     }
 
+    private _setEmitterToDone() {
+        this._emitter.setConfig({
+            frame: { frames: ['green'], cycle: true},
+            speed: 2,
+            blendMode: 'ADD',
+            lifespan: 5000,
+            quantity: 1,
+            scale: { start: 0.5, end: 0.1 },
+            frequency: 1000,
+        });
+    }
+
     public isFinished() {
         return this._isFinished;
     }
 
     public setIsFinished(finished) {
         this._isFinished = finished;
+
+        if (finished) {
+            this._setEmitterToDone();
+        }
     }
 }
