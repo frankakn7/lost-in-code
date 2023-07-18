@@ -75,6 +75,11 @@
                          "value":"computer"
                         }, 
                         {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"story_id",
                          "type":"string",
                          "value":"computerLaboratory"
@@ -96,6 +101,16 @@
                          "name":"gameobject_id",
                          "type":"string",
                          "value":"computer"
+                        }, 
+                        {
+                         "name":"is_story",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
                         }, 
                         {
                          "name":"story_id",
@@ -121,6 +136,11 @@
                          "value":"cannon"
                         }, 
                         {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"story_id",
                          "type":"string",
                          "value":"cannonLaboratory"
@@ -142,6 +162,11 @@
                          "name":"gameobject_id",
                          "type":"string",
                          "value":"cannon"
+                        }, 
+                        {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
                         }, 
                         {
                          "name":"story_id",

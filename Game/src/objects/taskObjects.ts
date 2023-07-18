@@ -6,12 +6,12 @@ import RoomScene from "../rooms/room";
 import { globalEventBus } from "../globalEventBus";
 
 export default class TaskObject extends InteractiveObject {
-    private _isOpenRightNow: boolean = false;
-    private _subscribed: boolean = false;
-    private _isStoryObject: boolean = false;
+    protected _isOpenRightNow: boolean = false;
+    protected _subscribed: boolean = false;
+    protected _isStoryObject: boolean = false;
 
-    private _isFinished = false;
-    private _emitter : Phaser.GameObjects.Particles.ParticleEmitter;
+    protected _isFinished = false;
+    protected _emitter : Phaser.GameObjects.Particles.ParticleEmitter;
     
 
     constructor(
@@ -27,7 +27,7 @@ export default class TaskObject extends InteractiveObject {
         this._isStoryObject = params.isStoryObject
 
         properties.forEach(p => {
-            if (p["name"] == "story_id") this._isStoryObject = true;
+            if (p["name"] == "is_story" && p["value"] == true) this._isStoryObject = true;
         });
 
         const shape = new Phaser.Geom.Rectangle(0, 0, this.width, this.height);

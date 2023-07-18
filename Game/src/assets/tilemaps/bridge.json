@@ -47,6 +47,16 @@
                          "value":"cannon"
                         }, 
                         {
+                         "name":"is_story",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"story_id",
                          "type":"string",
                          "value":"cannonBridge"
@@ -68,6 +78,16 @@
                          "name":"gameobject_id",
                          "type":"string",
                          "value":"cannon"
+                        }, 
+                        {
+                         "name":"is_story",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
                         }, 
                         {
                          "name":"story_id",
@@ -93,6 +113,16 @@
                          "value":"enemy"
                         }, 
                         {
+                         "name":"is_story",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"story_id",
                          "type":"string",
                          "value":"enemyBridge2"
@@ -114,6 +144,16 @@
                          "name":"gameobject_id",
                          "type":"string",
                          "value":"enemy"
+                        }, 
+                        {
+                         "name":"is_story",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
                         }, 
                         {
                          "name":"story_id",
@@ -139,6 +179,16 @@
                          "value":"enemy"
                         }, 
                         {
+                         "name":"is_story",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"story_id",
                          "type":"string",
                          "value":"enemyBridge3"
@@ -160,6 +210,16 @@
                          "name":"gameobject_id",
                          "type":"string",
                          "value":"enemy"
+                        }, 
+                        {
+                         "name":"is_story",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
                         }, 
                         {
                          "name":"story_id",
@@ -212,6 +272,7 @@
         {
          "columns":42,
          "firstgid":1,
+         "image":"..\/Space station._32_2.jpg",
          "image":"..\/tileset\/station_tilemap.png",
          "imageheight":1088,
          "imagewidth":1344,

@@ -45,13 +45,18 @@
                          "name":"gameobject_id",
                          "type":"string",
                          "value":"doorSingle"
+                        }, 
+                        {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":305.231,
-                 "y":280.615
+                 "x":305.32804330757,
+                 "y":278.836567905778
                 }, 
                 {
                  "height":0,
@@ -63,6 +68,11 @@
                          "name":"gameobject_id",
                          "type":"string",
                          "value":"crate"
+                        }, 
+                        {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
                         }, 
                         {
                          "name":"story_id",
@@ -88,6 +98,11 @@
                          "value":"barrel"
                         }, 
                         {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"story_id",
                          "type":"string",
                          "value":"barrelCommon"
@@ -111,6 +126,11 @@
                          "value":"computer"
                         }, 
                         {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"story_id",
                          "type":"string",
                          "value":"computerCommon"
@@ -132,6 +152,11 @@
                          "name":"gameobject_id",
                          "type":"string",
                          "value":"firstAidKit"
+                        }, 
+                        {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
                         }, 
                         {
                          "name":"story_id",
@@ -175,6 +200,11 @@
                  "point":true,
                  "properties":[
                         {
+                         "name":"event_id",
+                         "type":"string",
+                         "value":"event_loveletter"
+                        }, 
+                        {
                          "name":"gameobject_id",
                          "type":"string",
                          "value":"paper2"
@@ -203,6 +233,16 @@
                          "value":"bed"
                         }, 
                         {
+                         "name":"is_story",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"story_id",
                          "type":"string",
                          "value":"bedCommon"
@@ -224,6 +264,11 @@
                          "name":"gameobject_id",
                          "type":"string",
                          "value":"doorDouble"
+                        }, 
+                        {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
                         }],
                  "rotation":0,
                  "type":"",
@@ -270,6 +315,16 @@
                          "name":"gameobject_id",
                          "type":"string",
                          "value":"tableSeatLeft"
+                        }, 
+                        {
+                         "name":"is_story",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
                         }],
                  "rotation":0,
                  "type":"",
@@ -277,24 +332,6 @@
                  "width":0,
                  "x":529.094,
                  "y":241.671
-                }, 
-                {
-                 "height":0,
-                 "id":22,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"gameobject_id",
-                         "type":"string",
-                         "value":"tableSeatLeft"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":527.921,
-                 "y":172.454
                 }, 
                 {
                  "height":0,

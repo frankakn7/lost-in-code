@@ -47,6 +47,16 @@
                          "value":"locker"
                         }, 
                         {
+                         "name":"is_story",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"story_id",
                          "type":"string",
                          "value":"lockerHangar"
@@ -68,6 +78,16 @@
                          "name":"gameobject_id",
                          "type":"string",
                          "value":"barrel"
+                        }, 
+                        {
+                         "name":"is_story",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
                         }, 
                         {
                          "name":"story_id",
@@ -93,6 +113,11 @@
                          "value":"crate2"
                         }, 
                         {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"story_id",
                          "type":"string",
                          "value":"crate2Hangar"
@@ -114,6 +139,16 @@
                          "name":"gameobject_id",
                          "type":"string",
                          "value":"crate4"
+                        }, 
+                        {
+                         "name":"is_story",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
                         }, 
                         {
                          "name":"story_id",
