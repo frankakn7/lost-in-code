@@ -1,3 +1,5 @@
+import {TaskManagerStateType} from "./taskManagerStateType";
+
 export type GamestateType = {
     hats: {
         unlockedHats: string[];
@@ -16,4 +18,5 @@ export type GamestateType = {
         laboratory: string[];
         bridge: string[];
     };
+    taskmanager: TaskManagerStateType
 };

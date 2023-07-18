@@ -66,6 +66,12 @@ export default class PlayView extends Phaser.Scene {
             engine: [],
             laboratory: [],
             bridge: []
+        },
+        taskmanager: {
+            answeredQuestions: [],
+            currentChapterNumber: 1,
+            repairedObjectsThisChapter: 0,
+            currentPerformanceIndex: 1
         }
     };
 
@@ -245,7 +251,7 @@ export default class PlayView extends Phaser.Scene {
         }, "bridge", this).setPlayerPosition(32 * 2, 32 * 10));
 
 
-        this.taskManager = new TaskManager(this, [])
+        this.taskManager = new TaskManager(this, this._state.taskmanager)
 
 
         this.currentRoom = this.roomMap.get(this._startingRoomId);
@@ -367,21 +373,13 @@ export default class PlayView extends Phaser.Scene {
         }
     }
 
-    public saveAllToJSONString(): string {
-        return JSON.stringify({
-            hats: this.hatView.saveAll(),
-            playView: this.getCurrentRoom().getRoomId(),
-            room: this.getCurrentRoom().saveAll(),
-            story: this._storyManager.saveAll()
-        });
-    }
-
     public saveAllToGamestateType(): GamestateType {
         return {
             hats: this.hatView.saveAll(),
             playView: this.getCurrentRoom().getRoomId(),
             room: this.getCurrentRoom().saveAll(),
-            story: this._storyManager.saveAll()
+            story: this._storyManager.saveAll(),
+            taskmanager: this.taskManager.saveAll()
         };
     }
 
