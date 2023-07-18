@@ -12,13 +12,13 @@ module.exports = {
         path: path.resolve(__dirname, "dist"),
         filename: "[name].bundle.js",
         clean: true,
-        //assetModuleFilename: "assets/[name][ext]",
-        // assetModuleFilename: "assets/[path][name][ext]"
         assetModuleFilename: (pathData) => {
             const relativePath = pathData.filename.replace("src/", "");
             return relativePath;
         },
+        publicPath: "/game/",
     },
+    
     devtool: "source-map",
     devServer: {
         static: {

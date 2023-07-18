@@ -22,10 +22,6 @@ const port = process.env.PORT || 8080;
 
 const proxy = httpProxy.createProxyServer();
 
-app.get("/api", (req: Request, res: Response) => {
-    res.send("Hello World");
-});
-
 // proxy.on('proxyRes', function (proxyRes, req:IncomingMessage, res:ServerResponse) {
 //   var body = '';
 //   proxyRes.on('data', function (data: Buffer) {
@@ -49,12 +45,27 @@ app.get("/api", (req: Request, res: Response) => {
 //   });
 // });
 
+app.set('trust proxy', true);
+
+app.use(cors({
+    origin: (origin, callback) => {
+        // allow all origins 
+        callback(null, true)
+    },
+    credentials: true
+}));
+// app.use(cors({
+//     origin: 'http://localhost:5173',
+//     credentials: true
+// }))
+
+app.get("/api", (req: Request, res: Response) => {
+    res.send("Hello World");
+});
+
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({
-    origin: 'http://localhost:5173',
-    credentials: true
-}))
+
 
 app.use("/api/login", loginRouter);
 app.get("/api/me", authenticateToken, loginCheck);
