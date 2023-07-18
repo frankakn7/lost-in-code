@@ -93,14 +93,14 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"computerLaboratory2",
-                         "type":"string",
-                         "value":""
-                        }, 
-                        {
                          "name":"gameobject_id",
                          "type":"string",
                          "value":"computer"
+                        }, 
+                        {
+                         "name":"story_id",
+                         "type":"string",
+                         "value":"computerLaboratory2"
                         }],
                  "rotation":0,
                  "type":"",

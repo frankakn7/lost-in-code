@@ -38,5 +38,64 @@ export const GameObjectMap = {
             height: 40,
             isStoryObject: false
         }
+    },
+    barrel: {
+        class: TaskObject,
+        params: {
+            texture: "barrel",
+            width: 32,
+            height: 32,
+            isStoryObject: false
+        }
+    },
+    crate: {
+        class: TaskObject,
+        params: {
+            texture: "crate",
+            width: 32,
+            height: 32,
+            isStoryObject: false,
+            
+        }
+    },
+    crate2: {
+        class: TaskObject,
+        params: {
+            texture: "crate2",
+            width: 32,
+            height: 32,
+            isStoryObject: false,
+            
+        }
+    },
+    
+    crate4: {
+        class: TaskObject,
+        params: {
+            texture: "crate4",
+            width: 64,
+            height: 40,
+            isStoryObject: false
+        }
+    },
+
+    computer: {
+        class: TaskObject,
+        params: {
+            texture: "computer",
+            width: 32,
+            height: 32,
+            isStoryObject: false
+        }
+    },
+    
+    cannon: {
+        class: TaskObject,
+        params: {
+            texture: "cannon",
+            width: 32,
+            height: 32,
+            isStoryObject: false
+        }
     }
 }
