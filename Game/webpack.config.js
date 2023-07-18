@@ -18,10 +18,14 @@ module.exports = (env, options) => {
             path: path.resolve(__dirname, "dist"),
             filename: "[name].bundle.js",
             clean: true,
+            // assetModuleFilename: (pathData) => {
+            //     const relativePath = pathData.filename.replace("src/", "");
+            //     return relativePath;
+            // },
             assetModuleFilename: (pathData) => {
-                const relativePath = pathData.filename.replace("src/", "");
+                const relativePath = pathData.filename.replace("src"+path.sep, "");
                 return relativePath;
-            },
+              },              
             publicPath: "/game/",
         },
 
@@ -68,7 +72,7 @@ module.exports = (env, options) => {
                     ],
                 },
                 {
-                    test: /assets\/.*\.html$/i,
+                    test: /assets(\/|\\).*\.html$/i,
                     loader: 'html-loader',
                 },
             ],
@@ -91,7 +95,8 @@ module.exports = (env, options) => {
             splitChunks: {
                 cacheGroups: {
                     vendor: {
-                        test: /[\\/]node_modules[\\/]/,
+                        // test: /[\\/]node_modules[\\/]/,
+                        test: new RegExp(`[\\\\/]node_modules[\\\\/]`),
                         name: "vendors",
                         chunks: "all",
                     },
