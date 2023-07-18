@@ -50,7 +50,7 @@
 					response
 						.json()
 						.then((data: any) => {
-							goto(`/admin/curriculums/${data.insertId}`);
+							goto(`/curriculums/${data.insertId}`);
 						})
 						.catch((error: any) => {
 							console.error(error);

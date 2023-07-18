@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
+	import { goto } from '$app/navigation';
+	export let data: PageData;
 
-    export let data: PageData;
+	let sortBy = { col: 'id', ascending: true };
 
-    let sortBy = { col: 'order_position', ascending: true };
-
-	let chaptersArray = data.curriculum.chapters;
+	let groupArray = data.groups;
 
 	let sort = (column: string) => {
 		if (sortBy.col == column) {
@@ -19,26 +18,23 @@
 		// Modifier to sorting function for ascending or descending
 		let sortModifier = sortBy.ascending ? 1 : -1;
 
-		let sort = (a: any, b: any) =>
+		let sort = (a:any, b:any) =>
 			a[column] < b[column] ? -1 * sortModifier : a[column] > b[column] ? 1 * sortModifier : 0;
 
-            chaptersArray = chaptersArray.sort(sort);
+		groupArray = groupArray.sort(sort);
+		console.log(groupArray);
 	};
 </script>
 
-<h1>Curriculum: {data.curriculum.name}</h1>
-<p>{data.curriculum.description}</p>
-
-<h2>Chapters</h2>
-
+<h1>Groups</h1>
 <table>
 	<tr>
-		<th on:click={() => sort('order_position')}>
+		<th on:click={() => sort('id')}>
 			<div class="table-header">
-				<div class="header-text">Nr.</div>
-				{#if sortBy.col == 'order_position' && !sortBy.ascending}
+				<div class="header-text">ID</div>
+				{#if sortBy.col == 'id' && !sortBy.ascending}
 					<i class="fa fa-arrow-up" />
-				{:else if sortBy.col === 'order_position'}
+				{:else if sortBy.col === 'id'}
 					<i class="fa fa-arrow-down" />
 				{:else}
 					<i class="fa fa-arrow-down" style="visibility: hidden;" />
@@ -57,24 +53,24 @@
 				{/if}
 			</div>
 		</th>
-		<th on:click={() => sort('material')}>
+		<th on:click={() => sort('description')}>
 			<div class="table-header">
-				<div class="header-text">Material</div>
-				{#if sortBy.col == 'material' && !sortBy.ascending}
+				<div class="header-text">Description</div>
+				{#if sortBy.col == 'description' && !sortBy.ascending}
 					<i class="fa fa-arrow-up" />
-				{:else if sortBy.col === 'material'}
+				{:else if sortBy.col === 'description'}
 					<i class="fa fa-arrow-down" />
 				{:else}
 					<i class="fa fa-arrow-down" style="visibility: hidden;" />
 				{/if}
 			</div>
 		</th>
-        <th on:click={() => sort('id')}>
+		<th on:click={() => sort('curriculum_id')}>
 			<div class="table-header">
-				<div class="header-text">ID</div>
-				{#if sortBy.col == 'id' && !sortBy.ascending}
+				<div class="header-text">Curriculum ID</div>
+				{#if sortBy.col == 'curriculum_id' && !sortBy.ascending}
 					<i class="fa fa-arrow-up" />
-				{:else if sortBy.col === 'id'}
+				{:else if sortBy.col === 'curriculum_id'}
 					<i class="fa fa-arrow-down" />
 				{:else}
 					<i class="fa fa-arrow-down" style="visibility: hidden;" />
@@ -82,16 +78,12 @@
 			</div>
 		</th>
 	</tr>
-	{#each chaptersArray as chapter}
-		<tr on:click={() => goto(`/admin/chapters/${chapter.id}`)}>
-			<td>{chapter.order_position}</td>
-			<td>{chapter.name}</td>
-			{#if chapter.material}
-				<td>{chapter.material.slice(0,50)}...</td>
-			{:else}
-				<td>-</td>
-			{/if}
-			<td>{chapter.id}</td>
+	{#each groupArray as group}
+		<tr on:click={() => goto(`/groups/${group.id}`)}>
+			<td>{group.id}</td>
+			<td>{group.name}</td>
+			<td>{group.description}</td>
+			<td>{group.curriculum_id ?? '-'}</td>
 		</tr>
 	{/each}
 </table>
@@ -100,7 +92,7 @@
 	table {
 		text-align: center;
 		border-collapse: collapse;
-		width: 100%;
+        width: 100%;
 	}
 
 	.table-header {

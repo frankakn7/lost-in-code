@@ -7,14 +7,14 @@
 		<h2 id="app-name">L.I.C. Admin</h2>
 		<nav>
 			<ul>
-				<li><a href="/admin">Dashboard</a></li>
-				<li><a href="/admin/groups">Groups</a></li>
-				<li><a href="/admin/users">Users</a></li>
-				<li><a href="/admin/curriculums">Curriculums</a></li>
-				<li><a href="/admin/upload">Upload</a></li>
+				<li><a href="/">Dashboard</a></li>
+				<li><a href="/groups">Groups</a></li>
+				<li><a href="/users">Users</a></li>
+				<li><a href="/curriculums">Curriculums</a></li>
+				<li><a href="/upload">Upload</a></li>
 			</ul>
 			<ul>
-				<li><a href="/admin/logout">Logout</a></li>
+				<li><a href="/logout">Logout</a></li>
 			</ul>
 		</nav>
 	</div>

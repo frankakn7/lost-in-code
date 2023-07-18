@@ -10,14 +10,17 @@ import KnowledgeButtonTexture from "../assets/ui/apps/knowledge-app-icon.png";
 import HatAppTexture from "../assets/ui/apps/Hat-app-icon.png";
 import LogoutButtonTexture from "../assets/ui/Logout-Button.png";
 import HatView from "./hatView/hatView";
+import ApiHelper from "../helpers/apiHelper";
 
 export default class MenuView extends Phaser.Scene {
-    private _tilesprite : Phaser.GameObjects.TileSprite;
-    private _playView : PlayView;
-    
-    private hatView : HatView;
+    private _tilesprite: Phaser.GameObjects.TileSprite;
+    private _playView: PlayView;
+
+    private hatView: HatView;
 
     private _columns = 4;
+
+    private apiHelper: ApiHelper = new ApiHelper();
 
     public preload() {
         this.load.image("antennaAppTexture", AntennaAppTexture);
@@ -29,8 +32,8 @@ export default class MenuView extends Phaser.Scene {
     }
 
     constructor(
-        playView : PlayView,
-        settingsConfig?: string | Phaser.Types.Scenes.SettingsConfig,
+        playView: PlayView,
+        settingsConfig?: string | Phaser.Types.Scenes.SettingsConfig
     ) {
         super(settingsConfig);
         this._playView = playView;
@@ -38,15 +41,25 @@ export default class MenuView extends Phaser.Scene {
     }
 
     public create() {
-        this._tilesprite = this.add.tileSprite(0,0,this.cameras.main.displayWidth / 3, this.cameras.main.displayHeight / 3, "backgroundTile").setOrigin(0,0).setScale(3);
-
+        this._tilesprite = this.add
+            .tileSprite(
+                0,
+                0,
+                this.cameras.main.displayWidth / 3,
+                this.cameras.main.displayHeight / 3,
+                "backgroundTile"
+            )
+            .setOrigin(0, 0)
+            .setScale(3);
 
         const resumeButton = new SpriteButton(
             this,
             "resumeButtonTexture",
             180,
             180,
-            () => {this._resumeGame()}
+            () => {
+                this._resumeGame();
+            }
         );
         this.add.existing(resumeButton);
 
@@ -55,11 +68,14 @@ export default class MenuView extends Phaser.Scene {
             "logoutButtonTexture",
             this.cameras.main.displayWidth - 180,
             180,
-            () => {}
+            () => {
+                this.apiHelper.logout().then((response) => {
+                    location.reload();
+                });
+            }
         );
         this.add.existing(logoutButton);
 
-    
         // Oder was auch immer das dann repräsentieren soll
         const chatButton = new SpriteButton(
             this,
@@ -85,11 +101,12 @@ export default class MenuView extends Phaser.Scene {
             (this.scale.width / (this._columns + 1)) * 3,
             1000,
             () => {
-                this.openSubMenu(this._playView.hatView)
+                this.openSubMenu(this._playView.hatView);
             }
         );
         this.add.existing(hatButton);
-        if (this.scene.get("Hat View") == null) this.scene.add("hatView", this._playView.hatView);
+        if (this.scene.get("Hat View") == null)
+            this.scene.add("hatView", this._playView.hatView);
 
         const settingsButton = new SpriteButton(
             this,

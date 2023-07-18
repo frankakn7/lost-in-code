@@ -3,7 +3,8 @@
         background: rgb(247, 243, 240);
         border: 1px solid #42464b;
         border-radius: 6px;
-        height: 257px;
+        /* height: 257px; */
+        padding: 1rem;
         margin: 20px auto 0;
         width: 400px;
         display: flex;
@@ -20,7 +21,7 @@
         align-items: center;
     }
 
-    #username,
+    #email,
     #password {
         margin: 0.5rem;
         font-size: 1.2rem;
@@ -44,12 +45,20 @@
         transform: scale(1.2);
         transition: all 0.2s;
     }
+
+    #error {
+        color: #e54b4bff;
+        font-family: monospace;
+        display: none;
+        margin: 0;
+    }
 </style>
 
 <div id="loginFormContainer">
     <h3>LOGIN</h3>
+    <h4 id="error"></h4>
     <form id="loginForm">
-        <input type="text" id="username" placeholder="Username" />
+        <input type="email" id="email" placeholder="Email" />
         <input type="password" id="password" placeholder="Password" />
         <button id="submit" type="button">Login</button>
     </form>

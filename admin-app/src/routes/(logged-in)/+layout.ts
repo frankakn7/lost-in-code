@@ -17,7 +17,7 @@ export const load = (async ({ fetch }: any) => {
         }
     } catch (error) {
         console.log("User not logged in");
-        throw redirect(307, '/admin/login');
+        throw redirect(307, '/login');
         return {}
     }
 }) satisfies LayoutLoad;
