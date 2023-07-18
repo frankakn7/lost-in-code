@@ -91,7 +91,7 @@ export default class MenuView extends Phaser.Scene {
             "knowledgeAppTexture",
             (this.scale.width / (this._columns + 1)) * 2,
             1000,
-            () => {}
+            () => {this.openSubMenu("DocView")}
         );
         this.add.existing(knowledgeButton);
 
@@ -107,6 +107,8 @@ export default class MenuView extends Phaser.Scene {
         this.add.existing(hatButton);
         if (this.scene.get("Hat View") == null)
             this.scene.add("hatView", this._playView.hatView);
+
+        this.scene.add("DocView",this._playView.docView);
 
         const settingsButton = new SpriteButton(
             this,

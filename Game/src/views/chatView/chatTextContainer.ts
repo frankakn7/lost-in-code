@@ -27,6 +27,8 @@ export default class ChatTextContainer extends Phaser.GameObjects.Container {
      */
     private answerStyle: Phaser.Types.GameObjects.Text.TextStyle;
 
+    private maxY = 0;
+
     /**
      * Constructs the container, and **adds itself to the scene**
      * @param scene the scene the container will be added to
@@ -35,7 +37,7 @@ export default class ChatTextContainer extends Phaser.GameObjects.Container {
      */
     constructor(scene: Phaser.Scene, x: number=0, y: number=0) {
         super(scene, x, y);
-
+        this.maxY = y;
         //Set the style of the text coming TO the player (blue)
         this.textStyle = {
             fontSize: "30px",
@@ -71,7 +73,7 @@ export default class ChatTextContainer extends Phaser.GameObjects.Container {
 
         this.on('drag', (pointer, dragX, dragY) => {
             //Ensure that the container can only go to 0 (first text at the very top) or have the last text be at half the display height
-            this.y = Phaser.Math.Clamp(dragY, Math.min(this.scene.cameras.main.displayHeight / 2 - this.input.hitArea.height,0), 0);
+            this.y = Phaser.Math.Clamp(dragY, Math.min(this.scene.cameras.main.displayHeight / 2 - this.input.hitArea.height,0), this.maxY);
         })
     }
 
@@ -80,7 +82,7 @@ export default class ChatTextContainer extends Phaser.GameObjects.Container {
      * Additionally sets the hitarea to be as high as all the texts in the container (up until the last text)
      * @param text the text to be added
      */
-    private pushAndAdd(text: Phaser.GameObjects.Text): void {
+    public pushAndAdd(text: Phaser.GameObjects.Text): void {
         this.texts.push(text);
         this.add(text);
         this.input.hitArea = new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.displayWidth, this.calcNewTextY())

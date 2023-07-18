@@ -39,6 +39,9 @@ import flaresPng from "../assets/particles/flares.png";
 import {GamestateType} from "../types/gamestateType";
 import {globalEventBus} from "../helpers/globalEventBus";
 import ApiHelper from "../helpers/apiHelper";
+import ChapterManager from "./docView/chapterManager";
+import DocView from "./docView/docView";
+import ReturnButtonTexture from "../assets/ui/Return-Button.png";
 
 
 /**
@@ -112,10 +115,12 @@ export default class PlayView extends Phaser.Scene {
 
     private apiHelper = new ApiHelper();
 
+    public docView: DocView;
+
     /**
      * Opens the chat view by sending all other scenes to sleep and launching / awaking the chat view scene
      */
-    private openChatView(): void {
+    private openStoryChatView(): void {
         //Send all scenes to sleep
         this.scene.sleep();
         this.scene.sleep("controlPad");
@@ -195,6 +200,8 @@ export default class PlayView extends Phaser.Scene {
         this.load.image("pirateHat", pirateHat);
 
         this.load.atlas("flares", flaresPng, flaresJson);
+        // this.load.image("returnButtonTexture", ReturnButtonTexture);
+
     }
 
     /**
@@ -280,6 +287,8 @@ export default class PlayView extends Phaser.Scene {
             console.log("SLEEPING PLAY VIEW")
         })
 
+        this.docView = new DocView(this,this._state.taskmanager.currentChapterNumber);
+
         globalEventBus.on("save_game", () => this.apiHelper.updateStateData(this.saveAllToGamestateType()))
 
         // Adds the scene and launches it... (if active is set to true on added scene it is launched directly)
@@ -343,7 +352,7 @@ export default class PlayView extends Phaser.Scene {
             //prevent phone button from being continuously pressed by accident
             this.pauseChatButtons.phonePressed = false;
             //open the chat view
-            // this.openChatView();
+            // this.openStoryChatView();
             // this.getToRoomViaId("laboratory");
             this.openQuestionView();
             // console.log(this.saveAllToJSONString());
