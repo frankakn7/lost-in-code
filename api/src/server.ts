@@ -60,7 +60,7 @@ app.use(cors({
 // }))
 
 app.get("/api", (req: Request, res: Response) => {
-    res.send("Hello World");
+    res.send(JSON.stringify({response: "Hello World"}));
 });
 
 app.use(express.json());

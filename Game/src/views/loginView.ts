@@ -16,15 +16,9 @@ export default class LoginView extends Phaser.Scene {
 
     create() {
         this.cameras.main.setBackgroundColor("#3e536d");
-        // const element = this.add
-        //     .dom(
-        //         // this.cameras.main.displayWidth / 2,
-        //         // this.cameras.main.displayHeight / 2
-        //         100,
-        //         100
-        //     )
-        //     .createFromCache("loginForm")
-        //     // .setOrigin(0.5, 0.5);
+        
+        this.checkLoginStatus()
+
         const element = this.add
             .dom(
                 this.cameras.main.displayWidth / 2,
@@ -50,6 +44,13 @@ export default class LoginView extends Phaser.Scene {
                 }
             }
         });
+    }
+
+    private checkLoginStatus(){
+        const url = `${process.env.API_URL}/api`
+        // fetch(url,{method: "GET"}).then(response => console.log(response))//response.json().then(data => console.log(data)))
+        // fetch(url,{method: "GET"}).then(response => response.json().then(data => console.log(data)).catch(error => console.log(error)))
+        // fetch(url,{method: "GET"}).then(response => response.text().then(data => console.log(data)).catch(error => console.log(error)))
     }
 
     private startGame(){
