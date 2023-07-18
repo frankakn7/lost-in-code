@@ -4,6 +4,7 @@ import PlayView from "./views/playView";
 import ChatView from "./views/chatView/chatView";
 import './font.css';
 import LoginView from "./views/loginView";
+import { application } from "express";
 
 /**
  * Testing the tile config
@@ -44,4 +45,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
     backgroundColor: "#000000",
 };
 
+
+
+  
 export const game = new Phaser.Game(gameConfig);

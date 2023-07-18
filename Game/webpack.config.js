@@ -23,7 +23,7 @@ module.exports = (env, options) => {
             //     return relativePath;
             // },
             assetModuleFilename: (pathData) => {
-                const relativePath = pathData.filename.replace("src"+path.sep, "");
+            const relativePath = pathData.filename.replace("src/", "");
                 return relativePath;
               },              
             publicPath: "/game/",
@@ -95,8 +95,7 @@ module.exports = (env, options) => {
             splitChunks: {
                 cacheGroups: {
                     vendor: {
-                        // test: /[\\/]node_modules[\\/]/,
-                        test: new RegExp(`[\\\\/]node_modules[\\\\/]`),
+                    test: /[\\/]node_modules[\\/]/,
                         name: "vendors",
                         chunks: "all",
                     },
