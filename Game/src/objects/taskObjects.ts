@@ -11,6 +11,8 @@ export default class TaskObject extends InteractiveObject {
     private _isStoryObject: boolean = false;
 
     private _isFinished = false;
+    private _emitter : Phaser.GameObjects.Particles.ParticleEmitter;
+    
 
     constructor(
         scene: Phaser.Scene,
@@ -28,6 +30,22 @@ export default class TaskObject extends InteractiveObject {
         properties.forEach(p => {
             if (p["name"] == "story_id") this._isStoryObject = true;
         });
+
+        const shape = new Phaser.Geom.Rectangle(0, 0, this.width, this.height);
+        this._emitter = this.scene.add.particles(this.x, this.y, 'flares', { 
+            frame: { frames: ['red'], cycle: true},
+            speed: 2,
+            blendMode: 'ADD',
+            lifespan: 5000,
+            quantity: 1,
+            scale: { start: 0.5, end: 0.1 },
+            frequency: 800,
+        });
+        
+        
+        this._emitter.setDepth(11);
+        
+        this._emitter.addEmitZone({type: 'random', source: shape, total: 1});
     }
 
 
@@ -68,6 +86,15 @@ export default class TaskObject extends InteractiveObject {
                 this.setIsFinished(true);
                 this.room.getPlayView().pullNextStoryBit(this.room.getRoomId());
                 this.room.getPlayView().openChatView();
+                this._emitter.setConfig({ 
+                    frame: { frames: ['green'], cycle: true},
+                    speed: 2,
+                    blendMode: 'ADD',
+                    lifespan: 5000,
+                    quantity: 1,
+                    scale: { start: 0.5, end: 0.1 },
+                    frequency: 1000,
+                });
             }
         }
         

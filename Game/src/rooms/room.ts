@@ -9,6 +9,13 @@ import { GameObjectMap } from "../gameobjects";
 import DoorTexture from "../assets/gameobjects/door.png";
 import EngineTexture from "../assets/gameobjects/engine.png";
 import LockerTexture from "../assets/gameobjects/locker.png"
+import BarrelTexture from "../assets/gameobjects/barrel.png";
+import CrateTexture from "../assets/gameobjects/crate.png";
+import Crate2Texture from "../assets/gameobjects/crate2.png";
+import Crate4Texture from "../assets/gameobjects/crate4.png";
+import ComputerTexture from "../assets/gameobjects/computer.png";
+import CannonTexture from "../assets/gameobjects/cannon.png";
+
 import InteractiveObject from "../objects/interactiveObject";
 import storyJson from "../story_management/storyFormatExample.json";
 import StoryManager from "../story_management/storyManager";
@@ -71,6 +78,14 @@ export default class RoomScene extends Phaser.Scene {
         this.load.image("door", DoorTexture);
         this.load.image("engine", EngineTexture);
         this.load.image("locker", LockerTexture);
+        
+        this.load.image("barrel", BarrelTexture);
+        this.load.image("crate2", Crate2Texture);
+        this.load.image("crate", CrateTexture);
+        this.load.image("crate4", Crate4Texture);
+        this.load.image("computer", ComputerTexture);
+        this.load.image("cannon", CannonTexture);
+
     }
 
     public getRoomId() {
@@ -129,7 +144,7 @@ export default class RoomScene extends Phaser.Scene {
         // this.physics.add.existing(this.player);
         this.add.existing(this.player);
         this.cameras.main.startFollow(this.player);
-        this.cameras.main.setBounds(0, 0, tilemap.widthInPixels, tilemap.heightInPixels);
+        this.cameras.main.setBounds(0, 0, tilemap.widthInPixels, tilemap.heightInPixels + 130);
         this.cameras.main.setZoom(5, 5);
 
 
@@ -146,8 +161,8 @@ export default class RoomScene extends Phaser.Scene {
             
             
 
-            let x = Math.ceil(obj.x / 32) * 32;
-            let y = Math.ceil(obj.y / 32) * 32;
+            let x = (Math.ceil(obj.x / 32) * 32) - 32;
+            let y = (Math.ceil(obj.y / 32) * 32) - 32;
             
             let params = GameObjectMap[gameobjectID].params
             let texture = params.texture;
@@ -165,8 +180,10 @@ export default class RoomScene extends Phaser.Scene {
             }
 
             this.add.existing(newObj);
-            if (newObj.exists)
-                this.physics.add.collider(this.player, newObj);
+            
+            
+            this.physics.add.collider(this.player, newObj);
+            
             // const door = new InteractiveObject(this, 32*5, 32*5, "door");
             // this.add.existing(door);
             // this.physics.add.collider(this.player, door);
@@ -205,7 +222,7 @@ export default class RoomScene extends Phaser.Scene {
 
 
         this.fow.setTint(0x141932);
-        this.fow.setDepth(5);
+        this.fow.setDepth(10);
 
         this.events.emit("hats_unlock_check");
     }

@@ -19,7 +19,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
         default: "arcade",
         arcade: {
             gravity: { y: 0 },
-            debug: true,
+            debug: false,
         },
     },
     input: {
@@ -35,8 +35,8 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
         autoRound: true
 
     },
-    // scene: new PlayView("Play"),
-    scene: new LoginView(),
+    scene: new PlayView("Play"),
+    // scene: new LoginView(),
     //scene: new ChatView(),
     parent: "game",
     dom: {
