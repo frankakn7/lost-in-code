@@ -1,9 +1,8 @@
-import * as Phaser from "phaser";
-import InteractiveObject from "./interactiveObject";
-import PlayView from "../views/playView";
+import TaskObject from "./taskObjects";
 import RoomScene from "../rooms/room";
+import {visibility} from "html2canvas/dist/types/css/property-descriptors/visibility";
 
-export default class DoorObject extends InteractiveObject {
+export default class DoorObject extends TaskObject {
     constructor(
         scene: Phaser.Scene,
         room: RoomScene,
@@ -15,9 +14,13 @@ export default class DoorObject extends InteractiveObject {
         super(scene, room, x, y, params, properties);
     }
 
-    public interact(): void {
-        console.log("Open Door");
-        this.room.getPlayView().getToRoomViaId(this.room.getNextRoom());
-        
+    protected preUpdate(time: number, delta: number) {
+        if(this.isFinished()) {
+            this.setVisible(false);
+            this._emitter.setVisible(false);
+            this.body.enable = false;
+
+        }
+
     }
 }

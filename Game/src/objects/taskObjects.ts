@@ -6,12 +6,12 @@ import RoomScene from "../rooms/room";
 import { globalEventBus } from "../helpers/globalEventBus";
 
 export default class TaskObject extends InteractiveObject {
-    private _isOpenRightNow: boolean = false;
-    private _subscribed: boolean = false;
-    private _isStoryObject: boolean = false;
+    protected _isOpenRightNow: boolean = false;
+    protected _subscribed: boolean = false;
+    protected _isStoryObject: boolean = false;
 
-    private _isFinished = false;
-    private _emitter : Phaser.GameObjects.Particles.ParticleEmitter;
+    protected _isFinished = false;
+    protected _emitter : Phaser.GameObjects.Particles.ParticleEmitter;
     
 
     constructor(
@@ -28,7 +28,7 @@ export default class TaskObject extends InteractiveObject {
         this._isStoryObject = params.isStoryObject
 
         properties.forEach(p => {
-            if (p["name"] == "story_id") this._isStoryObject = true;
+            if (p["name"] == "is_story" && p["value"] == true) this._isStoryObject = true;
         });
 
         const shape = new Phaser.Geom.Rectangle(0, 0, this.width, this.height);
@@ -41,7 +41,11 @@ export default class TaskObject extends InteractiveObject {
             scale: { start: 0.5, end: 0.1 },
             frequency: 800,
         });
-        
+
+        if (this.isFinished()) {
+            this._setEmitterToDone();
+        }
+
         
         this._emitter.setDepth(11);
         
@@ -80,25 +84,35 @@ export default class TaskObject extends InteractiveObject {
     }
 
     public setDone() {
+
         globalEventBus.off('taskmanager_object_failed', this.setClosed);
         if (!this._isFinished) {
+            this.setIsFinished(true);
+
+            this._setEmitterToDone();
+
+            globalEventBus.emit("save_game")
             if (this._isStoryObject) {
-                this.setIsFinished(true);
-                globalEventBus.emit("save_game")
                 this.room.getPlayView().pullNextStoryBit(this.room.getRoomId());
                 this.room.getPlayView().openChatView();
-                this._emitter.setConfig({ 
-                    frame: { frames: ['green'], cycle: true},
-                    speed: 2,
-                    blendMode: 'ADD',
-                    lifespan: 5000,
-                    quantity: 1,
-                    scale: { start: 0.5, end: 0.1 },
-                    frequency: 1000,
-                });
             }
+
+            // TODO Should be able to stay, as this function wont be called after the door was successfully unlocked anyways
+            this.room.checkIfDoorUnlocked();
         }
-        
+
+    }
+
+    private _setEmitterToDone() {
+        this._emitter.setConfig({
+            frame: { frames: ['green'], cycle: true},
+            speed: 2,
+            blendMode: 'ADD',
+            lifespan: 5000,
+            quantity: 1,
+            scale: { start: 0.5, end: 0.1 },
+            frequency: 1000,
+        });
     }
 
     public isFinished() {
@@ -107,5 +121,9 @@ export default class TaskObject extends InteractiveObject {
 
     public setIsFinished(finished) {
         this._isFinished = finished;
+
+        if (finished) {
+            this._setEmitterToDone();
+        }
     }
 }

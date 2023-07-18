@@ -1,11 +1,12 @@
-import DoorObject from "./objects/doorObject";
+import PortalObject from "./objects/portalObject";
 import HatObject from "./objects/hatObject";
 import InteractiveObject from "./objects/interactiveObject";
 import TaskObject from "./objects/taskObjects";
+import DoorObject from "./objects/doorObject";
 
 export const GameObjectMap = {
     door: {
-        class: DoorObject,
+        class: PortalObject,
         params: {
             texture: "door",
             width: 18,
@@ -22,9 +23,18 @@ export const GameObjectMap = {
         }
     },
     engine: {
-        class: TaskObject,
+        class: InteractiveObject,
         params: {
             texture: "engine",
+            width: 60,
+            height: 60,
+            isStoryObject: false
+        }
+    },
+    engineBroken: {
+        class: TaskObject,
+        params: {
+            texture: "engineBroken",
             width: 60,
             height: 60,
             isStoryObject: false
@@ -93,9 +103,71 @@ export const GameObjectMap = {
         class: TaskObject,
         params: {
             texture: "cannon",
+            width: 35,
+            height: 35,
+            isStoryObject: false
+        }
+    },
+
+    tableSeatLeft: {
+        class: TaskObject,
+        params: {
+            texture: "tableseatleft",
+            width: 32,
+            height: 32,
+            isStoryObject: true
+        }
+    },
+
+    tableSeatRight: {
+        class: InteractiveObject,
+        params: {
+            texture: "tableseatright",
             width: 32,
             height: 32,
             isStoryObject: false
         }
-    }
+    },
+
+    firstAidKit: {
+        class: TaskObject,
+        params: {
+            texture: "firstaidkittexture",
+            width: 32,
+            height: 32,
+            isStoryObject: false
+        }
+
+    },
+
+    bed: {
+        class: TaskObject,
+        params: {
+            texture: "bed",
+            width: 32,
+            height: 64,
+            isStoryObject: true
+        }
+
+    },
+
+    doorSingle: {
+        class: DoorObject,
+        params: {
+            texture: "doorSingle",
+            width: 32,
+            height: 32,
+            isStoryObject: false
+        }
+    },
+
+    doorDouble: {
+        class: DoorObject,
+        params: {
+            texture: "doorDouble",
+            width: 64,
+            height: 32,
+            isStoryObject: false
+        }
+    },
 }

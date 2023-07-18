@@ -47,6 +47,11 @@
                          "value":"engineBroken"
                         }, 
                         {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"story_id",
                          "type":"string",
                          "value":"engineBrokenEngine3"
@@ -98,6 +103,11 @@
                          "value":"crate4"
                         }, 
                         {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"story_id",
                          "type":"string",
                          "value":"crate4Engine"
@@ -121,6 +131,11 @@
                          "value":"computer"
                         }, 
                         {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"story_id",
                          "type":"string",
                          "value":"computerEngine"
@@ -129,8 +144,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":110.869,
-                 "y":148.852
+                 "x":144.392298692591,
+                 "y":146.337752598056
                 }, 
                 {
                  "height":0,
@@ -152,30 +167,6 @@
                 }, 
                 {
                  "height":0,
-                 "id":12,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":205.313,
-                 "y":203.26
-                }, 
-                {
-                 "height":0,
-                 "id":13,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":206.34,
-                 "y":112.922
-                }, 
-                {
-                 "height":0,
                  "id":14,
                  "name":"",
                  "point":true,
@@ -184,6 +175,11 @@
                          "name":"gameobject_id",
                          "type":"string",
                          "value":"engineBroken"
+                        }, 
+                        {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
                         }, 
                         {
                          "name":"story_id",
@@ -209,6 +205,11 @@
                          "value":"engineBroken"
                         }, 
                         {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"story_id",
                          "type":"string",
                          "value":"engineBrokenEngine2"
@@ -217,7 +218,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":401.387468671679,
+                 "x":399.711303737049,
                  "y":112.922305764411
                 }, 
                 {
@@ -265,6 +266,70 @@
                  "width":0,
                  "x":78.6666666666666,
                  "y":441.333333333333
+                }, 
+                {
+                 "height":0,
+                 "id":18,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"event_id",
+                         "type":"string",
+                         "value":"event_hateletter"
+                        }, 
+                        {
+                         "name":"gameobject_id",
+                         "type":"string",
+                         "value":"paper2"
+                        }, 
+                        {
+                         "name":"story_id",
+                         "type":"string",
+                         "value":"paper2Common"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":76.2655045256453,
+                 "y":145.826349312772
+                }, 
+                {
+                 "height":0,
+                 "id":19,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"gameobject_id",
+                         "type":"string",
+                         "value":"engine"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":212.03486423064,
+                 "y":114.817298022125
+                }, 
+                {
+                 "height":0,
+                 "id":20,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"gameobject_id",
+                         "type":"string",
+                         "value":"engine"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":210.358699296011,
+                 "y":207.844451894066
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -273,7 +338,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":18,
+ "nextobjectid":21,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.1",

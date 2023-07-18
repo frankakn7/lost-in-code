@@ -47,6 +47,16 @@
                          "value":"locker"
                         }, 
                         {
+                         "name":"is_story",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"story_id",
                          "type":"string",
                          "value":"lockerHangar"
@@ -70,9 +80,9 @@
                          "value":"barrel"
                         }, 
                         {
-                         "name":"story_id",
-                         "type":"string",
-                         "value":"barrelHangar"
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
                         }],
                  "rotation":0,
                  "type":"",
@@ -91,6 +101,11 @@
                          "name":"gameobject_id",
                          "type":"string",
                          "value":"crate2"
+                        }, 
+                        {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
                         }, 
                         {
                          "name":"story_id",
@@ -114,6 +129,16 @@
                          "name":"gameobject_id",
                          "type":"string",
                          "value":"crate4"
+                        }, 
+                        {
+                         "name":"is_story",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"is_task",
+                         "type":"bool",
+                         "value":true
                         }, 
                         {
                          "name":"story_id",

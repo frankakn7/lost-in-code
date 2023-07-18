@@ -8,6 +8,7 @@ import { GameObjectMap } from "../gameobjects";
 
 import DoorTexture from "../assets/gameobjects/door.png";
 import EngineTexture from "../assets/gameobjects/engine.png";
+import EngineBrokenTexture from "../assets/gameobjects/engineBroken.png";
 import LockerTexture from "../assets/gameobjects/locker.png"
 import BarrelTexture from "../assets/gameobjects/barrel.png";
 import CrateTexture from "../assets/gameobjects/crate.png";
@@ -15,12 +16,19 @@ import Crate2Texture from "../assets/gameobjects/crate2.png";
 import Crate4Texture from "../assets/gameobjects/crate4.png";
 import ComputerTexture from "../assets/gameobjects/computer.png";
 import CannonTexture from "../assets/gameobjects/cannon.png";
+import TableSeatLeftTexture from "../assets/gameobjects/tableSeatLeft.png";
+import TableSeatRightTexture from "../assets/gameobjects/tableSeatRight.png";
+import FirstAidKitTexture from "../assets/gameobjects/firstAidKit.png";
+import BedTexture from "../assets/gameobjects/bed.png";
+import DoorSingleTexture from "../assets/gameobjects/doorSingle.png";
+import DoorDoubleTexture from "../assets/gameobjects/doorDouble.png";
 
 import InteractiveObject from "../objects/interactiveObject";
 import storyJson from "../story_management/storyFormatExample.json";
 import StoryManager from "../story_management/storyManager";
 import PlayView from "../views/playView";
 import TaskObject from "../objects/taskObjects";
+import {globalEventBus} from "../helpers/globalEventBus";
 
 
 
@@ -85,6 +93,13 @@ export default class RoomScene extends Phaser.Scene {
         this.load.image("crate4", Crate4Texture);
         this.load.image("computer", ComputerTexture);
         this.load.image("cannon", CannonTexture);
+        this.load.image("tableseatleft", TableSeatLeftTexture);
+        this.load.image("tableseatright", TableSeatRightTexture);
+        this.load.image("firstaidkittexture", FirstAidKitTexture);
+        this.load.image("bed", BedTexture);
+        this.load.image("doorSingle", DoorSingleTexture);
+        this.load.image("doorDouble", DoorDoubleTexture);
+        this.load.image("engineBroken", EngineBrokenTexture);
 
     }
 
@@ -284,6 +299,19 @@ export default class RoomScene extends Phaser.Scene {
     }
 
     public getDoorUnlocked() {
+
         return this._doorUnlocked;
+    }
+
+    public checkIfDoorUnlocked() {
+        let res = true;
+        this._taskObjects.forEach((obj) => {
+            if (!obj.isFinished()) res = false;
+        });
+
+        if (!res) return;
+
+        this.setDoorUnlocked(true);
+        globalEventBus.emit("door_was_unlocked");
     }
 }
