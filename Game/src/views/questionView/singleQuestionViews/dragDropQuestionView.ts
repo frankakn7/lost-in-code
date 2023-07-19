@@ -109,7 +109,7 @@ export default class DragDropQuestionView extends Phaser.Scene {
         if(correct){
             this.showCorrectText()
         }
-        return correct;
+        return new Promise((resolve) => resolve(correct));
     }
 
 }

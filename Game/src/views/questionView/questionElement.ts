@@ -153,10 +153,33 @@ class SnippetQuestionElement
     }
 }
 
+/**
+ * Question element for containing tests for create question
+ */
+class CreateQuestionElement implements QuestionElement {
+    readonly id: number;
+    content: string;
+    correctAnswers: string[];
+    elementIdentifier: string;
+
+
+    constructor(id:number, content: string, correctAnswers: string[], elementIdentifier:string) {
+        this.id = id;
+        this.content = content;
+        this.correctAnswers = correctAnswers;
+        this.elementIdentifier = elementIdentifier;
+    }
+
+    public checkIfCorrect(answer: string | number | boolean): boolean {
+        return null;
+    }
+}
+
 export {
     QuestionElement,
     ChoiceQuestionElement,
     InputQuestionElement,
     OrderQuestionElement,
-    SnippetQuestionElement
+    SnippetQuestionElement,
+    CreateQuestionElement
 };

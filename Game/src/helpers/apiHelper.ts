@@ -3,6 +3,27 @@ import {GamestateType} from "../types/gamestateType";
 export default class ApiHelper {
     private apiUrl = `${process.env.API_URL}`;
 
+    public evaluateCode(code:string){
+        const url = this.apiUrl + "/api/php";
+        const formData = new FormData();
+        formData.append("code", code);
+        console.log(formData)
+        return new Promise((resolve, reject) => {
+            fetch(url, {
+                method: "POST",
+                credentials: "include",
+                body: formData,
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        resolve(response);
+                    } else {
+                        reject("Evalutaion failed");
+                    }
+                })
+                .catch((error) => reject(error));
+        });
+    }
     public getStateData() {
         const url = this.apiUrl + "/api/gamestates/me";
         return new Promise((resolve, reject) => {

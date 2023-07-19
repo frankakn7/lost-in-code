@@ -112,6 +112,6 @@ export default class SelectOneQuestionView extends Phaser.Scene {
         if (allCorrect) {
             this.showCorrectText();
         }
-        return allCorrect;
+        return new Promise((resolve) => resolve(allCorrect));
     }
 }

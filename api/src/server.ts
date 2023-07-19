@@ -74,7 +74,7 @@ app.use(authenticateToken);
 
 app.post("/api/php", (req: Request, res: Response) => {
     proxy.web(req, res, {
-        target: "http://php_executor:6000", // Replace with the appropriate URL of your other server
+        target: process.env.PHP_URL || "http://localhost:6000", // Replace with the appropriate URL of your other server
     });
 });
 
