@@ -93,7 +93,7 @@ export default class TaskObject extends InteractiveObject {
 
             globalEventBus.emit("save_game")
             if (this._isStoryObject) {
-                this.room.getPlayView().pullNextStoryBit(this.room.getRoomId());
+                // this.room.getPlayView().pullNextStoryBit(this.room.getRoomId());
                 this.room.getPlayView().openChatView();
             }
 

@@ -17,14 +17,19 @@ export default class NewsPopup extends Phaser.Scene {
 
     public width: number;
     public height: number;
+    private _textureKey;
+    private _sprite;
+    private _rt;
 
-    constructor(playView: PlayView, sceneId: string, message, lifespan= 300) {
+    constructor(playView: PlayView, sceneId: string, message, lifespan= 300, achievementTextureKey?: string) {
         super(sceneId);
         this._message = message;
         this.lifespan = lifespan;
         this._playView = playView;
         this.width = this._playView.cameras.main.width;
         this.height = this._playView.cameras.main.height;
+
+        this._textureKey = achievementTextureKey;
 
 
         this.defaultLabelStyle = {
@@ -45,8 +50,6 @@ export default class NewsPopup extends Phaser.Scene {
                 blur: 1
             }
         }
-
-
     }
 
     update(time: number, delta: number) {
@@ -55,7 +58,9 @@ export default class NewsPopup extends Phaser.Scene {
 
         if (!this._fading) {
             // The 30 is a safety buffer
-            this.fadeOut();
+            if(this._timeLived > this.lifespan - this._fadeOutDur - 30) {
+                this.fadeOut();
+            }
         }
 
         if (this._timeLived > this.lifespan) {
@@ -64,15 +69,34 @@ export default class NewsPopup extends Phaser.Scene {
     }
 
     public fadeOut() {
-        if(this._timeLived > this.lifespan - this._fadeOutDur - 30) {
-            this._fadeOutTween = this.tweens.add({
+        if (this._fading) return;
+
+        this._fadeOutTween = this.tweens.add({
                 targets: this.label,
                 alpha: 0,
                 duration: this._fadeOutDur,
                 ease: 'Power2'
             });
-            this._fading = true;
+        this._fading = true;
+
+        if (this._textureKey) {
+            this._fadeOutTween = this.tweens.add({
+                targets: this._sprite,
+                alpha: 0,
+                duration: this._fadeOutDur,
+                ease: 'Power2'
+            });
         }
+
+
+            this._fadeOutTween = this.tweens.add({
+                targets: this._rt,
+                alpha: 0,
+                duration: this._fadeOutDur,
+                ease: 'Power2'
+            });
+
+
     }
 
     public kill() {
@@ -82,17 +106,42 @@ export default class NewsPopup extends Phaser.Scene {
 
 
     public create() {
+
+        this._rt = this.add.renderTexture(this.cameras.main.displayWidth / 2, this.cameras.main.displayHeight / 2, this.cameras.main.displayWidth, this.cameras.main.displayHeight).setOrigin(0.5, 0.5);
+        this._rt.fill(0x000, 0.5);
+
         this.label = this.scene.scene.add.text(
             this.width / 2, 400, this._message, this.defaultLabelStyle
         );
         this.label.setOrigin(0.5, 0);
         this.label.setAlpha(0);
 
+        if (this._textureKey) {
+            this._sprite = this.add.image(this.cameras.main.displayWidth / 2, 700, this._textureKey).setScale(10, 10).setOrigin(0.5, 0.5).setAlpha(0);
+
+
+            this.tweens.add({
+                targets: this._sprite,
+                alpha: 1,
+                duration: 500,
+                ease: 'Power2'
+            });
+
+            this.tweens.add({
+                targets: this._rt,
+                alpha: 1,
+                duration: 500,
+                ease: 'Power2'
+            });
+        }
+
+
         this.tweens.add({
             targets: this.label,
             alpha: 1,
-            duration: 300,
+            duration: 500,
             ease: 'Power2'
         });
+
     }
 }

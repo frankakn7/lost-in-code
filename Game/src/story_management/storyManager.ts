@@ -41,6 +41,7 @@ export default class StoryManager {
                 else break;
             }
         }
+        console.log(this._storyEvents)
     }
 
     public reconstructChatNodeTreeRecursively(room : string, json : JSON, nodeId: string) {
@@ -65,11 +66,12 @@ export default class StoryManager {
     public pullNextStoryBit(room) {
         // TODO CONTINUE HERE
         // this._finishedStuff[room].push(this._storyEvents.);
-        
 
         let key = this._storyEvents[room].keys().next().value;
         let value = this._storyEvents[room].get(key);
+
         this._storyEvents[room].delete(key)
+        console.log("wird gecalled")
 
         return value;
     }

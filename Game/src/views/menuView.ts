@@ -12,6 +12,10 @@ import LogoutButtonTexture from "../assets/ui/Logout-Button.png";
 import HatView from "./hatView/hatView";
 import ApiHelper from "../helpers/apiHelper";
 
+import AchievementsAppTexture from "../assets/ui/apps/Achievements-app-icon.png";
+import AchievementManager from "../achievements/achievementManager";
+import AchievementView from "../achievements/achievementView";
+
 export default class MenuView extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite;
     private _playView: PlayView;
@@ -22,12 +26,15 @@ export default class MenuView extends Phaser.Scene {
 
     private apiHelper: ApiHelper = new ApiHelper();
 
+    private _achievementView : AchievementView;
+
     public preload() {
         this.load.image("antennaAppTexture", AntennaAppTexture);
         this.load.image("knowledgeAppTexture", KnowledgeButtonTexture);
         this.load.image("settingsAppTexture", SettingsButtonTexture);
         this.load.image("resumeButtonTexture", ResumeButtonTexture);
         this.load.image("logoutButtonTexture", LogoutButtonTexture);
+        this.load.image("achievementsAppTexture", AchievementsAppTexture);
         this.load.image("hatAppTexture", HatAppTexture);
     }
 
@@ -38,6 +45,7 @@ export default class MenuView extends Phaser.Scene {
         super(settingsConfig);
         this._playView = playView;
         // this.hatView = new HatView();
+        this._achievementView = new AchievementView(this._playView, this._playView.achievementManager);
     }
 
     public create() {
@@ -80,7 +88,7 @@ export default class MenuView extends Phaser.Scene {
         const chatButton = new SpriteButton(
             this,
             "antennaAppTexture",
-            (this.scale.width / (this._columns + 1)) * 1,
+            (this.scale.width / (this._columns )) * 1,
             1000,
             () => {}
         );
@@ -89,7 +97,7 @@ export default class MenuView extends Phaser.Scene {
         const knowledgeButton = new SpriteButton(
             this,
             "knowledgeAppTexture",
-            (this.scale.width / (this._columns + 1)) * 2,
+            (this.scale.width / (this._columns )) * 2,
             1000,
             () => {}
         );
@@ -98,7 +106,7 @@ export default class MenuView extends Phaser.Scene {
         const hatButton = new SpriteButton(
             this,
             "hatAppTexture",
-            (this.scale.width / (this._columns + 1)) * 3,
+            (this.scale.width / (this._columns )) * 3,
             1000,
             () => {
                 this.openSubMenu(this._playView.hatView);
@@ -108,14 +116,29 @@ export default class MenuView extends Phaser.Scene {
         if (this.scene.get("Hat View") == null)
             this.scene.add("hatView", this._playView.hatView);
 
+        const achievementsButton = new SpriteButton(
+            this,
+            "achievementsAppTexture",
+            (this.scale.width / (this._columns )) * 1.5,
+            1224,
+            () => {
+                this.openSubMenu(this._achievementView)
+            }
+        );
+        this.add.existing(achievementsButton);
+
         const settingsButton = new SpriteButton(
             this,
             "settingsAppTexture",
-            (this.scale.width / (this._columns + 1)) * 4,
-            1000,
-            () => {}
+            (this.scale.width / (this._columns )) * 2.5,
+            1224,
+            () => {
+            }
         );
         this.add.existing(settingsButton);
+
+        if (this.scene.get("AchievementView") == null)
+            this.scene.add("achievementView", this._achievementView);
     }
 
     private _resumeGame() {

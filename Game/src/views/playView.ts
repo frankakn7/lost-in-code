@@ -40,6 +40,15 @@ import {GamestateType} from "../types/gamestateType";
 import {globalEventBus} from "../helpers/globalEventBus";
 import ApiHelper from "../helpers/apiHelper";
 import NewsPopup from "../ui/newsPopup";
+import AchievementManager from "../achievements/achievementManager";
+import {achievements} from "../achievements/achievements";
+
+import ATask5Texture from "../assets/achievements/badges_tasks/badge_tasks_5.png";
+import ATask10Texture from "../assets/achievements/badges_tasks/badge_tasks_10.png";
+import ATask20Texture from "../assets/achievements/badges_tasks/badge_tasks_20.png";
+import ATask30Texture from "../assets/achievements/badges_tasks/badge_tasks_30.png";
+import ATask40Texture from "../assets/achievements/badges_tasks/badge_tasks_40.png";
+import ATask50Texture from "../assets/achievements/badges_tasks/badge_tasks_50.png";
 
 
 
@@ -93,6 +102,8 @@ export default class PlayView extends Phaser.Scene {
      */
     private pauseChatButtons = new PauseChatButtons();
 
+    public achievementManager: AchievementManager = new AchievementManager();
+
     /**
      * the chat view
      */
@@ -131,11 +142,14 @@ export default class PlayView extends Phaser.Scene {
         if (this.scene.isSleeping(this.chatView)) {
             //start a new chat flow and awake the scene
             this.chatView.startNewChatFlow(this._storyManager.pullNextStoryBit(this.currentRoom.getRoomId()));
+            console.log("hier")
             this.scene.wake(this.chatView);
+
             //If the chat view hasn't been launched yet
         } else {
             //create a new chat view
             this.chatView = new ChatView(this._storyManager.pullNextStoryBit(this.currentRoom.getRoomId()));
+            console.log("und hier")
             //add chat view to the scene
             this.scene.add("chatView", this.chatView);
             //launch the chat view
@@ -157,15 +171,24 @@ export default class PlayView extends Phaser.Scene {
         this.taskQueue.push(task);
     }
 
-    public pullNextStoryBit(roomId) {
-        console.log(roomId)
-        return this._storyManager.pullNextStoryBit(roomId);
-    }
-
 
     public broadcastNews(message) {
         let newsId = "newsPopup" + (this._newsCounter++).toString();
-        let newsPopup = new NewsPopup(this, newsId,"Door unlocked!", 2500);
+        let newsPopup = new NewsPopup(this, newsId,message, 2500);
+        this.scene.add(newsId, newsPopup);
+        this.scene.launch(newsPopup);
+
+        if (this._news.length > 0) {
+            this._news.forEach((n) => {
+                n.kill();
+            })
+        }
+        this._news.push(newsPopup)
+    }
+
+    public broadcastAchievement(achievement) {
+        let newsId = "newsPopup" + (this._newsCounter++).toString();
+        let newsPopup = new NewsPopup(this, newsId,achievement.text, 2500, achievement.texture);
         this.scene.add(newsId, newsPopup);
         this.scene.launch(newsPopup);
 
@@ -200,6 +223,12 @@ export default class PlayView extends Phaser.Scene {
     }
 
     public preload() {
+        this.load.image("badge_tasks_5", ATask5Texture);
+        this.load.image("badge_tasks_10", ATask10Texture);
+        this.load.image("badge_tasks_20", ATask20Texture);
+        this.load.image("badge_tasks_30", ATask30Texture);
+        this.load.image("badge_tasks_40", ATask40Texture);
+        this.load.image("badge_tasks_50", ATask50Texture);
 
         this.load.image("backgroundTile", deviceBackgroundTilePng);
         this.load.image("strawHat", strawHatTexture);
@@ -300,7 +329,10 @@ export default class PlayView extends Phaser.Scene {
             console.log("SLEEPING PLAY VIEW")
         })
 
-        globalEventBus.on("save_game", () => this.apiHelper.updateStateData(this.saveAllToGamestateType()))
+        globalEventBus.on("save_game", () => this.apiHelper.updateStateData(this.saveAllToGamestateType()).
+        catch((error) => {
+            console.error(error);
+        }))
 
         // Adds the scene and launches it... (if active is set to true on added scene it is launched directly)
 
@@ -327,6 +359,8 @@ export default class PlayView extends Phaser.Scene {
 
         this.broadcastNews = this.broadcastNews.bind(this);
         globalEventBus.on("broadcast_news", (message) => {this.broadcastNews(message)})
+        this.broadcastAchievement = this.broadcastAchievement.bind(this);
+        globalEventBus.on("broadcast_achievement", (achievement) => {this.broadcastAchievement(achievement)});
     }
 
     //for testing purposes
@@ -365,8 +399,8 @@ export default class PlayView extends Phaser.Scene {
         if (this.pauseChatButtons.phonePressed) {
             //prevent phone button from being continuously pressed by accident
             this.pauseChatButtons.phonePressed = false;
-            this.broadcastNews("hoooray!")
 
+            globalEventBus.emit("broadcast_achievement", achievements["tasks_5"]);
         }
 
         if (this.pauseChatButtons.pausePressed) {

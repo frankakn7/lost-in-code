@@ -127,6 +127,7 @@ export default class TaskManager {
         } else {
             this.currentPerformanceIndex = currentQuestion.difficulty + 1;
         }
+        globalEventBus.emit("taskmanager_task_correct");
     }
 
     public questionAnsweredIncorrectly() {
