@@ -42,6 +42,8 @@ import ApiHelper from "../helpers/apiHelper";
 import ChapterManager, {ChapterType} from "./docView/chapterManager";
 import DocView from "./docView/docView";
 import ReturnButtonTexture from "../assets/ui/Return-Button.png";
+import NewsPopup from "../ui/newsPopup";
+
 
 
 /**
@@ -113,6 +115,9 @@ export default class PlayView extends Phaser.Scene {
 
     private taskQueue: Array<() => void> = [];
 
+    private _news = [];
+    private _newsCounter = 0;
+
     private apiHelper = new ApiHelper();
 
     public docView: DocView;
@@ -178,7 +183,22 @@ export default class PlayView extends Phaser.Scene {
         return this._storyManager.pullNextStoryBit(roomId);
     }
 
-    private openQuestionView() {
+
+    public broadcastNews(message) {
+        let newsId = "newsPopup" + (this._newsCounter++).toString();
+        let newsPopup = new NewsPopup(this, newsId,"Door unlocked!", 2500);
+        this.scene.add(newsId, newsPopup);
+        this.scene.launch(newsPopup);
+
+        if (this._news.length > 0) {
+            this._news.forEach((n) => {
+                n.kill();
+            })
+        }
+        this._news.push(newsPopup)
+    }
+
+    private openQuestionView(){
         //If the chat view already exists and is sleeping
         if (!this.docView.newChapter) {
 
@@ -353,6 +373,9 @@ export default class PlayView extends Phaser.Scene {
         //     this.openQuestionView();
         // });
         this.scene.add("menu", this.menuView);
+
+        this.broadcastNews = this.broadcastNews.bind(this);
+        globalEventBus.on("broadcast_news", (message) => {this.broadcastNews(message)})
     }
 
     //for testing purposes
@@ -394,9 +417,11 @@ export default class PlayView extends Phaser.Scene {
             //open the chat view
             // this.openStoryChatView();
             // this.getToRoomViaId("laboratory");
-            this.openQuestionView();
+            //this.openQuestionView();
             //this.openTextChatView("Harry ist der hmmmm...")
             // console.log(this.saveAllToJSONString());
+            this.broadcastNews("hoooray!")
+
         }
 
         if (this.pauseChatButtons.pausePressed) {

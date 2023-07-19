@@ -161,6 +161,7 @@ export default class RoomScene extends Phaser.Scene {
         this.cameras.main.startFollow(this.player);
         this.cameras.main.setBounds(0, 0, tilemap.widthInPixels, tilemap.heightInPixels + 130);
         this.cameras.main.setZoom(5, 5);
+        this.cameras.main.fadeIn(2000, 0, 0, 0);
 
 
 
@@ -313,5 +314,6 @@ export default class RoomScene extends Phaser.Scene {
 
         this.setDoorUnlocked(true);
         globalEventBus.emit("door_was_unlocked");
+        globalEventBus.emit("broadcast_news", "Door unlocked!");
     }
 }
