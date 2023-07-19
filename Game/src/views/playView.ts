@@ -52,6 +52,7 @@ import ATask20Texture from "../assets/achievements/badges_tasks/badge_tasks_20.p
 import ATask30Texture from "../assets/achievements/badges_tasks/badge_tasks_30.png";
 import ATask40Texture from "../assets/achievements/badges_tasks/badge_tasks_40.png";
 import ATask50Texture from "../assets/achievements/badges_tasks/badge_tasks_50.png";
+import ProgressBar from "../ui/progress";
 
 
 
@@ -104,6 +105,7 @@ export default class PlayView extends Phaser.Scene {
      * The pause and chat buttons at the top of the screen
      */
     private pauseChatButtons = new PauseChatButtons();
+    private progressBar = new ProgressBar(this);
 
     public achievementManager: AchievementManager = new AchievementManager();
 
@@ -379,7 +381,7 @@ export default class PlayView extends Phaser.Scene {
         }))
         this.docView = new DocView(this, this._state.taskmanager.currentChapterNumber);
 
-        globalEventBus.on("save_game", () => this.apiHelper.updateStateData(this.saveAllToGamestateType()))
+        // globalEventBus.on("save_game", () => this.apiHelper.updateStateData(this.saveAllToGamestateType()))
 
         // Adds the scene and launches it... (if active is set to true on added scene it is launched directly)
 
@@ -394,6 +396,9 @@ export default class PlayView extends Phaser.Scene {
         //Adds the pause and phone buttons scene and launches it
         this.scene.add("pauseChatButtons", this.pauseChatButtons);
         this.scene.launch(this.pauseChatButtons);
+
+        this.scene.add("Progress Bar", this.progressBar);
+        this.scene.launch(this.progressBar);
 
         // Adds the controlpad scene and launches it
         this.scene.add("controlPad", this.controlPad);

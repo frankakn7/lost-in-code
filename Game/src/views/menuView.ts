@@ -64,7 +64,7 @@ export default class MenuView extends Phaser.Scene {
             this,
             "resumeButtonTexture",
             180,
-            180,
+            225,
             () => {
                 this._resumeGame();
             }
@@ -75,7 +75,7 @@ export default class MenuView extends Phaser.Scene {
             this,
             "logoutButtonTexture",
             this.cameras.main.displayWidth - 180,
-            180,
+            225,
             () => {
                 this.apiHelper.logout().then((response) => {
                     location.reload();
@@ -99,7 +99,7 @@ export default class MenuView extends Phaser.Scene {
             "knowledgeAppTexture",
             (this.scale.width / (this._columns )) * 2,
             1000,
-            () => {}
+            () => {this.openSubMenu("DocView")}
         );
         this.add.existing(knowledgeButton);
 

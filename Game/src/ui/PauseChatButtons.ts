@@ -33,7 +33,7 @@ export default class PauseChatButtons extends Phaser.Scene {
 
     public create() {
         this.pauseButton = this.add
-            .image(180, 180, "pauseButton")
+            .image(180, 225, "phoneButton")
             .setOrigin(0.5, 0.5)
             .setInteractive()
             .on("pointerdown", () => {
@@ -44,24 +44,6 @@ export default class PauseChatButtons extends Phaser.Scene {
             })
             .on("pointerout", () => {
                 this.pausePressed = false;
-            });
-
-        this.phoneButton = this.add
-            .image(
-                this.cameras.main.displayWidth - 180,
-                180,
-                "phoneButton"
-            )
-            .setOrigin(0.5, 0.5)
-            .setInteractive()
-            .on("pointerdown", () => {
-                this.phonePressed = true;
-            })
-            .on("pointerup", () => {
-                this.phonePressed = false;
-            })
-            .on("pointerout", () => {
-                this.phonePressed = false;
             });
     }
 }

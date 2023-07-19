@@ -242,6 +242,7 @@ export default class RoomScene extends Phaser.Scene {
         this.fow.setDepth(10);
 
         this.events.emit("hats_unlock_check");
+        globalEventBus.emit("room_entered");
     }
     
     update (time, delta){
@@ -315,5 +316,17 @@ export default class RoomScene extends Phaser.Scene {
         this.setDoorUnlocked(true);
         globalEventBus.emit("door_was_unlocked");
         globalEventBus.emit("broadcast_news", "Door unlocked!");
+    }
+
+    public getTaskObjectCount() {
+        return this._taskObjects.length;
+    }
+
+    public getFinishedTaskObjectsCount() {
+        let c = 0;
+        this._taskObjects.forEach(obj => {
+           if (obj.isFinished()) c++;
+        });
+        return c;
     }
 }

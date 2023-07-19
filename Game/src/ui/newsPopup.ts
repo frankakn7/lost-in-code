@@ -34,7 +34,7 @@ export default class NewsPopup extends Phaser.Scene {
 
         this.defaultLabelStyle = {
             fontSize: "50px",
-            color: "#eeeee4",
+            color: "#FCFBF4",
             fontFamily: "forwardRegular",
             wordWrap: {
                 width: this.width,

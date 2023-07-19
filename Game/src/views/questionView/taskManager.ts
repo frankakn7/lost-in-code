@@ -338,21 +338,21 @@ echo $y;
             "input1"
         );
 
-        this.availableQuestions.push(
-            new Question(
-                6,
-                "Fill in the function so that it adds 2 numbers together",
-                "just fill it in",
-                QuestionType.CREATE,
-                [questionElementCreate],
-                5,
-                `
-function calculateSum($x,$y){
-    ###INPUT|input1|40|true###;
-}
-`
-            )
-        );
+//         this.availableQuestions.push(
+//             new Question(
+//                 6,
+//                 "Fill in the function so that it adds 2 numbers together",
+//                 "just fill it in",
+//                 QuestionType.CREATE,
+//                 [questionElementCreate],
+//                 5,
+//                 `
+// function calculateSum($x,$y){
+//     ###INPUT|input1|40|true###;
+// }
+// `
+//             )
+//         );
 
 
         this.populateNewQuestionSet();
