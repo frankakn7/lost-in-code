@@ -127,6 +127,8 @@ export default class MenuView extends Phaser.Scene {
         );
         this.add.existing(achievementsButton);
 
+        this.scene.add("DocView",this._playView.docView);
+
         const settingsButton = new SpriteButton(
             this,
             "settingsAppTexture",

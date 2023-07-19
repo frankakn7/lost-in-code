@@ -8,13 +8,15 @@ import {
     OrderQuestionElement,
 } from "./questionElement";
 import {TaskManagerStateType} from "../../types/taskManagerStateType";
+import DocView from "../docView/docView";
+import {ChapterType} from "../docView/chapterManager";
 
 export default class TaskManager {
     private availableQuestions: Question[] = [];
 
     private answeredQuestions: Question[] = [];
     //TODO: implement topic id properly
-    private currentChapterNumber: number = 1;
+    public currentChapterNumber: number = 1;
 
     private repairedObjectsThisChapter: number = 0;
 
@@ -89,6 +91,9 @@ export default class TaskManager {
         if(this.repairedObjectsThisChapter == 2){
             this.currentChapterNumber ++;
             this.repairedObjectsThisChapter = 0;
+            this.scene.docView.newChapter = true;
+            this.scene.docView.chapterManager.updateCurrentChapterOrder(this.currentChapterNumber);
+            this.scene.docView.chapterManager.updateChapters()
         }
     }
 
