@@ -68,7 +68,7 @@ export default class PlayView extends Phaser.Scene {
             selectedHat: "None"
         },
         playView: {
-            currentRoom: "bridge"
+            currentRoom: "hangar"
         },
         room: {
             finishedTaskObjects: [

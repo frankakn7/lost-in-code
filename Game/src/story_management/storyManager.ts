@@ -56,7 +56,7 @@ export default class StoryManager {
 
         let newNode : ChatFlowNode = {
             optionText: json[room][nodeId]["optionText"],
-            text: json[room][nodeId]["text"],
+            text: json[room][nodeId]["text"].replace("astronaut", "astronaut Peter").replace("Astronaut", "Astronaut Peter"),
             choices: choices
         }
 
