@@ -180,6 +180,6 @@ export default class InputQuestionView extends Phaser.Scene {
         }else{
             this.showCorrectText()
         }
-        return correct;
+        return new Promise((resolve) => resolve(correct));
     }
 }

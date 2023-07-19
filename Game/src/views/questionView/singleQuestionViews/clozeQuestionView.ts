@@ -171,6 +171,6 @@ export default class ClozeQuestionView extends Phaser.Scene {
         }else{
             this.showCorrectText()
         }
-        return correct;
+        return new Promise((resolve) => resolve(correct));
     }
 }

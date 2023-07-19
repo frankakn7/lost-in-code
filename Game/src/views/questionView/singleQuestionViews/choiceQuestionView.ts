@@ -152,7 +152,7 @@ export default class ChoiceQuestionView extends Phaser.Scene {
         }else{
             this.showCorrectText()
         }
-        return correct;
+        return new Promise((resolve) => resolve(correct));
     }
 
     create() {

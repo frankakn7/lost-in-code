@@ -1,25 +1,16 @@
-import hljs from "highlight.js/lib/core";
-import php from "highlight.js/lib/languages/php";
 import "highlight.js/styles/night-owl.css";
-import html2canvas from "html2canvas";
 import * as Phaser from "phaser";
 import TaskManager from "./taskManager";
 import Question from "./question";
-import { QuestionType } from "../../types/questionType";
+import {QuestionType} from "../../types/questionType";
 import deviceBackgroundTilePng from "../../assets/Device-Background-Tile.png";
 import DeviceButton from "../../ui/deviceButton";
-import {
-    ChoiceQuestionElement,
-    InputQuestionElement,
-    OrderQuestionElement,
-} from "./questionElement";
-import ChoiceButton from "./choiceButton";
-import DraggableCodeBlock from "./draggableCodeBlock";
 import ChoiceQuestionView from "./singleQuestionViews/choiceQuestionView";
 import InputQuestionView from "./singleQuestionViews/inputQuestionView";
 import DragDropQuestionView from "./singleQuestionViews/dragDropQuestionView";
 import ClozeQuestionView from "./singleQuestionViews/clozeQuestionView";
 import SelectOneQuestionView from "./singleQuestionViews/selectOneQuestionView";
+import CreateQuestionView from "./singleQuestionViews/createQuestionView";
 
 export default class QuestionView extends Phaser.Scene {
     private taskManager: TaskManager;
@@ -42,7 +33,8 @@ export default class QuestionView extends Phaser.Scene {
         | InputQuestionView
         | DragDropQuestionView
         | ClozeQuestionView
-        | SelectOneQuestionView;
+        | SelectOneQuestionView
+        | CreateQuestionView;
 
     constructor(taskManager: TaskManager) {
         super("QuestionView");
@@ -79,33 +71,33 @@ export default class QuestionView extends Phaser.Scene {
             align: "center",
         };
 
-        
+
         // this.cameras.main.setBackgroundColor("rgba(6,24,92,1)");
-        
+
         this.showSubmitButton();
-        
+
         this.taskManager.populateNewQuestionSet();
         this.getAndDisplayNewQuestion();
 
         this.progressBar = this.add.graphics();
         const totalWidth = this.cameras.main.displayWidth - 100;
-        this.progressBar.clear(); 
+        this.progressBar.clear();
         this.progressBar.fillStyle(0x1c1d21, 1);
         // this.progressBar.fillStyle(0x00c8ff, 1);
         this.progressBar.fillRect(50, 50, totalWidth, 50);
-        this.progressBar.lineStyle(3,0x00c8ff)
-        this.progressBar.strokeRect(50,50,totalWidth,50)
+        this.progressBar.lineStyle(3, 0x00c8ff)
+        this.progressBar.strokeRect(50, 50, totalWidth, 50)
         this.updateProgressBar()
     }
 
-    private updateProgressBar(correct=true) {
+    private updateProgressBar(correct = true) {
         const progress = this.taskManager.currentDoneQuestions / this.taskManager.currentTotalQuestions;
         const totalWidth = this.cameras.main.displayWidth - 100 - 10;  // Adjust the width of the bar as per your need. 100 is the sum of left and right padding (50 each).
         // this.progressBar.clear();  // Clear previous drawing
         // this.progressBar.fillStyle(0x00c8ff, 1);
-        if(correct){
+        if (correct) {
             this.progressBar.fillStyle(0x00ff7b, 1);
-        }else{
+        } else {
             this.progressBar.fillStyle(0xf54747, 1);
         }
         this.progressBar.fillRect(55, 55, progress * totalWidth, 40);
@@ -197,6 +189,17 @@ export default class QuestionView extends Phaser.Scene {
                 );
                 this.scene.launch("SelectOneQuestionView");
                 break;
+            case QuestionType.CREATE:
+                this.currentQuestionView = new CreateQuestionView(
+                    this.questionText,
+                    this.currentQuestion
+                )
+                this.scene.add(
+                    "CreateQuestionView",
+                    this.currentQuestionView
+                );
+                this.scene.launch("CreateQuestionView");
+                break;
             default:
                 console.log("none");
                 break;
@@ -204,23 +207,25 @@ export default class QuestionView extends Phaser.Scene {
     }
 
     private checkAnswer() {
-        let correct = this.currentQuestionView.checkAnswer();
-        if (correct) {
-            this.taskManager.questionAnsweredCorrectly();
-            this.showNextButton();
-            this.updateProgressBar()
-        } else {
-            this.updateProgressBar(false)
-            this.taskManager.questionAnsweredIncorrectly()
-            this.showExitButton();
-        }
+        this.currentQuestionView.checkAnswer().then(correct => {
+            console.log(correct)
+            if (correct) {
+                this.taskManager.questionAnsweredCorrectly();
+                this.showNextButton();
+                this.updateProgressBar()
+            } else {
+                this.updateProgressBar(false)
+                this.taskManager.questionAnsweredIncorrectly()
+                this.showExitButton();
+            }
+        });
     }
 
     private showSubmitButton(): void {
         this.bottomButton = new DeviceButton(
             this,
             this.cameras.main.displayWidth / 2 -
-                this.cameras.main.displayWidth / 4,
+            this.cameras.main.displayWidth / 4,
             this.cameras.main.displayHeight - 100,
             this.cameras.main.displayWidth / 2,
             () => {
@@ -237,7 +242,7 @@ export default class QuestionView extends Phaser.Scene {
         this.bottomButton = new DeviceButton(
             this,
             this.cameras.main.displayWidth / 2 -
-                this.cameras.main.displayWidth / 4,
+            this.cameras.main.displayWidth / 4,
             this.cameras.main.displayHeight - 100,
             this.cameras.main.displayWidth / 2,
             () => {
@@ -254,7 +259,7 @@ export default class QuestionView extends Phaser.Scene {
         this.bottomButton = new DeviceButton(
             this,
             this.cameras.main.displayWidth / 2 -
-                this.cameras.main.displayWidth / 4,
+            this.cameras.main.displayWidth / 4,
             this.cameras.main.displayHeight - 100,
             this.cameras.main.displayWidth / 2,
             () => {
@@ -266,7 +271,8 @@ export default class QuestionView extends Phaser.Scene {
         this.add.existing(this.bottomButton);
     }
 
-    update(time: number, delta: number): void {}
+    update(time: number, delta: number): void {
+    }
 
     private removeAllQuestionScenes() {
         this.scene.remove("ChoiceQuestionView");
@@ -274,6 +280,7 @@ export default class QuestionView extends Phaser.Scene {
         this.scene.remove("DragDropQuestionView");
         this.scene.remove("ClozeQuestionView");
         this.scene.remove("SelectOneQuestionView");
+        this.scene.remove("CreateQuestionView");
         // this.scene.remove(this.currentQuestionView);
     }
 

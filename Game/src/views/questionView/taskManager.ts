@@ -3,7 +3,7 @@ import { QuestionType } from "../../types/questionType";
 import PlayView from "../playView";
 import Question from "./question";
 import {
-    ChoiceQuestionElement,
+    ChoiceQuestionElement, CreateQuestionElement,
     InputQuestionElement,
     OrderQuestionElement,
 } from "./questionElement";
@@ -269,7 +269,7 @@ echo $y;
                     dragQuestionElement2,
                     dragQuestionElement3,
                 ],
-                3
+                4
             )
         );
 
@@ -330,7 +330,28 @@ echo $y;
         );
         // this.availableQuestions = questions;
 
+        let questionElementCreate = new CreateQuestionElement(
+            2,
+            `echo calculateSum(5,10);`,
+            ['calculateSum(5,10) == 15','calculateSum(20,20) == 40'],
+            "input1"
+        );
 
+        this.availableQuestions.push(
+            new Question(
+                6,
+                "Fill in the function so that it adds 2 numbers together",
+                "just fill it in",
+                QuestionType.CREATE,
+                [questionElementCreate],
+                5,
+                `
+function calculateSum($x,$y){
+    ###INPUT|input1|40|true###;
+}
+`
+            )
+        );
 
 
         this.populateNewQuestionSet();
