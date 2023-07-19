@@ -96,9 +96,9 @@ export default class InputQuestionView extends Phaser.Scene {
     }
 
     private displayInputQuestion(): void {
-        this.codeBlock = this.displayCodeBlock(this.currentQuestion.codeText);
+        this.codeBlock = this.displayCodeBlock(this.currentQuestion.code_text);
         this.inputField = this.displayInputField(
-            this.currentQuestion.elements[0].elementIdentifier,
+            this.currentQuestion.elements[0].element_identifier,
             this.codeBlock.y,
             this.codeBlock.height
         );
@@ -157,14 +157,14 @@ export default class InputQuestionView extends Phaser.Scene {
 
     public checkAnswer() {
         let correct = true;
-        let correctAnswers:any = [this.currentQuestion.elements[0].correctAnswers];
+        let correctAnswers:any = [this.currentQuestion.elements[0].correct_answers];
         let inputField = <HTMLInputElement>(
             document.getElementById(
-                this.currentQuestion.elements[0].elementIdentifier
+                this.currentQuestion.elements[0].element_identifier
             )
         );
         if (
-            !this.currentQuestion.elements[0].correctAnswers.includes(
+            !this.currentQuestion.elements[0].correct_answers.includes(
                 inputField.value
             )
         ) {

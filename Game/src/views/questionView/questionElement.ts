@@ -17,19 +17,19 @@ interface QuestionElement {
     /**
      * The identifier of html input elements if needed
      */
-    elementIdentifier?: string;
+    element_identifier?: string;
     /**
      * The correct position of the element in ordering questions
      */
-    correctOrderPosition?: number;
+    correct_order_position?: number;
     /**
      * Correct answer strings for input questions
      */
-    correctAnswers?: string[];
+    correct_answers?: string[];
     /**
      * Is the element part of the correct answer (choice questions, snippet questions)
      */
-    isCorrect?: boolean;
+    is_correct?: boolean;
 
     /**
      * Checks if the provided answer is correct and the element is part of the correct answer
@@ -44,12 +44,12 @@ interface QuestionElement {
 class ChoiceQuestionElement implements QuestionElement {
     readonly id: number;
     content: string;
-    isCorrect: boolean;
+    is_correct: boolean;
 
     constructor(id: number, content: string, isCorrect: boolean) {
         this.id = id;
         this.content = content;
-        this.isCorrect = isCorrect;
+        this.is_correct = isCorrect;
     }
 
     /**
@@ -58,7 +58,7 @@ class ChoiceQuestionElement implements QuestionElement {
      * @returns true if element was correctly selected
      */
     public checkIfCorrect(isSelected: boolean): boolean {
-        return isSelected === this.isCorrect;
+        return isSelected === this.is_correct;
     }
 }
 
@@ -67,8 +67,8 @@ class ChoiceQuestionElement implements QuestionElement {
  */
 class InputQuestionElement implements QuestionElement {
     readonly id: number;
-    correctAnswers: string[];
-    elementIdentifier: string;
+    correct_answers: string[];
+    element_identifier: string;
 
     constructor(
         id: number,
@@ -76,17 +76,17 @@ class InputQuestionElement implements QuestionElement {
         elementIdentifier: string
     ) {
         this.id = id;
-        this.correctAnswers = correctAnswers;
-        this.elementIdentifier = elementIdentifier;
+        this.correct_answers = correctAnswers;
+        this.element_identifier = elementIdentifier;
     }
 
     /**
      * 
      * @param userAnswer the answer the user gave in the input
-     * @returns true if the given input is part of {@link correctAnswers}
+     * @returns true if the given input is part of {@link correct_answers}
      */
     public checkIfCorrect(userAnswer: string): boolean {
-        return this.correctAnswers.includes(userAnswer);
+        return this.correct_answers.includes(userAnswer);
     }
 }
 
@@ -96,22 +96,22 @@ class InputQuestionElement implements QuestionElement {
 class OrderQuestionElement implements QuestionElement {
     readonly id: number;
     content: string;
-    correctOrderPosition: number;
+    correct_order_position: number;
 
     constructor(id: number, content: string, correctOrderPosition: number) {
         this.id = id;
         this.content = content;
-        this.correctOrderPosition = correctOrderPosition;
+        this.correct_order_position = correctOrderPosition;
     }
 
     /**
      * 
      * @param position the position the user placed the element in
      * @param isSelected **not needed**
-     * @returns correct if the user position is equal to {@link correctOrderPosition}
+     * @returns correct if the user position is equal to {@link correct_order_position}
      */
     public checkIfCorrect(position: number, isSelected?: boolean): boolean {
-        return position == this.correctOrderPosition;
+        return position == this.correct_order_position;
     }
 }
 
@@ -122,7 +122,7 @@ class SnippetQuestionElement
     extends OrderQuestionElement
     implements QuestionElement
 {
-    isCorrect: boolean;
+    is_correct: boolean;
 
     constructor(
         id: number,
@@ -131,7 +131,7 @@ class SnippetQuestionElement
         isCorrect: boolean
     ) {
         super(id, content, correctOrderPosition);
-        this.isCorrect = isCorrect;
+        this.is_correct = isCorrect;
     }
 
     /**
@@ -141,8 +141,8 @@ class SnippetQuestionElement
      * @returns true if element was correctly selected and placed
      */
     public checkIfCorrect(position: number, isSelected?: boolean): boolean {
-        if(isSelected == this.isCorrect){
-            if(this.isCorrect){
+        if(isSelected == this.is_correct){
+            if(this.is_correct){
                 return super.checkIfCorrect(position)
             }else{
                 return true
@@ -159,15 +159,15 @@ class SnippetQuestionElement
 class CreateQuestionElement implements QuestionElement {
     readonly id: number;
     content: string;
-    correctAnswers: string[];
-    elementIdentifier: string;
+    correct_answers: string[];
+    element_identifier: string;
 
 
     constructor(id:number, content: string, correctAnswers: string[], elementIdentifier:string) {
         this.id = id;
         this.content = content;
-        this.correctAnswers = correctAnswers;
-        this.elementIdentifier = elementIdentifier;
+        this.correct_answers = correctAnswers;
+        this.element_identifier = elementIdentifier;
     }
 
     public checkIfCorrect(answer: string | number | boolean): boolean {

@@ -60,7 +60,7 @@ export default class ClozeQuestionView extends Phaser.Scene {
 
     private async displayClozeQuestion() {
         this.codeBlock = this.displayCodeBlockCloze(
-            this.currentQuestion.codeText
+            this.currentQuestion.code_text
         );
     }
 
@@ -154,10 +154,10 @@ export default class ClozeQuestionView extends Phaser.Scene {
         let correctAnswers:any = [];
         this.currentQuestion.elements.forEach((element) => {
             let inputField = <HTMLInputElement>(
-                document.getElementById(element.elementIdentifier)
+                document.getElementById(element.element_identifier)
             );
-            correctAnswers.push(element.correctAnswers);
-            if (element.correctAnswers.includes(inputField.value)) {
+            correctAnswers.push(element.correct_answers);
+            if (element.correct_answers.includes(inputField.value)) {
                 inputField.style.color = "#00ff7b";
                 inputField.style.borderColor = "#00ff7b";
             } else {

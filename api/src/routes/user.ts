@@ -38,6 +38,21 @@ router.get("/", requireAdminRole,(req: Request, res: Response) => {
 });
 
 /**
+ * Get specific user data
+ */
+router.get("/me/curriculum_data",onlyAllowSelf, (req: Request, res: Response) => {
+    const sql = 'SELECT * FROM `user_game_curriculum` WHERE user_id = ?;'
+    const userId = req.body.user.id;
+    const params = [userId]
+    db.query(sql,params).then((results:any) => {
+        res.send(results[0])
+    }).catch(error => {
+        console.error(error)
+        return res.status(500).send("Server error")
+    })
+});
+
+/**
  * Get specific user
  */
 router.get("/:id",onlyAllowSelf, (req: Request, res: Response) => {

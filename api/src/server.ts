@@ -63,7 +63,7 @@ app.get("/api", (req: Request, res: Response) => {
     res.send(JSON.stringify({response: "Hello World"}));
 });
 
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
 app.use(cookieParser());
 
 

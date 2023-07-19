@@ -80,7 +80,7 @@ export default class CreateQuestionView extends Phaser.Scene {
 
     private async displayCreateQuestion() {
         this.codeBlock = this.displayCodeBlockCloze(
-            this.currentQuestion.codeText + this.currentQuestion.elements[0].content
+            this.currentQuestion.code_text + this.currentQuestion.elements[0].content
         );
         const buttonWidth = this.cameras.main.displayWidth / 2;
         this.evaluateButton = new DeviceButton(
@@ -211,7 +211,7 @@ export default class CreateQuestionView extends Phaser.Scene {
             "These Tests were Passed",
             this.correctTextStyle
         ).setOrigin(0.5, 0);
-        this.correctAnswer.appendText(this.currentQuestion.elements[0].correctAnswers.join("\n"))
+        this.correctAnswer.appendText(this.currentQuestion.elements[0].correct_answers.join("\n"))
     }
 
     private showWrongText(text:string) {
@@ -223,7 +223,7 @@ export default class CreateQuestionView extends Phaser.Scene {
             "One of these tests failed with the output: "+text,
             this.correctAnswerStyle
         ).setOrigin(0.5, 0);
-        this.correctAnswer.appendText(this.currentQuestion.elements[0].correctAnswers.join("\n"))
+        this.correctAnswer.appendText(this.currentQuestion.elements[0].correct_answers.join("\n"))
     }
 
     private showOutputText(text) {
@@ -252,13 +252,13 @@ export default class CreateQuestionView extends Phaser.Scene {
         let regex = /###INPUT\|(.+?)\|(.+?)\|(.+?)###/g;
         let match;
         let fullCode;
-        while ((match = regex.exec(this.currentQuestion.codeText)) !== null) {
+        while ((match = regex.exec(this.currentQuestion.code_text)) !== null) {
 
             let inputField = <HTMLInputElement>(
-                document.getElementById(this.currentQuestion.elements[0].elementIdentifier)
+                document.getElementById(this.currentQuestion.elements[0].element_identifier)
             );
 
-            fullCode = (this.currentQuestion.codeText).replace(
+            fullCode = (this.currentQuestion.code_text).replace(
                 match[0],
                 inputField.value
             );
@@ -274,7 +274,7 @@ export default class CreateQuestionView extends Phaser.Scene {
     public async checkAnswer() {
         let correct = false;
 
-        let testCondition = this.currentQuestion.elements[0].correctAnswers.join(' && ')
+        let testCondition = this.currentQuestion.elements[0].correct_answers.join(' && ')
 
         const ifStatement = "\necho " + testCondition +" ? 1 : 0;";
 
@@ -283,7 +283,7 @@ export default class CreateQuestionView extends Phaser.Scene {
         console.log(fullTestCode)
 
         let inputField = <HTMLInputElement>(
-            document.getElementById(this.currentQuestion.elements[0].elementIdentifier)
+            document.getElementById(this.currentQuestion.elements[0].element_identifier)
         );
 
         const result:any = await this.testCode(fullTestCode)

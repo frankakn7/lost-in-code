@@ -12,11 +12,11 @@ export default class Question {
     /**
      * The text displayed when the question is asked
      */
-    questionText: string;
+    question_text: string;
     /**
      * The code block to be displayed for certain questions
      */
-    codeText?: string;
+    code_text?: string;
     /**
      * A hint that can be displayed
      */
@@ -36,11 +36,11 @@ export default class Question {
 
     constructor(id: number, questionText: string, hint: string, type: QuestionType, elements: QuestionElement[],difficulty: number, codeText?: string) {
         this.id = id;
-        this.questionText = questionText;
+        this.question_text = questionText;
         this.hint = hint;
         this.type = type;
         this.elements = elements;
         this.difficulty = difficulty;
-        this.codeText = codeText;
+        this.code_text = codeText;
     }
 }

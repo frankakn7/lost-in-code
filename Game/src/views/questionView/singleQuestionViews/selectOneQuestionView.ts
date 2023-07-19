@@ -100,7 +100,7 @@ export default class SelectOneQuestionView extends Phaser.Scene {
             const blockIsCorrect = this.currentQuestion.elements.find(
                 (element: ChoiceQuestionElement) =>
                     element.id == block.getElementId()
-            ).isCorrect
+            ).is_correct
             const correct = blockIsCorrect == block.getSelected();
             if(block.getSelected() && correct){
                 block.markCorrect();

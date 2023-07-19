@@ -131,7 +131,7 @@ export default class QuestionView extends Phaser.Scene {
             .text(
                 this.cameras.main.displayWidth / 2,
                 150,
-                this.currentQuestion.questionText,
+                this.currentQuestion.question_text,
                 this.textStyle
             )
             .setOrigin(0.5, 0);

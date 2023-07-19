@@ -69,8 +69,8 @@ export default class ChoiceQuestionView extends Phaser.Scene {
 
     private displayChoiceQuestion(): void {
         let codeBlock;
-        if (this.currentQuestion.codeText) {
-            codeBlock = this.displayCodeBlock(this.currentQuestion.codeText);
+        if (this.currentQuestion.code_text) {
+            codeBlock = this.displayCodeBlock(this.currentQuestion.code_text);
         }
         this.currentQuestion.elements.forEach(
             (element: ChoiceQuestionElement) => {
@@ -131,10 +131,10 @@ export default class ChoiceQuestionView extends Phaser.Scene {
             let element = this.currentQuestion.elements.find(
                 (element) => element.id == button.getElementId()
             );
-            if (element.isCorrect) {
+            if (element.is_correct) {
                 correctAnswers.push(element.content);
             }
-            if (!(button.isSelected() === element.isCorrect)) {
+            if (!(button.isSelected() === element.is_correct)) {
                 if (button.isSelected()) {
                     button.colorIncorrectSelected();
                 } else {

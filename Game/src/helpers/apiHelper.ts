@@ -3,7 +3,7 @@ import {GamestateType} from "../types/gamestateType";
 export default class ApiHelper {
     private apiUrl = `${process.env.API_URL}`;
 
-    public evaluateCode(code:string){
+    public evaluateCode(code: string) {
         const url = this.apiUrl + "/api/php";
         const formData = new FormData();
         formData.append("code", code);
@@ -24,15 +24,51 @@ export default class ApiHelper {
                 .catch((error) => reject(error));
         });
     }
-    public getStateData() {
-        const url = this.apiUrl + "/api/gamestates/me";
+
+    public getFullChapter(chapterNumber: number) {
+        const url = this.apiUrl + "/api/users/me/curriculum_data";
         return new Promise((resolve, reject) => {
             fetch(url, {method: "GET", credentials: "include"})
                 .then((response) => {
                     response
                         .json()
-                        .then((data) =>
-                            resolve(data)
+                        .then((data) => {
+                            // resolve(data);
+                            const url2 = this.apiUrl + "/api/chapters/";
+                            fetch(url2, {method: "GET", credentials: "include"})
+                                .then((res) => {
+                                    res.json().then((chapters: any) => {
+                                        const chapter = chapters.find(chapter => chapter.order_position == chapterNumber && chapter.curriculum_id == data.curriculum_id)
+                                        const url3 = this.apiUrl + "/api/chapters/" + chapter.id + "/full";
+                                        fetch(url3, {method: "GET", credentials: "include"})
+                                            .then((res) => {
+                                                res.json().then((chapter: any) => {
+                                                    resolve(chapter);
+                                                }).catch((error) => reject(error));
+                                            }).catch((error) => reject(error));
+                                    }).catch((error) => reject(error));
+                                }).catch((error) => reject(error));
+                        }).catch((error) => reject(error));
+                })
+                .catch((error) => reject(error));
+        })
+    }
+
+
+    public
+
+    getStateData() {
+        const url = this.apiUrl + "/api/gamestates/me";
+        return new Promise((resolve, reject) => {
+            fetch(url, {method: "GET", credentials: "include"})
+                .then((response) => {
+                    console.log(response)
+                    response
+                        .json()
+                        .then((data) => {
+
+                                resolve(data)
+                            }
                         )
                         .catch((error) => reject(error));
                 })
@@ -40,7 +76,8 @@ export default class ApiHelper {
         });
     }
 
-    public updateStateData(state_data: GamestateType) {
+    public updateStateData(state_data: GamestateType
+    ) {
         console.log(state_data)
         const gameState = {game_state: state_data}
         console.log(JSON.stringify(gameState))
@@ -71,10 +108,12 @@ export default class ApiHelper {
                     if (response.status == 200) {
                         response
                             .json()
-                            .then((data) =>
-                                data.user
-                                    ? resolve(data)
-                                    : reject("not logged in")
+                            .then((data) => {
+                                    console.log(data.user)
+                                    data.user
+                                        ? resolve(data)
+                                        : reject("not logged in")
+                                }
                             )
                             .catch((error) => reject(error));
                     } else {

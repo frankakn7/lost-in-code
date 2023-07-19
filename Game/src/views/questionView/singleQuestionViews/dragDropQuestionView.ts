@@ -99,7 +99,7 @@ export default class DragDropQuestionView extends Phaser.Scene {
                     }
                 )
             );
-            if (element.correctOrderPosition === index + 1) {
+            if (element.correct_order_position === index + 1) {
                 block.markCorrect();
             } else {
                 correct = false;

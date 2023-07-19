@@ -1,5 +1,5 @@
-import { globalEventBus } from "../../helpers/globalEventBus";
-import { QuestionType } from "../../types/questionType";
+import {globalEventBus} from "../../helpers/globalEventBus";
+import {QuestionType} from "../../types/questionType";
 import PlayView from "../playView";
 import Question from "./question";
 import {
@@ -10,6 +10,7 @@ import {
 import {TaskManagerStateType} from "../../types/taskManagerStateType";
 import DocView from "../docView/docView";
 import {ChapterType} from "../docView/chapterManager";
+import ApiHelper from "../../helpers/apiHelper";
 
 export default class TaskManager {
     private availableQuestions: Question[] = [];
@@ -24,12 +25,16 @@ export default class TaskManager {
 
     readonly currentChapterMaxDifficulty: number;
 
-    private currentQuestionSetForObject = new Map<number, Question>();
+    // private currentQuestionSetForObject = new Map<number, Question>();
+    private currentQuestionSetForObject = [];
+
 
     public currentDoneQuestions: number;
     public currentTotalQuestions: number;
 
     private scene: PlayView;
+
+    private apiHandler = new ApiHelper();
 
     // private defaultTaskManagerState: TaskManagerStateType = {
     //     answeredQuestions: [],
@@ -38,7 +43,11 @@ export default class TaskManager {
     //     currentPerformanceIndex: 1
     // }
 
-    //TODO: Implement loading questions from api
+    private loadQuestions() {
+        this.apiHandler.getFullChapter(this.currentChapterNumber)
+            .then((response:any) => {this.availableQuestions = response.questions; console.log(response)})
+            .catch((error) => console.error(error))
+    }
 
     private shuffleQuestions(questions: Question[]) {
         for (let i = questions.length - 1; i > 0; i--) {
@@ -67,29 +76,34 @@ export default class TaskManager {
                 (question) => question.difficulty == i
             );
             if (question === undefined) {
-                question = this.answeredQuestions.find(
-                    (question) => question.difficulty == i
-                );
+                // question = this.answeredQuestions.find(
+                //     (question) => question.difficulty == i
+                // );
+                continue;
             }
             // console.log("Q Diff: "+question.difficulty)
-            this.currentQuestionSetForObject.set(i, question);
+            // this.currentQuestionSetForObject.set(i, question);
+            this.currentQuestionSetForObject.push(question);
         }
         this.currentDoneQuestions = 0;
-        this.currentTotalQuestions = this.currentQuestionSetForObject.size;
+        this.currentTotalQuestions = this.currentQuestionSetForObject.length;
     }
 
     public getCurrentQuestionFromQuestionSet() {
-        let question = this.currentQuestionSetForObject.get(
-            this.currentPerformanceIndex
-        );
+        // let question = this.currentQuestionSetForObject.get(
+        //     this.currentPerformanceIndex
+        // );
+        //let question = this.currentQuestionSetForObject.shift()
+        let question = this.currentQuestionSetForObject[0];
         // console.log("Q Diff: "+question.difficulty)
+        console.log(question)
         return question;
     }
 
     private checkNextChapter() {
-        this.repairedObjectsThisChapter ++;
-        if(this.repairedObjectsThisChapter == 2){
-            this.currentChapterNumber ++;
+        this.repairedObjectsThisChapter++;
+        if (this.repairedObjectsThisChapter == 2) {
+            this.currentChapterNumber++;
             this.repairedObjectsThisChapter = 0;
             this.scene.docView.newChapter = true;
             this.scene.docView.chapterManager.updateCurrentChapterOrder(this.currentChapterNumber);
@@ -97,7 +111,7 @@ export default class TaskManager {
         }
     }
 
-    private onObjectFailed(){
+    private onObjectFailed() {
         console.log("FAILED")
         if (this.scene.scene.isSleeping(this.scene)) {
             this.scene.queueTask(() => {
@@ -125,9 +139,9 @@ export default class TaskManager {
             (question) => question !== currentQuestion
         );
         this.answeredQuestions.push(currentQuestion);
-        this.currentQuestionSetForObject.delete(this.currentPerformanceIndex);
+        this.currentQuestionSetForObject.shift()
         this.currentDoneQuestions++;
-        if (this.currentQuestionSetForObject.size == 0) {
+        if (this.currentQuestionSetForObject.length == 0) {
             this.onObjectRepaired();
         } else {
             this.currentPerformanceIndex = currentQuestion.difficulty + 1;
@@ -140,9 +154,10 @@ export default class TaskManager {
             ? this.currentPerformanceIndex--
             : null;
         this.onObjectFailed();
+
     }
 
-    public saveAll(){
+    public saveAll() {
         return {
             // availableQuestions: [...this.availableQuestions.map(question => question.id)],
             answeredQuestions: [...this.answeredQuestions.map(quesion => quesion.id)],
@@ -152,7 +167,7 @@ export default class TaskManager {
         }
     }
 
-    private loadState(state: TaskManagerStateType){
+    private loadState(state: TaskManagerStateType) {
         this.answeredQuestions = this.availableQuestions.filter(question => state.answeredQuestions.includes(question.id))
         this.availableQuestions = this.availableQuestions.filter(question => !state.answeredQuestions.includes(question.id))
         this.currentChapterNumber = state.currentChapterNumber;
@@ -160,7 +175,7 @@ export default class TaskManager {
         this.currentPerformanceIndex = state.currentPerformanceIndex;
     }
 
-    constructor(scene: PlayView, savedTaskManagerState?:TaskManagerStateType) {
+    constructor(scene: PlayView, savedTaskManagerState?: TaskManagerStateType) {
         this.scene = scene;
 
         const code = `<?php
@@ -215,12 +230,12 @@ echo $y;
 
         let clozeQuestionElement = new InputQuestionElement(
             1,
-            ["Hello","hello"],
+            ["Hello", "hello"],
             "input1"
         );
         let clozeQuestionElement2 = new InputQuestionElement(
             2,
-            ["There","there"],
+            ["There", "there"],
             "input2"
         );
 
@@ -334,7 +349,7 @@ echo $y;
         let questionElementCreate = new CreateQuestionElement(
             2,
             `echo calculateSum(5,10);`,
-            ['calculateSum(5,10) == 15','calculateSum(20,20) == 40'],
+            ['calculateSum(5,10) == 15', 'calculateSum(20,20) == 40'],
             "input1"
         );
 
@@ -358,6 +373,8 @@ echo $y;
         this.populateNewQuestionSet();
 
         this.loadState(savedTaskManagerState);
+
+        this.loadQuestions();
 
         this.currentChapterMaxDifficulty = Math.max(
             ...this.availableQuestions.map((q) => q.difficulty)
