@@ -55,6 +55,10 @@ export default class RoomScene extends Phaser.Scene {
 
     private _playView;
     private _doorUnlocked = false;
+
+    private _timeUntilStoryStartsInRoom = 2500;
+    private _timeSinceRoomEnter = 0;
+    private _roomStoryPlayed = false;
     
     /**
      * Room constructor
@@ -251,6 +255,14 @@ export default class RoomScene extends Phaser.Scene {
             this.vision.y = this.player.y - 16;
             this.fow.setX(this.player.x);
             this.fow.setY(this.player.y);
+        }
+
+        if (!this._roomStoryPlayed) {
+            this._timeSinceRoomEnter += delta;
+            if (this._timeSinceRoomEnter > this._timeUntilStoryStartsInRoom) {
+                this._roomStoryPlayed = true;
+                this.getPlayView().openStoryChatView();
+            }
         }
 
         

@@ -72,7 +72,7 @@ export default class PlayView extends Phaser.Scene {
         },
         room: {
             finishedTaskObjects: [
-                false, false, false, false
+                false, true, true, true
             ],
         },
         story: {
