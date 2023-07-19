@@ -164,8 +164,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":111.19,
-                 "y":181.274
+                 "x":109.101056711546,
+                 "y":209.474734394125
                 }, 
                 {
                  "height":0,
@@ -230,8 +230,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":367.623,
-                 "y":197
+                 "x":199.463065279478,
+                 "y":210.578131374949
                 }, 
                 {
                  "height":0,
@@ -272,7 +272,6 @@
         {
          "columns":42,
          "firstgid":1,
-         "image":"..\/Space station._32_2.jpg",
          "image":"..\/tileset\/station_tilemap.png",
          "imageheight":1088,
          "imagewidth":1344,

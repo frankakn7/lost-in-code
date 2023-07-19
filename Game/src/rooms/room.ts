@@ -22,6 +22,7 @@ import FirstAidKitTexture from "../assets/gameobjects/firstAidKit.png";
 import BedTexture from "../assets/gameobjects/bed.png";
 import DoorSingleTexture from "../assets/gameobjects/doorSingle.png";
 import DoorDoubleTexture from "../assets/gameobjects/doorDouble.png";
+import EnemyTexture from "../assets/gameobjects/enemy.png";
 
 import InteractiveObject from "../objects/interactiveObject";
 import storyJson from "../story_management/storyFormatExample.json";
@@ -29,6 +30,7 @@ import StoryManager from "../story_management/storyManager";
 import PlayView from "../views/playView";
 import TaskObject from "../objects/taskObjects";
 import {globalEventBus} from "../helpers/globalEventBus";
+import EnemyObject from "../objects/enemyObject";
 
 
 
@@ -104,6 +106,7 @@ export default class RoomScene extends Phaser.Scene {
         this.load.image("doorSingle", DoorSingleTexture);
         this.load.image("doorDouble", DoorDoubleTexture);
         this.load.image("engineBroken", EngineBrokenTexture);
+        this.load.image("enemy", EnemyTexture);
 
     }
 
@@ -122,7 +125,7 @@ export default class RoomScene extends Phaser.Scene {
         const floorLayer = tilemap.createLayer(this.tilemapConfig.floorLayer, tileset);
         const collisionLayer = tilemap.createLayer(this.tilemapConfig.collisionLayer, tileset);
         collisionLayer.setCollisionByExclusion([-1], true, false);
-        collisionLayer.setDepth(4);
+        collisionLayer.setDepth(2);
 
 
         /**

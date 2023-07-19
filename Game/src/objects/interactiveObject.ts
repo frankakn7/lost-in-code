@@ -26,7 +26,7 @@ export default class InteractiveObject extends Phaser.Physics.Arcade.Sprite {
         this.scene.physics.world.enable(this);
         this.setSize(params.width, params.height);
         this.setImmovable(true);
-        this.setDepth(6);
+        this.setDepth(3);
         // TODO Set depth for rendering
 
         // if (params.origin) this.setOrigin(params.origin.x, params.origin.y);

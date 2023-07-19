@@ -3,6 +3,7 @@ import HatObject from "./objects/hatObject";
 import InteractiveObject from "./objects/interactiveObject";
 import TaskObject from "./objects/taskObjects";
 import DoorObject from "./objects/doorObject";
+import EnemyObject from "./objects/enemyObject";
 
 export const GameObjectMap = {
     door: {
@@ -170,4 +171,14 @@ export const GameObjectMap = {
             isStoryObject: false
         }
     },
+
+    enemy: {
+        class: EnemyObject,
+        params: {
+            texture: "enemy",
+            width: 5,
+            height: 5,
+            isStoryObject: false
+        }
+    }
 }

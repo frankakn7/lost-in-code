@@ -68,11 +68,11 @@ export default class PlayView extends Phaser.Scene {
             selectedHat: "None"
         },
         playView: {
-            currentRoom: "hangar"
+            currentRoom: "bridge"
         },
         room: {
             finishedTaskObjects: [
-                false, true, true, true
+                false, false, false, false
             ],
         },
         story: {
@@ -345,7 +345,7 @@ export default class PlayView extends Phaser.Scene {
             objectsLayer: "Objects"
         }, "bridge", this).setPlayerPosition(32 * 2, 32 * 10));
 
-
+        this.loadData();
         this.taskManager = new TaskManager(this, this._state.taskmanager)
 
 
@@ -466,7 +466,8 @@ export default class PlayView extends Phaser.Scene {
     }
 
     public loadData() {
-        this._startingRoomId = this._state.playView.currentRoom ? this._state.playView.currentRoom : this._startingRoomId;
+        if (this._state.playView.currentRoom)
+            this._startingRoomId = this._state.playView.currentRoom
     }
 
 
