@@ -94,7 +94,7 @@ export default class TaskObject extends InteractiveObject {
             globalEventBus.emit("save_game")
             if (this._isStoryObject) {
                 this.room.getPlayView().pullNextStoryBit(this.room.getRoomId());
-                this.room.getPlayView().openChatView();
+                this.room.getPlayView().openStoryChatView();
             }
 
             // TODO Should be able to stay, as this function wont be called after the door was successfully unlocked anyways

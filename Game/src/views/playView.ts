@@ -39,7 +39,7 @@ import flaresPng from "../assets/particles/flares.png";
 import {GamestateType} from "../types/gamestateType";
 import {globalEventBus} from "../helpers/globalEventBus";
 import ApiHelper from "../helpers/apiHelper";
-import ChapterManager from "./docView/chapterManager";
+import ChapterManager, {ChapterType} from "./docView/chapterManager";
 import DocView from "./docView/docView";
 import ReturnButtonTexture from "../assets/ui/Return-Button.png";
 
@@ -97,7 +97,7 @@ export default class PlayView extends Phaser.Scene {
     /**
      * the chat view
      */
-    private chatView: ChatView;
+    private storyChatView: ChatView;
 
     private questionView: QuestionView;
 
@@ -128,19 +128,35 @@ export default class PlayView extends Phaser.Scene {
         this.scene.sleep("Room");
 
         //If the chat view already exists and is sleeping
-        if (this.scene.isSleeping(this.chatView)) {
+        if (this.scene.isSleeping(this.storyChatView)) {
             //start a new chat flow and awake the scene
-            this.chatView.startNewChatFlow(this._storyManager.pullNextStoryBit(this.currentRoom.getRoomId()));
-            this.scene.wake(this.chatView);
+            this.storyChatView.startNewChatFlow(this._storyManager.pullNextStoryBit(this.currentRoom.getRoomId()));
+            this.scene.wake(this.storyChatView);
             //If the chat view hasn't been launched yet
         } else {
             //create a new chat view
-            this.chatView = new ChatView(this._storyManager.pullNextStoryBit(this.currentRoom.getRoomId()));
+            this.storyChatView = new ChatView(this._storyManager.pullNextStoryBit(this.currentRoom.getRoomId()), "StoryChatView");
             //add chat view to the scene
-            this.scene.add("chatView", this.chatView);
+            this.scene.add("StoryChatView", this.storyChatView);
             //launch the chat view
-            this.scene.launch(this.chatView);
+            this.scene.launch(this.storyChatView);
         }
+    }
+
+    public openTextChatView(text,customExitFunction:Function): void {
+        this.scene.sleep();
+        this.scene.sleep("controlPad");
+        this.scene.sleep("pauseChatButtons");
+        this.scene.sleep("Room");
+
+        const simpleChatNode: ChatFlowNode = {text: text, optionText: "Start", choices: new Map<string, ChatFlowNode>}
+
+        const simpleChatFlow = new ChatFlow(simpleChatNode)
+
+        const textChatView = new ChatView(simpleChatFlow, "ChatTextView", true,customExitFunction)
+
+        this.scene.add("ChatTextView", textChatView)
+        this.scene.launch(textChatView)
     }
 
     onWake() {
@@ -164,23 +180,47 @@ export default class PlayView extends Phaser.Scene {
 
     private openQuestionView() {
         //If the chat view already exists and is sleeping
-        this.scene.sleep(this);
-        this.scene.sleep("controlPad");
-        this.scene.sleep("pauseChatButtons");
-        this.scene.sleep("Room");
-        if (this.scene.isSleeping(this.questionView)) {
-            this.scene.wake(this.questionView);
-            //If the chat view hasn't been launched yet
-            // } else if(this.scene.isActive(this.questionView)){
-            //     console.log(this.scene.isActive(this.questionView))
-            //     return;
+        if (!this.docView.newChapter) {
+
+            this.scene.sleep(this);
+            this.scene.sleep("controlPad");
+            this.scene.sleep("pauseChatButtons");
+            this.scene.sleep("Room");
+            if (this.scene.isSleeping(this.questionView)) {
+                this.scene.wake(this.questionView);
+                //If the chat view hasn't been launched yet
+                // } else if(this.scene.isActive(this.questionView)){
+                //     console.log(this.scene.isActive(this.questionView))
+                //     return;
+            } else {
+                //create a new question view
+                this.questionView = new QuestionView(this.taskManager);
+                //add question view to the scene
+                this.scene.add("questionView", this.questionView);
+                //launch the question view
+                this.scene.launch(this.questionView);
+            }
         } else {
-            //create a new question view
-            this.questionView = new QuestionView(this.taskManager);
-            //add question view to the scene
-            this.scene.add("questionView", this.questionView);
-            //launch the question view
-            this.scene.launch(this.questionView);
+            this.docView.newChapter = false
+            this.docView.chapterManager.updateChapters().then((chapters: ChapterType[]) => {
+                this.openTextChatView(chapters.find(chapter => chapter.order_position == this.taskManager.currentChapterNumber).material,() => {
+                    this.scene.remove("ChatTextView");
+                    if (this.scene.isSleeping(this.questionView)) {
+                        this.scene.wake(this.questionView);
+                        //If the chat view hasn't been launched yet
+                        // } else if(this.scene.isActive(this.questionView)){
+                        //     console.log(this.scene.isActive(this.questionView))
+                        //     return;
+                    } else {
+                        //create a new question view
+                        this.questionView = new QuestionView(this.taskManager);
+                        //add question view to the scene
+                        this.scene.add("questionView", this.questionView);
+                        //launch the question view
+                        this.scene.launch(this.questionView);
+                    }
+                })
+            });
         }
     }
 
@@ -287,7 +327,7 @@ export default class PlayView extends Phaser.Scene {
             console.log("SLEEPING PLAY VIEW")
         })
 
-        this.docView = new DocView(this,this._state.taskmanager.currentChapterNumber);
+        this.docView = new DocView(this, this._state.taskmanager.currentChapterNumber);
 
         globalEventBus.on("save_game", () => this.apiHelper.updateStateData(this.saveAllToGamestateType()))
 
@@ -355,6 +395,7 @@ export default class PlayView extends Phaser.Scene {
             // this.openStoryChatView();
             // this.getToRoomViaId("laboratory");
             this.openQuestionView();
+            //this.openTextChatView("Harry ist der hmmmm...")
             // console.log(this.saveAllToJSONString());
         }
 

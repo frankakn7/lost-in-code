@@ -46,31 +46,9 @@ export default class TextView extends Phaser.Scene {
         ).setDepth(2);
         this.add.existing(this.resumeButton);
 
-        this.textStyle = {
-            fontSize: "30px",
-            fontFamily: "forwardRegular",
-            color: "#00c8ff",
-            wordWrap: {
-                width:
-                    this.cameras.main.displayWidth -
-                    100 * 2,
-                useAdvancedWrap: true,
-            },
-        };
-
-        this.textToDisplay = this.add
-            .text(
-                this.cameras.main.displayWidth - 100,
-                0,
-                this.textToDisplay,
-                this.textStyle
-            )
-            .setOrigin(1, 0);
-
         this.chatTextContainer = new ChatTextContainer(this, 0, this.resumeButton.y + this.resumeButton.height);
-        // this.textObjectToDisplay = this.chatTextContainer.addReceivedText()
-        // this.textObjectToDisplay.setText(this.textToDisplay);
-        this.chatTextContainer.pushAndAdd(this.textToDisplay);
+        this.chatTextContainer.addFullRecievedText(this.textToDisplay);
+        // this.chatTextContainer.addAnswerText(this.textToDisplay);
     }
 
     private _backToMenu() {

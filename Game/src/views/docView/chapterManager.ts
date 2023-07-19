@@ -83,14 +83,22 @@ export default class ChapterManager {
         return this.chapters.find(chapter => chapter.id == id);
     }
 
+    public updateCurrentChapterOrder(newChapterNumber){
+        this.currentChapterOrderPosition = newChapterNumber;
+    }
+
     public updateChapters() {
-        if(!this.chapters.find(chapter => chapter.order_position == this.currentChapterOrderPosition)){
-            console.log(this.currentChapterOrderPosition)
-            this.fetchChapters().then((chapters:[]) => {
-                this.chapters = chapters.filter((chapter:ChapterType) => chapter.order_position <= this.currentChapterOrderPosition);
-                console.log(this.chapters)
-            })
-        }
+        return new Promise((resolve, reject)=> {
+            if(!this.chapters.find(chapter => chapter.order_position == this.currentChapterOrderPosition)){
+                console.log(this.currentChapterOrderPosition)
+                this.fetchChapters().then((chapters:[]) => {
+                    this.chapters = chapters.filter((chapter:ChapterType) => chapter.order_position <= this.currentChapterOrderPosition);
+                    resolve(this.chapters)
+                }).catch(error => reject(error))
+            }else{
+                resolve(this.chapters)
+            }
+        })
     }
 
     constructor(chapterOrderPosition?:number) {

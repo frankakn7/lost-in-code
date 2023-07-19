@@ -60,13 +60,20 @@ export default class ChatView extends Phaser.Scene {
 
     private tilesprite: Phaser.GameObjects.TileSprite;
 
+    private destroyOnExit = false;
+
+    private exitFunction:Function = this.exitChat;
+
     /**
      * 
      * @param chatFlow The first {@link ChatFlow} to be handled by the chat view
      */
-    constructor(chatFlow: ChatFlow) {
-        super("chatView");
-        this.currentChatFlow = chatFlow
+    constructor(chatFlow: ChatFlow, sceneName?:string, destroyOnExit?:boolean, customExitFunc?:Function) {
+
+        super(sceneName ?? "chatView");
+        destroyOnExit ? this.destroyOnExit = destroyOnExit : null;
+        this.currentChatFlow = chatFlow;
+        customExitFunc ? this.exitFunction = customExitFunc : null;
     }
 
     public preload(){
@@ -94,6 +101,8 @@ export default class ChatView extends Phaser.Scene {
     
             // Show the full text
             this.textToAnimate.setText(this.currentChatFlow.getCurrentText());
+
+            this.chatTextContainer.calculateNewInputHitArea()
     
             // Display the choices
             this.showChoices(this.currentChatFlow.getCurrentChoices());
@@ -234,7 +243,8 @@ export default class ChatView extends Phaser.Scene {
                 this.buttonWidth,
                 () => {
                     //call exit chat function on click
-                    this.exitChat();
+                    // this.exitChat();
+                    this.exitFunction()
                 }, //needs to be anonymous function for this to equal
                 "Exit"  //text to be displayed on the button
             );
@@ -283,6 +293,10 @@ export default class ChatView extends Phaser.Scene {
         this.scene.wake("Room");
         this.scene.wake("controlPad");
         this.scene.wake("pauseChatButtons");
-        this.scene.sleep(this);
+        if(!this.destroyOnExit){
+            this.scene.sleep(this);
+        }else{
+            this.scene.remove();
+        }
     }
 }

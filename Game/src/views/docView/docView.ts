@@ -9,7 +9,7 @@ import TextView from "./textView";
 export default class DocView extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite;
 
-    private chapterManager: ChapterManager;
+    public chapterManager: ChapterManager;
 
     private _playView: PlayView;
 
@@ -20,6 +20,8 @@ export default class DocView extends Phaser.Scene {
     private buttonSpacing = 50;
 
     private textView;
+
+    public newChapter;
 
     constructor(playView: PlayView, chapterNumber: number) {
         super("DocView");
