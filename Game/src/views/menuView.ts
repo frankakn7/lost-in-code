@@ -90,7 +90,7 @@ export default class MenuView extends Phaser.Scene {
             "antennaAppTexture",
             (this.scale.width / (this._columns )) * 1,
             1000,
-            () => {}
+            () => {this._playView.openStoryChatViewWithoutPulling()}
         );
         this.add.existing(chatButton);
 

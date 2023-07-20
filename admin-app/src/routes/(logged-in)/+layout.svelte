@@ -7,7 +7,7 @@
 		<h2 id="app-name">L.I.C. Admin</h2>
 		<nav>
 			<ul>
-				<li><a href="/">Dashboard</a></li>
+				<!-- <li><a href="/">Dashboard</a></li> -->
 				<li><a href="/groups">Groups</a></li>
 				<li><a href="/users">Users</a></li>
 				<li><a href="/curriculums">Curriculums</a></li>

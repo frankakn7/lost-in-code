@@ -23,7 +23,7 @@ export default class TaskManager {
 
     private currentPerformanceIndex: number = 1;
 
-    readonly currentChapterMaxDifficulty: number;
+    private currentChapterMaxDifficulty: number;
 
     // private currentQuestionSetForObject = new Map<number, Question>();
     private currentQuestionSetForObject = [];
@@ -45,7 +45,13 @@ export default class TaskManager {
 
     private loadQuestions() {
         this.apiHandler.getFullChapter(this.currentChapterNumber)
-            .then((response:any) => {this.availableQuestions = response.questions; console.log(response)})
+            .then((response:any) => {
+                this.availableQuestions = response.questions;
+                this.currentChapterMaxDifficulty = Math.max(
+                    ...this.availableQuestions.map((q) => q.difficulty)
+                );
+                console.log(response);
+            })
             .catch((error) => console.error(error))
     }
 
@@ -66,7 +72,9 @@ export default class TaskManager {
     public populateNewQuestionSet() {
         this.shuffleQuestions(this.availableQuestions);
         this.shuffleQuestions(this.answeredQuestions);
-        // console.log("PI: " + this.currentPerformanceIndex);
+        console.log("PI: " + this.currentPerformanceIndex);
+        console.log(this.currentChapterMaxDifficulty)
+        console.log(this.availableQuestions)
         for (
             let i = this.currentPerformanceIndex;
             i <= this.currentChapterMaxDifficulty;
@@ -76,13 +84,14 @@ export default class TaskManager {
                 (question) => question.difficulty == i
             );
             if (question === undefined) {
-                // question = this.answeredQuestions.find(
-                //     (question) => question.difficulty == i
-                // );
+                question = this.answeredQuestions.find(
+                    (question) => question.difficulty == i
+                );
                 continue;
             }
             // console.log("Q Diff: "+question.difficulty)
             // this.currentQuestionSetForObject.set(i, question);
+            console.log(question)
             this.currentQuestionSetForObject.push(question);
         }
         this.currentDoneQuestions = 0;
@@ -369,15 +378,10 @@ echo $y;
 //             )
 //         );
 
-
-        this.populateNewQuestionSet();
-
         this.loadState(savedTaskManagerState);
 
         this.loadQuestions();
 
-        this.currentChapterMaxDifficulty = Math.max(
-            ...this.availableQuestions.map((q) => q.difficulty)
-        );
+        this.populateNewQuestionSet();
     }
 }

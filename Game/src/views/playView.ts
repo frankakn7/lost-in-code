@@ -135,10 +135,18 @@ export default class PlayView extends Phaser.Scene {
 
     public docView: DocView;
 
+    public openStoryChatViewWithoutPulling() {
+        this.scene.sleep();
+        this.scene.sleep("controlPad");
+        this.scene.sleep("pauseChatButtons");
+        this.scene.sleep("Room");
+        this.scene.wake(this.storyChatView);
+    }
+
     /**
      * Opens the chat view by sending all other scenes to sleep and launching / awaking the chat view scene
      */
-    private openStoryChatView(): void {
+    public openStoryChatView(): void {
         //Send all scenes to sleep
         this.scene.sleep();
         this.scene.sleep("controlPad");
@@ -484,7 +492,9 @@ export default class PlayView extends Phaser.Scene {
     public saveAllToGamestateType(): GamestateType {
         return {
             hats: this.hatView.saveAll(),
-            playView: this.getCurrentRoom().getRoomId(),
+            playView: {
+                currentRoom: this.getCurrentRoom().getRoomId()
+            },
             room: this.getCurrentRoom().saveAll(),
             story: this._storyManager.saveAll(),
             taskmanager: this.taskManager.saveAll()
