@@ -40,67 +40,46 @@ export default class TaskManager {
     private loadQuestions() {
         this.apiHandler.getFullChapter(this.rootNode.user.chapterNumber)
             .then((response:any) => {
-                console.log(response)
                 this.availableQuestions = response.questions;
                 this.currentChapterMaxDifficulty = Math.max(
                     ...this.availableQuestions.map((q) => q.difficulty)
                 );
-                console.log(response);
             })
             .catch((error) => console.error(error))
     }
 
     private shuffleQuestions(questions: Question[]) {
-        for (let i = questions.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            const temp = questions[i];
-            questions[i] = questions[j];
-            questions[j] = temp;
+        let m = questions.length;
+        while (m) {
+            const i = Math.floor(Math.random() * m--);
+            [questions[m], questions[i]] = [questions[i], questions[m]];
         }
-    }
-
-    getRandomQuestion() {
-        // this.shuffleQuestions(this.availableQuestions);
-        return this.availableQuestions.pop();
     }
 
     public populateNewQuestionSet() {
         this.shuffleQuestions(this.availableQuestions);
         this.shuffleQuestions(this.answeredQuestions);
-        console.log("PI: " + this.rootNode.user.performanceIndex);
-        console.log(this.currentChapterMaxDifficulty)
-        console.log(this.availableQuestions)
-        for (
-            let i = this.rootNode.user.performanceIndex;
-            i <= this.currentChapterMaxDifficulty;
-            i++
-        ) {
-            let question = this.availableQuestions.find(
-                (question) => question.difficulty == i
-            );
-            if (question === undefined) {
-                question = this.answeredQuestions.find(
-                    (question) => question.difficulty == i
-                );
-                continue;
+
+        const availableQuestionsMap = this.availableQuestions.reduce((map, question) => {
+            if (!map[question.difficulty]) map[question.difficulty] = [];
+            map[question.difficulty].push(question);
+            return map;
+        }, {});
+
+        for (let i = this.rootNode.user.performanceIndex; i <= this.currentChapterMaxDifficulty; i++) {
+            const questionsWithDifficulty = availableQuestionsMap[i];
+            if (questionsWithDifficulty && questionsWithDifficulty.length > 0) {
+                const question = questionsWithDifficulty.pop();
+                this.currentQuestionSetForObject.push(question);
             }
-            // console.log("Q Diff: "+question.difficulty)
-            // this.currentQuestionSetForObject.set(i, question);
-            console.log(question)
-            this.currentQuestionSetForObject.push(question);
         }
+
         this.currentDoneQuestions = 0;
         this.currentTotalQuestions = this.currentQuestionSetForObject.length;
     }
 
     public getCurrentQuestionFromQuestionSet() {
-        // let question = this.currentQuestionSetForObject.get(
-        //     this.currentPerformanceIndex
-        // );
-        //let question = this.currentQuestionSetForObject.shift()
         let question = this.currentQuestionSetForObject[0];
-        // console.log("Q Diff: "+question.difficulty)
-        console.log(question)
         return question;
     }
 
@@ -141,13 +120,14 @@ export default class TaskManager {
 
     public questionAnsweredCorrectly() {
         const currentQuestion = this.getCurrentQuestionFromQuestionSet();
-        this.availableQuestions = this.availableQuestions.filter(
-            (question) => question !== currentQuestion
-        );
+        const index = this.availableQuestions.indexOf(currentQuestion);
+        if (index > -1) {
+            this.availableQuestions.splice(index, 1);
+        }
         this.answeredQuestions.push(currentQuestion);
-        this.currentQuestionSetForObject.shift()
+        this.currentQuestionSetForObject.shift();
         this.currentDoneQuestions++;
-        if (this.currentQuestionSetForObject.length == 0) {
+        if (this.currentQuestionSetForObject.length === 0) {
             this.onObjectRepaired();
         } else {
             this.rootNode.user.performanceIndex = currentQuestion.difficulty + 1;
