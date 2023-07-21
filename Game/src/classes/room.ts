@@ -250,6 +250,18 @@ export default class RoomScene extends Phaser.Scene {
 
         this.events.emit("hats_unlock_check");
         globalEventBus.emit("room_entered");
+
+        //this.checkIfDoorUnlocked(); ---> Broadcastet door unlocked
+        //UNLOCKS DOOR IF LOADING FROM GAMESTATE
+        let res = true;
+        this._taskObjects.forEach((obj) => {
+            if (!obj.isFinished()) res = false;
+        });
+
+        if (!res) return;
+
+        this.setDoorUnlocked(true);
+        globalEventBus.emit("save_game");
     }
     
     update (time, delta){

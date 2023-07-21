@@ -18,7 +18,7 @@ export default class TaskManager {
 
     private answeredQuestions: Question[] = [];
 
-    private currentChapterMaxDifficulty: number;
+    private currentChapterMaxDifficulty: number = 5;
 
     private currentQuestionSetForObject = [];
 
@@ -110,6 +110,8 @@ export default class TaskManager {
             this.rootNode.user.increaseChapterNumber();
             this.rootNode.user.repairedObjectsThisChapter = 0;
             this.rootNode.user.newChapter = true;
+            this.rootNode.user.performanceIndex --;
+            this.loadQuestions()
             this.rootNode.docView.chapterManager.updateCurrentChapterOrder(this.rootNode.user.chapterNumber);
             this.rootNode.docView.chapterManager.updateChapters()
         }
@@ -158,18 +160,7 @@ export default class TaskManager {
             ? this.rootNode.user.performanceIndex--
             : null;
         this.onObjectFailed();
-
     }
-
-    // public saveAll() {
-    //     return {
-    //         // availableQuestions: [...this.availableQuestions.map(question => question.id)],
-    //         answeredQuestions: [...this.answeredQuestions.map(quesion => quesion.id)],
-    //         currentChapterNumber: this.currentChapterNumber,
-    //         repairedObjectsThisChapter: this.repairedObjectsThisChapter,
-    //         currentPerformanceIndex: this.currentPerformanceIndex
-    //     }
-    // }
 
     private loadState(answeredQuestionIds: number[]) {
         this.answeredQuestions = this.availableQuestions.filter(question => answeredQuestionIds.includes(question.id))
