@@ -1,7 +1,7 @@
 import "highlight.js/styles/night-owl.css";
 import * as Phaser from "phaser";
-import TaskManager from "./taskManager";
-import Question from "./question";
+import TaskManager from "../../managers/taskManager";
+import Question from "../../classes/question/question";
 import {QuestionType} from "../../types/questionType";
 import deviceBackgroundTilePng from "../../assets/Device-Background-Tile.png";
 import DeviceButton from "../../ui/deviceButton";

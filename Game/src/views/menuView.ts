@@ -9,12 +9,12 @@ import SettingsButtonTexture from "../assets/ui/apps/Settings-app-icon.png";
 import KnowledgeButtonTexture from "../assets/ui/apps/knowledge-app-icon.png";
 import HatAppTexture from "../assets/ui/apps/Hat-app-icon.png";
 import LogoutButtonTexture from "../assets/ui/Logout-Button.png";
-import HatView from "./hatView/hatView";
+import HatView from "./hatView";
 import ApiHelper from "../helpers/apiHelper";
 
 import AchievementsAppTexture from "../assets/ui/apps/Achievements-app-icon.png";
-import AchievementManager from "../achievements/achievementManager";
-import AchievementView from "../achievements/achievementView";
+import AchievementManager from "../managers/achievementManager";
+import AchievementView from "./achievementView";
 
 export default class MenuView extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite;

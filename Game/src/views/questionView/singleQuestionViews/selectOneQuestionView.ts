@@ -1,11 +1,11 @@
 import * as Phaser from "phaser";
-import Question from "../question";
+import Question from "../../../classes/question/question";
 import hljs from "highlight.js/lib/core";
 import php from "highlight.js/lib/languages/php";
 import "highlight.js/styles/night-owl.css";
-import { ChoiceQuestionElement } from "../questionElement";
-import ChoiceButton from "../choiceButton";
-import SelectableCodeBlock from "../selectableCodeBlock";
+import { ChoiceQuestionElement } from "../../../classes/question/questionElement";
+import ChoiceButton from "../../../ui/choiceButton";
+import SelectableCodeBlock from "../../../ui/question/selectableCodeBlock";
 
 export default class SelectOneQuestionView extends Phaser.Scene {
     private currentQuestion: Question;

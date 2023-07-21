@@ -1,5 +1,5 @@
 import {globalEventBus} from "../helpers/globalEventBus";
-import {achievements} from "./achievements";
+import {achievements} from "../constants/achievements";
 
 
 export default class AchievementManager {

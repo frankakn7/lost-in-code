@@ -2,8 +2,8 @@
 
 import * as Phaser from "phaser";
 import InteractiveObject from "./interactiveObject";
-import RoomScene from "../rooms/room";
-import { globalEventBus } from "../helpers/globalEventBus";
+import RoomScene from "../room";
+import { globalEventBus } from "../../helpers/globalEventBus";
 
 export default class TaskObject extends InteractiveObject {
     protected _isOpenRightNow: boolean = false;

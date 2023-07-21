@@ -1,7 +1,7 @@
 import { text } from "express";
-import ControlPadScene from "../ui/ControlPadScene";
+import ControlPadScene from "../../ui/ControlPadScene";
 import { Vector } from "matter";
-import PlayView from "../views/playView";
+import PlayView from "../../views/playView";
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
     private movementSpeed = 10;

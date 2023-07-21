@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
 import { TilemapConfig } from "../types/tilemapConfig";
-import { Player } from "../objects/Player";
+import { Player } from "./objects/Player";
 import PlayerTexture from "../assets/player.png";
 import ShadowTexture from "../assets/shadow.png"
 import Mask from "../assets/mask.png";
@@ -24,13 +24,13 @@ import DoorSingleTexture from "../assets/gameobjects/doorSingle.png";
 import DoorDoubleTexture from "../assets/gameobjects/doorDouble.png";
 import EnemyTexture from "../assets/gameobjects/enemy.png";
 
-import InteractiveObject from "../objects/interactiveObject";
-import storyJson from "../story_management/storyFormatExample.json";
-import StoryManager from "../story_management/storyManager";
+import InteractiveObject from "./objects/interactiveObject";
+import storyJson from "../managers/story_management/storyFormatExample.json";
+import StoryManager from "../managers/story_management/storyManager";
 import PlayView from "../views/playView";
-import TaskObject from "../objects/taskObjects";
+import TaskObject from "./objects/taskObjects";
 import {globalEventBus} from "../helpers/globalEventBus";
-import EnemyObject from "../objects/enemyObject";
+import EnemyObject from "./objects/enemyObject";
 
 
 

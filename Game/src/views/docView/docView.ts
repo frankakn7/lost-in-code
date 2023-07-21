@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import ChapterManager, {ChapterType} from "./chapterManager";
+import ChapterManager, {ChapterType} from "../../managers/chapterManager";
 import SpriteButton from "../../ui/SpriteButton";
 import ReturnButtonTexture from "../../assets/ui/Return-Button.png";
 import PlayView from "../playView";

@@ -1,4 +1,4 @@
-import DeviceButton from "../../ui/deviceButton";
+import DeviceButton from "./deviceButton";
 import * as Phaser from "phaser";
 
 export default class ChoiceButton extends DeviceButton {

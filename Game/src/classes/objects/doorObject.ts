@@ -1,5 +1,5 @@
 import TaskObject from "./taskObjects";
-import RoomScene from "../rooms/room";
+import RoomScene from "../room";
 import {visibility} from "html2canvas/dist/types/css/property-descriptors/visibility";
 
 export default class DoorObject extends TaskObject {

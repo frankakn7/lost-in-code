@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import ChatTextContainer from "../chatView/chatTextContainer";
+import ChatTextContainer from "../../ui/chatTextContainer";
 import DocView from "./docView";
 import SpriteButton from "../../ui/SpriteButton";
 

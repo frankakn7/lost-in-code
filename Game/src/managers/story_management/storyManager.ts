@@ -1,9 +1,9 @@
 import * as Phaser from "phaser";
-import ChatFlow from "../views/chatView/chatFlow";
-import storyJson from "../assets/story.json";
-import { ChatFlowNode } from "../views/chatView/chatFlowNode";
+import ChatFlow from "../../classes/chat/chatFlow";
+import storyJson from "../../assets/story.json";
+import { ChatFlowNode } from "../../classes/chat/chatFlowNode";
 import { json } from "express";
-import PlayView from "../views/playView";
+import PlayView from "../../views/playView";
 
 export default class StoryManager {
     private _storyEvents = {};

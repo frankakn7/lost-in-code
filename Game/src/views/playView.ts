@@ -1,15 +1,15 @@
 import * as Phaser from "phaser";
-import RoomScene from "../rooms/room";
+import RoomScene from "../classes/room";
 import ControlPadScene from "../ui/ControlPadScene";
 import PauseChatButtons from "../ui/PauseChatButtons";
-import ChatView from "./chatView/chatView";
-import {ChatFlowNode} from "./chatView/chatFlowNode";
-import ChatFlow from "./chatView/chatFlow";
+import ChatView from "./chatView";
+import {ChatFlowNode} from "../classes/chat/chatFlowNode";
+import ChatFlow from "../classes/chat/chatFlow";
 import QuestionView from "./questionView/questionView";
-import TaskManager from "./questionView/taskManager";
+import TaskManager from "../managers/taskManager";
 import deviceBackgroundTilePng from "../assets/Device-Background-Tile.png";
 import MenuView from "./menuView";
-import StoryManager from "../story_management/storyManager";
+import StoryManager from "../managers/story_management/storyManager";
 
 import strawHatTexture from "../assets/hats/strawHat.png";
 import sorcerersHatTexture from "../assets/hats/redHat.png";
@@ -21,8 +21,8 @@ import crownTexture from "../assets/hats/crown.png";
 import pirateHat from "../assets/hats/pirateHat.png";
 import hatBg from "../assets/hats/hatBg.png";
 import hatBgSelected from "../assets/hats/hatBgSelected.png";
-import {HatMap} from "../hats/hats";
-import HatView from "./hatView/hatView";
+import {HatMap} from "../constants/hats";
+import HatView from "./hatView";
 
 import tilesetPng from "../assets/tileset/station_tilemap.png";
 import tilemapJson from "../tilemaps/engineRoom.json";
@@ -39,12 +39,12 @@ import flaresPng from "../assets/particles/flares.png";
 import {GamestateType} from "../types/gamestateType";
 import {globalEventBus} from "../helpers/globalEventBus";
 import ApiHelper from "../helpers/apiHelper";
-import ChapterManager, {ChapterType} from "./docView/chapterManager";
+import ChapterManager, {ChapterType} from "../managers/chapterManager";
 import DocView from "./docView/docView";
 import ReturnButtonTexture from "../assets/ui/Return-Button.png";
 import NewsPopup from "../ui/newsPopup";
-import AchievementManager from "../achievements/achievementManager";
-import {achievements} from "../achievements/achievements";
+import AchievementManager from "../managers/achievementManager";
+import {achievements} from "../constants/achievements";
 
 import ATask5Texture from "../assets/achievements/badges_tasks/badge_tasks_5.png";
 import ATask10Texture from "../assets/achievements/badges_tasks/badge_tasks_10.png";

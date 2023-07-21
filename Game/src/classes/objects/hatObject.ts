@@ -1,5 +1,5 @@
-import { HatMap } from "../hats/hats";
-import RoomScene from "../rooms/room";
+import { HatMap } from "../../constants/hats";
+import RoomScene from "../room";
 import InteractiveObject from "./interactiveObject";
 
 

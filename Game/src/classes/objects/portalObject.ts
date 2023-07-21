@@ -1,8 +1,8 @@
 import * as Phaser from "phaser";
 import InteractiveObject from "./interactiveObject";
-import PlayView from "../views/playView";
-import RoomScene from "../rooms/room";
-import {globalEventBus} from "../helpers/globalEventBus";
+import PlayView from "../../views/playView";
+import RoomScene from "../room";
+import {globalEventBus} from "../../helpers/globalEventBus";
 import Clock = Phaser.Time.Clock;
 
 export default class PortalObject extends InteractiveObject {

@@ -1,9 +1,9 @@
 import * as Phaser from "phaser";
-import { ChatFlowNode } from "./chatFlowNode";
-import ChatFlow from "./chatFlow";
-import DeviceButton from "../../ui/deviceButton";
-import ChatTextContainer from "./chatTextContainer";
-import deviceBackgroundTilePng from "../../assets/Device-Background-Tile.png";
+import { ChatFlowNode } from "../classes/chat/chatFlowNode";
+import ChatFlow from "../classes/chat/chatFlow";
+import DeviceButton from "../ui/deviceButton";
+import ChatTextContainer from "../ui/chatTextContainer";
+import deviceBackgroundTilePng from "../assets/Device-Background-Tile.png";
 
 /**
  * The ChatView displaying the chat

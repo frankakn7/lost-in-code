@@ -1,9 +1,9 @@
-import PortalObject from "./objects/portalObject";
-import HatObject from "./objects/hatObject";
-import InteractiveObject from "./objects/interactiveObject";
-import TaskObject from "./objects/taskObjects";
-import DoorObject from "./objects/doorObject";
-import EnemyObject from "./objects/enemyObject";
+import PortalObject from "./classes/objects/portalObject";
+import HatObject from "./classes/objects/hatObject";
+import InteractiveObject from "./classes/objects/interactiveObject";
+import TaskObject from "./classes/objects/taskObjects";
+import DoorObject from "./classes/objects/doorObject";
+import EnemyObject from "./classes/objects/enemyObject";
 
 export const GameObjectMap = {
     door: {

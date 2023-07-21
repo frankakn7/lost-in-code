@@ -1,10 +1,10 @@
 import * as Phaser from "phaser";
-import Question from "../question";
+import Question from "../../../classes/question/question";
 import hljs from "highlight.js/lib/core";
 import php from "highlight.js/lib/languages/php";
 import "highlight.js/styles/night-owl.css";
-import {ChoiceQuestionElement} from "../questionElement";
-import ChoiceButton from "../choiceButton";
+import {ChoiceQuestionElement} from "../../../classes/question/questionElement";
+import ChoiceButton from "../../../ui/choiceButton";
 import DeviceButton from "../../../ui/deviceButton";
 import ApiHelper from "../../../helpers/apiHelper";
 

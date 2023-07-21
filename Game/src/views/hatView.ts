@@ -1,10 +1,10 @@
 import { text } from "express";
-import { HatMap } from "../../hats/hats";
-import SpriteButton from "../../ui/SpriteButton";
-import PlayView from "../playView";
-import ReturnButtonTexture from "../../assets/ui/Return-Button.png"
-import DeviceButton from "../../ui/deviceButton";
-import {globalEventBus} from "../../helpers/globalEventBus";
+import { HatMap } from "../constants/hats";
+import SpriteButton from "../ui/SpriteButton";
+import PlayView from "./playView";
+import ReturnButtonTexture from "../assets/ui/Return-Button.png"
+import DeviceButton from "../ui/deviceButton";
+import {globalEventBus} from "../helpers/globalEventBus";
 
 export default class HatView extends Phaser.Scene {
     private _tilesprite : Phaser.GameObjects.TileSprite;

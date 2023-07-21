@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
 import TaskObject from "./taskObjects";
-import RoomScene from "../rooms/room";
+import RoomScene from "../room";
 
 export default class EnemyObject extends TaskObject {
     private _breathCalcHelperVar = 0;

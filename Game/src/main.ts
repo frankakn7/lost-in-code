@@ -1,7 +1,7 @@
 import * as Phaser from "phaser";
-import RoomScene from "./rooms/room";
+import RoomScene from "./classes/room";
 import PlayView from "./views/playView";
-import ChatView from "./views/chatView/chatView";
+import ChatView from "./views/chatView";
 import './font.css';
 import LoginView from "./views/loginView";
 import { application } from "express";

@@ -1,16 +1,16 @@
-import {globalEventBus} from "../../helpers/globalEventBus";
-import {QuestionType} from "../../types/questionType";
-import PlayView from "../playView";
-import Question from "./question";
+import {globalEventBus} from "../helpers/globalEventBus";
+import {QuestionType} from "../types/questionType";
+import PlayView from "../views/playView";
+import Question from "../classes/question/question";
 import {
     ChoiceQuestionElement, CreateQuestionElement,
     InputQuestionElement,
     OrderQuestionElement,
-} from "./questionElement";
-import {TaskManagerStateType} from "../../types/taskManagerStateType";
-import DocView from "../docView/docView";
-import {ChapterType} from "../docView/chapterManager";
-import ApiHelper from "../../helpers/apiHelper";
+} from "../classes/question/questionElement";
+import {TaskManagerStateType} from "../types/taskManagerStateType";
+import DocView from "../views/docView/docView";
+import {ChapterType} from "./chapterManager";
+import ApiHelper from "../helpers/apiHelper";
 
 export default class TaskManager {
     private availableQuestions: Question[] = [];

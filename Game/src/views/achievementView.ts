@@ -1,9 +1,9 @@
 import * as Phaser from "phaser";
-import AchievementManager from "./achievementManager";
+import AchievementManager from "../managers/achievementManager";
 import ReturnButtonTexture from "../assets/ui/Return-Button.png";
 import SpriteButton from "../ui/SpriteButton";
-import PlayView from "../views/playView";
-import {achievements} from "./achievements";
+import PlayView from "./playView";
+import {achievements} from "../constants/achievements";
 
 
 
