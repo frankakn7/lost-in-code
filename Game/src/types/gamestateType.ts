@@ -14,5 +14,9 @@ export type GamestateType = {
         laboratory: string[];
         bridge: string[];
     };
+    achievements: {
+        taskCounter: number;
+        unlocked: string[];
+    };
     user: UserStateType
 };

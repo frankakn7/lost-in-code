@@ -52,6 +52,13 @@ import ATask20Texture from "../assets/achievements/badges_tasks/badge_tasks_20.p
 import ATask30Texture from "../assets/achievements/badges_tasks/badge_tasks_30.png";
 import ATask40Texture from "../assets/achievements/badges_tasks/badge_tasks_40.png";
 import ATask50Texture from "../assets/achievements/badges_tasks/badge_tasks_50.png";
+
+import ALevels1Texture from "../assets/achievements/badges_levels/badge_level_1.png";
+import ALevels2Texture from "../assets/achievements/badges_levels/badge_level_2.png";
+import ALevels3Texture from "../assets/achievements/badges_levels/badge_level_3.png";
+import ALevels4Texture from "../assets/achievements/badges_levels/badge_level_4.png";
+import ALevels5Texture from "../assets/achievements/badges_levels/badge_level_5.png";
+
 import ProgressBar from "../ui/progress";
 import User from "../classes/user";
 
@@ -87,6 +94,10 @@ export default class RootNode extends Phaser.Scene {
             unlockedHats: [],
             selectedHat: "None",
             newChapter: true,
+        },
+        achievements: {
+            taskCounter: 0,
+            unlocked: []
         }
     };
 
@@ -107,7 +118,7 @@ export default class RootNode extends Phaser.Scene {
     private pauseChatButtons = new PauseChatButtons();
     private progressBar = new ProgressBar(this);
 
-    public achievementManager: AchievementManager = new AchievementManager();
+    public achievementManager: AchievementManager = new AchievementManager(this);
 
     /**
      * the chat view
@@ -284,6 +295,12 @@ export default class RootNode extends Phaser.Scene {
         this.load.image("badge_tasks_30", ATask30Texture);
         this.load.image("badge_tasks_40", ATask40Texture);
         this.load.image("badge_tasks_50", ATask50Texture);
+
+        this.load.image("badge_levels_hangar", ALevels1Texture);
+        this.load.image("badge_levels_common", ALevels2Texture);
+        this.load.image("badge_levels_engine", ALevels3Texture);
+        this.load.image("badge_levels_lab", ALevels4Texture);
+        this.load.image("badge_levels_bridge", ALevels5Texture);
 
         this.load.image("backgroundTile", deviceBackgroundTilePng);
         this.load.image("strawHat", strawHatTexture);
@@ -505,7 +522,8 @@ export default class RootNode extends Phaser.Scene {
             },
             room: this.getCurrentRoom().saveAll(),
             story: this._storyManager.saveAll(),
-            user: this.user.saveState()
+            user: this.user.saveState(),
+            achievements: this.achievementManager.saveAll()
         };
     }
 

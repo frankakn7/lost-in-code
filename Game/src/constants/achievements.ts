@@ -23,4 +23,23 @@ export const achievements = {
         texture: "badge_tasks_50",
         text: "You fixed 50 exercises!"
     },
+    levels_hangar: {
+        texture: "badge_levels_hangar",
+        text: "You made it through the hangar!"
+    },
+
+    levels_commonRoom: {
+        texture: "badge_levels_common",
+        text: "You made it through the common room!"
+    },
+
+    levels_engine: {
+        texture: "badge_levels_engine",
+        text: "You made it through the engine room!"
+    },
+
+    levels_bridge: {
+        texture: "badge_levels_bridge",
+        text: "You finished the game!"
+    },
 }

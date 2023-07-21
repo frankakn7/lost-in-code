@@ -341,7 +341,7 @@ export default class RoomScene extends Phaser.Scene {
         if (!res) return;
 
         this.setDoorUnlocked(true);
-        globalEventBus.emit("door_was_unlocked");
+        globalEventBus.emit("door_was_unlocked", this._roomId);
         globalEventBus.emit("broadcast_news", "Door unlocked!");
     }
 
