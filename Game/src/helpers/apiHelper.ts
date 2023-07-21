@@ -25,6 +25,23 @@ export default class ApiHelper {
         });
     }
 
+    public getChapters(){
+        const url = this.apiUrl + "/api/chapters/me";
+        return new Promise((resolve, reject) => {
+            fetch(url, {method: "GET", credentials: "include"})
+                .then((response) => {
+                    response.json().then((data) => {
+                        console.log("Getting chapters")
+                        console.log(data)
+                        resolve(data)
+                    })
+                })
+                .catch((error) => {
+                    reject(error)
+                })
+        })
+    }
+
     public getFullChapter(chapterNumber: number) {
         const url = this.apiUrl + "/api/users/me/curriculum_data";
         return new Promise((resolve, reject) => {

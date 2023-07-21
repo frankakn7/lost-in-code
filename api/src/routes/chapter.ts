@@ -62,6 +62,29 @@ router.get("/", (req: Request, res: Response) => {
 });
 
 /**
+ * Get all chapters from user curriculum
+ */
+router.get("/me", (req: Request, res: Response) => {
+    const sql = 'SELECT `curriculum_id` FROM `user_game_curriculum` WHERE user_id = ?;'
+    const userId = req.body.user.id;
+    const params = [userId]
+    db.query(sql,params)
+        .then((results:any) => {
+            const curriculum_id = results[0].curriculum_id;
+            const sql = "SELECT * FROM `chapter` WHERE `curriculum_id` = ?;";
+            const params = [curriculum_id];
+            db.query(sql,params)
+                .then((results) => {
+                    res.send(results);
+                })
+                .catch((error) => {
+                    console.error(error);
+                    return res.status(500).send("Server error");
+                });
+        })
+});
+
+/**
  * Get specific chapter
  */
 router.get("/:id", (req: Request, res: Response) => {
