@@ -42,6 +42,7 @@ export default class ApiHelper {
                                         const url3 = this.apiUrl + "/api/chapters/" + chapter.id + "/full";
                                         fetch(url3, {method: "GET", credentials: "include"})
                                             .then((res) => {
+                                                console.log(res)
                                                 res.json().then((chapter: any) => {
                                                     resolve(chapter);
                                                 }).catch((error) => reject(error));
@@ -62,11 +63,12 @@ export default class ApiHelper {
         return new Promise((resolve, reject) => {
             fetch(url, {method: "GET", credentials: "include"})
                 .then((response) => {
-                    console.log(response)
+                    // console.log(response)
                     response
                         .json()
                         .then((data) => {
-
+                                console.log("GAME STATE DATA")
+                                console.log(data)
                                 resolve(data)
                             }
                         )
@@ -109,7 +111,7 @@ export default class ApiHelper {
                         response
                             .json()
                             .then((data) => {
-                                    console.log(data.user)
+                                    // console.log(data.user)
                                     data.user
                                         ? resolve(data)
                                         : reject("not logged in")

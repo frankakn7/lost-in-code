@@ -2,7 +2,7 @@ import * as Phaser from "phaser";
 import AchievementManager from "../managers/achievementManager";
 import ReturnButtonTexture from "../assets/ui/Return-Button.png";
 import SpriteButton from "../ui/SpriteButton";
-import PlayView from "./playView";
+import RootNode from "./rootNode";
 import {achievements} from "../constants/achievements";
 
 
@@ -14,7 +14,7 @@ import TrophyTexture from "../assets/achievements/trophy.png";
 export default class AchievementView extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite;
     private _manager: AchievementManager;
-    private _playView: PlayView;
+    private _playView: RootNode;
 
     private _sprites = []
     private _margin = 30;

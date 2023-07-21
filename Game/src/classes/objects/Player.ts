@@ -1,14 +1,14 @@
 import { text } from "express";
 import ControlPadScene from "../../ui/ControlPadScene";
 import { Vector } from "matter";
-import PlayView from "../../views/playView";
+import RootNode from "../../views/rootNode";
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
     private movementSpeed = 10;
     private _breathCalcHelperVar = 0;
     private _walkingRotationHelperVar = 0;
     private _isMoving = false;
-    private _playView : PlayView;
+    private _playView : RootNode;
 
     private shadow : Phaser.GameObjects.Sprite;
     private shadowYOffset = 0;

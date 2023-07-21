@@ -1,7 +1,7 @@
 import * as Phaser from "phaser";
 import DeviceButton from "../ui/deviceButton";
 import SpriteButton from "../ui/SpriteButton";
-import PlayView from "./playView";
+import RootNode from "./rootNode";
 
 import AntennaAppTexture from "../assets/ui/apps/Antenna-app-icon.png";
 import ResumeButtonTexture from "../assets/ui/Resume-Button.png";
@@ -18,7 +18,7 @@ import AchievementView from "./achievementView";
 
 export default class MenuView extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite;
-    private _playView: PlayView;
+    private _playView: RootNode;
 
     private hatView: HatView;
 
@@ -39,7 +39,7 @@ export default class MenuView extends Phaser.Scene {
     }
 
     constructor(
-        playView: PlayView,
+        playView: RootNode,
         settingsConfig?: string | Phaser.Types.Scenes.SettingsConfig
     ) {
         super(settingsConfig);

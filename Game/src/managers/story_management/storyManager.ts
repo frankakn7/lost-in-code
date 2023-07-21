@@ -3,11 +3,11 @@ import ChatFlow from "../../classes/chat/chatFlow";
 import storyJson from "../../assets/story.json";
 import { ChatFlowNode } from "../../classes/chat/chatFlowNode";
 import { json } from "express";
-import PlayView from "../../views/playView";
+import RootNode from "../../views/rootNode";
 
 export default class StoryManager {
     private _storyEvents = {};
-    private _playView : PlayView;
+    private _playView : RootNode;
 
     private _finishedStuff = {
         hangar: [],
@@ -17,7 +17,7 @@ export default class StoryManager {
         bridge: []
     };
 
-    constructor(playView: PlayView) {
+    constructor(playView: RootNode) {
         this._playView = playView;
         this.loadData();
 

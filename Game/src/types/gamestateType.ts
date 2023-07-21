@@ -1,10 +1,6 @@
-import {TaskManagerStateType} from "./taskManagerStateType";
+import {UserStateType} from "./userStateType";
 
 export type GamestateType = {
-    hats: {
-        unlockedHats: string[];
-        selectedHat: string;
-    };
     playView: {
         currentRoom: string;
     };
@@ -18,5 +14,5 @@ export type GamestateType = {
         laboratory: string[];
         bridge: string[];
     };
-    taskmanager: TaskManagerStateType
+    user: UserStateType
 };

@@ -27,7 +27,7 @@ import EnemyTexture from "../assets/gameobjects/enemy.png";
 import InteractiveObject from "./objects/interactiveObject";
 import storyJson from "../managers/story_management/storyFormatExample.json";
 import StoryManager from "../managers/story_management/storyManager";
-import PlayView from "../views/playView";
+import RootNode from "../views/rootNode";
 import TaskObject from "./objects/taskObjects";
 import {globalEventBus} from "../helpers/globalEventBus";
 import EnemyObject from "./objects/enemyObject";
@@ -70,7 +70,7 @@ export default class RoomScene extends Phaser.Scene {
     constructor(
         tilemapConfig: TilemapConfig,
         roomId: string,
-        playView : PlayView
+        playView : RootNode
         // settingsConfig?: string | Phaser.Types.Scenes.SettingsConfig
     ) {
         super("Room_" + roomId);
@@ -210,7 +210,7 @@ export default class RoomScene extends Phaser.Scene {
             // const door = new InteractiveObject(this, 32*5, 32*5, "door");
             // this.add.existing(door);
             // this.physics.add.collider(this.player, door);
-            this._playView.hatView.loadSelectedHat();
+            //this._playView.hatView.loadSelectedHat();
         });
 
         for(let i = 0; i < this._taskObjects.length; i++) {

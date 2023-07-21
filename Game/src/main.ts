@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
 import RoomScene from "./classes/room";
-import PlayView from "./views/playView";
+import RootNode from "./views/rootNode";
 import ChatView from "./views/chatView";
 import './font.css';
 import LoginView from "./views/loginView";
@@ -35,7 +35,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
         autoRound: true
 
     },
-    // scene: new PlayView(),
+    // scene: new RootNode(),
     scene: new LoginView(),
     // scene: new ChatView(),
     parent: "game",

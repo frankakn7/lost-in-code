@@ -53,20 +53,17 @@ import ATask30Texture from "../assets/achievements/badges_tasks/badge_tasks_30.p
 import ATask40Texture from "../assets/achievements/badges_tasks/badge_tasks_40.png";
 import ATask50Texture from "../assets/achievements/badges_tasks/badge_tasks_50.png";
 import ProgressBar from "../ui/progress";
+import User from "../classes/user";
 
 
 
 /**
  * Represents the view in which the rooms and player are explorable (default playing view)
  */
-export default class PlayView extends Phaser.Scene {
+export default class RootNode extends Phaser.Scene {
     private roomMap = new Map<string, RoomScene>;
 
     private _state: GamestateType = {
-        hats: {
-            unlockedHats: [],
-            selectedHat: "None"
-        },
         playView: {
             currentRoom: "hangar"
         },
@@ -82,11 +79,14 @@ export default class PlayView extends Phaser.Scene {
             laboratory: [],
             bridge: []
         },
-        taskmanager: {
-            answeredQuestions: [],
-            currentChapterNumber: 1,
+        user: {
+            answeredQuestionIds: [],
+            chapterNumber: 1,
             repairedObjectsThisChapter: 0,
-            currentPerformanceIndex: 1
+            performanceIndex: 1,
+            unlockedHats: [],
+            selectedHat: "None",
+            newChapter: true,
         }
     };
 
@@ -114,7 +114,8 @@ export default class PlayView extends Phaser.Scene {
      */
     private storyChatView: ChatView;
 
-    private questionView: QuestionView;
+    // private questionView: QuestionView;
+    private questionView: Phaser.Scene;
 
     public menuView = new MenuView(this);
 
@@ -134,6 +135,8 @@ export default class PlayView extends Phaser.Scene {
     private apiHelper = new ApiHelper();
 
     public docView: DocView;
+
+    private _user: User;
 
     public openStoryChatViewWithoutPulling() {
         this.scene.sleep();
@@ -230,7 +233,7 @@ export default class PlayView extends Phaser.Scene {
 
     private openQuestionView(){
         //If the chat view already exists and is sleeping
-        if (!this.docView.newChapter) {
+        if (!this._user.newChapter) {
 
             this.scene.sleep(this);
             this.scene.sleep("controlPad");
@@ -251,9 +254,9 @@ export default class PlayView extends Phaser.Scene {
                 this.scene.launch(this.questionView);
             }
         } else {
-            this.docView.newChapter = false
+            this._user.newChapter = false
             this.docView.chapterManager.updateChapters().then((chapters: ChapterType[]) => {
-                this.openTextChatView(chapters.find(chapter => chapter.order_position == this.taskManager.currentChapterNumber).material,() => {
+                this.openTextChatView(chapters.find(chapter => chapter.order_position == this._user.chapterNumber).material,() => {
                     this.scene.remove("ChatTextView");
                     if (this.scene.isSleeping(this.questionView)) {
                         this.scene.wake(this.questionView);
@@ -306,11 +309,15 @@ export default class PlayView extends Phaser.Scene {
      * @param settingsConfig the standard settingsConfig object used for all scenes
      */
     constructor(
+        userData?: any,
         state?: GamestateType,
     ) {
         super("Play");
 
         state ? this._state = state : null;
+
+        console.log(this._state)
+        this._user = userData ? new User(userData.id, userData.username, this._state.user) : new User();
 
         this.roomMap.set("hangar", new RoomScene({
             tilesetImage: tilesetPng,
@@ -354,10 +361,12 @@ export default class PlayView extends Phaser.Scene {
         }, "bridge", this).setPlayerPosition(32 * 2, 32 * 10));
 
         this.loadData();
-        this.taskManager = new TaskManager(this, this._state.taskmanager)
+        this.taskManager = new TaskManager(this)
 
 
         this.currentRoom = this.roomMap.get(this._startingRoomId);
+
+        this.questionView = new QuestionView(this.taskManager);
     }
 
     /**
@@ -387,7 +396,7 @@ export default class PlayView extends Phaser.Scene {
         catch((error) => {
             console.error(error);
         }))
-        this.docView = new DocView(this, this._state.taskmanager.currentChapterNumber);
+        this.docView = new DocView(this, this._state.user.chapterNumber);
 
         // globalEventBus.on("save_game", () => this.apiHelper.updateStateData(this.saveAllToGamestateType()))
 
@@ -491,17 +500,21 @@ export default class PlayView extends Phaser.Scene {
 
     public saveAllToGamestateType(): GamestateType {
         return {
-            hats: this.hatView.saveAll(),
             playView: {
                 currentRoom: this.getCurrentRoom().getRoomId()
             },
             room: this.getCurrentRoom().saveAll(),
             story: this._storyManager.saveAll(),
-            taskmanager: this.taskManager.saveAll()
+            user: this.user.saveState()
         };
     }
 
     public getState() {
         return this._state;
+    }
+
+
+    get user(): User {
+        return this._user;
     }
 }

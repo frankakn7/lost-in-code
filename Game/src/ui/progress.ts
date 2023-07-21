@@ -1,12 +1,12 @@
 import * as Phaser from "phaser";
-import PlayView from "../views/playView";
+import RootNode from "../views/rootNode";
 import {globalEventBus} from "../helpers/globalEventBus";
 
 export default class ProgressBar extends Phaser.Scene {
     private _bar;
     private _playView;
 
-    constructor(playView: PlayView) {
+    constructor(playView: RootNode) {
         super("Progress Bar");
         this._playView = playView;
     }

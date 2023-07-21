@@ -1,38 +1,32 @@
 import {globalEventBus} from "../helpers/globalEventBus";
 import {QuestionType} from "../types/questionType";
-import PlayView from "../views/playView";
+import RootNode from "../views/rootNode";
 import Question from "../classes/question/question";
 import {
     ChoiceQuestionElement, CreateQuestionElement,
     InputQuestionElement,
     OrderQuestionElement,
 } from "../classes/question/questionElement";
-import {TaskManagerStateType} from "../types/taskManagerStateType";
 import DocView from "../views/docView/docView";
 import {ChapterType} from "./chapterManager";
 import ApiHelper from "../helpers/apiHelper";
+import availableQuestions from "./availableQuestionsTestData";
 
 export default class TaskManager {
+
     private availableQuestions: Question[] = [];
 
     private answeredQuestions: Question[] = [];
-    //TODO: implement topic id properly
-    public currentChapterNumber: number = 1;
-
-    private repairedObjectsThisChapter: number = 0;
-
-    private currentPerformanceIndex: number = 1;
 
     private currentChapterMaxDifficulty: number;
 
-    // private currentQuestionSetForObject = new Map<number, Question>();
     private currentQuestionSetForObject = [];
 
 
     public currentDoneQuestions: number;
     public currentTotalQuestions: number;
 
-    private scene: PlayView;
+    private rootNode: RootNode;
 
     private apiHandler = new ApiHelper();
 
@@ -44,8 +38,9 @@ export default class TaskManager {
     // }
 
     private loadQuestions() {
-        this.apiHandler.getFullChapter(this.currentChapterNumber)
+        this.apiHandler.getFullChapter(this.rootNode.user.chapterNumber)
             .then((response:any) => {
+                console.log(response)
                 this.availableQuestions = response.questions;
                 this.currentChapterMaxDifficulty = Math.max(
                     ...this.availableQuestions.map((q) => q.difficulty)
@@ -72,11 +67,11 @@ export default class TaskManager {
     public populateNewQuestionSet() {
         this.shuffleQuestions(this.availableQuestions);
         this.shuffleQuestions(this.answeredQuestions);
-        console.log("PI: " + this.currentPerformanceIndex);
+        console.log("PI: " + this.rootNode.user.performanceIndex);
         console.log(this.currentChapterMaxDifficulty)
         console.log(this.availableQuestions)
         for (
-            let i = this.currentPerformanceIndex;
+            let i = this.rootNode.user.performanceIndex;
             i <= this.currentChapterMaxDifficulty;
             i++
         ) {
@@ -110,20 +105,20 @@ export default class TaskManager {
     }
 
     private checkNextChapter() {
-        this.repairedObjectsThisChapter++;
-        if (this.repairedObjectsThisChapter == 2) {
-            this.currentChapterNumber++;
-            this.repairedObjectsThisChapter = 0;
-            this.scene.docView.newChapter = true;
-            this.scene.docView.chapterManager.updateCurrentChapterOrder(this.currentChapterNumber);
-            this.scene.docView.chapterManager.updateChapters()
+        this.rootNode.user.increaseRepairedObjectsThisChapter();
+        if (this.rootNode.user.repairedObjectsThisChapter == 2) {
+            this.rootNode.user.increaseChapterNumber();
+            this.rootNode.user.repairedObjectsThisChapter = 0;
+            this.rootNode.user.newChapter = true;
+            this.rootNode.docView.chapterManager.updateCurrentChapterOrder(this.rootNode.user.chapterNumber);
+            this.rootNode.docView.chapterManager.updateChapters()
         }
     }
 
     private onObjectFailed() {
         console.log("FAILED")
-        if (this.scene.scene.isSleeping(this.scene)) {
-            this.scene.queueTask(() => {
+        if (this.rootNode.scene.isSleeping(this.rootNode)) {
+            this.rootNode.queueTask(() => {
                 globalEventBus.emit("taskmanager_object_failed");
             });
         } else {
@@ -132,8 +127,8 @@ export default class TaskManager {
     }
 
     private onObjectRepaired() {
-        if (this.scene.scene.isSleeping(this.scene)) {
-            this.scene.queueTask(() => {
+        if (this.rootNode.scene.isSleeping(this.rootNode)) {
+            this.rootNode.queueTask(() => {
                 globalEventBus.emit("taskmanager_object_finished");
             });
         } else {
@@ -153,232 +148,41 @@ export default class TaskManager {
         if (this.currentQuestionSetForObject.length == 0) {
             this.onObjectRepaired();
         } else {
-            this.currentPerformanceIndex = currentQuestion.difficulty + 1;
+            this.rootNode.user.performanceIndex = currentQuestion.difficulty + 1;
         }
         globalEventBus.emit("taskmanager_task_correct");
     }
 
     public questionAnsweredIncorrectly() {
-        this.currentPerformanceIndex > 1
-            ? this.currentPerformanceIndex--
+        this.rootNode.user.performanceIndex > 1
+            ? this.rootNode.user.performanceIndex--
             : null;
         this.onObjectFailed();
 
     }
 
-    public saveAll() {
-        return {
-            // availableQuestions: [...this.availableQuestions.map(question => question.id)],
-            answeredQuestions: [...this.answeredQuestions.map(quesion => quesion.id)],
-            currentChapterNumber: this.currentChapterNumber,
-            repairedObjectsThisChapter: this.repairedObjectsThisChapter,
-            currentPerformanceIndex: this.currentPerformanceIndex
-        }
+    // public saveAll() {
+    //     return {
+    //         // availableQuestions: [...this.availableQuestions.map(question => question.id)],
+    //         answeredQuestions: [...this.answeredQuestions.map(quesion => quesion.id)],
+    //         currentChapterNumber: this.currentChapterNumber,
+    //         repairedObjectsThisChapter: this.repairedObjectsThisChapter,
+    //         currentPerformanceIndex: this.currentPerformanceIndex
+    //     }
+    // }
+
+    private loadState(answeredQuestionIds: number[]) {
+        this.answeredQuestions = this.availableQuestions.filter(question => answeredQuestionIds.includes(question.id))
+        this.availableQuestions = this.availableQuestions.filter(question => !answeredQuestionIds.includes(question.id))
     }
 
-    private loadState(state: TaskManagerStateType) {
-        this.answeredQuestions = this.availableQuestions.filter(question => state.answeredQuestions.includes(question.id))
-        this.availableQuestions = this.availableQuestions.filter(question => !state.answeredQuestions.includes(question.id))
-        this.currentChapterNumber = state.currentChapterNumber;
-        this.repairedObjectsThisChapter = state.repairedObjectsThisChapter;
-        this.currentPerformanceIndex = state.currentPerformanceIndex;
-    }
+    constructor(rootNode: RootNode) {
+        this.rootNode = rootNode;
 
-    constructor(scene: PlayView, savedTaskManagerState?: TaskManagerStateType) {
-        this.scene = scene;
-
-        const code = `<?php
-$txt = "Hello world!";
-$x = 5;
-$y = 10.5;
-
-echo $txt;
-echo "<br>";
-echo $x;
-echo "<br>";
-echo $y;
-?>`;
-
-        let questionElement = new ChoiceQuestionElement(1, "text output", true);
-        let questionElement2 = new ChoiceQuestionElement(
-            2,
-            "graphical output",
-            false
-        );
-
-        let inputQuestionElement = new InputQuestionElement(
-            1,
-            ["Hello There"],
-            "input1"
-        );
-
-        let dragQuestionElement2 = new OrderQuestionElement(
-            1,
-            `<?php
-        $txt = "Hello world!";
-        $x = 5;`,
-            1
-        );
-        let dragQuestionElement1 = new OrderQuestionElement(
-            2,
-            `       $y = 10.5;
-
-        echo $txt;
-        echo "<br>";`,
-            2
-        );
-        let dragQuestionElement3 = new OrderQuestionElement(
-            3,
-            `       echo $x;
-        echo "<br>";
-        echo $y;
-        $p = 0.5;
-?>`,
-            3
-        );
-
-        let clozeQuestionElement = new InputQuestionElement(
-            1,
-            ["Hello", "hello"],
-            "input1"
-        );
-        let clozeQuestionElement2 = new InputQuestionElement(
-            2,
-            ["There", "there"],
-            "input2"
-        );
-
-        this.availableQuestions.push(
-            new Question(
-                1,
-                "What is the output of the following code?",
-                "Just Answer",
-                QuestionType.CHOICE,
-                [questionElement, questionElement2],
-                1,
-                code
-            )
-        );
-
-        this.availableQuestions.push(
-            new Question(
-                1,
-                "What is php not capable of doing?",
-                "Just Answer",
-                QuestionType.CHOICE,
-                [questionElement, questionElement2],
-                2
-            )
-        );
-
-        this.availableQuestions.push(
-            new Question(
-                2,
-                "What is the output of the following code?",
-                "Just Answer",
-                QuestionType.SINGLE_INPUT,
-                [inputQuestionElement],
-                3,
-                code
-            )
-        );
-
-        this.availableQuestions.push(
-            new Question(
-                3,
-                "Reorder these elements into the correct order!",
-                "just order them",
-                QuestionType.DRAG_DROP,
-                [
-                    dragQuestionElement1,
-                    dragQuestionElement2,
-                    dragQuestionElement3,
-                ],
-                4
-            )
-        );
-
-        this.availableQuestions.push(
-            new Question(
-                4,
-                "Fill in the blanks!",
-                "just fill it in",
-                QuestionType.CLOZE,
-                [clozeQuestionElement, clozeQuestionElement2],
-                3,
-                `
-<?php
-    $txt = "Hello world!";
-    $x = 5;
-    $y = 10.5;
-
-    echo $txt;
-    echo "<br>";
-    echo $x;
-    echo "<br>";
-    echo $y;
-    echo "###INPUT|input1|20|true###";
-    echo "<br>";
-    echo "###INPUT|input2|15|false###";
-?>
-`
-            )
-        );
-
-        let questionElementSelectBlock = new ChoiceQuestionElement(
-            1,
-            `<?php
-        $txt = "Hello world!";
-        echo $txt;
-?>`,
-            true
-        );
-        let questionElementSelectBlock2 = new ChoiceQuestionElement(
-            2,
-            `<?php
-            $txt = "Hello There!";
-            echo $txt;
-    ?>`,
-            false
-        );
-
-        this.availableQuestions.push(
-            new Question(
-                5,
-                "Which code block outputs: Hello There! ",
-                "Just Answer",
-                QuestionType.SELECT_ONE,
-                [questionElementSelectBlock, questionElementSelectBlock2],
-                1,
-                code
-            )
-        );
-        // this.availableQuestions = questions;
-
-        let questionElementCreate = new CreateQuestionElement(
-            2,
-            `echo calculateSum(5,10);`,
-            ['calculateSum(5,10) == 15', 'calculateSum(20,20) == 40'],
-            "input1"
-        );
-
-//         this.availableQuestions.push(
-//             new Question(
-//                 6,
-//                 "Fill in the function so that it adds 2 numbers together",
-//                 "just fill it in",
-//                 QuestionType.CREATE,
-//                 [questionElementCreate],
-//                 5,
-//                 `
-// function calculateSum($x,$y){
-//     ###INPUT|input1|40|true###;
-// }
-// `
-//             )
-//         );
-
-        this.loadState(savedTaskManagerState);
+        //Test data!
+        //this.availableQuestions = availableQuestions;
+        console.log(rootNode.user)
+        this.loadState(rootNode.user.answeredQuestionIds);
 
         this.loadQuestions();
 

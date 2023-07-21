@@ -1,11 +1,11 @@
 import loginFormHtml from "../assets/html/login.html";
 import * as Phaser from "phaser";
-import PlayView from "./playView";
+import RootNode from "./rootNode";
 import ApiHelper from "../helpers/apiHelper";
 import { response } from "express";
 
 export default class LoginView extends Phaser.Scene {
-    playView: PlayView;
+    playView: RootNode;
     private apiHelper: ApiHelper = new ApiHelper();
 
     constructor() {
@@ -15,7 +15,7 @@ export default class LoginView extends Phaser.Scene {
     preload() {
         // this.load.html("loginForm", loginFormHtml);
         this.apiHelper.checkLoginStatus()
-            .then((response) => this.startGame())
+            .then((response:any) => this.startGame(response.user))
             .catch((error) => console.log(error));
     }
 
@@ -41,8 +41,8 @@ export default class LoginView extends Phaser.Scene {
             if (event.target.id === "submit") {
                 const inputEmail = this.getChildByID("email");
                 const inputPassword = this.getChildByID("password");
-                loginView.apiHelper.login(inputEmail.value,inputPassword.value).then(response => {
-                    loginView.startGame();
+                loginView.apiHelper.login(inputEmail.value,inputPassword.value).then((response:any) => {
+                    loginView.startGame(response.user);
                 }).catch(error => {
                     const errorText = this.getChildByID("error")
                     errorText.innerHTML = error
@@ -54,13 +54,14 @@ export default class LoginView extends Phaser.Scene {
 
     
 
-    private startGame() {
+    private startGame(userData:any) {
         this.apiHelper.getStateData().then((data:any) => {
+            console.log("### STARTING GAME")
             console.log(data.state_data);
             if(data.state_data){
-                this.playView = new PlayView(data.state_data);
+                this.playView = new RootNode(userData, data.state_data);
             }else{
-                this.playView = new PlayView();
+                this.playView = new RootNode();
             }
             this.scene.add("Play", this.playView);
             this.scene.launch("Play");

@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
 import RoomScene from "../room";
-import PlayView from "../../views/playView";
+import RootNode from "../../views/rootNode";
 
 /**
  * A class used to define interactive objects

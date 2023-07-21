@@ -46,6 +46,7 @@ export default class QuestionView extends Phaser.Scene {
     }
 
     create() {
+        console.log("creating QUESTION VIEW")
         this.scene;
 
         this.tilesprite = this.add

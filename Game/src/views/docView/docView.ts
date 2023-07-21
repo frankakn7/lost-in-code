@@ -2,7 +2,7 @@ import Phaser from "phaser";
 import ChapterManager, {ChapterType} from "../../managers/chapterManager";
 import SpriteButton from "../../ui/SpriteButton";
 import ReturnButtonTexture from "../../assets/ui/Return-Button.png";
-import PlayView from "../playView";
+import RootNode from "../rootNode";
 import DeviceButton from "../../ui/deviceButton";
 import TextView from "./textView";
 
@@ -11,7 +11,7 @@ export default class DocView extends Phaser.Scene {
 
     public chapterManager: ChapterManager;
 
-    private _playView: PlayView;
+    private _playView: RootNode;
 
     private resumeButton;
 
@@ -21,9 +21,7 @@ export default class DocView extends Phaser.Scene {
 
     private textView;
 
-    public newChapter;
-
-    constructor(playView: PlayView, chapterNumber: number) {
+    constructor(playView: RootNode, chapterNumber: number) {
         super("DocView");
         this.chapterManager = new ChapterManager(chapterNumber)
         this._playView = playView;

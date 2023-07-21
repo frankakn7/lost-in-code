@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
 import InteractiveObject from "./interactiveObject";
-import PlayView from "../../views/playView";
+import RootNode from "../../views/rootNode";
 import RoomScene from "../room";
 import {globalEventBus} from "../../helpers/globalEventBus";
 import Clock = Phaser.Time.Clock;

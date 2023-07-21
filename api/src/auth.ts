@@ -6,9 +6,9 @@ export enum role {
     USER = "USER",
 }
 
-export const generateAuthToken = (id: string, role: string, res: Response) => {
+export const generateAuthToken = (id: string, role: string, username: string, res: Response) => {
     const token = jwt.sign(
-        { id, role },
+        { id, role, username},
         process.env.JWT_SECRET || "your-secret-key",
         { expiresIn: "1d" }
     );

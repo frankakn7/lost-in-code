@@ -1,4 +1,4 @@
-import { HatMap } from "../../constants/hats";
+import {HatMap} from "../../constants/hats";
 import RoomScene from "../room";
 import InteractiveObject from "./interactiveObject";
 
@@ -18,9 +18,9 @@ export default class HatObject extends InteractiveObject {
         this.body.enable = false;
         this.body.setOffset(0, 0);
 
-        
+
         properties.forEach(p => {
-            if (p["name"] == "hat_id")  {
+            if (p["name"] == "hat_id") {
                 this._hatId = p["value"];
             }
         });
@@ -39,8 +39,9 @@ export default class HatObject extends InteractiveObject {
     }
 
     public checkIfUnlocked() {
-        if (this.room.getPlayView().hatView.unlockedHats.includes(this._hatId)
-        ||  this.room.getPlayView().getState().hats.unlockedHats.includes(this._hatId)) {            
+        // if (this.room.getPlayView().user.unlockedHats.includes(this._hatId)
+        // ||  this.room.getPlayView().user.unlockedHats.includes(this._hatId)) {
+        if (this.room.getPlayView().user.unlockedHats.includes(this._hatId)) {
             this.destroy();
         }
     }

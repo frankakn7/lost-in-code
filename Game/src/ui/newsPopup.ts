@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
 import {text} from "express";
-import PlayView from "../views/playView";
+import RootNode from "../views/rootNode";
 
 export default class NewsPopup extends Phaser.Scene {
     private _message : string;
@@ -9,7 +9,7 @@ export default class NewsPopup extends Phaser.Scene {
     private label;
     private lifespan: number;
     private _timeLived: number = 0;
-    private _playView: PlayView;
+    private _playView: RootNode;
 
     private _fadeOutDur: number = 300;
     private _fadeOutTween;
@@ -21,7 +21,7 @@ export default class NewsPopup extends Phaser.Scene {
     private _sprite;
     private _rt;
 
-    constructor(playView: PlayView, sceneId: string, message, lifespan= 300, achievementTextureKey?: string) {
+    constructor(playView: RootNode, sceneId: string, message, lifespan= 300, achievementTextureKey?: string) {
         super(sceneId);
         this._message = message;
         this.lifespan = lifespan;

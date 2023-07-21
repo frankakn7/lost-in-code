@@ -14,7 +14,7 @@ router.post("/", (req, res) => {
     console.log(email)
     console.log(password)
     const sql =
-        "SELECT `id`, `password_hash`, `role` FROM `user` WHERE `email` = ?;";
+        "SELECT `id`, `password_hash`, `role`, `username` FROM `user` WHERE `email` = ?;";
     const params = [email];
 
     db.query(sql, params)
@@ -27,7 +27,7 @@ router.post("/", (req, res) => {
             }
 
             // Generate token and set it in a HttpOnly cookie
-            generateAuthToken(row.id, row.role, res);
+            generateAuthToken(row.id, row.role, row.username, res);
 
             // Send back a success message
             res.json({ success: true });
