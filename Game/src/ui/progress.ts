@@ -4,11 +4,11 @@ import {globalEventBus} from "../helpers/globalEventBus";
 
 export default class ProgressBar extends Phaser.Scene {
     private _bar;
-    private _playView;
+    private _rootNode;
 
-    constructor(playView: RootNode) {
+    constructor(rootNode: RootNode) {
         super("Progress Bar");
-        this._playView = playView;
+        this._rootNode = rootNode;
     }
 
     //
@@ -21,7 +21,7 @@ export default class ProgressBar extends Phaser.Scene {
     }
 
     public updateBar() {
-        const progress = this._playView.getCurrentRoom().getFinishedTaskObjectsCount() / this._playView.getCurrentRoom().getTaskObjectCount();
+        const progress = this._rootNode.getCurrentRoom().getFinishedTaskObjectsCount() / this._rootNode.getCurrentRoom().getTaskObjectCount();
         console.log(progress)
         const totalWidthInner = this.cameras.main.displayWidth - 100 - 10;
         this._bar.fillStyle(0xFCFBF4, 1);

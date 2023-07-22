@@ -18,7 +18,7 @@ import AchievementView from "./achievementView";
 
 export default class MenuView extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite;
-    private _playView: RootNode;
+    private _rootNode: RootNode;
 
     private hatView: HatView;
 
@@ -39,13 +39,13 @@ export default class MenuView extends Phaser.Scene {
     }
 
     constructor(
-        playView: RootNode,
+        rootNode: RootNode,
         settingsConfig?: string | Phaser.Types.Scenes.SettingsConfig
     ) {
         super(settingsConfig);
-        this._playView = playView;
+        this._rootNode = rootNode;
         // this.hatView = new HatView();
-        this._achievementView = new AchievementView(this._playView, this._playView.achievementManager);
+        this._achievementView = new AchievementView(this._rootNode, this._rootNode.achievementManager);
     }
 
     public create() {
@@ -90,7 +90,7 @@ export default class MenuView extends Phaser.Scene {
             "antennaAppTexture",
             (this.scale.width / (this._columns )) * 1,
             1000,
-            () => {this._playView.openStoryChatViewWithoutPulling()}
+            () => {this._rootNode.openStoryChatViewWithoutPulling()}
         );
         this.add.existing(chatButton);
 
@@ -109,12 +109,12 @@ export default class MenuView extends Phaser.Scene {
             (this.scale.width / (this._columns )) * 3,
             1000,
             () => {
-                this.openSubMenu(this._playView.hatView);
+                this.openSubMenu(this._rootNode.hatView);
             }
         );
         this.add.existing(hatButton);
         if (this.scene.get("Hat View") == null)
-            this.scene.add("hatView", this._playView.hatView);
+            this.scene.add("hatView", this._rootNode.hatView);
 
         const achievementsButton = new SpriteButton(
             this,
@@ -128,7 +128,7 @@ export default class MenuView extends Phaser.Scene {
         this.add.existing(achievementsButton);
 
         if (this.scene.get("DocView") == null)
-            this.scene.add("DocView", this._playView.docView);
+            this.scene.add("DocView", this._rootNode.docView);
 
 
         const settingsButton = new SpriteButton(
@@ -147,7 +147,7 @@ export default class MenuView extends Phaser.Scene {
 
     private _resumeGame() {
         this.scene.sleep(this);
-        this._playView.pauseOrResumeGame(false);
+        this._rootNode.pauseOrResumeGame(false);
     }
 
     private openSubMenu(menu) {

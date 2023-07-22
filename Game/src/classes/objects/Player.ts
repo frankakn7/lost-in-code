@@ -8,7 +8,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     private _breathCalcHelperVar = 0;
     private _walkingRotationHelperVar = 0;
     private _isMoving = false;
-    private _playView : RootNode;
+    private _rootNode : RootNode;
 
     private shadow : Phaser.GameObjects.Sprite;
     private shadowYOffset = 0;
@@ -25,9 +25,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     public rightPress = false
     public interactPress = false
 
-    constructor(scene, x, y, texture, playView) {
+    private _canMove = true;
+
+    constructor(scene, x, y, texture, rootNode) {
         super(scene, x, y, texture);
-        this._playView = playView;
+        this._rootNode = rootNode;
 
         this.scene = scene;
         this.shadow = this.scene.physics.add.sprite(x, y + this.shadowYOffset, "shadowTexture");
@@ -58,8 +60,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     preUpdate(time, delta) {
         // Movement
         
-        
-        this.updateMovement(delta);
+
+        if (this._canMove) {
+            this.updateMovement(delta);
+        }
         this.updateShadow();
         this.updateBreathAnimation(delta, 300, 30);
         // this.updateBreathAnimation(delta, 500, 30);
@@ -134,19 +138,19 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     public updateHat() {
-        if (this._playView.hatView == undefined) {
+        if (this._rootNode.hatView == undefined) {
             return;
         }
         
-        // console.log(this._playView.hatView.getSelectedHatId())
+        // console.log(this._rootNode.hatView.getSelectedHatId())
         
-        let hatId = this._playView.hatView.getSelectedHatId();
-        if (this._playView.hatView.getSelectedHatId() != "None") {
+        let hatId = this._rootNode.hatView.getSelectedHatId();
+        if (this._rootNode.hatView.getSelectedHatId() != "None") {
             const width = 32;
             const height = 64;
             let renderTexture = this.scene.make.renderTexture({width, height}, false);
             renderTexture.draw("playerTexture", 0, 32);
-            renderTexture.draw(this._playView.hatMap[hatId].texture, 0, 32 + this.hatYOffset);
+            renderTexture.draw(this._rootNode.hatMap[hatId].texture, 0, 32 + this.hatYOffset);
 
             let textureKey = "playerTextureWith" + hatId;
             if (!this.scene.textures.exists(textureKey))
@@ -161,6 +165,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             this.body.setOffset(6, 0);
         }
 
+    }
+
+    public setCanMove(can) {
+        this._canMove = can;
     }
 
 }

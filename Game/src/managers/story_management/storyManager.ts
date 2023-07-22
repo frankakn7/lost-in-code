@@ -7,7 +7,7 @@ import RootNode from "../../views/rootNode";
 
 export default class StoryManager {
     private _storyEvents = {};
-    private _playView : RootNode;
+    private _rootNode : RootNode;
 
     private _finishedStuff = {
         hangar: [],
@@ -17,8 +17,8 @@ export default class StoryManager {
         bridge: []
     };
 
-    constructor(playView: RootNode) {
-        this._playView = playView;
+    constructor(rootNode: RootNode) {
+        this._rootNode = rootNode;
         this.loadData();
 
 
@@ -77,7 +77,7 @@ export default class StoryManager {
     }
 
     public loadData() {
-        this._finishedStuff = this._playView.getState().story;
+        this._finishedStuff = this._rootNode.getState().story;
     }
 
     public saveAll() {

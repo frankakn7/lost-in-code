@@ -21,11 +21,11 @@ export default class HatView extends Phaser.Scene {
     }
 
     constructor(
-        playView: RootNode,
+        rootNode: RootNode,
         settingsConfig?: string | Phaser.Types.Scenes.SettingsConfig
     ) {
         super("Hat View");
-        this._rootNode = playView;
+        this._rootNode = rootNode;
     }
 
     public create() {

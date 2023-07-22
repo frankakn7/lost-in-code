@@ -9,7 +9,7 @@ export default class NewsPopup extends Phaser.Scene {
     private label;
     private lifespan: number;
     private _timeLived: number = 0;
-    private _playView: RootNode;
+    private _rootNode: RootNode;
 
     private _fadeOutDur: number = 300;
     private _fadeOutTween;
@@ -21,13 +21,13 @@ export default class NewsPopup extends Phaser.Scene {
     private _sprite;
     private _rt;
 
-    constructor(playView: RootNode, sceneId: string, message, lifespan= 300, achievementTextureKey?: string) {
+    constructor(rootNode: RootNode, sceneId: string, message, lifespan= 300, achievementTextureKey?: string) {
         super(sceneId);
         this._message = message;
         this.lifespan = lifespan;
-        this._playView = playView;
-        this.width = this._playView.cameras.main.width;
-        this.height = this._playView.cameras.main.height;
+        this._rootNode = rootNode;
+        this.width = this._rootNode.cameras.main.width;
+        this.height = this._rootNode.cameras.main.height;
 
         this._textureKey = achievementTextureKey;
 
@@ -101,7 +101,7 @@ export default class NewsPopup extends Phaser.Scene {
 
     public kill() {
         if(this._fadeOutTween) this.tweens.remove(this._fadeOutTween);
-        this._playView.scene.remove(this);
+        this._rootNode.scene.remove(this);
     }
 
 

@@ -1,7 +1,7 @@
 import {UserStateType} from "./userStateType";
 
 export type GamestateType = {
-    playView: {
+    rootNode: {
         currentRoom: string;
     };
     room: {

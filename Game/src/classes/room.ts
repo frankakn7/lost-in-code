@@ -55,7 +55,7 @@ export default class RoomScene extends Phaser.Scene {
     private _onStartupFinishedTaskObjects = [false, false, false, false];
     // private controls;
 
-    private _playView;
+    private _rootNode;
     private _doorUnlocked = false;
 
     private _timeUntilStoryStartsInRoom = 2500;
@@ -70,13 +70,13 @@ export default class RoomScene extends Phaser.Scene {
     constructor(
         tilemapConfig: TilemapConfig,
         roomId: string,
-        playView : RootNode
+        rootNode : RootNode
         // settingsConfig?: string | Phaser.Types.Scenes.SettingsConfig
     ) {
         super("Room_" + roomId);
         this.tilemapConfig = tilemapConfig;
         
-        this._playView = playView;
+        this._rootNode = rootNode;
         this._roomId = roomId;
     }
 
@@ -159,8 +159,9 @@ export default class RoomScene extends Phaser.Scene {
 
         // this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
         // TODO This is the worst code ever written you shouldnt be using this.scene x 4
-        this.player = new Player(this, this._playerDefaultX, this._playerDefaultY, "playerTexture", this._playView);
+        this.player = new Player(this, this._playerDefaultX, this._playerDefaultY, "playerTexture", this._rootNode);
         this.physics.add.collider(this.player, collisionLayer);
+        this.player.setCanMove(false);
         // this.physics.world.enable(this.player);
         
         // this.physics.add.existing(this.player);
@@ -210,7 +211,7 @@ export default class RoomScene extends Phaser.Scene {
             // const door = new InteractiveObject(this, 32*5, 32*5, "door");
             // this.add.existing(door);
             // this.physics.add.collider(this.player, door);
-            //this._playView.hatView.loadSelectedHat();
+            //this._rootNode.hatView.loadSelectedHat();
         });
 
         for(let i = 0; i < this._taskObjects.length; i++) {
@@ -276,7 +277,8 @@ export default class RoomScene extends Phaser.Scene {
             this._timeSinceRoomEnter += delta;
             if (this._timeSinceRoomEnter > this._timeUntilStoryStartsInRoom) {
                 this._roomStoryPlayed = true;
-                this.getPlayView().openStoryChatView();
+                this.getRootNode().openStoryChatView();
+                this.player.setCanMove(true);
             }
         }
 
@@ -288,8 +290,8 @@ export default class RoomScene extends Phaser.Scene {
         
     }
 
-    public getPlayView() {
-        return this._playView;
+    public getRootNode() {
+        return this._rootNode;
     }
 
     public setPlayerPosition(x, y) {
@@ -319,8 +321,8 @@ export default class RoomScene extends Phaser.Scene {
     }
 
     public loadData() {
-        this.setDoorUnlocked(this.getPlayView().getState().room.doorUnlocked);
-        this._onStartupFinishedTaskObjects = this.getPlayView().getState().room.finishedTaskObjects;
+        this.setDoorUnlocked(this.getRootNode().getState().room.doorUnlocked);
+        this._onStartupFinishedTaskObjects = this.getRootNode().getState().room.finishedTaskObjects;
     }
 
     public setDoorUnlocked(locked) {

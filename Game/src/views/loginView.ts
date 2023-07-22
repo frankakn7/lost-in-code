@@ -5,7 +5,7 @@ import ApiHelper from "../helpers/apiHelper";
 import { response } from "express";
 
 export default class LoginView extends Phaser.Scene {
-    playView: RootNode;
+    rootNode: RootNode;
     private apiHelper: ApiHelper = new ApiHelper();
 
     constructor() {
@@ -59,11 +59,11 @@ export default class LoginView extends Phaser.Scene {
             console.log("### STARTING GAME")
             console.log(data.state_data);
             if(data.state_data){
-                this.playView = new RootNode(userData, data.state_data);
+                this.rootNode = new RootNode(userData, data.state_data);
             }else{
-                this.playView = new RootNode();
+                this.rootNode = new RootNode();
             }
-            this.scene.add("Play", this.playView);
+            this.scene.add("Play", this.rootNode);
             this.scene.launch("Play");
             this.scene.remove(this);
         }).catch((error) => console.error(error));

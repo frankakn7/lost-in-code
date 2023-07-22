@@ -26,7 +26,7 @@ export default class TaskManager {
     public currentDoneQuestions: number;
     public currentTotalQuestions: number;
 
-    private rootNode: RootNode;
+    private _rootNode: RootNode;
 
     private apiHandler = new ApiHelper();
 
@@ -38,7 +38,7 @@ export default class TaskManager {
     // }
 
     private loadQuestions() {
-        this.apiHandler.getFullChapter(this.rootNode.user.chapterNumber)
+        this.apiHandler.getFullChapter(this._rootNode.user.chapterNumber)
             .then((response:any) => {
                 this.availableQuestions = response.questions;
                 this.currentChapterMaxDifficulty = Math.max(
@@ -66,7 +66,7 @@ export default class TaskManager {
             return map;
         }, {});
 
-        for (let i = this.rootNode.user.performanceIndex; i <= this.currentChapterMaxDifficulty; i++) {
+        for (let i = this._rootNode.user.performanceIndex; i <= this.currentChapterMaxDifficulty; i++) {
             const questionsWithDifficulty = availableQuestionsMap[i];
             if (questionsWithDifficulty && questionsWithDifficulty.length > 0) {
                 const question = questionsWithDifficulty.pop();
@@ -84,22 +84,22 @@ export default class TaskManager {
     }
 
     private checkNextChapter() {
-        this.rootNode.user.increaseRepairedObjectsThisChapter();
-        if (this.rootNode.user.repairedObjectsThisChapter == 2) {
-            this.rootNode.user.increaseChapterNumber();
-            this.rootNode.user.repairedObjectsThisChapter = 0;
-            this.rootNode.user.newChapter = true;
-            this.rootNode.user.performanceIndex --;
+        this._rootNode.user.increaseRepairedObjectsThisChapter();
+        if (this._rootNode.user.repairedObjectsThisChapter == 2) {
+            this._rootNode.user.increaseChapterNumber();
+            this._rootNode.user.repairedObjectsThisChapter = 0;
+            this._rootNode.user.newChapter = true;
+            this._rootNode.user.performanceIndex --;
             this.loadQuestions()
-            this.rootNode.docView.chapterManager.updateCurrentChapterOrder(this.rootNode.user.chapterNumber);
-            this.rootNode.docView.chapterManager.updateChapters()
+            this._rootNode.docView.chapterManager.updateCurrentChapterOrder(this._rootNode.user.chapterNumber);
+            this._rootNode.docView.chapterManager.updateChapters()
         }
     }
 
     private onObjectFailed() {
         console.log("FAILED")
-        if (this.rootNode.scene.isSleeping(this.rootNode)) {
-            this.rootNode.queueTask(() => {
+        if (this._rootNode.scene.isSleeping(this._rootNode)) {
+            this._rootNode.queueTask(() => {
                 globalEventBus.emit("taskmanager_object_failed");
             });
         } else {
@@ -108,8 +108,8 @@ export default class TaskManager {
     }
 
     private onObjectRepaired() {
-        if (this.rootNode.scene.isSleeping(this.rootNode)) {
-            this.rootNode.queueTask(() => {
+        if (this._rootNode.scene.isSleeping(this._rootNode)) {
+            this._rootNode.queueTask(() => {
                 globalEventBus.emit("taskmanager_object_finished");
             });
         } else {
@@ -130,14 +130,14 @@ export default class TaskManager {
         if (this.currentQuestionSetForObject.length === 0) {
             this.onObjectRepaired();
         } else {
-            this.rootNode.user.performanceIndex = currentQuestion.difficulty + 1;
+            this._rootNode.user.performanceIndex = currentQuestion.difficulty + 1;
         }
         globalEventBus.emit("taskmanager_task_correct");
     }
 
     public questionAnsweredIncorrectly() {
-        this.rootNode.user.performanceIndex > 1
-            ? this.rootNode.user.performanceIndex--
+        this._rootNode.user.performanceIndex > 1
+            ? this._rootNode.user.performanceIndex--
             : null;
         this.onObjectFailed();
     }
@@ -148,7 +148,7 @@ export default class TaskManager {
     }
 
     constructor(rootNode: RootNode) {
-        this.rootNode = rootNode;
+        this._rootNode = rootNode;
 
         //Test data!
         //this.availableQuestions = availableQuestions;

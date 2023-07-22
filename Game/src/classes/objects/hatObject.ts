@@ -34,14 +34,14 @@ export default class HatObject extends InteractiveObject {
     }
 
     public interact(): void {
-        this.room.getPlayView().hatView.unlock(this._hatId);
+        this.room.getRootNode().hatView.unlock(this._hatId);
         this.destroy();
     }
 
     public checkIfUnlocked() {
         // if (this.room.getPlayView().user.unlockedHats.includes(this._hatId)
         // ||  this.room.getPlayView().user.unlockedHats.includes(this._hatId)) {
-        if (this.room.getPlayView().user.unlockedHats.includes(this._hatId)) {
+        if (this.room.getRootNode().user.unlockedHats.includes(this._hatId)) {
             this.destroy();
         }
     }

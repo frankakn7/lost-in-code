@@ -11,7 +11,7 @@ export default class DocView extends Phaser.Scene {
 
     public chapterManager: ChapterManager;
 
-    private _playView: RootNode;
+    private _rootNode: RootNode;
 
     private resumeButton;
 
@@ -21,10 +21,10 @@ export default class DocView extends Phaser.Scene {
 
     private textView;
 
-    constructor(playView: RootNode, chapterNumber: number) {
+    constructor(rootNode: RootNode, chapterNumber: number) {
         super("DocView");
         this.chapterManager = new ChapterManager(chapterNumber)
-        this._playView = playView;
+        this._rootNode = rootNode;
     }
 
     private createChapterButtons() {
@@ -72,7 +72,7 @@ export default class DocView extends Phaser.Scene {
     }
 
     private _backToMenu() {
-        this._playView.menuView.scene.resume();
+        this._rootNode.menuView.scene.resume();
         this.scene.sleep();
     }
 

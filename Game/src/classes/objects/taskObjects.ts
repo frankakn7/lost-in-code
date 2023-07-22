@@ -61,7 +61,7 @@ export default class TaskObject extends InteractiveObject {
             this._isOpenRightNow = true;
             globalEventBus.once('taskmanager_object_finished', this.setDone);
             globalEventBus.once('taskmanager_object_failed', this.setClosed);
-            this.room.getPlayView().openQuestionView();      
+            this.room.getRootNode().openQuestionView();
         }
 
     }
@@ -95,7 +95,7 @@ export default class TaskObject extends InteractiveObject {
             globalEventBus.emit("object_repaired")
             if (this._isStoryObject) {
                 // this.room.getPlayView().pullNextStoryBit(this.room.getRoomId());
-                this.room.getPlayView().openStoryChatView();
+                this.room.getRootNode().openStoryChatView();
             }
 
             // TODO Should be able to stay, as this function wont be called after the door was successfully unlocked anyways

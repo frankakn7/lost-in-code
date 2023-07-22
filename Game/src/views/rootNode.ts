@@ -71,7 +71,7 @@ export default class RootNode extends Phaser.Scene {
     private roomMap = new Map<string, RoomScene>;
 
     private _state: GamestateType = {
-        playView: {
+        rootNode: {
             currentRoom: "hangar"
         },
         room: {
@@ -500,8 +500,8 @@ export default class RootNode extends Phaser.Scene {
     }
 
     public loadData() {
-        if (this._state.playView.currentRoom)
-            this._startingRoomId = this._state.playView.currentRoom
+        if (this._state.rootNode.currentRoom)
+            this._startingRoomId = this._state.rootNode.currentRoom
     }
 
 
@@ -517,7 +517,7 @@ export default class RootNode extends Phaser.Scene {
 
     public saveAllToGamestateType(): GamestateType {
         return {
-            playView: {
+            rootNode: {
                 currentRoom: this.getCurrentRoom().getRoomId()
             },
             room: this.getCurrentRoom().saveAll(),

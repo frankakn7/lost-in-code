@@ -14,7 +14,7 @@ import TrophyTexture from "../assets/achievements/trophy.png";
 export default class AchievementView extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite;
     private _manager: AchievementManager;
-    private _playView: RootNode;
+    private _rootNode: RootNode;
 
     private _sprites = []
     private _margin = 30;
@@ -24,10 +24,10 @@ export default class AchievementView extends Phaser.Scene {
     private columns = 3;
     private borderThickness = 20;
 
-    constructor(playView, manager) {
+    constructor(rootNode, manager) {
         super("AchievementView");
         this._manager = manager;
-        this._playView = playView;
+        this._rootNode = rootNode;
     }
 
     preload() {
@@ -90,7 +90,7 @@ export default class AchievementView extends Phaser.Scene {
     }
 
     private _backToMenu() {
-        this._playView.menuView.scene.resume();
+        this._rootNode.menuView.scene.resume();
         this.scene.sleep();
     }
 }
