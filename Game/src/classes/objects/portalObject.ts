@@ -29,7 +29,7 @@ export default class PortalObject extends InteractiveObject {
             scale: { start: 0.2, end: 0.1 }
         });
 
-        this._emitter.setDepth(11);
+        this._emitter.setDepth(6);
 
         this._emitter.addEmitZone({type: 'edge', source: shape, total: 1, quantity: 64});
 

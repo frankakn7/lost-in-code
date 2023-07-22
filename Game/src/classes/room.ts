@@ -218,36 +218,7 @@ export default class RoomScene extends Phaser.Scene {
             this._taskObjects[i].setIsFinished(this._onStartupFinishedTaskObjects[i]);
         }
 
-        const width = this.scale.width
-        const height = this.scale.height;
-
-
-        // TODO Put fow stuff into separate methods
-        // create fow
-        this.fow = this.make.renderTexture({
-            width,
-            height
-        }, true);
-
-        this.fow.fill(0x074e67, 0.8);
-
-        // TODO Make this actually render and use instead for the fow
-        // this.fow.draw(door);
-        this.fow.draw(floorLayer);
-        this.vision = this.make.image({
-            x: this.player.x,
-            y: this.player.y - 16,
-            key: 'mask',
-            add: false
-        });
-        this.vision.scale = 2.;
-
-        this.fow.mask = new Phaser.Display.Masks.BitmapMask(this, this.vision);
-        this.fow.mask.invertAlpha = true;
-
-
-        this.fow.setTint(0x141932);
-        this.fow.setDepth(10);
+        this._setupFOW();
 
         this.events.emit("hats_unlock_check");
         globalEventBus.emit("room_entered");
@@ -263,6 +234,40 @@ export default class RoomScene extends Phaser.Scene {
 
         this.setDoorUnlocked(true);
         globalEventBus.emit("save_game");
+    }
+
+
+    private _setupFOW() {
+        const width = this.scale.width;
+        const height = this.scale.height;
+
+
+        // TODO Put fow stuff into separate methods
+        // create fow
+        this.fow = this.make.renderTexture({
+            width,
+            height
+        }, true);
+
+        this.fow.fill(0x074e67, 0.8);
+
+        // TODO Make this actually render and use instead for the fow
+        // this.fow.draw(door);
+        // this.fow.draw(floorLayer);
+        this.vision = this.make.image({
+            x: this.player.x,
+            y: this.player.y - 16,
+            key: 'mask',
+            add: false
+        });
+        this.vision.scale = 2.;
+
+        this.fow.mask = new Phaser.Display.Masks.BitmapMask(this, this.vision);
+        this.fow.mask.invertAlpha = true;
+
+
+        this.fow.setTint(0x141932);
+        this.fow.setDepth(10);
     }
     
     update (time, delta){

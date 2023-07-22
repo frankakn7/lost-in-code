@@ -29,7 +29,7 @@ export default class HatObject extends InteractiveObject {
             this.setTexture(HatMap[this._hatId].texture);
 
         this.scene.events.on("hats_unlock_check", this.checkIfUnlocked, this);
-        this.setDepth(1);
+        this.setDepth(3);
         this.checkIfUnlocked();
     }
 
