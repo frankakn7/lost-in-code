@@ -23,7 +23,7 @@ export default class MenuView extends Phaser.Scene {
 
     private hatView: HatView;
 
-    private _columns = 4;
+    private _columns = 2;
 
     private apiHelper: ApiHelper = new ApiHelper();
 
@@ -89,30 +89,30 @@ export default class MenuView extends Phaser.Scene {
         const chatButton = new SpriteButton(
             this,
             "antennaAppTexture",
-            (this.scale.width / (this._columns )) * 1,
+            (this.scale.width / (this._columns + 1)) * 1,
             1000,
             () => {this._rootNode.openStoryChatViewWithoutPulling()}
-        );
+        ).setScale(1.25);
         this.add.existing(chatButton);
 
         const knowledgeButton = new SpriteButton(
             this,
             "knowledgeAppTexture",
-            (this.scale.width / (this._columns )) * 2,
+            (this.scale.width / (this._columns + 1)) * 2,
             1000,
             () => {this.openSubMenu("DocView")}
-        );
+        ).setScale(1.25);
         this.add.existing(knowledgeButton);
 
         const hatButton = new SpriteButton(
             this,
             "hatAppTexture",
-            (this.scale.width / (this._columns )) * 3,
-            1000,
+            (this.scale.width / (this._columns + 1)) * 2,
+            1300,
             () => {
                 this.openSubMenu(this._rootNode.hatView);
             }
-        );
+        ).setScale(1.25);
         this.add.existing(hatButton);
         if (this.scene.get("Hat View") == null)
             this.scene.add("hatView", this._rootNode.hatView);
@@ -120,12 +120,12 @@ export default class MenuView extends Phaser.Scene {
         const achievementsButton = new SpriteButton(
             this,
             "achievementsAppTexture",
-            (this.scale.width / (this._columns )) * 1.5,
-            1224,
+            (this.scale.width / (this._columns + 1)) * 1,
+            1300,
             () => {
                 this.openSubMenu(this._achievementView)
             }
-        );
+        ).setScale(1.25);
         this.add.existing(achievementsButton);
 
         if (this.scene.get("DocView") == null)
@@ -134,16 +134,6 @@ export default class MenuView extends Phaser.Scene {
 
         var evalv = new EvaluationView(this._rootNode, this._rootNode.achievementManager);
         this.scene.add("EvaluationView", evalv);
-        const settingsButton = new SpriteButton(
-            this,
-            "settingsAppTexture",
-            (this.scale.width / (this._columns )) * 2.5,
-            1224,
-            () => {
-                this.openSubMenu(evalv);
-            }
-        );
-        this.add.existing(settingsButton);
 
         if (this.scene.get("AchievementView") == null)
             this.scene.add("achievementView", this._achievementView);
