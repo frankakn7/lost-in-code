@@ -4,6 +4,7 @@ import ChatFlow from "../classes/chat/chatFlow";
 import DeviceButton from "../ui/deviceButton";
 import ChatTextContainer from "../ui/chatTextContainer";
 import deviceBackgroundTilePng from "../assets/Device-Background-Tile.png";
+import {globalEventBus} from "../helpers/globalEventBus";
 
 /**
  * The ChatView displaying the chat
@@ -64,11 +65,13 @@ export default class ChatView extends Phaser.Scene {
 
     private exitFunction:Function = this.exitChat;
 
+    private textToSave: string[][] = [];
+
     /**
-     * 
+     *
      * @param chatFlow The first {@link ChatFlow} to be handled by the chat view
      */
-    constructor(chatFlow: ChatFlow, sceneName?:string, destroyOnExit?:boolean, customExitFunc?:Function) {
+    constructor(chatFlow: ChatFlow, chatHistory?: string[][], sceneName?:string, destroyOnExit?:boolean, customExitFunc?:Function) {
 
         super(sceneName ?? "chatView");
         destroyOnExit ? this.destroyOnExit = destroyOnExit : null;
@@ -77,7 +80,7 @@ export default class ChatView extends Phaser.Scene {
     }
 
     public preload(){
-        
+
     }
 
     public create() {
@@ -98,17 +101,17 @@ export default class ChatView extends Phaser.Scene {
         if (this.updateTextAnimationEvent) {
             // Remove the animation event
             this.updateTextAnimationEvent.remove(false);
-    
+
             // Show the full text
             this.textToAnimate.setText(this.currentChatFlow.getCurrentText());
 
             this.chatTextContainer.calculateNewInputHitArea()
-    
+
             // Display the choices
             this.showChoices(this.currentChatFlow.getCurrentChoices());
         }
     }
-    
+
 
     /**
      * Starts a new Chat flow loop
@@ -185,7 +188,7 @@ export default class ChatView extends Phaser.Scene {
     /**
      * Starts the text animation and displays the possible choices when it ends
      * @param textObject the textObject where the animation is occurring
-     * @param text the whole string that should be displayed 
+     * @param text the whole string that should be displayed
      * @param choices the choices that should be displayed as buttons
      */
     private showTextThenChoices(
@@ -193,6 +196,7 @@ export default class ChatView extends Phaser.Scene {
         text: string,
         choices: Array<string>
     ) {
+        this.textToSave.push(["M",text])
         //start the animation
         this.startTextAnimation(textObject, text, () => {
             //when animation is over show the choices as buttons
@@ -220,7 +224,7 @@ export default class ChatView extends Phaser.Scene {
                     this.buttonWidth,
                     () => {
                         //when choice button is clicked
-                        this.onChoiceClick(choiceString); 
+                        this.onChoiceClick(choiceString);
                     }, //needs to be anonymous function for "this" to be the scene
                     choiceString    //the string to be displayed on the button
                 );
@@ -264,6 +268,7 @@ export default class ChatView extends Phaser.Scene {
      * @param choiceText the string of the selected choice
      */
     private onChoiceClick(choiceText: string) {
+        this.textToSave.push(["A",choiceText]);
         //Adds the answer text to the scene and container without animation
         this.answerText = this.chatTextContainer.addAnswerText(choiceText);
         //Create a new text object for animation
@@ -285,6 +290,10 @@ export default class ChatView extends Phaser.Scene {
         );
     }
 
+    public getSavedText() {
+        return this.textToSave;
+    }
+
     /**
      * Sends this scene to sleep and reawakes all the other scenes
      */
@@ -293,6 +302,9 @@ export default class ChatView extends Phaser.Scene {
         this.scene.wake("Room");
         this.scene.wake("controlPad");
         this.scene.wake("pauseChatButtons");
+
+        globalEventBus.emit("save_game")
+
         if(!this.destroyOnExit){
             this.scene.sleep(this);
         }else{

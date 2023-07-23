@@ -13,6 +13,7 @@ export type GamestateType = {
         engine: string[];
         laboratory: string[];
         bridge: string[];
+        history: string[][];
     };
     achievements: {
         taskCounter: number;

@@ -85,7 +85,8 @@ export default class RootNode extends Phaser.Scene {
             commonRoom: [],
             engine: [],
             laboratory: [],
-            bridge: []
+            bridge: [],
+            history: []
         },
         user: {
             answeredQuestionIds: [],
@@ -135,7 +136,7 @@ export default class RootNode extends Phaser.Scene {
 
     private taskManager: TaskManager;
 
-    private _storyManager = new StoryManager(this);
+    private _storyManager: StoryManager;
 
     public hatMap = HatMap;
 
@@ -174,7 +175,7 @@ export default class RootNode extends Phaser.Scene {
             //If the chat view hasn't been launched yet
         } else {
             //create a new chat view
-            this.storyChatView = new ChatView(this._storyManager.pullNextStoryBit(this.currentRoom.getRoomId()), "StoryChatView");
+            this.storyChatView = new ChatView(this._storyManager.pullNextStoryBit(this.currentRoom.getRoomId()),[], "StoryChatView");
             //add chat view to the scene
             this.scene.add("StoryChatView", this.storyChatView);
             //launch the chat view
@@ -190,7 +191,7 @@ export default class RootNode extends Phaser.Scene {
             this.scene.wake(this.storyChatView);
         }
         else {
-            this.storyChatView = new ChatView(cf, "StoryChatView");
+            this.storyChatView = new ChatView(cf, [], "StoryChatView");
             this.scene.add("StoryChatView", this.storyChatView);
             //launch the chat view
             this.scene.launch(this.storyChatView);
@@ -204,7 +205,7 @@ export default class RootNode extends Phaser.Scene {
 
         const simpleChatFlow = new ChatFlow(simpleChatNode)
 
-        const textChatView = new ChatView(simpleChatFlow, "ChatTextView", true,customExitFunction)
+        const textChatView = new ChatView(simpleChatFlow, [],"ChatTextView", true,customExitFunction)
 
         this.scene.add("ChatTextView", textChatView)
         this.scene.launch(textChatView)
@@ -396,6 +397,7 @@ export default class RootNode extends Phaser.Scene {
         }, "bridge", this).setPlayerPosition(32 * 2, 32 * 10));
 
         this.loadData();
+        this._storyManager = new StoryManager(this)
         this.taskManager = new TaskManager(this)
 
 
@@ -541,7 +543,7 @@ export default class RootNode extends Phaser.Scene {
                 currentRoom: this.getCurrentRoom().getRoomId()
             },
             room: this.getCurrentRoom().saveAll(),
-            story: this._storyManager.saveAll(),
+            story: {...this._storyManager.saveAll(), history:[]},
             user: this.user.saveState(),
             achievements: this.achievementManager.saveAll()
         };

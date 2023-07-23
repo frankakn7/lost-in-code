@@ -17,6 +17,8 @@ export default class StoryManager {
         bridge: []
     };
 
+    private _textHistory: string[][] = [];
+
     constructor(rootNode: RootNode) {
         this._rootNode = rootNode;
         this.loadData();
@@ -26,6 +28,7 @@ export default class StoryManager {
             if (!(room in this._storyEvents)) this._storyEvents[room] = new Map<string, ChatFlow>();
             
             for (var i = 0; i < Object.keys(storyJson[room]).length; i++) {
+                console.log(i)
                 if (this._finishedStuff[room].includes(i.toString())) {
                     continue;
                 }
@@ -89,11 +92,13 @@ export default class StoryManager {
         return value;
     }
 
+
     public loadData() {
         this._finishedStuff = this._rootNode.getState().story;
     }
 
     public saveAll() {
+        console.log(this._finishedStuff)
         return this._finishedStuff;
     }
 
