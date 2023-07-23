@@ -161,11 +161,7 @@ export default class RootNode extends Phaser.Scene {
      * Opens the chat view by sending all other scenes to sleep and launching / awaking the chat view scene
      */
     public openStoryChatView(): void {
-        //Send all scenes to sleep
-        this.scene.sleep();
-        this.scene.sleep("controlPad");
-        this.scene.sleep("pauseChatButtons");
-        this.scene.sleep("Room");
+        this.prepSceneForChat();
 
         //If the chat view already exists and is sleeping
         if (this.scene.isSleeping(this.storyChatView)) {
@@ -183,11 +179,23 @@ export default class RootNode extends Phaser.Scene {
         }
     }
 
+    public openEventChatView(roomId, eventId) : void {
+        let cf = this._storyManager.pullEventIdChatFlow(roomId, eventId);
+
+        if (this.scene.isSleeping(this.storyChatView)) {
+            this.storyChatView.startNewChatFlow(cf);
+            this.scene.wake(this.storyChatView);
+        }
+        else {
+            this.storyChatView = new ChatView(cf, "StoryChatView");
+            this.scene.add("StoryChatView", this.storyChatView);
+            //launch the chat view
+            this.scene.launch(this.storyChatView);
+        }
+    }
+
     public openTextChatView(text,customExitFunction:Function): void {
-        this.scene.sleep();
-        this.scene.sleep("controlPad");
-        this.scene.sleep("pauseChatButtons");
-        this.scene.sleep("Room");
+        this.prepSceneForChat();
 
         const simpleChatNode: ChatFlowNode = {text: text, optionText: "Start", choices: new Map<string, ChatFlowNode>}
 
@@ -197,6 +205,13 @@ export default class RootNode extends Phaser.Scene {
 
         this.scene.add("ChatTextView", textChatView)
         this.scene.launch(textChatView)
+    }
+
+    public prepSceneForChat() {
+        this.scene.sleep();
+        this.scene.sleep("controlPad");
+        this.scene.sleep("pauseChatButtons");
+        this.scene.sleep("Room");
     }
 
     onWake() {
@@ -534,5 +549,9 @@ export default class RootNode extends Phaser.Scene {
 
     get user(): User {
         return this._user;
+    }
+
+    public getStoryManager() {
+        return this._storyManager;
     }
 }

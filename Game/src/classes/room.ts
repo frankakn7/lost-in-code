@@ -23,6 +23,7 @@ import BedTexture from "../assets/gameobjects/bed.png";
 import DoorSingleTexture from "../assets/gameobjects/doorSingle.png";
 import DoorDoubleTexture from "../assets/gameobjects/doorDouble.png";
 import EnemyTexture from "../assets/gameobjects/enemy.png";
+import PaperTexture from "../assets/gameobjects/paper2.png";
 
 import InteractiveObject from "./objects/interactiveObject";
 import storyJson from "../managers/story_management/storyFormatExample.json";
@@ -31,6 +32,7 @@ import RootNode from "../views/rootNode";
 import TaskObject from "./objects/taskObjects";
 import {globalEventBus} from "../helpers/globalEventBus";
 import EnemyObject from "./objects/enemyObject";
+import ClueObject from "./objects/clueObject";
 
 
 
@@ -52,6 +54,7 @@ export default class RoomScene extends Phaser.Scene {
 
     private _interactiveObjects = [];
     private _taskObjects = [];
+    private _clues = [];
     private _onStartupFinishedTaskObjects = [false, false, false, false];
     // private controls;
 
@@ -60,7 +63,6 @@ export default class RoomScene extends Phaser.Scene {
 
     private _timeUntilStoryStartsInRoom = 2500;
     private _timeSinceRoomEnter = 0;
-    private _roomStoryPlayed = false;
     
     /**
      * Room constructor
@@ -108,6 +110,7 @@ export default class RoomScene extends Phaser.Scene {
         this.load.image("engineBroken", EngineBrokenTexture);
         this.load.image("enemy", EnemyTexture);
 
+        this.load.image("paper", PaperTexture);
     }
 
     public getRoomId() {
@@ -202,6 +205,9 @@ export default class RoomScene extends Phaser.Scene {
             if (newObj instanceof TaskObject) {
                 this._taskObjects.push(newObj);
             }
+            if (newObj instanceof ClueObject) {
+                this._clues.push(newObj);
+            }
 
             this.add.existing(newObj);
             
@@ -278,13 +284,14 @@ export default class RoomScene extends Phaser.Scene {
             this.fow.setY(this.player.y);
         }
 
-        if (!this._roomStoryPlayed) {
+        if (!this.getRootNode().getStoryManager().checkIfRoomStoryPlayed(this._roomId)) {
             this._timeSinceRoomEnter += delta;
             if (this._timeSinceRoomEnter > this._timeUntilStoryStartsInRoom) {
-                this._roomStoryPlayed = true;
                 this.getRootNode().openStoryChatView();
                 this.player.setCanMove(true);
             }
+        } else {
+            this.player.setCanMove(true);
         }
 
         

@@ -4,6 +4,7 @@ import InteractiveObject from "./classes/objects/interactiveObject";
 import TaskObject from "./classes/objects/taskObjects";
 import DoorObject from "./classes/objects/doorObject";
 import EnemyObject from "./classes/objects/enemyObject";
+import ClueObject from "./classes/objects/clueObject";
 
 export const GameObjectMap = {
     door: {
@@ -179,6 +180,15 @@ export const GameObjectMap = {
             width: 5,
             height: 5,
             isStoryObject: false
+        }
+    },
+
+    paper2: {
+        class: ClueObject,
+        params: {
+            texture: "paper",
+            width: 20,
+            height: 20
         }
     }
 }

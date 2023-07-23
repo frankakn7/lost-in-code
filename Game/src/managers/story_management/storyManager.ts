@@ -26,7 +26,9 @@ export default class StoryManager {
             if (!(room in this._storyEvents)) this._storyEvents[room] = new Map<string, ChatFlow>();
             
             for (var i = 0; i < Object.keys(storyJson[room]).length; i++) {
-                if (this._finishedStuff[room].includes(i.toString())) continue;
+                if (this._finishedStuff[room].includes(i.toString())) {
+                    continue;
+                }
 
                 if (i.toString() in storyJson[room]) {
                     let cf : ChatFlow = new ChatFlow(this.reconstructChatNodeTreeRecursively(
@@ -42,6 +44,18 @@ export default class StoryManager {
             }
         }
         console.log(this._storyEvents)
+    }
+
+    public checkIfEventAvailable(roomId, eventId) {
+        if (this._finishedStuff[roomId].includes(eventId)) return false;
+        if (storyJson[roomId][eventId]) return true;
+
+        return false;
+    }
+
+    public pullEventIdChatFlow(roomId, eventId) {
+        this._finishedStuff[roomId].push(eventId);
+        return new ChatFlow(this.reconstructChatNodeTreeRecursively(roomId, storyJson, eventId));
     }
 
     public reconstructChatNodeTreeRecursively(room : string, json : JSON, nodeId: string) {
@@ -65,13 +79,12 @@ export default class StoryManager {
 
     public pullNextStoryBit(room) {
         // TODO CONTINUE HERE
-        // this._finishedStuff[room].push(this._storyEvents.);
 
         let key = this._storyEvents[room].keys().next().value;
         let value = this._storyEvents[room].get(key);
 
-        this._storyEvents[room].delete(key)
-        console.log("wird gecalled")
+        this._finishedStuff[room].push(key);
+        this._storyEvents[room].delete(key);
 
         return value;
     }
@@ -82,5 +95,9 @@ export default class StoryManager {
 
     public saveAll() {
         return this._finishedStuff;
+    }
+
+    public checkIfRoomStoryPlayed(roomId) {
+        return this._finishedStuff[roomId].includes("0");
     }
 }
