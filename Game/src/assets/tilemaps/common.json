@@ -73,11 +73,6 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
-                        }, 
-                        {
-                         "name":"story_id",
-                         "type":"string",
-                         "value":"crateCommon"
                         }],
                  "rotation":0,
                  "type":"",
@@ -101,11 +96,6 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
-                        }, 
-                        {
-                         "name":"story_id",
-                         "type":"string",
-                         "value":"barrelCommon"
                         }],
                  "rotation":0,
                  "type":"",
@@ -129,11 +119,6 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
-                        }, 
-                        {
-                         "name":"story_id",
-                         "type":"string",
-                         "value":"computerCommon"
                         }],
                  "rotation":0,
                  "type":"",
@@ -157,11 +142,6 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
-                        }, 
-                        {
-                         "name":"story_id",
-                         "type":"string",
-                         "value":"firstAidKitCommon"
                         }],
                  "rotation":0,
                  "type":"",
@@ -178,11 +158,6 @@
                  "properties":[
                         {
                          "name":"gameobject_id",
-                         "type":"string",
-                         "value":"tableSeatRight"
-                        }, 
-                        {
-                         "name":"story_id",
                          "type":"string",
                          "value":"tableSeatRight"
                         }],
@@ -208,11 +183,6 @@
                          "name":"gameobject_id",
                          "type":"string",
                          "value":"paper2"
-                        }, 
-                        {
-                         "name":"story_id",
-                         "type":"string",
-                         "value":"paper2Common"
                         }],
                  "rotation":0,
                  "type":"",
@@ -241,11 +211,6 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
-                        }, 
-                        {
-                         "name":"story_id",
-                         "type":"string",
-                         "value":"bedCommon"
                         }],
                  "rotation":0,
                  "type":"",

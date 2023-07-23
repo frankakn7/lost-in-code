@@ -140,7 +140,7 @@ export default class TaskManager {
         this.checkNextChapter();
     }
 
-    public questionAnsweredCorrectly() {
+    public questionAnsweredCorrectly(duration: number) {
         const currentQuestion = this.getCurrentQuestionFromQuestionSet();
         const index = this.availableQuestions.indexOf(currentQuestion);
         if (index > -1) {
@@ -156,7 +156,9 @@ export default class TaskManager {
         } else {
             this._rootNode.user.performanceIndex = currentQuestion.difficulty + 1;
         }
-        globalEventBus.emit("taskmanager_task_correct");
+
+
+        globalEventBus.emit("taskmanager_task_correct", duration);
     }
 
     public questionAnsweredIncorrectly() {
@@ -164,6 +166,7 @@ export default class TaskManager {
             ? this._rootNode.user.performanceIndex--
             : null;
         this.onObjectFailed();
+        globalEventBus.emit("taskmanager_task_incorrect");
     }
 
     private loadState(answeredQuestionIds: number[]) {

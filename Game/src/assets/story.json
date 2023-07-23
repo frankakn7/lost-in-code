@@ -21,28 +21,24 @@
             "text": "…krkrkrkr… test …krkr… Attention astronaut! This is mission control. I'll be assisting you with the repair of the spacecraft. Our primary mode of communication will be through this chat interface. Here, I'll be sharing vital information regarding your assigned tasks. Are you prepared to utilize your skills and successfully recover the ship? Please confirm receipt of this message by responding. Over.",
             "choices": ["0aa", "0ab"]
         },
-        "0aa": {
-            "optionText": "I copy.",
-            "text": "Your proficiency in PHP will be crucial for the successful repair of this ship. Before we proceed, it is imperative to assess your expertise to provide you with the necessary assistance for this vital mission. Stand by for a brief assessment to evaluate your know-how. Please be prepared to demonstrate your skills"
-        },
         "0ab": {
-            "optionText": "Hell yes!!!",
-            "text": "Your proficiency in PHP will be crucial for the successful repair of this ship. Before we proceed, it is imperative to assess your expertise to provide you with the necessary assistance for this vital mission. Stand by for a brief assessment to evaluate your know-how. Please be prepared to demonstrate your skills"
+            "optionText": "I copy",
+            "text": "You've reached the hangar, over. This is where you'll find interactive containing valuable knowledge. Your objective is to repair all the broken objects to unlock the next room. To do so, you'll need to successfully complete a series of exercises that vary in difficulty. The better you perform, the fewer exercises you'll encounter. Remember, each object requires attention. Once you've interacted with all the objects in this room, the door will unlock, allowing you to progress. Be aware that some objects may also provide insights into what happened on the spaceship or grant you the ability to customize your avatar. As you sift through this room we will be evaluating your current PHP proficiency and fine-tune your tools accordingly. Stay focused, astronaut. Your mission to repair the spaceship and unravel its mysteries awaits. Good luck, over."
+        },
+        "0aa": {
+            "optionText": "Heck Yea!",
+            "text": "You've reached the hangar, over. This is where you'll find interactive containing valuable knowledge. Your objective is to repair all the broken objects to unlock the next room. To do so, you'll need to successfully complete a series of exercises that vary in difficulty. The better you perform, the fewer exercises you'll encounter. Remember, each object requires attention. Once you've interacted with all the objects in this room, the door will unlock, allowing you to progress. Be aware that some objects may also provide insights into what happened on the spaceship or grant you the ability to customize your avatar. As you sift through this room we will be evaluating your current PHP proficiency and fine-tune your tools accordingly. Stay focused, astronaut. Your mission to repair the spaceship and unravel its mysteries awaits. Good luck, over."
         },
         "1": {
             "optionText": "Start the chat",
-            "text": "You've reached the hangar, over. This is where you'll find interactive containing valuable knowledge. Your objective is to repair all the broken objects to unlock the next room. To do so, you'll need to successfully complete a series of exercises that vary in difficulty. The better you perform, the fewer exercises you'll encounter. Remember, each object requires attention. Once you've interacted with all the objects in this room, the door will unlock, allowing you to progress. Be aware that some objects may also provide insights into what happened on the spaceship or grant you the ability to customize your avatar. Stay focused, astronaut. Your mission to repair the spaceship and unravel its mysteries awaits. Good luck, over."
-        },
-        "2": {
-            "optionText": "Start the chat",
             "text": "Attention, astronaut. We've received visual data indicating a complete breakdown of the ship's machinery... What could have caused this extensive failure?",
-            "choices": ["2a", "end"]
+            "choices": ["1a", "end"]
         },
-        "2a": {
+        "1a": {
             "optionText": "I wonder...",
             "text": "No time for speculation. Astronaut, please proceed with your mission. Over."
         },
-        "3": {
+        "2": {
             "optionText": "Start the chat",
             "text": "Good job astronaut, you have picked up all the tools necessary to further advance. Over."
         }
@@ -167,7 +163,7 @@
         },
         "5": {
             "optionText": "Start the chat",
-            "text": "Bill: Don't touch me with those technology-infersted fingers!"
+            "text": "Bill: Don't touch me with those technology-infested fingers!"
         },
         "6": {
             "optionText": "Start the chat",
@@ -176,14 +172,17 @@
         },
         "6a": {
             "optionText": "I just did...",
-            "text": "Britney: You may have defeated us now, but there are so much more enlightened people out there. You may take our lives, but you will never take ... OUR FREEDOM!"
+            "text": "Britney: You may have defeated us now, but there are so much more enlightened people out there. You may take our lives, but you will never take ... OUR FREEDOM!",
+            "choices": ["final"]
         },
         "6b": {
             "optionText": "Innovation always wins!",
-            "text": "Britney: Never! Soon, you will see the damage you have unleashed in the world by joining hands with the wrong side! I can already see the regret in your future!"
+            "text": "Britney: Never! Soon, you will see the damage you have unleashed in the world by joining hands with the wrong side! I can already see the regret in your future!",
+            "choices": ["final"]
         },
-        "event_game_finished": {
-            "optionText": "Congrats you successfully repaired the spaceship and defeated the Bytebreaker Brigade. With your knowledge in programming you saved the world and all it's technology. You can be proud of yourself! But remember what the Bytebreaker Brigade said: they won't give up! And so shouldn't you. Continue learning programming and deepen your knowledge to be prepared if the Bytebreaker Brigade ever strikes again!"
+        "final": {
+            "optionText": ".\\activate_comms",
+            "text": "Congrats you successfully repaired the spaceship and defeated the Bytebreaker Brigade, you will be picked up soon. With your knowledge in programming you saved the world and all it's technology. You can be proud of yourself! But remember what the Bytebreaker Brigade said: they won't give up! And so shouldn't you. Continue learning programming and deepen your knowledge to be prepared if the Bytebreaker Brigade ever strikes again!"
         }
     }
 }

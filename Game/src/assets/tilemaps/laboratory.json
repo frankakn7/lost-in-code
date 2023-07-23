@@ -78,11 +78,6 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
-                        }, 
-                        {
-                         "name":"story_id",
-                         "type":"string",
-                         "value":"computerLaboratory"
                         }],
                  "rotation":0,
                  "type":"",
@@ -111,11 +106,6 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
-                        }, 
-                        {
-                         "name":"story_id",
-                         "type":"string",
-                         "value":"computerLaboratory2"
                         }],
                  "rotation":0,
                  "type":"",
@@ -139,11 +129,6 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
-                        }, 
-                        {
-                         "name":"story_id",
-                         "type":"string",
-                         "value":"cannonLaboratory"
                         }],
                  "rotation":0,
                  "type":"",
@@ -167,11 +152,6 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
-                        }, 
-                        {
-                         "name":"story_id",
-                         "type":"string",
-                         "value":"cannonLaboratory2"
                         }],
                  "rotation":0,
                  "type":"",

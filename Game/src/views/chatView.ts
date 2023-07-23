@@ -334,6 +334,7 @@ export default class ChatView extends Phaser.Scene {
         this.textToSave = [];
         globalEventBus.emit("save_game")
 
+        globalEventBus.emit("chat_closed");
         if(!this.destroyOnExit){
             this.scene.sleep(this);
         }else{

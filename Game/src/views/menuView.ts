@@ -15,6 +15,7 @@ import ApiHelper from "../helpers/apiHelper";
 import AchievementsAppTexture from "../assets/ui/apps/Achievements-app-icon.png";
 import AchievementManager from "../managers/achievementManager";
 import AchievementView from "./achievementView";
+import EvaluationView from "./evaluationView";
 
 export default class MenuView extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite;
@@ -131,12 +132,15 @@ export default class MenuView extends Phaser.Scene {
             this.scene.add("DocView", this._rootNode.docView);
 
 
+        var evalv = new EvaluationView(this._rootNode, this._rootNode.achievementManager);
+        this.scene.add("EvaluationView", evalv);
         const settingsButton = new SpriteButton(
             this,
             "settingsAppTexture",
             (this.scale.width / (this._columns )) * 2.5,
             1224,
             () => {
+                this.openSubMenu(evalv);
             }
         );
         this.add.existing(settingsButton);
