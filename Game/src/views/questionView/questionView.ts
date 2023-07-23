@@ -25,6 +25,7 @@ export default class QuestionView extends Phaser.Scene {
     private tilesprite: Phaser.GameObjects.TileSprite;
 
     private bottomButton: DeviceButton;
+    private _startTime: number = 0;
 
     private progressBar: Phaser.GameObjects.Graphics;
 
@@ -127,6 +128,7 @@ export default class QuestionView extends Phaser.Scene {
     }
 
     private displayQuestion(): void {
+        this._startTime = this.time.now;
         this.questionText ? this.questionText.destroy() : null;
         this.questionText = this.add
             .text(
@@ -211,7 +213,7 @@ export default class QuestionView extends Phaser.Scene {
         this.currentQuestionView.checkAnswer().then(correct => {
             console.log(correct)
             if (correct) {
-                this.taskManager.questionAnsweredCorrectly();
+                this.taskManager.questionAnsweredCorrectly(this._startTime - this.time.now);
                 this.showNextButton();
                 this.updateProgressBar()
             } else {

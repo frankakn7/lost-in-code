@@ -61,6 +61,7 @@ import ALevels5Texture from "../assets/achievements/badges_levels/badge_level_5.
 
 import ProgressBar from "../ui/progress";
 import User from "../classes/user";
+import EvaluationView from "./evaluationView";
 
 
 
@@ -73,7 +74,8 @@ export default class RootNode extends Phaser.Scene {
     // Empty State for testing purposes
     private _state: GamestateType = {
         rootNode: {
-            currentRoom: "hangar"
+            currentRoom: "hangar",
+            gameFinished: false
         },
         room: {
             finishedTaskObjects: [
@@ -98,11 +100,16 @@ export default class RootNode extends Phaser.Scene {
         },
         achievements: {
             taskCounter: 0,
+            incorrectCounter: 0,
+            currentStreak: 0,
+            longestStreak: 0,
+            fastestTaskTime: 0,
             unlocked: []
         }
     };
 
 
+    private _gameFinished = false;
 
     /**
      * The current room that the play view should show (and the player is in)
@@ -151,6 +158,7 @@ export default class RootNode extends Phaser.Scene {
     public docView: DocView;
 
     private _user: User;
+
 
     public openStoryChatViewWithoutPulling() {
         this.scene.sleep();
@@ -465,8 +473,27 @@ export default class RootNode extends Phaser.Scene {
         globalEventBus.on("broadcast_news", (message) => {this.broadcastNews(message)})
         this.broadcastAchievement = this.broadcastAchievement.bind(this);
         globalEventBus.on("broadcast_achievement", (achievement) => {this.broadcastAchievement(achievement)});
+        globalEventBus.once("game_finished", (() => {
+            this._gameFinished = true;
+            globalEventBus.emit("save_game");
+        }).bind(this))
 
-        this.scene.launch(this.currentRoom);
+        globalEventBus.on("chat_closed", (() => {
+            if (this._gameFinished) {
+                let evalView = new EvaluationView(this, this.achievementManager);
+                this.scene.add("EvaluationView", evalView);
+                this.scene.launch(evalView)
+            }
+        }).bind(this));
+
+        if (this._gameFinished) {
+            let evalView = new EvaluationView(this, this.achievementManager);
+            this.scene.add("EvaluationView", evalView);
+            this.scene.launch(evalView);
+        } else{
+            this.scene.launch(this.currentRoom);
+        }
+
     }
 
     //for testing purposes
@@ -522,6 +549,7 @@ export default class RootNode extends Phaser.Scene {
     public loadData() {
         if (this._state.rootNode.currentRoom)
             this._startingRoomId = this._state.rootNode.currentRoom
+        this._gameFinished = this._state.rootNode.gameFinished;
     }
 
 
@@ -538,7 +566,8 @@ export default class RootNode extends Phaser.Scene {
     public saveAllToGamestateType(): GamestateType {
         return {
             rootNode: {
-                currentRoom: this.getCurrentRoom().getRoomId()
+                currentRoom: this.getCurrentRoom().getRoomId(),
+                gameFinished: this._gameFinished
             },
             room: this.getCurrentRoom().saveAll(),
             story: this._storyManager.saveAll(),
@@ -560,8 +589,8 @@ export default class RootNode extends Phaser.Scene {
         return this._storyManager;
     }
 
-    public checkIfgameStartedForFirstTime() {
-        if (this.getStoryManager().checkIfEventAvailable("hangar", "event_game_start")) return true;
-        return false;
-    }
+    // public checkIfgameStartedForFirstTime() {
+    //     if (this.getStoryManager().checkIfEventAvailable("hangar", "event_game_start")) return true;
+    //     return false;
+    // }
 }

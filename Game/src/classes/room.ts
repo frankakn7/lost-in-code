@@ -346,7 +346,7 @@ export default class RoomScene extends Phaser.Scene {
         return this._doorUnlocked;
     }
 
-    public checkIfDoorUnlocked() {
+    public checkIfRoomFinished() {
         let res = true;
         this._taskObjects.forEach((obj) => {
             if (!obj.isFinished()) res = false;
@@ -354,9 +354,14 @@ export default class RoomScene extends Phaser.Scene {
 
         if (!res) return;
 
-        this.setDoorUnlocked(true);
-        globalEventBus.emit("door_was_unlocked", this._roomId);
-        globalEventBus.emit("broadcast_news", "Door unlocked!");
+        if (this._roomId != "bridge") {
+            this.setDoorUnlocked(true);
+            globalEventBus.emit("door_was_unlocked", this._roomId);
+            globalEventBus.emit("broadcast_news", "Door unlocked!");
+        }
+        else {
+            globalEventBus.emit("game_finished");
+        }
     }
 
     public getTaskObjectCount() {
@@ -370,4 +375,6 @@ export default class RoomScene extends Phaser.Scene {
         });
         return c;
     }
+    
+
 }

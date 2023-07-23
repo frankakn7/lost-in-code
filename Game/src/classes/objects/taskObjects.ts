@@ -99,7 +99,7 @@ export default class TaskObject extends InteractiveObject {
             }
 
             // TODO Should be able to stay, as this function wont be called after the door was successfully unlocked anyways
-            this.room.checkIfDoorUnlocked();
+            this.room.checkIfRoomFinished();
         }
 
     }

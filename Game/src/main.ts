@@ -1,10 +1,7 @@
 import * as Phaser from "phaser";
-import RoomScene from "./classes/room";
 import RootNode from "./views/rootNode";
-import ChatView from "./views/chatView";
 import './font.css';
-import LoginView from "./views/loginView";
-import { application } from "express";
+import Center = Phaser.Scale.Center;
 
 
 /**
@@ -55,7 +52,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
         // autoRound: true
 
     },
-
+    autoCenter: Center.CENTER_BOTH,
     scene: new RootNode(),
     // scene: new LoginView(),
     // scene: new ChatView(),

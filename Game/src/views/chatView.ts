@@ -4,6 +4,7 @@ import ChatFlow from "../classes/chat/chatFlow";
 import DeviceButton from "../ui/deviceButton";
 import ChatTextContainer from "../ui/chatTextContainer";
 import deviceBackgroundTilePng from "../assets/Device-Background-Tile.png";
+import {globalEventBus} from "../helpers/globalEventBus";
 
 /**
  * The ChatView displaying the chat
@@ -293,6 +294,7 @@ export default class ChatView extends Phaser.Scene {
         this.scene.wake("Room");
         this.scene.wake("controlPad");
         this.scene.wake("pauseChatButtons");
+        globalEventBus.emit("chat_closed");
         if(!this.destroyOnExit){
             this.scene.sleep(this);
         }else{
