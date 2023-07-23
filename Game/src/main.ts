@@ -2,6 +2,7 @@ import * as Phaser from "phaser";
 import RootNode from "./views/rootNode";
 import './font.css';
 import Center = Phaser.Scale.Center;
+import LoginView from "./views/loginView";
 
 
 /**
