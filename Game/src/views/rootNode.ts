@@ -70,6 +70,7 @@ import User from "../classes/user";
 export default class RootNode extends Phaser.Scene {
     private roomMap = new Map<string, RoomScene>;
 
+    // Empty State for testing purposes
     private _state: GamestateType = {
         rootNode: {
             currentRoom: "hangar"
@@ -100,6 +101,8 @@ export default class RootNode extends Phaser.Scene {
             unlocked: []
         }
     };
+
+
 
     /**
      * The current room that the play view should show (and the player is in)
@@ -438,7 +441,7 @@ export default class RootNode extends Phaser.Scene {
             this.scene.add(key, this.roomMap.get(key));
         })
 
-        this.scene.launch(this.currentRoom);
+
 
         // TODO: Check if mobile
 
@@ -462,6 +465,8 @@ export default class RootNode extends Phaser.Scene {
         globalEventBus.on("broadcast_news", (message) => {this.broadcastNews(message)})
         this.broadcastAchievement = this.broadcastAchievement.bind(this);
         globalEventBus.on("broadcast_achievement", (achievement) => {this.broadcastAchievement(achievement)});
+
+        this.scene.launch(this.currentRoom);
     }
 
     //for testing purposes
@@ -553,5 +558,10 @@ export default class RootNode extends Phaser.Scene {
 
     public getStoryManager() {
         return this._storyManager;
+    }
+
+    public checkIfgameStartedForFirstTime() {
+        if (this.getStoryManager().checkIfEventAvailable("hangar", "event_game_start")) return true;
+        return false;
     }
 }

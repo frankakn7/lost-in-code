@@ -1,5 +1,10 @@
 {
     "hangar": {
+        "0":{
+            "optionText": "Start the chat",
+            "text": "Welcome to Lost in Code, a thrilling video game that takes you on an interstellar adventure through a broken spaceship. You play as Astronaut tasked with repairing the damaged vessel and uncovering the mysterious cause of its destruction. Along the way, you'll encounter challenging coding tasks, clues to unravel the story, and unexpected obstacles to overcome. With the help of mission control, can you save the ship and discover the truth behind its demise? Get ready to embark on a journey beyond the stars.",
+            "choices": ["0a"]
+        },
         "end": {
             "optionText": "> ./Deactivate 'Communications Relay'",
             "text": "...<Communications Relay Deactivated>..."
@@ -11,16 +16,16 @@
             "choices": [""]
         },
 
-        "0": {
-            "optionText": "Start the chat",
-            "text": "…krkrkrkr… test …krkr… Attention astronaut! This is mission control. I'll be assisting you with the repair of the spacecraft. Our primary mode of communication will be through this chat interface. Here, I'll be sharing vital information regarding your assigned tasks. Are you prepared to utilize your skills and successfully recover the ship? Please confirm receipt of this message by responding. Over.",
-            "choices": ["0a", "0b"]
-        },
         "0a": {
+            "optionText": ".\\activate_comms",
+            "text": "…krkrkrkr… test …krkr… Attention astronaut! This is mission control. I'll be assisting you with the repair of the spacecraft. Our primary mode of communication will be through this chat interface. Here, I'll be sharing vital information regarding your assigned tasks. Are you prepared to utilize your skills and successfully recover the ship? Please confirm receipt of this message by responding. Over.",
+            "choices": ["0aa", "0ab"]
+        },
+        "0aa": {
             "optionText": "I copy.",
             "text": "Your proficiency in PHP will be crucial for the successful repair of this ship. Before we proceed, it is imperative to assess your expertise to provide you with the necessary assistance for this vital mission. Stand by for a brief assessment to evaluate your know-how. Please be prepared to demonstrate your skills"
         },
-        "0b": {
+        "0ab": {
             "optionText": "Hell yes!!!",
             "text": "Your proficiency in PHP will be crucial for the successful repair of this ship. Before we proceed, it is imperative to assess your expertise to provide you with the necessary assistance for this vital mission. Stand by for a brief assessment to evaluate your know-how. Please be prepared to demonstrate your skills"
         },
@@ -80,7 +85,7 @@
         },
         "event_loveletter2": {
             "optionText": "How dramatic!",
-            "text": "I wonder how long it took him to find all these metaphors. Over."
+            "text": "I wonder how long he needed to find all these metaphors. Over."
         }
     },
     "engine": {
@@ -176,6 +181,9 @@
         "6b": {
             "optionText": "Innovation always wins!",
             "text": "Britney: Never! Soon, you will see the damage you have unleashed in the world by joining hands with the wrong side! I can already see the regret in your future!"
+        },
+        "event_game_finished": {
+            "optionText": "Congrats you successfully repaired the spaceship and defeated the Bytebreaker Brigade. With your knowledge in programming you saved the world and all it's technology. You can be proud of yourself! But remember what the Bytebreaker Brigade said: they won't give up! And so shouldn't you. Continue learning programming and deepen your knowledge to be prepared if the Bytebreaker Brigade ever strikes again!"
         }
     }
 }
