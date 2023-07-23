@@ -72,7 +72,7 @@ export default class InputQuestionView extends Phaser.Scene {
         dummyPre.style.letterSpacing = "5px";
         // dummyPre.style.display = "inline-block";
         dummyPre.style.width = `${this.cameras.main.displayWidth - 200}px`;
-        dummyPre.style.maxHeight = `${this.cameras.main.displayHeight / 3}px`;
+        dummyPre.style.maxHeight = `${this.cameras.main.displayHeight / 4}px`;
         dummyPre.style.overflow = "scroll";
         dummyPre.style.overscrollBehavior = "contain";
         dummyPre.style.backgroundColor = "white";
@@ -96,7 +96,7 @@ export default class InputQuestionView extends Phaser.Scene {
     }
 
     private displayInputQuestion(): void {
-        this.codeBlock = this.displayCodeBlock(this.currentQuestion.code_text);
+        this.currentQuestion.code_text ? this.codeBlock = this.displayCodeBlock(this.currentQuestion.code_text) : null;
         this.inputField = this.displayInputField(
             this.currentQuestion.elements[0].element_identifier,
             this.codeBlock.y,

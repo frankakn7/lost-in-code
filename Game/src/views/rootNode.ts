@@ -158,7 +158,17 @@ export default class RootNode extends Phaser.Scene {
         this.scene.sleep("controlPad");
         this.scene.sleep("pauseChatButtons");
         this.scene.sleep("Room");
-        this.scene.wake(this.storyChatView);
+        // this.scene.wake(this.storyChatView);
+        if (this.scene.isSleeping(this.storyChatView)) {
+            this.scene.wake(this.storyChatView);
+        } else {
+            //create a new chat view
+            this.storyChatView = new ChatView(this, null,this._state.story.history, "StoryChatView");
+            //add chat view to the scene
+            this.scene.add("StoryChatView", this.storyChatView);
+            //launch the chat view
+            this.scene.launch(this.storyChatView);
+        }
     }
 
     /**
@@ -175,7 +185,7 @@ export default class RootNode extends Phaser.Scene {
             //If the chat view hasn't been launched yet
         } else {
             //create a new chat view
-            this.storyChatView = new ChatView(this._storyManager.pullNextStoryBit(this.currentRoom.getRoomId()),[], "StoryChatView");
+            this.storyChatView = new ChatView(this, this._storyManager.pullNextStoryBit(this.currentRoom.getRoomId()),this._state.story.history, "StoryChatView");
             //add chat view to the scene
             this.scene.add("StoryChatView", this.storyChatView);
             //launch the chat view
@@ -191,7 +201,7 @@ export default class RootNode extends Phaser.Scene {
             this.scene.wake(this.storyChatView);
         }
         else {
-            this.storyChatView = new ChatView(cf, [], "StoryChatView");
+            this.storyChatView = new ChatView(this, cf, this._state.story.history, "StoryChatView");
             this.scene.add("StoryChatView", this.storyChatView);
             //launch the chat view
             this.scene.launch(this.storyChatView);
@@ -205,7 +215,7 @@ export default class RootNode extends Phaser.Scene {
 
         const simpleChatFlow = new ChatFlow(simpleChatNode)
 
-        const textChatView = new ChatView(simpleChatFlow, [],"ChatTextView", true,customExitFunction)
+        const textChatView = new ChatView(this, simpleChatFlow, [],"ChatTextView", true,customExitFunction)
 
         this.scene.add("ChatTextView", textChatView)
         this.scene.launch(textChatView)
@@ -400,6 +410,7 @@ export default class RootNode extends Phaser.Scene {
         this._storyManager = new StoryManager(this)
         this.taskManager = new TaskManager(this)
 
+        //this.storyChatView = new ChatView(this, null,this._state.story.history, "StoryChatView");
 
         this.currentRoom = this.roomMap.get(this._startingRoomId);
 
@@ -418,8 +429,10 @@ export default class RootNode extends Phaser.Scene {
     public getToRoomViaId(id: string) {
         let nextRoom = this.roomMap.get(id);
         this.scene.stop(this.currentRoom)
+        this._state.room.finishedTaskObjects = Array(nextRoom.getTaskObjectCount()).fill(false);
         this.scene.launch(this.roomMap.get(id));
         this.currentRoom = nextRoom;
+
     }
 
     public create() {
@@ -500,7 +513,8 @@ export default class RootNode extends Phaser.Scene {
         //     this.currentRoom.player.downPress
         // }
         // if(this.controlPad.interactPress){
-        //     console.log("interact")
+        //     // console.log("interact")
+        //     globalEventBus.emit("save_game")
         // }
 
         //if the phone button is pressed
@@ -543,7 +557,7 @@ export default class RootNode extends Phaser.Scene {
                 currentRoom: this.getCurrentRoom().getRoomId()
             },
             room: this.getCurrentRoom().saveAll(),
-            story: {...this._storyManager.saveAll(), history:[]},
+            story: this._storyManager.saveAll(),
             user: this.user.saveState(),
             achievements: this.achievementManager.saveAll()
         };

@@ -5,6 +5,7 @@ import DeviceButton from "../ui/deviceButton";
 import ChatTextContainer from "../ui/chatTextContainer";
 import deviceBackgroundTilePng from "../assets/Device-Background-Tile.png";
 import {globalEventBus} from "../helpers/globalEventBus";
+import RootNode from "./rootNode";
 
 /**
  * The ChatView displaying the chat
@@ -67,15 +68,23 @@ export default class ChatView extends Phaser.Scene {
 
     private textToSave: string[][] = [];
 
+    private rootNode: RootNode;
+
+    private chatHistory: string[][] = [];
+
+
     /**
      *
      * @param chatFlow The first {@link ChatFlow} to be handled by the chat view
      */
-    constructor(chatFlow: ChatFlow, chatHistory?: string[][], sceneName?:string, destroyOnExit?:boolean, customExitFunc?:Function) {
+    constructor(rootNode: RootNode, chatFlow?: ChatFlow, chatHistory?: string[][], sceneName?:string, destroyOnExit?:boolean, customExitFunc?:Function) {
 
         super(sceneName ?? "chatView");
+        this.rootNode = rootNode;
+
+        this.chatHistory = chatHistory;
         destroyOnExit ? this.destroyOnExit = destroyOnExit : null;
-        this.currentChatFlow = chatFlow;
+        chatFlow ? this.currentChatFlow = chatFlow : null;
         customExitFunc ? this.exitFunction = customExitFunc : null;
     }
 
@@ -91,10 +100,23 @@ export default class ChatView extends Phaser.Scene {
         //create the text container
         this.chatTextContainer = new ChatTextContainer(this, 0, 0);
 
+        this.chatHistory.length ? this.applyChatHistory() : null;
+
+
         //start the new chat flow
-        this.startNewChatFlow(this.currentChatFlow)
 
         this.input.on('pointerdown', () => this.skipTextAnimation());
+
+        console.log("CURRENT CHAT FLOW")
+        console.log(this.currentChatFlow);
+        this.currentChatFlow ? this.startNewChatFlow(this.currentChatFlow) : this.showExitButton();
+    }
+
+    private applyChatHistory() {
+        this.chatHistory.forEach(message => {
+            message[0] === "M" ? this.chatTextContainer.addFullRecievedText(message[1]) : null;
+            message[0] === "A" ? this.chatTextContainer.addAnswerText(message[1]) : null;
+        })
     }
 
     private skipTextAnimation(): void {
@@ -239,24 +261,28 @@ export default class ChatView extends Phaser.Scene {
             });
         //if there are no choices
         } else {
-            //create the exit button
-            this.exitButton = new DeviceButton(
-                this,
-                this.cameras.main.displayWidth / 2 - this.buttonWidth / 2,  //center button horizontally
-                previousY - this.buttonPadding,
-                this.buttonWidth,
-                () => {
-                    //call exit chat function on click
-                    // this.exitChat();
-                    this.exitFunction()
-                }, //needs to be anonymous function for this to equal
-                "Exit"  //text to be displayed on the button
-            );
-            //set y to include the button height
-            this.exitButton.setY(this.exitButton.y - this.exitButton.height);
-            //add exit button to the scene
-            this.add.existing(this.exitButton);
+            this.showExitButton();
         }
+    }
+
+    private showExitButton(){
+        //create the exit button
+        this.exitButton = new DeviceButton(
+            this,
+            this.cameras.main.displayWidth / 2 - this.buttonWidth / 2,  //center button horizontally
+            this.cameras.main.displayHeight - this.buttonPadding,
+            this.buttonWidth,
+            () => {
+                //call exit chat function on click
+                // this.exitChat();
+                this.exitFunction()
+            }, //needs to be anonymous function for this to equal
+            "Exit"  //text to be displayed on the button
+        );
+        //set y to include the button height
+        this.exitButton.setY(this.exitButton.y - this.exitButton.height);
+        //add exit button to the scene
+        this.add.existing(this.exitButton);
     }
 
     /**
@@ -303,6 +329,9 @@ export default class ChatView extends Phaser.Scene {
         this.scene.wake("controlPad");
         this.scene.wake("pauseChatButtons");
 
+        console.log(this.textToSave);
+        this.rootNode.getStoryManager().addTextHistory(this.textToSave);
+        this.textToSave = [];
         globalEventBus.emit("save_game")
 
         if(!this.destroyOnExit){

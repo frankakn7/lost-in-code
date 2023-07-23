@@ -53,7 +53,7 @@ export default class RoomScene extends Phaser.Scene {
     private _nextRoom = "hangar";
 
     private _interactiveObjects = [];
-    private _taskObjects = [];
+    private _taskObjects: TaskObject[] = [];
     private _clues = [];
     private _onStartupFinishedTaskObjects = [false, false, false, false];
     // private controls;
@@ -221,7 +221,7 @@ export default class RoomScene extends Phaser.Scene {
         });
 
         for(let i = 0; i < this._taskObjects.length; i++) {
-            this._taskObjects[i].setIsFinished(this._onStartupFinishedTaskObjects[i]);
+            this._taskObjects[i].setIsFinished(this._onStartupFinishedTaskObjects[i] ?? false);
         }
 
         this._setupFOW();
@@ -329,6 +329,8 @@ export default class RoomScene extends Phaser.Scene {
         this._taskObjects.forEach(o => {
             res.finishedTaskObjects.push(o.isFinished());
         });
+        console.log("RESSSSS")
+        console.log(res)
         return res;
     }
 

@@ -19,6 +19,8 @@ export default class ChoiceQuestionView extends Phaser.Scene {
 
     private correctTextStyle;
 
+    private buttonWidth = 100;
+
     constructor(
         questionText: Phaser.GameObjects.Text,
         currentQuestion: Question
@@ -44,7 +46,7 @@ export default class ChoiceQuestionView extends Phaser.Scene {
         dummyPre.style.letterSpacing = "5px";
         // dummyPre.style.display = "inline-block";
         dummyPre.style.width = `${this.cameras.main.displayWidth - 200}px`;
-        dummyPre.style.maxHeight = `${this.cameras.main.displayHeight / 3}px`;
+        dummyPre.style.maxHeight = `${this.cameras.main.displayHeight / 4}px`;
         dummyPre.style.overflow = "scroll";
         dummyPre.style.overscrollBehavior = "contain";
         dummyPre.style.backgroundColor = "white";
@@ -83,9 +85,9 @@ export default class ChoiceQuestionView extends Phaser.Scene {
                 let answerButton = new ChoiceButton(
                     this,
                     this.cameras.main.displayWidth / 2 -
-                        this.cameras.main.displayWidth / 4,
+                        this.buttonWidth / 2,
                     previousButtonY + 100,
-                    this.cameras.main.displayWidth / 2,
+                    this.buttonWidth  ,
                     () => {
                         // console.log(element.checkIfCorrect(true));
                     },
@@ -156,6 +158,7 @@ export default class ChoiceQuestionView extends Phaser.Scene {
     }
 
     create() {
+        this.buttonWidth = this.cameras.main.displayWidth - 300;
         this.displayChoiceQuestion();
         this.correctAnswerStyle = {
             fontSize: "35px",

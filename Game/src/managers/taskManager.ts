@@ -38,14 +38,18 @@ export default class TaskManager {
     // }
 
     private loadQuestions() {
-        this.apiHandler.getFullChapter(this._rootNode.user.chapterNumber)
-            .then((response:any) => {
-                this.availableQuestions = response.questions;
-                this.currentChapterMaxDifficulty = Math.max(
-                    ...this.availableQuestions.map((q) => q.difficulty)
-                );
-            })
-            .catch((error) => console.error(error))
+        return new Promise((resolve, reject) => {
+            this.apiHandler.getFullChapter(this._rootNode.user.chapterNumber)
+                .then((response:any) => {
+                    this.availableQuestions = response.questions;
+                    this.currentChapterMaxDifficulty = Math.max(
+                        ...this.availableQuestions.map((q) => q.difficulty)
+                    );
+                    console.log(availableQuestions)
+                    resolve(null);
+                })
+                .catch((error) => reject(error))
+        })
     }
 
     private shuffleQuestions(questions: Question[]) {
@@ -60,19 +64,37 @@ export default class TaskManager {
         this.shuffleQuestions(this.availableQuestions);
         this.shuffleQuestions(this.answeredQuestions);
 
+        this.currentQuestionSetForObject = [];
+
         const availableQuestionsMap = this.availableQuestions.reduce((map, question) => {
             if (!map[question.difficulty]) map[question.difficulty] = [];
             map[question.difficulty].push(question);
             return map;
         }, {});
 
+        const answeredQuestionsMap = this.answeredQuestions.reduce((map, question) => {
+            if (!map[question.difficulty]) map[question.difficulty] = [];
+            map[question.difficulty].push(question);
+            return map;
+        }, {});
+
         for (let i = this._rootNode.user.performanceIndex; i <= this.currentChapterMaxDifficulty; i++) {
-            const questionsWithDifficulty = availableQuestionsMap[i];
-            if (questionsWithDifficulty && questionsWithDifficulty.length > 0) {
-                const question = questionsWithDifficulty.pop();
-                this.currentQuestionSetForObject.push(question);
+            let questionsWithDifficulty = availableQuestionsMap[i];
+            let j = 0;
+            let increasing = true
+            while((!questionsWithDifficulty || questionsWithDifficulty.length <= 0) && j >= 0){
+                questionsWithDifficulty = availableQuestionsMap[i+j];
+                if (!questionsWithDifficulty || questionsWithDifficulty.length <= 0) {
+                    questionsWithDifficulty = answeredQuestionsMap[i+j];
+                }
+                increasing ? j++ : j--;
+                j >= this.currentChapterMaxDifficulty ? increasing = false : null;
             }
+            const question = questionsWithDifficulty.pop();
+            this.currentQuestionSetForObject.push(question);
         }
+
+        console.log(this.currentQuestionSetForObject);
 
         this.currentDoneQuestions = 0;
         this.currentTotalQuestions = this.currentQuestionSetForObject.length;
@@ -124,7 +146,9 @@ export default class TaskManager {
         if (index > -1) {
             this.availableQuestions.splice(index, 1);
         }
+        console.log(currentQuestion)
         this.answeredQuestions.push(currentQuestion);
+        this._rootNode.user.addAnsweredQuestionIds(currentQuestion.id);
         this.currentQuestionSetForObject.shift();
         this.currentDoneQuestions++;
         if (this.currentQuestionSetForObject.length === 0) {
@@ -152,11 +176,12 @@ export default class TaskManager {
 
         //Test data!
         //this.availableQuestions = availableQuestions;
-        console.log(rootNode.user)
-        this.loadState(rootNode.user.answeredQuestionIds);
+        // console.log(rootNode.user)
 
-        this.loadQuestions();
+        this.loadQuestions().then((result => {
+            this.loadState(rootNode.user.answeredQuestionIds);
+            this.populateNewQuestionSet();
+        })).catch(error => console.error(error));
 
-        this.populateNewQuestionSet();
     }
 }

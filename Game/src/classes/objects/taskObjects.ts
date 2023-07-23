@@ -117,10 +117,11 @@ export default class TaskObject extends InteractiveObject {
     }
 
     public isFinished() {
+        console.log(this._isFinished);
         return this._isFinished;
     }
 
-    public setIsFinished(finished) {
+    public setIsFinished(finished:boolean) {
         this._isFinished = finished;
 
         if (finished) {

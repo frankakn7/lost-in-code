@@ -75,7 +75,6 @@ export default class QuestionView extends Phaser.Scene {
 
         // this.cameras.main.setBackgroundColor("rgba(6,24,92,1)");
 
-        this.showSubmitButton();
 
         this.taskManager.populateNewQuestionSet();
         this.getAndDisplayNewQuestion();
@@ -89,6 +88,7 @@ export default class QuestionView extends Phaser.Scene {
         this.progressBar.lineStyle(3, 0x00c8ff)
         this.progressBar.strokeRect(50, 50, totalWidth, 50)
         this.updateProgressBar()
+        this.showSubmitButton();
     }
 
     private updateProgressBar(correct = true) {
@@ -137,7 +137,6 @@ export default class QuestionView extends Phaser.Scene {
             )
             .setOrigin(0.5, 0);
         this.removeAllQuestionScenes();
-        this.showSubmitButton();
         switch (this.currentQuestion.type) {
             case QuestionType.CHOICE:
                 // console.log("Choice");
@@ -205,6 +204,8 @@ export default class QuestionView extends Phaser.Scene {
                 console.log("none");
                 break;
         }
+        // this.scene.bringToTop();
+        this.showSubmitButton();
     }
 
     private checkAnswer() {
@@ -223,6 +224,7 @@ export default class QuestionView extends Phaser.Scene {
     }
 
     private showSubmitButton(): void {
+        this.bottomButton?.destroy(true);
         this.bottomButton = new DeviceButton(
             this,
             this.cameras.main.displayWidth / 2 -

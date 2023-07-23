@@ -66,7 +66,29 @@ export default class ClozeQuestionView extends Phaser.Scene {
 
     private displayCodeBlockCloze(code: string): Phaser.GameObjects.DOMElement {
         hljs.registerLanguage("php", php);
-        let highlightedCode = hljs.highlight(code, { language: "php" }).value;
+
+        hljs.registerLanguage("php", php);
+
+        let regex = /###INPUT\|(.+?)\|(.+?)\|(.+?)###/g;
+        let parts = code.split(regex);
+
+        let processedParts = [];
+
+        for (let i = 0; i < parts.length; i += 4) {
+            processedParts.push(hljs.highlight(parts[i], { language: "php" }).value);
+
+            if (i + 1 < parts.length) {
+                let id = parts[i + 1];
+                let length = parts[i + 2];
+                let whitespace = parts[i + 3] === "true" ? "" : ' style="white-space: nowrap;"';
+
+                processedParts.push(`<input type='text' id='${id}' maxlength='${length}' style="font-family: 'forwardRegular'; font-size: 25px; padding: 10px; border: 5px solid #00c8ff; background-color: #3f414a; color: #d1d6e0"${whitespace}/>`);
+            }
+        }
+
+        let highlightedCode = processedParts.join("");
+
+        // let highlightedCode = hljs.highlight(code, { language: "php" }).value;
 
         // Create a dummy div and apply the highlighted code to it
         let dummyPre = document.createElement("pre");
@@ -80,7 +102,7 @@ export default class ClozeQuestionView extends Phaser.Scene {
         dummyPre.style.letterSpacing = "5px"
         // dummyPre.style.display = "inline-block";
         dummyPre.style.width = `${this.cameras.main.displayWidth - 200}px`;
-        dummyPre.style.maxHeight = `${this.cameras.main.displayHeight / 3}px`;
+        dummyPre.style.maxHeight = `${this.cameras.main.displayHeight / 4}px`;
         dummyPre.style.overflow = "scroll";
         dummyPre.style.overscrollBehavior = "contain";
         dummyPre.style.backgroundColor = "white";
@@ -91,26 +113,28 @@ export default class ClozeQuestionView extends Phaser.Scene {
         dummyPre.style.color = "#c0c5ce";
 
         // Extract the placeholders and their information
-        let regex = /###INPUT\|(.+?)\|(.+?)\|(.+?)###/g;
-        let match;
-        while ((match = regex.exec(dummyDiv.innerHTML)) !== null) {
-            let id = match[1];
-            let length = match[2];
-            let whitespace = match[3];
-
-            let inputField = `<input type='text' id='${id}' maxlength='${length}' style="font-family: 'forwardRegular'; font-size: 25px; padding: 10px; border: 5px solid #00c8ff; background-color: #3f414a; color: #d1d6e0"`;
-
-            if (whitespace === "false") {
-                inputField += 'style="white-space: nowrap;" ';
-            }
-
-            inputField += "/>";
-
-            dummyDiv.innerHTML = dummyDiv.innerHTML.replace(
-                match[0],
-                inputField
-            );
-        }
+        // console.log(dummyDiv.innerHTML)
+        // let regex = /###INPUT\|(.+?)\|(.+?)\|(.+?)###/g;
+        // let match;
+        // while ((match = regex.exec(dummyDiv.innerHTML)) !== null) {
+        //     console.log(match);
+        //     let id = match[1];
+        //     let length = match[2];
+        //     let whitespace = match[3];
+        //
+        //     let inputField = `<input type='text' id='${id}' maxlength='${length}' style="font-family: 'forwardRegular'; font-size: 25px; padding: 10px; border: 5px solid #00c8ff; background-color: #3f414a; color: #d1d6e0"`;
+        //
+        //     if (whitespace === "false") {
+        //         inputField += 'style="white-space: nowrap;" ';
+        //     }
+        //
+        //     inputField += "/>";
+        //
+        //     dummyDiv.innerHTML = dummyDiv.innerHTML.replace(
+        //         match[0],
+        //         inputField
+        //     );
+        // }
 
         dummyPre.appendChild(dummyDiv);
         // dummyForm.appendChild(dummyPre);

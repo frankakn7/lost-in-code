@@ -92,14 +92,18 @@ export default class StoryManager {
         return value;
     }
 
+    public addTextHistory(newTexts: string[][]){
+        this._textHistory = this._textHistory.concat(newTexts);
+    }
 
     public loadData() {
-        this._finishedStuff = this._rootNode.getState().story;
+        let {history, ...finishedStuff} = this._rootNode.getState().story;
+        this._finishedStuff = finishedStuff;
+        this._textHistory = history;
     }
 
     public saveAll() {
-        console.log(this._finishedStuff)
-        return this._finishedStuff;
+        return {...this._finishedStuff, history: this._textHistory};
     }
 
     public checkIfRoomStoryPlayed(roomId) {
