@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import Modal from './Modal.svelte';
-	import UserModal from './UserModal.svelte';
+	import UserModal from './ConfirmModal.svelte';
 
 	export let users: any[] = [];
 
@@ -98,6 +98,9 @@
 		</tr>
 	{/each}
 </table>
+<div id="centered-button">
+	<a href="/users/create" class="click-button" id="add-button"><i class="fa fa-plus" /> Add User</a>
+</div>
 
 <style>
 	table {
@@ -143,5 +146,47 @@
 	td,
 	th {
 		padding: 0.5rem;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	.click-button {
+		padding: 0.4rem;
+		cursor: pointer;
+		border-style: none;
+		border-radius: 0.2rem;
+		background-color: var(--yinmn-blue);
+		color: var(--timberwolf);
+		font-size: 1rem;
+		/* box-shadow: 2px 2px 2px gray; */
+		transition: all 0.2s;
+	}
+
+	.click-button:hover {
+		/* transform: translate(-2px,-2px); */
+		scale: 1.1;
+		font-size: 1.1rem;
+		/* box-shadow: 4px 4px 2px gray; */
+		transition: all 0.2s;
+	}
+
+	.click-button:active {
+		scale: 0.9;
+		font-size: 1rem;
+		transition: all 0.2s;
+	}
+
+	#add-button {
+		background-color: var(--pigment-green);
+		margin-right: 1rem;
+	}
+
+	#centered-button{
+		margin-top: 2rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 </style>

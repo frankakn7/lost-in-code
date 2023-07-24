@@ -16,8 +16,6 @@ router.post("/", (req, res) => {
 
 router.get("/me", (req, res) => {
     const userId = req.body.user.id;
-    console.log(req.body)
-    console.log(userId)
     getGameState(req,res,userId);
 });
 
@@ -32,7 +30,6 @@ router.get("/:userId", (req, res) => {
 router.put("/me", (req, res) => {
     const userId = req.body.user.id;
     const game_state = req.body.game_state;
-    console.log(req.body)
     updateGameState(req,res,userId,game_state)
 });
 

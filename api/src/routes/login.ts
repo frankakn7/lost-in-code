@@ -11,8 +11,6 @@ const router = express.Router();
  */
 router.post("/", (req, res) => {
     const { email, password } = req.body;
-    console.log(email)
-    console.log(password)
     const sql =
         "SELECT `id`, `password_hash`, `role`, `username` FROM `user` WHERE `email` = ?;";
     const params = [email];
