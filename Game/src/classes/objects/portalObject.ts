@@ -5,9 +5,21 @@ import RoomScene from "../room";
 import {globalEventBus} from "../../helpers/globalEventBus";
 import Clock = Phaser.Time.Clock;
 
+/**
+ * PortalObject is a subclass of InteractiveObject that represents an object that can be interacted with to get to the next room.
+ */
 export default class PortalObject extends InteractiveObject {
-    private _emitter;
+    private _emitter; // Stores the particle emitter for the object.
 
+    /**
+     * Creates an instance of PortalObject.
+     * @param scene
+     * @param room
+     * @param x
+     * @param y
+     * @param params
+     * @param properties
+     */
     constructor(
         scene: Phaser.Scene,
         room: RoomScene,
@@ -20,6 +32,8 @@ export default class PortalObject extends InteractiveObject {
 
         const shape = new Phaser.Geom.Line(0, 0, 0, this.height);
         const shape1 = new Phaser.Geom.Rectangle(0, 0, this.width, this.height);
+
+        // Set up particle emitter
         this._emitter = this.scene.add.particles(this.x, this.y, 'flares', {
             frame: { frames: ['red'], cycle: true},
             speed: 1,
@@ -42,8 +56,10 @@ export default class PortalObject extends InteractiveObject {
     }
 
     public interact(): void {
+        // Check if the door is unlocked
         if (this.room.getDoorUnlocked()) {
             console.log("Open Door");
+            // Fade out the camera and then change the room
             this.room.getRootNode().getToRoomViaId(this.room.getNextRoom());
             this.room.cameras.main.fadeOut(1000, 0, 0, 0)
         }
