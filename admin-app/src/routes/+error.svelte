@@ -3,7 +3,7 @@
 </script>
 
 <div>
-	<h1>Sadly Something Went Wrong</h1>
+	<h1>Sadly, Something Went Wrong</h1>
 	<h1>{$page.status}: {$page.error?.message}</h1>
 </div>
 

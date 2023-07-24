@@ -13,6 +13,8 @@
     let role = 'USER';
     const groups = data.groups;
 
+    let passwordMismatch = false;
+
     // let previousPage : string = base ;
     //
     // afterNavigate(({from}) => {
@@ -20,6 +22,12 @@
     // })
 
     function handleSubmit() {
+        if (password !== passwordConfirm) {
+            passwordMismatch = true;
+            // alert("Passwords do not match!");
+            return;
+        }
+
         const formData = {username, email, password, group_id: group_id === 'null' ? null : group_id, role};
         console.log(formData);
         const apiUrl = import.meta.env.VITE_API_URL;
@@ -72,7 +80,7 @@
                 <label for="password-confirm">Confirm Password</label>
             </td>
             <td>
-                <input type="password" id="password-confirm" bind:value={passwordConfirm} required />
+                <input type="password" id="password-confirm" bind:value={passwordConfirm} class="{passwordMismatch ? 'mismatch' : ''}" required />
             </td>
         </tr>
         <tr>
@@ -161,6 +169,10 @@
 
     #cancel-button {
         background-color: var(--imperial-red);
+    }
+
+    .mismatch {
+        border: 2px solid var(--imperial-red);
     }
 
 </style>
