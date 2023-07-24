@@ -110,59 +110,67 @@ export default class RootNode extends Phaser.Scene {
     };
 
 
-    private _gameFinished = false;
+    private _gameFinished = false; // Indicates whether the game has been finished or not.
 
 
-    private currentRoom: RoomScene;
+    private currentRoom: RoomScene; // The currently displayed room.
 
-    private _startingRoomId: string = "hangar";
+    private _startingRoomId: string = "hangar"; // The ID of the default starting room.
 
-    private controlPad = new ControlPadScene();
-
-
-    private pauseChatButtons = new PauseChatButtons();
-    private progressBar = new ProgressBar(this);
-
-    public achievementManager: AchievementManager = new AchievementManager(this);
+    private controlPad = new ControlPadScene(); // The control pad scene for handling player movement.
 
 
-    private storyChatView: ChatView;
+    private pauseChatButtons = new PauseChatButtons(); // The pause chat buttons scene for handling pausing and resuming chat.
+    private progressBar = new ProgressBar(this); // The progress bar scene for displaying the progress of the game.
+
+    public achievementManager: AchievementManager = new AchievementManager(this); // The achievement manager for handling achievements.
 
 
-    private questionView: Phaser.Scene;
+    private storyChatView: ChatView; // The chat view scene for handling chat.
 
-    public menuView = new MenuView(this);
 
-    private taskManager: TaskManager;
+    private questionView: Phaser.Scene; // The question view scene for handling questions.
 
-    private _storyManager: StoryManager;
+    public menuView = new MenuView(this); // The menu view scene for handling the menu.
 
-    public hatMap = HatMap;
+    private taskManager: TaskManager; // The task manager for handling tasks.
 
-    public hatView = new HatView(this);
+    private _storyManager: StoryManager; // The story manager for handling the story.
+
+    public hatMap = HatMap; // The hat map for storing hat data.
+
+    public hatView = new HatView(this); // The hat view scene for handling hats.
 
     private taskQueue: Array<() => void> = [];
 
-    private _news = [];
-    private _newsCounter = 0;
+    private _news = []; // The news popups that are currently displayed.
+    private _newsCounter = 0; // The counter for the news popups.
 
-    private apiHelper = new ApiHelper();
+    private apiHelper = new ApiHelper(); // The API helper for handling API calls.
 
-    public docView: DocView;
+    public docView: DocView; // The documentation view scene for handling documentation.
 
-    private _user: User;
+    private _user: User; // The user instance for storing user data.
 
 
+    /**
+     * Opens the story chat view without removing the story chat node from the story manager.
+     * If the chat view is already open, it wakes it up; otherwise, it creates a new chat view.
+     * The method also sleeps other scenes such as controlPad, pauseChatButtons, and Room for a smooth transition.
+     */
     public openStoryChatViewWithoutPulling() {
+        // Sleep other scenes for a smooth transition
         this.scene.sleep();
         this.scene.sleep("controlPad");
         this.scene.sleep("pauseChatButtons");
         this.scene.sleep("Room");
         // this.scene.wake(this.storyChatView);
+
+        // Check if the story chat view is already open
         if (this.scene.isSleeping(this.storyChatView)) {
             this.scene.wake(this.storyChatView);
         } else {
-            //create a new chat view
+            // Create a new chat view with the history from _state.story
             this.storyChatView = new ChatView(this, null,this._state.story.history, "StoryChatView");
             //add chat view to the scene
             this.scene.add("StoryChatView", this.storyChatView);
@@ -193,6 +201,10 @@ export default class RootNode extends Phaser.Scene {
         }
     }
 
+    /**
+     * Opens the story chat view, either by waking up an existing sleeping chat view
+     * or by creating and launching a new chat view with the first chat flow.
+     */
     public openEventChatView(roomId, eventId) : void {
         let cf = this._storyManager.pullEventIdChatFlow(roomId, eventId);
 
@@ -208,6 +220,11 @@ export default class RootNode extends Phaser.Scene {
         }
     }
 
+    /**
+     * Opens a text-based chat view with the provided text and custom exit function.
+     * @param {string} text - The text to be displayed in the chat view.
+     * @param {Function} customExitFunction - A custom function to be executed when the chat view is exited.
+     */
     public openTextChatView(text,customExitFunction:Function): void {
         this.prepSceneForChat();
 
@@ -221,6 +238,10 @@ export default class RootNode extends Phaser.Scene {
         this.scene.launch(textChatView)
     }
 
+    /**
+     * Prepares the scene for displaying a chat view by putting other scenes to sleep.
+     * This ensures that only the chat view is active and visible.
+     */
     public prepSceneForChat() {
         this.scene.sleep();
         this.scene.sleep("controlPad");
@@ -228,6 +249,10 @@ export default class RootNode extends Phaser.Scene {
         this.scene.sleep("Room");
     }
 
+    /**
+     * Called when the scene is woken up from being paused.
+     * Processes tasks in the task queue, executing them one by one.
+     */
     onWake() {
         // Execute all tasks in the queue
         while (this.taskQueue.length > 0) {
@@ -243,6 +268,12 @@ export default class RootNode extends Phaser.Scene {
     }
 
 
+    /**
+     * Broadcasts a news message to the player.
+     * Creates and displays a new NewsPopup with the given message.
+     * If there are existing news popups, they will be removed before showing the new one.
+     * @param {string} message - The news message to be displayed in the popup.
+     */
     public broadcastNews(message) {
         let newsId = "newsPopup" + (this._newsCounter++).toString();
         let newsPopup = new NewsPopup(this, newsId,message, 2500);
@@ -257,6 +288,12 @@ export default class RootNode extends Phaser.Scene {
         this._news.push(newsPopup)
     }
 
+    /**
+     * Broadcasts an achievement popup with the given achievement information.
+     * @param {object} achievement - The achievement object containing information about the achievement.
+     * @param {string} achievement.text - The text message to be displayed in the achievement popup.
+     * @param {string} achievement.texture - The texture key for the icon/image associated with the achievement.
+     */
     public broadcastAchievement(achievement) {
         let newsId = "newsPopup" + (this._newsCounter++).toString();
         let newsPopup = new NewsPopup(this, newsId,achievement.text, 2500, achievement.texture);
@@ -271,6 +308,11 @@ export default class RootNode extends Phaser.Scene {
         this._news.push(newsPopup)
     }
 
+    /**
+     * Opens the QuestionView or TextChatView based on certain conditions.
+     * If the user is not in a new chapter, the QuestionView is opened. Otherwise,
+     * the TextChatView with the chapter material is displayed, and then the QuestionView is opened.
+     */
     private openQuestionView(){
         //If the chat view already exists and is sleeping
         if (!this._user.newChapter) {
@@ -317,6 +359,9 @@ export default class RootNode extends Phaser.Scene {
         }
     }
 
+    /**
+     * Preloads the required assets for the game.
+     */
     public preload() {
         this.load.image("badge_tasks_5", ATask5Texture);
         this.load.image("badge_tasks_10", ATask10Texture);
