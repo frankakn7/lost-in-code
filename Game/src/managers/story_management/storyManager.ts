@@ -11,8 +11,8 @@ import RootNode from "../../views/rootNode";
  * reconstructing the chat flow tree from json, etc
  */
 export default class StoryManager {
-    private _storyEvents = {};
-    private _rootNode : RootNode;
+    private _storyEvents = {}; // Stores ChatFlow objects for each room and event.
+    private _rootNode : RootNode; // The root node of the game or application.
 
     private _finishedStuff = {
         hangar: [],
@@ -20,9 +20,9 @@ export default class StoryManager {
         engine: [],
         laboratory: [],
         bridge: []
-    };
+    };  // Stores the IDs of the events that have been finished for each room.
 
-    private _textHistory: string[][] = [];
+    private _textHistory: string[][] = []; // Stores the text history for the current game or application.
 
     /**
      * Constructs a new instance of the class.
