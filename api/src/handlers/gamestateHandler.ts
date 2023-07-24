@@ -20,7 +20,7 @@ export const getGameState = (req: any, res: any, userId: any) => {
 
     db.query(sql, params)
         .then((results:any) => {
-            res.send(results[0]);
+            res.json(results[0]);
         })
         .catch((error) => {
             console.error("Error querying from the database:", error);

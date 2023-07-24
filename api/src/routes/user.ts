@@ -5,7 +5,9 @@ import db from "../db";
 
 const router = express.Router();
 
-
+/**
+ * Create user
+ */
 router.post("/", requireAdminRole,async (req, res) => {
     const user = req.body;
 
@@ -40,9 +42,24 @@ router.get("/", requireAdminRole,(req: Request, res: Response) => {
 /**
  * Get specific user data
  */
-router.get("/me/curriculum_data",onlyAllowSelf, (req: Request, res: Response) => {
+router.get("/me/curriculum_data", (req: Request, res: Response) => {
     const sql = 'SELECT * FROM `user_game_curriculum` WHERE user_id = ?;'
     const userId = req.body.user.id;
+    const params = [userId]
+    db.query(sql,params).then((results:any) => {
+        res.send(results[0])
+    }).catch(error => {
+        console.error(error)
+        return res.status(500).send("Server error")
+    })
+});
+
+/**
+ * Get specific user data
+ */
+router.get("/:id/curriculum_data",onlyAllowSelf, (req: Request, res: Response) => {
+    const sql = 'SELECT * FROM `user_game_curriculum` WHERE user_id = ?;'
+    const userId = req.params.id;
     const params = [userId]
     db.query(sql,params).then((results:any) => {
         res.send(results[0])
@@ -69,11 +86,23 @@ router.get("/:id",onlyAllowSelf, (req: Request, res: Response) => {
 /**
  * Update specific user
  */
-router.put("/:id",onlyAllowSelf, (req: Request, res: Response) => {
+router.put("/:id",onlyAllowSelf, async (req: Request, res: Response) => {
     const userId = req.params.id;
     const user = req.body;
-    const sql = 'UPDATE `user` SET `username` = ?, `email` = ?, `password_hash` = ?, `group_id` = ? WHERE `id` = ?;'
-    const params = [user.username, user.email, user.password_hash, user.group_id, userId];
+
+    let sql = "";
+    let params = [];
+
+    console.log(user.password)
+    if(user.password && user.password != ""){
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(user.password, saltRounds);
+        sql = 'UPDATE `user` SET `username` = ?, `email` = ?, `password_hash` = ?, `group_id` = ? WHERE `id` = ?;'
+        params = [user.username, user.email, hashedPassword, user.group_id, userId];
+    }else{
+        sql = 'UPDATE `user` SET `username` = ?, `email` = ?, `group_id` = ? WHERE `id` = ?;'
+        params = [user.username, user.email, user.group_id, userId];
+    }
     db.query(sql,params).then(results => {
         res.send(results)
     }).catch(error => {

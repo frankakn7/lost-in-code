@@ -63,7 +63,8 @@
 	form {
 		background-color: var(--timberwolf);
 		padding: 1.5rem;
-		width: 30%;
+		width: 50%;
+		min-width: 25rem;
         height: 15rem;
 		border-radius: 1rem;
 		font-size: 2rem;
@@ -82,8 +83,13 @@
 	.input-container {
 		width: 100%;
 		display: flex;
-		justify-content: space-around;
+		justify-content: center;
 		align-items: center;
+	}
+
+	.input-container i,
+	.input-container input {
+		margin: 0.5rem;
 	}
 
     #login-button {

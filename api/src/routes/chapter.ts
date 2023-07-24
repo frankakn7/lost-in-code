@@ -114,7 +114,7 @@ router.get("/:id/full", (req: Request, res: Response) => {
                 db.query(sql, params)
                     .then((results:any) => {
                         results[0].questions = []
-                        console.log(results[0])
+                        // console.log(results[0])
                         res.send(results[0]);
                     })
                     .catch((error) => {
