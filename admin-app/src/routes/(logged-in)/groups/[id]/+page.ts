@@ -8,5 +8,13 @@ export const load = (async ({ params, fetch }: any) => {
 	});
 	console.log("Requesting Group")
 	const data = await response.json();
-	return {group: data};
+
+	const curriculumResponse = await fetch(`${apiUrl}/curriculums/`, {
+		method: 'GET',
+		credentials: "include"
+	});
+	console.log("Requesting Group")
+	const curriculumData = await curriculumResponse.json();
+
+	return {group: data, curriculums: curriculumData};
 }) satisfies PageLoad;
