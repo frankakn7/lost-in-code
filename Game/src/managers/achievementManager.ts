@@ -19,9 +19,13 @@ export default class AchievementManager {
     constructor(rootNode: RootNode) {
         this._rootNode = rootNode;
         this.loadData();
+
+
         globalEventBus.on("taskmanager_task_correct", ((duration) => {
             this._onTaskmanagerCorrect(duration)
         }).bind(this));
+
+
         globalEventBus.on("taskmanager_task_incorrect",
             this._onTaskManagerIncorrect.bind(this));
 
@@ -31,6 +35,7 @@ export default class AchievementManager {
     private _onTaskmanagerCorrect(duration) {
         this._tasksCounter++;
         this._currentStreak++;
+
         if (this._currentStreak > this._longestStreak) this._longestStreak = this._currentStreak;
 
         if (duration > 0) {
@@ -83,6 +88,7 @@ export default class AchievementManager {
             unlocked: this.unlocked,
         }
     }
+
 
     public loadData() {
         this.unlocked = this._rootNode.getState().achievements.unlocked;
