@@ -99,7 +99,7 @@ export default class StoryManager {
     public loadData() {
         let {history, ...finishedStuff} = this._rootNode.getState().story;
         this._finishedStuff = finishedStuff;
-        this._textHistory = history;
+        this._textHistory = history ?? [];
     }
 
     public saveAll() {

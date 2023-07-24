@@ -147,7 +147,7 @@ export default class RootNode extends Phaser.Scene {
 
     public hatMap = HatMap;
 
-    public hatView = new HatView(this);
+    public hatView: HatView;
 
     private taskQueue: Array<() => void> = [];
 
@@ -415,6 +415,7 @@ export default class RootNode extends Phaser.Scene {
         }, "bridge", this).setPlayerPosition(32 * 2, 32 * 10));
 
         this.loadData();
+        this.hatView = new HatView(this)
         this._storyManager = new StoryManager(this)
         this.taskManager = new TaskManager(this)
 

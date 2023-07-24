@@ -29,7 +29,7 @@ export default class HatView extends Phaser.Scene {
     }
 
     public create() {
-        this.loadData();
+        // this.loadData();
         this._tilesprite = this.add.tileSprite(0,0,this.cameras.main.displayWidth / 3, this.cameras.main.displayHeight / 3, "backgroundTile").setOrigin(0,0).setScale(3);
         
         const resumeButton = new SpriteButton(
@@ -45,13 +45,13 @@ export default class HatView extends Phaser.Scene {
         this.drawHatButtons();
     }
 
-    private loadData() {
-        this._rootNode.user.unlockedHats.forEach(hat => {
-            this._rootNode.user.addUnlockedHats(hat);
-        });
-
-       // this.loadSelectedHat()
-    }
+    // private loadData() {
+    //     this._rootNode.user.unlockedHats.forEach(hat => {
+    //         this._rootNode.user.addUnlockedHats(hat);
+    //     });
+    //
+    //    // this.loadSelectedHat()
+    // }
 
     // public loadSelectedHat() {
     //     if(this._rootNode.user.selectedHat){

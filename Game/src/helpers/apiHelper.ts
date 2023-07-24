@@ -156,7 +156,16 @@ export default class ApiHelper {
             })
                 .then((response) => {
                     if (response.ok) {
-                        resolve(response);
+                        response
+                            .json()
+                            .then((data) => {
+                                console.log(data)
+                                    data.user
+                                        ? resolve(data)
+                                        : reject("no user data")
+                                }
+                            )
+                            .catch((error) => reject(error));
                     } else {
                         reject("login failed");
                     }
