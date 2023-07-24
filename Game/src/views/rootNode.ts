@@ -112,31 +112,23 @@ export default class RootNode extends Phaser.Scene {
 
     private _gameFinished = false;
 
-    /**
-     * The current room that the play view should show (and the player is in)
-     */
+
     private currentRoom: RoomScene;
 
     private _startingRoomId: string = "hangar";
-    /**
-     * The ui control pad for controlling the player
-     */
+
     private controlPad = new ControlPadScene();
 
-    /**
-     * The pause and chat buttons at the top of the screen
-     */
+
     private pauseChatButtons = new PauseChatButtons();
     private progressBar = new ProgressBar(this);
 
     public achievementManager: AchievementManager = new AchievementManager(this);
 
-    /**
-     * the chat view
-     */
+
     private storyChatView: ChatView;
 
-    // private questionView: QuestionView;
+
     private questionView: Phaser.Scene;
 
     public menuView = new MenuView(this);
@@ -358,9 +350,9 @@ export default class RootNode extends Phaser.Scene {
     }
 
     /**
-     * Play View constructor
-     * @param initialRoomKey the room scene that the play view should start with
-     * @param settingsConfig the standard settingsConfig object used for all scenes
+     * Constructs the RootNode scene, responsible for setting up the entire game.
+     * @param {any} userData - Data related to the user, such as ID and username.
+     * @param {GamestateType} state - The state of the game, indicating the progress and data of the user's playthrough.
      */
     constructor(
         userData?: any,
@@ -368,11 +360,16 @@ export default class RootNode extends Phaser.Scene {
     ) {
         super("Play");
 
+        // If the state parameter is provided, set it as the current state of the game.
+        // If not provided, the default state will be used.
         state ? this._state = state : null;
 
         console.log(this._state)
+        // Create a new User instance with the provided user data if available, otherwise create a new User with default data.
         this._user = userData ? new User(userData.id, userData.username, this._state.user) : new User();
 
+        // Create and set up the various RoomScene instances for different rooms in the game.
+        // Each RoomScene represents a specific room in the game with its tilemap, layers, and player position.
         this.roomMap.set("hangar", new RoomScene({
             tilesetImage: tilesetPng,
             tilesetName: "spac2",
@@ -414,12 +411,13 @@ export default class RootNode extends Phaser.Scene {
             objectsLayer: "Objects"
         }, "bridge", this).setPlayerPosition(32 * 2, 32 * 10));
 
+        // Load the required data for the game.
         this.loadData();
         this._storyManager = new StoryManager(this)
         this.taskManager = new TaskManager(this)
 
-        //this.storyChatView = new ChatView(this, null,this._state.story.history, "StoryChatView");
 
+        // Set the current room to be the starting room specified by the startingRoomId.
         this.currentRoom = this.roomMap.get(this._startingRoomId);
 
         this.questionView = new QuestionView(this.taskManager);
@@ -433,45 +431,58 @@ export default class RootNode extends Phaser.Scene {
         return this.currentRoom;
     }
 
-
+    /**
+     * Navigates the player to a new room in the game based on the provided room ID.
+     * @param {string} id - The ID of the room to navigate to.
+     */
     public getToRoomViaId(id: string) {
         let nextRoom = this.roomMap.get(id);
         this.scene.stop(this.currentRoom)
+
+        // Initialize the 'finishedTaskObjects' property of the game state for the next room.
+        // The 'finishedTaskObjects' property is an array that tracks the completion status of tasks in the room.
+        // It is set to an array of false values with the length equal to the number of task objects in the next room.
         this._state.room.finishedTaskObjects = Array(nextRoom.getTaskObjectCount()).fill(false);
+
+        // Launch the next room scene to activate it.
         this.scene.launch(this.roomMap.get(id));
+
         this.currentRoom = nextRoom;
 
     }
 
+    /**
+     * Initializes the RootNode scene and sets up various components of the game.
+     * Called during the scene's creation and initialization.
+     */
     public create() {
-
+        // Set up event listeners for wake and sleep events of the RootNode scene.
         this.events.on('wake', this.onWake, this);
         this.events.on('sleep', () => {
             console.log("SLEEPING PLAY VIEW")
         })
 
+        // Set up event listener to save the game state when 'save_game' event is emitted.
         globalEventBus.on("save_game", () => this.apiHelper.updateStateData(this.saveAllToGamestateType()).
         catch((error) => {
             console.error(error);
         }))
+
+        // Create and initialize the DocView instance for handling documentation view.
         this.docView = new DocView(this, this._state.user.chapterNumber);
 
-        // globalEventBus.on("save_game", () => this.apiHelper.updateStateData(this.saveAllToGamestateType()))
-
-        // Adds the scene and launches it... (if active is set to true on added scene it is launched directly)
-
+        // Add each RoomScene to the game as a separate scene using the roomMap.
         this.roomMap.forEach((value, key) => {
             this.scene.add(key, this.roomMap.get(key));
         })
 
 
 
-        // TODO: Check if mobile
-
-        //Adds the pause and phone buttons scene and launches it
+        //Adds the pause button scene and launches it
         this.scene.add("pauseChatButtons", this.pauseChatButtons);
         this.scene.launch(this.pauseChatButtons);
 
+        // Adds the progress bar scene and launches it.
         this.scene.add("Progress Bar", this.progressBar);
         this.scene.launch(this.progressBar);
 
@@ -479,20 +490,22 @@ export default class RootNode extends Phaser.Scene {
         this.scene.add("controlPad", this.controlPad);
         this.scene.launch(this.controlPad);
 
-        // this.scene.get('Room').events.on('interacted_question_object', () => {
-        //     this.openQuestionView();
-        // });
+        // Adds the menu scene.
         this.scene.add("menu", this.menuView);
 
+        // Set up event listeners to handle broadcasting news and achievements.
         this.broadcastNews = this.broadcastNews.bind(this);
         globalEventBus.on("broadcast_news", (message) => {this.broadcastNews(message)})
         this.broadcastAchievement = this.broadcastAchievement.bind(this);
         globalEventBus.on("broadcast_achievement", (achievement) => {this.broadcastAchievement(achievement)});
+
+        // Set up an event listener for the 'game_finished' event to handle the game completion.
         globalEventBus.once("game_finished", (() => {
             this._gameFinished = true;
             globalEventBus.emit("save_game");
         }).bind(this))
 
+        // Set up an event listener for the 'chat_closed' event to open the evaluation view when the game is finished.
         globalEventBus.on("chat_closed", (() => {
             if (this._gameFinished) {
                 let evalView = new EvaluationView(this, this.achievementManager);
@@ -501,6 +514,7 @@ export default class RootNode extends Phaser.Scene {
             }
         }).bind(this));
 
+        // Check if the game is already finished and launch the EvaluationView if necessary.
         if (this._gameFinished) {
             let evalView = new EvaluationView(this, this.achievementManager);
             this.scene.add("EvaluationView", evalView);
@@ -511,11 +525,14 @@ export default class RootNode extends Phaser.Scene {
 
     }
 
-    //for testing purposes
+
+    /**
+     * Update function called every frame during the game loop.
+     * @param time - The current game time in milliseconds.
+     * @param delta - The time elapsed since the last frame in milliseconds.
+     */
     public update(time: number, delta: number): void {
-
-        //TODO: Optimize the player control logic
-
+        // Update the current room's player movement based on control pad input.
         if (this.currentRoom.player) {
             this.currentRoom.player.leftPress = this.controlPad.leftPress
             this.currentRoom.player.rightPress = this.controlPad.rightPress
@@ -544,24 +561,30 @@ export default class RootNode extends Phaser.Scene {
         //     globalEventBus.emit("save_game")
         // }
 
-        //if the phone button is pressed
+
+        // Handle phone button press to trigger an achievement.
         if (this.pauseChatButtons.phonePressed) {
             //prevent phone button from being continuously pressed by accident
             this.pauseChatButtons.phonePressed = false;
 
-
+            // Broadcast the "tasks_5" achievement.
             globalEventBus.emit("broadcast_achievement", achievements["tasks_5"]);
         }
 
+        // Handle pause button press to pause the game and open the menu.
         if (this.pauseChatButtons.pausePressed) {
             this.pauseChatButtons.pausePressed = false;
-            this.scene.launch(this.menuView);
 
+            // Launch the menu scene and pause the game.
+            this.scene.launch(this.menuView);
             this.pauseOrResumeGame(true);
         }
 
     }
 
+    /**
+     * Loads the game data from the game state.
+     */
     public loadData() {
         if (this._state.rootNode.currentRoom)
             this._startingRoomId = this._state.rootNode.currentRoom
@@ -569,6 +592,10 @@ export default class RootNode extends Phaser.Scene {
     }
 
 
+    /**
+     * Pauses or resumes the game by pausing or resuming the current room and the control pad.
+     * @param pause
+     */
     public pauseOrResumeGame: Function = (pause) => {
         if (pause) {
             this.currentRoom.scene.pause();
@@ -579,6 +606,9 @@ export default class RootNode extends Phaser.Scene {
         }
     }
 
+    /**
+     * Saves the game state to a GamestateType object.
+     */
     public saveAllToGamestateType(): GamestateType {
         return {
             rootNode: {
@@ -592,15 +622,23 @@ export default class RootNode extends Phaser.Scene {
         };
     }
 
+    /**
+     * Returns the current game state.
+     */
     public getState() {
         return this._state;
     }
 
-
+    /**
+     * Returns the current user.
+     */
     get user(): User {
         return this._user;
     }
 
+    /**
+     * Returns the current story manager.
+     */
     public getStoryManager() {
         return this._storyManager;
     }
