@@ -15,11 +15,10 @@ export const load = (async ({ params, fetch }: any) => {
 	console.log("Requesting Gamestate")
 	let gamestateData;
 	try{
-
 		gamestateData = await gamestateResponse.json();
 	}catch(e){
 		gamestateData = null;
-		console.error(e)
+		console.log("No Gamestate Data")
 	}
 	const groupResponse = await fetch(`${apiUrl}/groups/`, {
 		method: 'GET',

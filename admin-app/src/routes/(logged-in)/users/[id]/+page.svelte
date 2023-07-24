@@ -36,6 +36,9 @@
 
     function handleSave() {
         console.log('Saving user:', editedUser);
+        if(editedUser.group_id == "null"){
+            editedUser.group_id = null;
+        }
         const apiUrl = import.meta.env.VITE_API_URL;
         fetch(`${apiUrl}/users/${user.id}`, {
             method: 'PUT',
@@ -148,7 +151,7 @@
                             {/each}
                         </select>
                     {:else}
-                        {groups.find(group => group.id == user.group_id).name}
+                        {groups.find(group => group.id == user.group_id)?.name ?? "None"}
                     {/if}
                 </td>
                 <td
