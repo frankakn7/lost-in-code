@@ -76,7 +76,7 @@ export default class ControlPadScene extends Phaser.Scene {
     public create() {
         this.controlPadCenter = {
             x: this.cameras.main.width / 2,
-            y: this.cameras.main.height - 350,
+            y: this.cameras.main.height - 250,
         };
         this.arrowLeft = this.add
             .image(
@@ -134,7 +134,7 @@ export default class ControlPadScene extends Phaser.Scene {
         this.arrowDown = this.add
             .image(
                 this.controlPadCenter.x,
-                this.controlPadCenter.y + 200,
+                this.controlPadCenter.y,
                 "arrowDown"
             )
             .setOrigin(0.5, 0.5)
@@ -148,19 +148,19 @@ export default class ControlPadScene extends Phaser.Scene {
             .on("pointerout", () => {
                 this.downPress = false;
             });
-        this.interactButton = this.add
-            .image(this.controlPadCenter.x, this.controlPadCenter.y, "interact")
-            .setOrigin(0.5, 0.5)
-            .setInteractive()
-            .on("pointerdown", () => {
-                this.interactPress = true;
-            })
-            .on("pointerup", () => {
-                this.interactPress = false;
-            })
-            .on("pointerout", () => {
-                this.interactPress = false;
-            });
+        // this.interactButton = this.add
+        //     .image(this.controlPadCenter.x, this.controlPadCenter.y, "interact")
+        //     .setOrigin(0.5, 0.5)
+        //     .setInteractive()
+        //     .on("pointerdown", () => {
+        //         this.interactPress = true;
+        //     })
+        //     .on("pointerup", () => {
+        //         this.interactPress = false;
+        //     })
+        //     .on("pointerout", () => {
+        //         this.interactPress = false;
+        //     });
 
         this.scale.on("resize", this.resize, this);
     }

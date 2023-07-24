@@ -109,6 +109,6 @@ export default class ChapterManager {
 
     constructor(chapterOrderPosition?:number) {
         this.currentChapterOrderPosition = chapterOrderPosition;
-        this.updateChapters();
+        this.updateChapters().catch(error => console.log(error));
     }
 }

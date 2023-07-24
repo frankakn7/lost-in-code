@@ -36,8 +36,8 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
         // Fit to window
         // width: window.innerWidth,
         // height: window.innerHeight,
-        // mode: Phaser.Scale.FIT,
-        mode: Phaser.Scale.RESIZE,
+        mode: Phaser.Scale.FIT,
+        // mode: Phaser.Scale.RESIZE,
         parent: 'game',
         width: SIZE_WIDTH_SCREEN,
         height: SIZE_HEIGHT_SCREEN,
@@ -55,8 +55,8 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
 
     },
     autoCenter: Center.CENTER_BOTH,
-    // scene: new RootNode(),
-    scene: new LoginView(),
+    scene: new RootNode(),
+    // scene: new LoginView(),
     // scene: new ChatView(),
     parent: "game",
     dom: {
