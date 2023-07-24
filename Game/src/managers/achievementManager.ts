@@ -2,48 +2,70 @@ import {globalEventBus} from "../helpers/globalEventBus";
 import {achievements} from "../constants/achievements";
 import RootNode from "../views/rootNode";
 
-
+/**
+ * Achievement manager, handles the achievement flow, loading from json, saving to game state,
+ */
 export default class AchievementManager {
 
-    private _tasksCounter = 0;
-    private _incorrectCounter = 0;
-    private _currentStreak = 0;
-    private _longestStreak = 0;
-    private _fastestTaskTime = 0;
-    public unlocked = [];
+    private _tasksCounter = 0; // Stores the number of tasks completed.
+    private _incorrectCounter = 0; // Stores the number of incorrectly answered tasks.
+    private _currentStreak = 0; // Stores the current streak of correct tasks.
+    private _longestStreak = 0; // Stores the longest streak of correct tasks.
+    private _fastestTaskTime = 0; // Stores the fastest time to complete a task.
+    public unlocked = []; // Stores the IDs of the unlocked achievements.
 
-    private _achievements = achievements;
+    private _achievements = achievements;  // Stores the achievements from the 'achievements' file.
 
-    private _rootNode : RootNode;
+    private _rootNode : RootNode; // The root node of the game or application.
 
+    /**
+     * Creates an instance of the Achievement Manager.
+     * @param {RootNode} rootNode - The RootNode instance that serves as the root of the game scene hierarchy.
+     */
     constructor(rootNode: RootNode) {
         this._rootNode = rootNode;
         this.loadData();
 
 
+        // Listen for the "taskmanager_task_correct" event emitted by the Task Manager.
+        // When a task is correctly completed, call the _onTaskmanagerCorrect method.
         globalEventBus.on("taskmanager_task_correct", ((duration) => {
             this._onTaskmanagerCorrect(duration)
         }).bind(this));
 
-
+        // Listen for the "taskmanager_task_incorrect" event emitted by the Task Manager.
+        // When a task is answered incorrectly, call the _onTaskManagerIncorrect method.
         globalEventBus.on("taskmanager_task_incorrect",
             this._onTaskManagerIncorrect.bind(this));
 
+        // Listen for the "door_was_unlocked" event emitted when a door is unlocked in a room.
+        // Call the _checkForLevelAchievement method to check for level-related achievements.
         globalEventBus.on("door_was_unlocked", ((room) => {this._checkForLevelAchievement(room)}).bind(this));
     }
 
+    /**
+     * Handles the event when a task is correctly completed.
+     * Updates the task-related statistics and checks for task-related achievements.
+     * @param {number} duration - The duration it took to complete the task.
+     */
     private _onTaskmanagerCorrect(duration) {
+        // Increment the total number of tasks completed.
         this._tasksCounter++;
+
+        // Increment the current streak of correctly completed tasks.
         this._currentStreak++;
 
+        // Update the longest streak of correctly completed tasks, if applicable.
         if (this._currentStreak > this._longestStreak) this._longestStreak = this._currentStreak;
 
+        // If the task completion duration is greater than zero, update the fastest task completion time.
         if (duration > 0) {
             if (duration < this._fastestTaskTime) {
                 this._fastestTaskTime = duration;
             }
         }
 
+        // Check for task-related achievements based on the updated statistics.
         this._checkForTaskAchievement();
     }
 
