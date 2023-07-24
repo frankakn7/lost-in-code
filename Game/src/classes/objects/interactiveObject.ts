@@ -3,7 +3,11 @@ import RoomScene from "../room";
 import RootNode from "../../views/rootNode";
 
 /**
- * A class used to define interactive objects
+ * InteractiveObject is a base class for objects that can be interacted with in a RoomScene.
+ * It extends Phaser.Physics.Arcade.Sprite and provides common functionality for interactive objects.
+ *
+ * @class InteractiveObject
+ * @extends Phaser.Physics.Arcade.Sprite
  */
 export default class InteractiveObject extends Phaser.Physics.Arcade.Sprite {
     protected room: RoomScene;
@@ -27,16 +31,13 @@ export default class InteractiveObject extends Phaser.Physics.Arcade.Sprite {
         this.setSize(params.width, params.height);
         this.setImmovable(true);
         this.setDepth(3);
-        // TODO Set depth for rendering
 
-        // if (params.origin) this.setOrigin(params.origin.x, params.origin.y);
     }
 
     /**
      * Function to be executed when player interacts with object
      */
     public interact(){
-        //TODO: Build general interactivity function
         console.log("Interacted with "+this);
         this.scene.events.emit("interacted_question_object");
         
