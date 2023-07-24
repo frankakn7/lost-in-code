@@ -17,8 +17,8 @@ router.post("/", (req, res) => {
 
     db.query(sql, params)
         .then(async (results: any) => {
-            console.log("Okay");
             // Here we suppose that results[0] is the user's data in the database
+            console.log(results)
             const row = <any>results[0];
             if (!row || !(await bcrypt.compare(password, row.password_hash))) {
                 return res.status(401).send("Invalid email or password");

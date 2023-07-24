@@ -80,7 +80,6 @@ export default class ApiHelper {
         return new Promise((resolve, reject) => {
             fetch(url, {method: "GET", credentials: "include"})
                 .then((response) => {
-                    // console.log(response)
                     response
                         .json()
                         .then((data) => {
@@ -124,11 +123,12 @@ export default class ApiHelper {
         return new Promise((resolve, reject) => {
             fetch(url, {method: "GET", credentials: "include"})
                 .then((response) => {
+                    console.log(response)
                     if (response.status == 200) {
                         response
                             .json()
                             .then((data) => {
-                                    // console.log(data.user)
+                                    console.log(data.user)
                                     data.user
                                         ? resolve(data)
                                         : reject("not logged in")

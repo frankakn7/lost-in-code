@@ -18,7 +18,7 @@ export default class ControlPadScene extends Phaser.Scene {
     private arrowRight: Phaser.GameObjects.Image;
     private arrowUp: Phaser.GameObjects.Image;
     private arrowDown: Phaser.GameObjects.Image;
-    private interactButton: Phaser.GameObjects.Image;
+    // private interactButton: Phaser.GameObjects.Image;
 
     constructor() {
         super("ControlPad");
@@ -59,10 +59,10 @@ export default class ControlPadScene extends Phaser.Scene {
             this.controlPadCenter.x,
             this.controlPadCenter.y + 200
         );
-        this.interactButton.setPosition(
-            this.controlPadCenter.x,
-            this.controlPadCenter.y
-        );
+        // this.interactButton.setPosition(
+        //     this.controlPadCenter.x,
+        //     this.controlPadCenter.y
+        // );
     }
 
     public preload() {

@@ -70,7 +70,7 @@ router.get("/me", (req: Request, res: Response) => {
     const params = [userId]
     db.query(sql,params)
         .then((results:any) => {
-            const curriculum_id = results[0].curriculum_id;
+            const curriculum_id = results[0]?.curriculum_id;
             const sql = "SELECT * FROM `chapter` WHERE `curriculum_id` = ?;";
             const params = [curriculum_id];
             db.query(sql,params)

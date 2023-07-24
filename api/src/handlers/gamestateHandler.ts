@@ -20,7 +20,7 @@ export const getGameState = (req: any, res: any, userId: any) => {
 
     db.query(sql, params)
         .then((results:any) => {
-            res.json(results[0]);
+            res.json(results[0] ?? {});
         })
         .catch((error) => {
             console.error("Error querying from the database:", error);
@@ -29,8 +29,9 @@ export const getGameState = (req: any, res: any, userId: any) => {
 }
 
 export const updateGameState = (req: any, res: any, userId: any, game_state:any) => {
-    const sql = "UPDATE `game_state` SET `state_data` = ? WHERE `user_id` = ?;";
-    const params = [JSON.stringify(game_state), userId];
+    console.log(game_state)
+    const sql = "INSERT INTO `game_state` (`user_id`, `state_data`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `state_data` = ?;";
+    const params = [userId, JSON.stringify(game_state), JSON.stringify(game_state)];
 
     db.query(sql, params)
         .then((results) => {

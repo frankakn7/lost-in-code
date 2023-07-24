@@ -55,8 +55,8 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
 
     },
     autoCenter: Center.CENTER_BOTH,
-    scene: new RootNode(),
-    // scene: new LoginView(),
+    // scene: new RootNode(),
+    scene: new LoginView(),
     // scene: new ChatView(),
     parent: "game",
     dom: {

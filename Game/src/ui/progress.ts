@@ -17,7 +17,10 @@ export default class ProgressBar extends Phaser.Scene {
         this.reset();
 
         globalEventBus.on("object_repaired", this.updateBar.bind(this));
-        globalEventBus.on("room_entered", this.reset.bind(this));
+        globalEventBus.on("room_entered", (() => {
+            this.reset()
+            this.updateBar()
+        }).bind(this));
     }
 
     public updateBar() {

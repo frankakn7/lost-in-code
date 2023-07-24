@@ -195,7 +195,7 @@
     {/if}
 </form>
 
-{#if gamestate}
+{#if Object.keys(gamestate).length != 0}
     <h2>Game State</h2>
     <pre id="gamestate-json"><code class="json">
 {JSON.stringify(gamestate, null, 2)}
