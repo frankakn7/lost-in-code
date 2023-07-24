@@ -55,11 +55,14 @@ export default class LoginView extends Phaser.Scene {
     
 
     private startGame(userData:any) {
+        console.log(userData)
         this.apiHelper.getStateData().then((data:any) => {
             console.log("### STARTING GAME")
             console.log(data.state_data);
             if(data.state_data){
                 this.rootNode = new RootNode(userData, data.state_data);
+            }else if(userData){
+                this.rootNode = new RootNode(userData);
             }else{
                 this.rootNode = new RootNode();
             }
