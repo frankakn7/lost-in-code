@@ -15,7 +15,6 @@ import ApiHelper from "../helpers/apiHelper";
 import AchievementsAppTexture from "../assets/ui/apps/Achievements-app-icon.png";
 import AchievementManager from "../managers/achievementManager";
 import AchievementView from "./achievementView";
-import EvaluationView from "./evaluationView";
 
 export default class MenuView extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite;
@@ -130,10 +129,6 @@ export default class MenuView extends Phaser.Scene {
 
         if (this.scene.get("DocView") == null)
             this.scene.add("DocView", this._rootNode.docView);
-
-
-        var evalv = new EvaluationView(this._rootNode, this._rootNode.achievementManager);
-        this.scene.add("EvaluationView", evalv);
 
         if (this.scene.get("AchievementView") == null)
             this.scene.add("achievementView", this._achievementView);

@@ -5,15 +5,31 @@ import InteractiveObject from "./interactiveObject";
 import RoomScene from "../room";
 import { globalEventBus } from "../../helpers/globalEventBus";
 
+/**
+ * TaskObject is a subclass of InteractiveObject that represents an object that can be interacted with to complete a task.
+ * It extends InteractiveObject and provides additional functionality for task-related interactions and status.
+ *
+ * @class TaskObject
+ * @extends InteractiveObject
+ */
 export default class TaskObject extends InteractiveObject {
-    protected _isOpenRightNow: boolean = false;
-    protected _subscribed: boolean = false;
-    protected _isStoryObject: boolean = false;
+    protected _isOpenRightNow: boolean = false; // Stores whether the object is currently open.
+    protected _subscribed: boolean = false; // Stores whether the object is currently subscribed to the taskmanager_task_correct event.
+    protected _isStoryObject: boolean = false; // Stores whether the object is a story object.
 
-    protected _isFinished = false;
-    protected _emitter : Phaser.GameObjects.Particles.ParticleEmitter;
-    
+    protected _isFinished = false; // Stores whether the object is finished.
+    protected _emitter : Phaser.GameObjects.Particles.ParticleEmitter; // Stores the particle emitter for the object.
 
+
+    /**
+     * Creates an instance of TaskObject.
+     * @param scene
+     * @param room
+     * @param x
+     * @param y
+     * @param params
+     * @param properties
+     */
     constructor(
         scene: Phaser.Scene,
         room: RoomScene,
@@ -52,7 +68,10 @@ export default class TaskObject extends InteractiveObject {
         this._emitter.addEmitZone({type: 'random', source: shape, total: 1});
     }
 
-
+    /**
+     * Function to be executed when player interacts with the task object.
+     * It opens the question view and subscribes to events for task completion/failure.
+     */
     public interact(){
         //TODO: Build general interactivity function
         
@@ -66,23 +85,19 @@ export default class TaskObject extends InteractiveObject {
 
     }
 
-    public update(...args: any[]): void {
-        //TODO: Also turn off event if not finished
-        // if (this._isOpenRightNow && !this._subscribed) {
-        //     this.scene.events.on("taskmanager_object_finished", this.setDone);
-        //     this._subscribed = true;
-        // }
-        // if (!this._isOpenRightNow && this._subscribed) {
-        //     this.scene.events.off("taskmanager_object_finished", this.setDone);
-        //     this._subscribed = false;
-        // }
-    }
-
+    /**
+     * Function to be executed when the task associated with the object fails.
+     * It resets the object's status and unsubscribes from task-related events.
+     */
     public setClosed(){
         this._isOpenRightNow = false;
         globalEventBus.off("taskmanager_object_finished",this.setDone);
     }
 
+    /**
+     * Function to be executed when the task associated with the object is completed successfully.
+     * It updates the object's status, emits events, and opens the story chat view if it is a story object.
+     */
     public setDone() {
 
         globalEventBus.off('taskmanager_object_failed', this.setClosed);
@@ -104,6 +119,9 @@ export default class TaskObject extends InteractiveObject {
 
     }
 
+    /**
+     * Sets the particle emitter to show the "done" effect when the task is completed.
+     */
     private _setEmitterToDone() {
         this._emitter.setConfig({
             frame: { frames: ['green'], cycle: true},
@@ -116,11 +134,19 @@ export default class TaskObject extends InteractiveObject {
         });
     }
 
+    /**
+     * Checks if the task associated with the object is finished.
+     * @returns {boolean} Whether the task is finished or not.
+     */
     public isFinished() {
         console.log(this._isFinished);
         return this._isFinished;
     }
 
+    /**
+     * Sets the status of the object according to its task.
+     * @param finished
+     */
     public setIsFinished(finished:boolean) {
         this._isFinished = finished;
 

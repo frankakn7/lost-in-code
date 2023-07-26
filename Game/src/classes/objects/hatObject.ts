@@ -41,6 +41,8 @@ export default class HatObject extends InteractiveObject {
     public checkIfUnlocked() {
         // if (this.room.getPlayView().user.unlockedHats.includes(this._hatId)
         // ||  this.room.getPlayView().user.unlockedHats.includes(this._hatId)) {
+        console.log("CHECKING HATS UNLOCKED")
+        console.log(this.room.getRootNode().user)
         if (this.room.getRootNode().user.unlockedHats.includes(this._hatId)) {
             this.destroy();
         }

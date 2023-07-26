@@ -28,7 +28,7 @@ router.post("/", (req, res) => {
             generateAuthToken(row.id, row.role, row.username, res);
 
             // Send back a success message
-            res.json({ success: true });
+            res.json({ user:{id: row.id, role: row.role, username: row.username} });
         })
         .catch((error) => {
             console.error("Error inserting into the database:", error);

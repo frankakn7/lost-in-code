@@ -42,6 +42,8 @@ export default class LoginView extends Phaser.Scene {
                 const inputEmail = this.getChildByID("email");
                 const inputPassword = this.getChildByID("password");
                 loginView.apiHelper.login(inputEmail.value,inputPassword.value).then((response:any) => {
+                    console.log("RESPONSE")
+                    console.log(response)
                     loginView.startGame(response.user);
                 }).catch(error => {
                     const errorText = this.getChildByID("error")
@@ -59,6 +61,8 @@ export default class LoginView extends Phaser.Scene {
         this.apiHelper.getStateData().then((data:any) => {
             console.log("### STARTING GAME")
             console.log(data.state_data);
+            console.log("### USER DATA")
+            console.log(userData)
             if(data.state_data){
                 this.rootNode = new RootNode(userData, data.state_data);
             }else if(userData){

@@ -83,7 +83,7 @@ export default class EvaluationView extends Phaser.Scene {
             + "\n" + "- Mistakes made: " + this._am.incorrectCounter
             + "\n" + "- Fastest solving time: " + formatTime(this._am.fastestTaskTime)
             + "\n" + "- Badges earned: " + this._am.badgesEarned
-            + "\n" + "- Hats found: " + this._rootNode.user.unlockedHats.length + " out of " + Object.keys(HatMap).length
+            + "\n" + "- Hats found: " + this._rootNode.user.unlockedHats.filter((value, index, self) => self.indexOf(value) === index) + " out of " + Object.keys(HatMap).length
 
         let headerLabel = this.add.text(this.cameras.main.displayWidth / 2 - 360, 200,
             "Congratulations!\n You finished the game!", h1LabelStyle);

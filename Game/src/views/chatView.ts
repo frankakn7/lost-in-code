@@ -100,7 +100,7 @@ export default class ChatView extends Phaser.Scene {
         //create the text container
         this.chatTextContainer = new ChatTextContainer(this, 0, 0);
 
-        this.chatHistory.length ? this.applyChatHistory() : null;
+        this.chatHistory?.length ? this.applyChatHistory() : null;
 
 
         //start the new chat flow

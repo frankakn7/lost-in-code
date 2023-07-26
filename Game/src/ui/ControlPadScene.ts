@@ -39,26 +39,26 @@ export default class ControlPadScene extends Phaser.Scene {
         previousWidth: number,
         previousHeight: number
     ) {
-        this.controlPadCenter = {
-            x: this.cameras.main.width / 2,
-            y: this.cameras.main.height - 350,
-        };
-        this.arrowLeft.setPosition(
-            this.controlPadCenter.x - 200,
-            this.controlPadCenter.y
-        );
-        this.arrowRight.setPosition(
-            this.controlPadCenter.x + 200,
-            this.controlPadCenter.y
-        );
-        this.arrowUp.setPosition(
-            this.controlPadCenter.x,
-            this.controlPadCenter.y - 200
-        );
-        this.arrowDown.setPosition(
-            this.controlPadCenter.x,
-            this.controlPadCenter.y + 200
-        );
+        // this.controlPadCenter = {
+        //     x: this.cameras.main.width / 2,
+        //     y: this.cameras.main.height - 350,
+        // };
+        // this.arrowLeft.setPosition(
+        //     this.controlPadCenter.x - 200,
+        //     this.controlPadCenter.y
+        // );
+        // this.arrowRight.setPosition(
+        //     this.controlPadCenter.x + 200,
+        //     this.controlPadCenter.y
+        // );
+        // this.arrowUp.setPosition(
+        //     this.controlPadCenter.x,
+        //     this.controlPadCenter.y - 200
+        // );
+        // this.arrowDown.setPosition(
+        //     this.controlPadCenter.x,
+        //     this.controlPadCenter.y + 100
+        // );
         // this.interactButton.setPosition(
         //     this.controlPadCenter.x,
         //     this.controlPadCenter.y

@@ -11,6 +11,7 @@ import DragDropQuestionView from "./singleQuestionViews/dragDropQuestionView";
 import ClozeQuestionView from "./singleQuestionViews/clozeQuestionView";
 import SelectOneQuestionView from "./singleQuestionViews/selectOneQuestionView";
 import CreateQuestionView from "./singleQuestionViews/createQuestionView";
+import {globalEventBus} from "../../helpers/globalEventBus";
 
 export default class QuestionView extends Phaser.Scene {
     private taskManager: TaskManager;
@@ -299,5 +300,6 @@ export default class QuestionView extends Phaser.Scene {
         this.scene.wake("pauseChatButtons");
         this.removeAllQuestionScenes();
         this.scene.remove(this);
+        globalEventBus.emit("save_game")
     }
 }

@@ -63,7 +63,21 @@
     }
 
     function handleDelete() {
-        console.log("DELETE")
+        const apiUrl = import.meta.env.VITE_API_URL;
+        fetch(`${apiUrl}/users/${user.id}`, {
+            method: 'DELETE',
+            credentials: "include"
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                console.log(`User with id ${user.id} has been deleted.`);
+                goto("/users")
+            })
+            .catch((error) => {
+                console.error('There has been a problem with your fetch operation: ', error);
+            });
     }
 </script>
 
