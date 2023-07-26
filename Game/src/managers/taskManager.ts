@@ -12,6 +12,9 @@ import {ChapterType} from "./chapterManager";
 import ApiHelper from "../helpers/apiHelper";
 import availableQuestions from "./availableQuestionsTestData";
 
+/**
+ * Manages tasks and questions for the game.
+ */
 export default class TaskManager {
 
     private availableQuestions: Question[] = [];

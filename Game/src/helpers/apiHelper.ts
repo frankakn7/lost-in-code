@@ -1,10 +1,23 @@
 import {GamestateType} from "../types/gamestateType";
 
+/**
+ * Helper class for making API requests related to the game.
+ */
 export default class ApiHelper {
+    /**
+     * The base URL for the API.
+     * @type {string}
+     * @private
+     */
     private apiUrl = `${process.env.API_URL}`;
 
+    /**
+     * Evaluate the given code on the server.
+     * @param {string} code - The code to be evaluated.
+     * @returns {Promise} - A Promise that resolves with the server response or rejects with an error message.
+     */
     public evaluateCode(code: string) {
-        const url = this.apiUrl + "/api/php";
+        const url = this.apiUrl + "/php";
         const formData = new FormData();
         formData.append("code", code);
         console.log(formData)
@@ -25,8 +38,12 @@ export default class ApiHelper {
         });
     }
 
+    /**
+     * Get chapters specific to the current user.
+     * @returns {Promise} - A Promise that resolves with the user's chapters data or rejects with an error message.
+     */
     public getChapters(){
-        const url = this.apiUrl + "/api/chapters/me";
+        const url = this.apiUrl + "/chapters/me";
         return new Promise((resolve, reject) => {
             fetch(url, {method: "GET", credentials: "include"})
                 .then((response) => {
@@ -42,8 +59,13 @@ export default class ApiHelper {
         })
     }
 
+    /**
+     * Get the full chapter for the given chapter number.
+     * @param {number} chapterNumber - The chapter number for which to fetch the full data.
+     * @returns {Promise} - A Promise that resolves with the full chapter data or rejects with an error message.
+     */
     public getFullChapter(chapterNumber: number) {
-        const url = this.apiUrl + "/api/users/me/curriculum_data";
+        const url = this.apiUrl + "/users/me/curriculum_data";
         return new Promise((resolve, reject) => {
             fetch(url, {method: "GET", credentials: "include"})
                 .then((response) => {
@@ -51,12 +73,12 @@ export default class ApiHelper {
                         .json()
                         .then((data) => {
                             // resolve(data);
-                            const url2 = this.apiUrl + "/api/chapters/";
+                            const url2 = this.apiUrl + "/chapters/";
                             fetch(url2, {method: "GET", credentials: "include"})
                                 .then((res) => {
                                     res.json().then((chapters: any) => {
                                         const chapter = chapters.find(chapter => chapter.order_position == chapterNumber && chapter.curriculum_id == data.curriculum_id)
-                                        const url3 = this.apiUrl + "/api/chapters/" + chapter.id + "/full";
+                                        const url3 = this.apiUrl + "/chapters/" + chapter.id + "/full";
                                         fetch(url3, {method: "GET", credentials: "include"})
                                             .then((res) => {
                                                 console.log(res)
@@ -72,11 +94,12 @@ export default class ApiHelper {
         })
     }
 
-
-    public
-
-    getStateData() {
-        const url = this.apiUrl + "/api/gamestates/me";
+    /**
+     * Get the game state data for the current user.
+     * @returns {Promise} - A Promise that resolves with the user's game state data or rejects with an error message.
+     */
+    public getStateData() {
+        const url = this.apiUrl + "/gamestates/me";
         return new Promise((resolve, reject) => {
             fetch(url, {method: "GET", credentials: "include"})
                 .then((response) => {
@@ -94,12 +117,17 @@ export default class ApiHelper {
         });
     }
 
+    /**
+     * Update the game state data for the current user.
+     * @param {GamestateType} state_data - The new game state data to be updated.
+     * @returns {Promise} - A Promise that resolves with the updated game state data or rejects with an error message.
+     */
     public updateStateData(state_data: GamestateType
     ) {
         console.log(state_data)
         const gameState = {game_state: state_data}
         console.log(JSON.stringify(gameState))
-        const url = this.apiUrl + "/api/gamestates/me";
+        const url = this.apiUrl + "/gamestates/me";
         return new Promise((resolve, reject) => {
             fetch(url, {
                 method: "PUT", headers: {
@@ -118,8 +146,12 @@ export default class ApiHelper {
         });
     }
 
+    /**
+     * Check the login status of the current user.
+     * @returns {Promise} - A Promise that resolves if the user is logged in, or rejects with an error message otherwise.
+     */
     public checkLoginStatus() {
-        const url = this.apiUrl + "/api/me";
+        const url = this.apiUrl + "/me";
         return new Promise((resolve, reject) => {
             fetch(url, {method: "GET", credentials: "include"})
                 .then((response) => {
@@ -143,8 +175,14 @@ export default class ApiHelper {
         });
     }
 
+    /**
+     * Log in the user with the provided email and password.
+     * @param {string} email - The user's email address.
+     * @param {string} password - The user's password.
+     * @returns {Promise} - A Promise that resolves with the user data if login is successful, or rejects with an error message otherwise.
+     */
     public login(email, password) {
-        const url = this.apiUrl + "/api/login";
+        const url = this.apiUrl + "/login";
         return new Promise((resolve, reject) => {
             fetch(url, {
                 method: "POST",
@@ -174,8 +212,12 @@ export default class ApiHelper {
         });
     }
 
+    /**
+     * Log out the current user.
+     * @returns {Promise} - A Promise that resolves if the logout is successful, or rejects with an error message otherwise.
+     */
     public logout() {
-        const url = this.apiUrl + "/api/logout";
+        const url = this.apiUrl + "/logout";
         return new Promise((resolve, reject) => {
             fetch(url, {method: "POST", credentials: "include"})
                 .then((response) => {
