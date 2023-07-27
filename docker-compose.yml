@@ -2,13 +2,9 @@ version: '3'
 services:
   admin_app:
     build: ./admin-app
-    ports:
-      - "3000:3000"
   
   api:
     build: ./api
-    ports:
-      - "8080:8080"
     environment:
       - DB_HOST=mysql
       - DB_PORT=3306
@@ -17,13 +13,9 @@ services:
   
   game:
     build: ./game
-    ports:
-      - "4000:4000"
     
   php_executor:
     build: ./php-server
-    ports:
-      - "6000:6000"
   
   nginx:
     build: ./nginx-proxy
@@ -42,8 +34,6 @@ services:
       - ./lost_in_code.sql:/docker-entrypoint-initdb.d/schema.sql
     env_file:
       - ./.env.db
-    ports:
-      - "3306:3306"
   
 volumes:
   mysql_data:
