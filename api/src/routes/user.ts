@@ -93,7 +93,6 @@ router.put("/:id",onlyAllowSelf, async (req: Request, res: Response) => {
     let sql = "";
     let params = [];
 
-    console.log(user.password)
     if(user.password && user.password != ""){
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(user.password, saltRounds);

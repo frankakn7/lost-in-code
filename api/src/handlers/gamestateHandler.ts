@@ -29,7 +29,6 @@ export const getGameState = (req: any, res: any, userId: any) => {
 }
 
 export const updateGameState = (req: any, res: any, userId: any, game_state:any) => {
-    console.log(game_state)
     const sql = "INSERT INTO `game_state` (`user_id`, `state_data`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `state_data` = ?;";
     const params = [userId, JSON.stringify(game_state), JSON.stringify(game_state)];
 
