@@ -120,7 +120,7 @@ export default class StoryManager {
         // This node will include the optionText, text, and the choices Map created above.
         let newNode : ChatFlowNode = {
             optionText: json[room][nodeId]["optionText"],
-            text: json[room][nodeId]["text"].replace("astronaut", "astronaut Peter").replace("Astronaut", "Astronaut Peter"),
+            text: json[room][nodeId]["text"].replace("astronaut", "astronaut " + this._rootNode.user.username).replace("Astronaut", "Astronaut " + this._rootNode.user.username),
             choices: choices
         }
 
