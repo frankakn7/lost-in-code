@@ -12,12 +12,19 @@ export default class ApiHelper {
     private apiUrl = `${process.env.API_URL}`;
 
     /**
+     * The URL for the php server.
+     * @type {string}
+     * @private
+     */
+    private phpUrl = `${process.env.PHP_URL}`;
+
+    /**
      * Evaluate the given code on the server.
      * @param {string} code - The code to be evaluated.
      * @returns {Promise} - A Promise that resolves with the server response or rejects with an error message.
      */
     public evaluateCode(code: string) {
-        const url = this.apiUrl + "/php";
+        const url = this.phpUrl;
         const formData = new FormData();
         formData.append("code", code);
         console.log(formData)
