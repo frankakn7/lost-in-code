@@ -7,7 +7,7 @@ import { RowDataPacket } from "mysql2";
 const router = express.Router();
 
 /**
- * Login
+ * Logout
  */
 router.post("/", (req, res) => {
     res.clearCookie('token');
