@@ -56,9 +56,7 @@ To use the admin application, visit the admin endpoint mentioned under
 [endpoints](#application-endpoints) and login with an account with the `ADMIN`
 status. Here you can manage the users, user groups and curricula.
 
-### Useful information
-
-#### Application Endpoints
+### Application Endpoints
 
 The different endpoints for the systems are:
 
@@ -72,7 +70,9 @@ The different endpoints for the systems are:
 (All endpoints have to be prefixed with either `localhost` or your systems IP
 address)
 
-#### Default Admin user
+## API Information
+
+### Default Admin user
 
 |          |               |
 | -------- | ------------- |
@@ -80,9 +80,9 @@ address)
 | Email    | `admin@admin` |
 | Password | `test`        |
 
-#### API Endpoints
+### API Endpoints
 
-**General Routes**
+#### General Routes
 
 | Method | Endpoint   | Requirements | Description                                               |
 | ------ | ---------- | ------------ | --------------------------------------------------------- |
@@ -90,7 +90,7 @@ address)
 | `GET`  | `/api/me`  | None         | Checks and responds if the user is logged in              |
 | `POST` | `/api/php` | None         | Proxies the request to the PHP server                     |
 
-**Users**
+#### Users
 
 | Method   | Endpoint                             | Role Requirements          | Description                               |
 | -------- | ------------------------------------ | -------------------------- | ----------------------------------------- |
@@ -103,7 +103,7 @@ address)
 | `DELETE` | `/api/users/:id`                     | Admin                      | Delete specific user                      |
 | `POST`   | `/api/users/:userId/groups/:groupId` | Admin                      | Move user to specific group               |
 
-**Groups**
+#### Groups
 
 | Method   | Endpoint                                    | Requirements | Description                       |
 | -------- | ------------------------------------------- | ------------ | --------------------------------- |
@@ -115,7 +115,7 @@ address)
 | `DELETE` | `/api/groups/:id`                           | Admin        | Delete a specific group           |
 | `POST`   | `/api/groups/:curriculumId/groups/:groupId` | Admin        | Set curriculum for specific group |
 
-**Curriculums**
+#### Curriculums
 
 | Method   | Endpoint                    | Requirements | Description                         |
 | -------- | --------------------------- | ------------ | ----------------------------------- |
@@ -127,7 +127,7 @@ address)
 | `PUT`    | `/api/curriculums/:id`      | Admin        | Update specific curriculum          |
 | `DELETE` | `/api/curriculums/:id`      | Admin        | Delete specific curriculum          |
 
-**Chapters**
+#### Chapters
 
 | Method   | Endpoint                                             | Requirements | Description                                 |
 | -------- | ---------------------------------------------------- | ------------ | ------------------------------------------- |
@@ -141,7 +141,7 @@ address)
 | `DELETE` | `/api/chapters/:id`                                  | Admin        | Delete specific chapter                     |
 | `POST`   | `/api/chapters/:chapterId/curriculums/:curriculumId` | Admin        | Change associated curriculum for chapter    |
 
-**Questions**
+#### Questions
 
 | Method   | Endpoint                                         | Requirements | Description                                   |
 | -------- | ------------------------------------------------ | ------------ | --------------------------------------------- |
@@ -154,7 +154,7 @@ address)
 | `DELETE` | `/api/questions/:id`                             | Admin        | Delete a specific question                    |
 | `POST`   | `/api/questions/:questionId/chapters/:chapterId` | Admin        | Change the chapter associated with a question |
 
-**Gamestates**
+#### Gamestates
 
 | Method   | Endpoint                  | Requirements | Description                                    |
 | -------- | ------------------------- | ------------ | ---------------------------------------------- |
@@ -165,7 +165,7 @@ address)
 | `PUT`    | `/api/gamestates/:userId` | None         | Update game state for a specific user by ID    |
 | `DELETE` | `/api/gamestates/:userId` | None         | Delete game state for a specific user by ID    |
 
-**Question Elements**
+#### Question Elements
 
 | Method   | Endpoint                                                         | Requirements | Description                                        |
 | -------- | ---------------------------------------------------------------- | ------------ | -------------------------------------------------- |
@@ -176,7 +176,7 @@ address)
 | `DELETE` | `/api/question_elements/:id`                                     | Admin        | Delete a specific question element by its ID       |
 | `POST`   | `/api/question_elements/:questionElementId/question/:questionId` | Admin        | Change question ID for a specific question element |
 
-**Correct Answers**
+#### Correct Answers
 
 | Method   | Endpoint                                                                    | Requirements | Description                                                    |
 | -------- | --------------------------------------------------------------------------- | ------------ | -------------------------------------------------------------- |
@@ -187,14 +187,337 @@ address)
 | `DELETE` | `/api/correct_answers/:id`                                                  | Admin        | Delete a specific correct answer by its ID                     |
 | `POST`   | `/api/correct_answers/:correctAnswerId/question_element/:questionElementId` | Admin        | Change the `question_element_id` for a specific correct answer |
 
-**Login**
+#### Login
 
 | Method | Endpoint     | Request Body          | Description                                                                                                                      |
 | ------ | ------------ | --------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | `POST` | `/api/login` | `{ email, password }` | Authenticates the user and logs them in. If successful, returns user data and sets an authentication token in a HttpOnly cookie. |
 
-**Logout**
+#### Logout
 
 | Method | Endpoint       | Requirements | Description     |
 | ------ | -------------- | ------------ | --------------- |
 | `POST` | `/api/logout/` | None         | Logout the user |
+
+### JSON-Data Structures
+
+For using the database or uploading a new curriculum to the admin application,
+the following JSON-structures are used.
+
+#### Curriculum
+
+##### Empty Curriculum
+
+```JSON
+{
+    "name": "Name of the curriculum (Bsp. PHP)",
+    "description": "Description of the curriculum",
+    "chapters": [...]      //The Chapters inside this curriculum
+}
+
+```
+
+##### Full Curriculum Example
+
+```JSON
+{
+    "name": "PHP für einsteiger",
+    "description": "Ein curriculum zum vermitteln von PHP basics",
+    "chapters": [
+        {
+            "name": "Einführung",
+            "material": "Was ist php? PHP ist eine scripting sprache welche ....",
+            "order_position": 1,
+            "questions": [
+                {
+                    "question_text": "Was ist php?",
+                    "type": "CHOICE",
+                    "difficulty": 1,
+                    "elements": [
+                        {
+                            "content": "Ein Computer",
+                            "is_correct": false
+                        },
+                        {
+                            "content": "Eine Scripting sprache",
+                            "is_correct": true
+                        },
+                        {
+                            "content": "Etwas zum essen",
+                            "is_correct": false
+                        }
+                    ]
+                },
+                {
+                    "question_text": "Was ist der output dieses code abschnitts?",
+                    "code_text": "<?php echo 'Hello There'; ?>",
+                    "hint": "schau hinter dem echo",
+                    "type": "SINGLE_INPUT",
+                    "difficulty": 1,
+                    "elements": [
+                        {
+                            "element_identifier": "i1",
+                            "correct_answers": ["Hello There", "hello there"]
+                        }
+                    ]
+                },
+                {
+                    "question_text": "Vervollständige den Code sodass 5 als ausgabe rauskommt",
+                    "code_text": "<?php \n$x = 3; \n$y = 2; \necho '###INPUT|i1|20|true###'; \n?>", 
+                    "type": "CLOZE",
+                    "difficulty": 3,
+                    "elements": [
+                        {
+                            "element_identifier": "i1",
+                            "correct_answers": ["$x+$y"]
+                        }
+                    ]
+                },
+                {
+                    "question_text": "Bringe die code abschnitte in die richtige reihenfolge",
+                    "type": "DRAG_DROP",
+                    "difficulty": 3,
+                    "elements": [
+                        {
+                            "content": "<?php \n$x = 3;",
+                            "correct_order_position": 1
+                        },
+                        {
+                            "content": "$y = 2; \necho '$x';",
+                            "correct_order_position": 2
+                        },
+                        {
+                            "content": "?>",
+                            "correct_order_position": 3
+                        }
+                    ]
+                },
+                {
+                    "question_text": "Welche dieser code blöcke ist eine function?",
+                    "type": "SELECT_ONE",
+                    "difficulty": 2,
+                    "elements": [
+                        {
+                            "content": "<?php \n$x = 3; \n$y = 2; \necho '$x+$y'; \n?>",
+                            "is_correct": false
+                        },
+                        {
+                            "content": "<?php \nfunction functionName() { \n$y = 2; \necho '$y+5'; \n} \n?>",
+                            "is_correct": true
+                        }
+                    ]
+                },
+                {
+                    "question_text": "Complete this function so that it adds 2 numbers together!",
+                    "code_text": "function calculateSum($num1, $num2){\n ###INPUT|i1|50|true### \n}",
+                    "hint": null,
+                    "type": "CREATE",
+                    "difficulty": 5,
+                    "elements": [
+                        {
+                            "content": "echo calculateSum(5,10);",
+                            "element_identifier": "i1",
+                            "correct_order_position": null,
+                            "correct_answers": ["calculateSum(5,10) == 15", "calculateSum(20,20) == 40"],
+                            "is_correct": null
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+```
+
+#### Chapter
+
+```JSON
+{
+    "name": "Chapter Name (Syntax)",
+    "material": "The Learning-material like explanations etc. goes here",
+    "order_position": 1,    //Position of the chapter inside the curriculum
+    "questions": [...]         //The contained questions inside this Chapter
+}
+```
+
+#### Question
+
+##### Empty Question
+
+```JSON
+{
+    "question_text": "The Question the user sees at the top of the screen",
+    "code_text": "<?php echo 'Hello There'; ?>",        //Here code can be entered which will be displayed to the user in some question types
+    "hint": "A hint that could theoretically be displayed for the user",    //currently not used
+    "type": "CHOICE / SINGLE_INPUT / CLOZE / DRAG_DROP / SELECT_ONE / CREATE",  //One of the these types have to be used
+    "difficulty": 1,    //Subjective difficulty level defined by question creator
+    "elements": []      //Question elements needed for the different question types
+}
+```
+
+##### Question Type Examples
+
+###### Multiple / single choice question
+
+```JSON
+{
+    "question_text": "Was ist php?",
+    "type": "CHOICE",
+    "difficulty": 1,
+    "elements": [
+        {
+            "content": "Ein Computer",
+            "is_correct": false
+        },
+        {
+            "content": "Eine Scripting sprache",
+            "is_correct": true
+        },
+        {
+            "content": "Etwas zum essen",
+            "is_correct": false
+        }
+    ]
+}
+```
+
+###### Input field question
+
+Here an input field is displayed underneath a code block
+
+```JSON
+{
+    "question_text": "Was ist der output dieses code abschnitts?",
+    "code_text": "<?php echo 'Hello There'; ?>",
+    "hint": "schau hinter dem echo",
+    "type": "SINGLE_INPUT",
+    "difficulty": 1,
+    "elements": [
+        {
+            "element_identifier": "i1",
+            "correct_answers": ["Hello There", "hello there"]
+        }
+    ]
+}
+```
+
+###### Fill in the blanks / CLOZE question
+
+Here input fields are displayed inside the code block to fill in the blanks.
+
+```JSON
+{
+    "question_text": "Vervollständige den Code sodass 5 als ausgabe rauskommt",
+    "code_text": "<?php \n$x = 3; \n$y = 2; \necho '###INPUT|i1|20|true###'; \n?>",
+    "type": "CLOZE",
+    "difficulty": 3,
+    "elements": [
+        {
+            "element_identifier": "i1",
+            "correct_answers": ["$x+$y"]
+        }
+    ]
+}
+```
+
+The following piece of code
+
+```
+###INPUT|i1|20|true###
+```
+
+describes an input field with the corresponding element id `i1` and a maximum of `20` characters as input
+
+###### Drag and drop question
+
+This question displays code blocks that have to be reordered into the correct order
+
+```JSON
+{
+    "question_text": "Bringe die code abschnitte in die richtige reihenfolge",
+    "type": "DRAG_DROP",
+    "difficulty": 3,
+    "elements": [
+        {
+            "content": "<?php \n$x = 3;",
+            "correct_order_position": 1
+        },
+        {
+            "content": "$y = 2; \necho '$x';",
+            "correct_order_position": 2
+        },
+        {
+            "content": "?>",
+            "correct_order_position": 3
+        }
+    ]
+}
+```
+
+###### Select one code block question
+
+In this question the correct code block / code blocks have to be selected to answer the question.
+
+```JSON
+{
+    "question_text": "Welche dieser code blöcke ist eine function?",
+    "type": "SELECT_ONE",
+    "difficulty": 2,
+    "elements": [
+        {
+            "content": "<?php \n$x = 3; \n$y = 2; \necho '$x+$y'; \n?>",
+            "is_correct": false
+        },
+        {
+            "content": "<?php \nfunction functionName() { \n$y = 2; \necho '$y+5'; \n} \n?>",
+            "is_correct": true
+        }
+    ]
+}
+```
+
+###### Create question
+
+Here a user has to write code that will be evaluated on a server to answer the question
+
+```JSON
+{
+    "question_text": "Complete this function so that it adds 2 numbers together!",
+    "code_text": "function calculateSum($num1, $num2){\n ###INPUT|i1|50|true### \n}",   //The code the user will see and the defined input field for the user
+    "hint": null,
+    "type": "CREATE",
+    "difficulty": 5,
+    "elements": [
+        {
+            "content": "echo calculateSum(5,10);",  //The code that will be executed when the user wants to evaluate his current code without committing his answer
+            "element_identifier": "i1",
+            "correct_order_position": null,
+            "correct_answers": ["calculateSum(5,10) == 15", "calculateSum(20,20) == 40"],   //The tests that have to be passed by the written code to complete the question
+            "is_correct": null
+        }
+    ]
+}
+```
+
+
+
+#### Question Element
+
+The question elements that are used inside the question, such as:
+
+- multiple / single choice buttons
+- Drag and Drop Code blocks
+- Selectable code blocks
+- input fields
+
+See [question type examples](#question-type-examples) for examples of how to use this element
+
+```JSON
+{
+    "content": "The text that will be displayed on a multiple choice button / the code that will be shown inside a drag and drop code element",
+    "element_identifier": "can be anything but must be unique to other identifiers in the same question (is used to distinguish html input elements e.g. input1 or i1 etc )",
+    "correct_order_position": 1,    //For drag and drop questions this is the correct position of the code blocks
+    "correct_answers": ["answer", "options", "for a text field"],   //For text inputs
+    "is_correct": true  //For single or multiple choice questions, this marks which element is correct
+}
+```
