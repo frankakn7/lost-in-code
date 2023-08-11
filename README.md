@@ -82,13 +82,21 @@ address)
 
 #### API Endpoints
 
+**General Routes**
+
+| Method | Endpoint   | Requirements | Description                                               |
+| ------ | ---------- | ------------ | --------------------------------------------------------- |
+| `GET`  | `/api`     | None         | Returns a Hello World response to check if server is live |
+| `GET`  | `/api/me`  | None         | Checks and responds if the user is logged in              |
+| `POST` | `/api/php` | None         | Proxies the request to the PHP server                     |
+
 **Users**
 
 | Method   | Endpoint                             | Role Requirements          | Description                               |
 | -------- | ------------------------------------ | -------------------------- | ----------------------------------------- |
 | `POST`   | `/api/users`                         | Admin                      | Create user                               |
 | `GET`    | `/api/users`                         | Admin                      | Get all users                             |
-| `GET`    | `/api/users/me/curriculum_data`      | -                          | Get specific user data (for current user) |
+| `GET`    | `/api/users/me/curriculum_data`      | None                       | Get specific user data (for current user) |
 | `GET`    | `/api/users/:id/curriculum_data`     | User (only himself), Admin | Get specific user's curriculum data       |
 | `GET`    | `/api/users/:id`                     | User (only himself), Admin | Get specific user                         |
 | `PUT`    | `/api/users/:id`                     | User (only himself), Admin | Update specific user                      |
@@ -113,9 +121,9 @@ address)
 | -------- | --------------------------- | ------------ | ----------------------------------- |
 | `POST`   | `/api/curriculums/`         | Admin        | Create new curriculum               |
 | `POST`   | `/api/curriculums/full`     | Admin        | Create new FULL curriculum          |
-| `GET`    | `/api/curriculums/`         | -            | Get all curriculums                 |
-| `GET`    | `/api/curriculums/:id`      | -            | Get specific curriculum via ID      |
-| `GET`    | `/api/curriculums/:id/full` | -            | Get specific FULL curriculum via ID |
+| `GET`    | `/api/curriculums/`         | None         | Get all curriculums                 |
+| `GET`    | `/api/curriculums/:id`      | None         | Get specific curriculum via ID      |
+| `GET`    | `/api/curriculums/:id/full` | None         | Get specific FULL curriculum via ID |
 | `PUT`    | `/api/curriculums/:id`      | Admin        | Update specific curriculum          |
 | `DELETE` | `/api/curriculums/:id`      | Admin        | Delete specific curriculum          |
 
@@ -145,3 +153,48 @@ address)
 | `PUT`    | `/api/questions/:id`                             | Admin        | Update a question                             |
 | `DELETE` | `/api/questions/:id`                             | Admin        | Delete a specific question                    |
 | `POST`   | `/api/questions/:questionId/chapters/:chapterId` | Admin        | Change the chapter associated with a question |
+
+**Gamestates**
+
+| Method   | Endpoint                  | Requirements | Description                                    |
+| -------- | ------------------------- | ------------ | ---------------------------------------------- |
+| `POST`   | `/api/gamestates/`        | None         | Create a new game state                        |
+| `GET`    | `/api/gamestates/me`      | None         | Get game state for the current user            |
+| `GET`    | `/api/gamestates/:userId` | None         | Get game state for a specific user by their ID |
+| `PUT`    | `/api/gamestates/me`      | None         | Update game state for the current user         |
+| `PUT`    | `/api/gamestates/:userId` | None         | Update game state for a specific user by ID    |
+| `DELETE` | `/api/gamestates/:userId` | None         | Delete game state for a specific user by ID    |
+
+**Question Elements**
+
+| Method   | Endpoint                                                         | Requirements | Description                                        |
+| -------- | ---------------------------------------------------------------- | ------------ | -------------------------------------------------- |
+| `POST`   | `/api/question_elements/`                                        | Admin        | Create a new question element                      |
+| `GET`    | `/api/question_elements/`                                        | None         | Retrieve all question elements                     |
+| `GET`    | `/api/question_elements/:id`                                     | None         | Retrieve a specific question element by its ID     |
+| `PUT`    | `/api/question_elements/:id`                                     | Admin        | Update a specific question element by its ID       |
+| `DELETE` | `/api/question_elements/:id`                                     | Admin        | Delete a specific question element by its ID       |
+| `POST`   | `/api/question_elements/:questionElementId/question/:questionId` | Admin        | Change question ID for a specific question element |
+
+**Correct Answers**
+
+| Method   | Endpoint                                                                    | Requirements | Description                                                    |
+| -------- | --------------------------------------------------------------------------- | ------------ | -------------------------------------------------------------- |
+| `POST`   | `/api/correct_answers/`                                                     | Admin        | Create a new correct answer                                    |
+| `GET`    | `/api/correct_answers/`                                                     | None         | Retrieve all correct answers                                   |
+| `GET`    | `/api/correct_answers/:id`                                                  | None         | Retrieve a specific correct answer by its ID                   |
+| `PUT`    | `/api/correct_answers/:id`                                                  | Admin        | Update a specific correct answer by its ID                     |
+| `DELETE` | `/api/correct_answers/:id`                                                  | Admin        | Delete a specific correct answer by its ID                     |
+| `POST`   | `/api/correct_answers/:correctAnswerId/question_element/:questionElementId` | Admin        | Change the `question_element_id` for a specific correct answer |
+
+**Login**
+
+| Method | Endpoint     | Request Body          | Description                                                                                                                      |
+| ------ | ------------ | --------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `POST` | `/api/login` | `{ email, password }` | Authenticates the user and logs them in. If successful, returns user data and sets an authentication token in a HttpOnly cookie. |
+
+**Logout**
+
+| Method | Endpoint       | Requirements | Description     |
+| ------ | -------------- | ------------ | --------------- |
+| `POST` | `/api/logout/` | None         | Logout the user |
