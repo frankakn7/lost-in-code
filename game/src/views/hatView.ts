@@ -129,7 +129,7 @@ export default class HatView extends Phaser.Scene {
 
                 // Determine which texture to use for the hat button based on whether the hat is selected or not.
                 let texture;
-                if (prop == this._rootNode.user.selectedHat) texture = renderTextureSelected.texture;
+                if (prop == this._rootNode.gameStateManager.user.selectedHat) texture = renderTextureSelected.texture;
                 else texture = renderTexture.texture;
 
                 // Create a hat button using the SpriteButton class.
@@ -144,7 +144,7 @@ export default class HatView extends Phaser.Scene {
                         if (!this._isHatUnlocked(prop)) return;
 
                         hatButton.setTexture(textureKey);
-                        this._rootNode.user.selectedHat = prop;
+                        this._rootNode.gameStateManager.user.selectedHat = prop;
                         this.deleteAllHatButtons();
                         this.drawHatButtons();
                          globalEventBus.emit("save_game")
@@ -168,7 +168,7 @@ export default class HatView extends Phaser.Scene {
             300,
             () => {
                 // When the "Remove Hat" button is clicked, set the player's selected hat to "None" and redraw the hat buttons.
-                this._rootNode.user.selectedHat = "None";
+                this._rootNode.gameStateManager.user.selectedHat = "None";
                 this.drawHatButtons();
             },
             "Remove Hat"
@@ -192,7 +192,7 @@ export default class HatView extends Phaser.Scene {
      * Returns the ID of the currently selected hat.
      */
     public getSelectedHatId() {
-        return this._rootNode.user.selectedHat;
+        return this._rootNode.gameStateManager.user.selectedHat;
     }
 
     /**
@@ -207,14 +207,14 @@ export default class HatView extends Phaser.Scene {
     // Save the selected hat and unlocked hats to the game state.
     public saveAll() {
         return {
-            selectedHat: this._rootNode.user.selectedHat,
-            unlockedHats: this._rootNode.user.unlockedHats
+            selectedHat: this._rootNode.gameStateManager.user.selectedHat,
+            unlockedHats: this._rootNode.gameStateManager.user.unlockedHats
         };
     }
 
     // Check if a hat is unlocked.
     private _isHatUnlocked(hatId: string) {
-        let res = (HatMap[hatId].unlocked || this._rootNode.user.unlockedHats.includes(hatId));
+        let res = (HatMap[hatId].unlocked || this._rootNode.gameStateManager.user.unlockedHats.includes(hatId));
         console.log(hatId + " is " +res);
         return res;
     }
@@ -222,7 +222,7 @@ export default class HatView extends Phaser.Scene {
     // Unlock a hat.
     public unlock(hatId) {
         console.log("Unlocked " + hatId + "!");
-        this._rootNode.user.addUnlockedHats(hatId);
+        this._rootNode.gameStateManager.addUnlockedHats(hatId);
         globalEventBus.emit("save_game")
     }
 }

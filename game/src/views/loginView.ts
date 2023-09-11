@@ -3,9 +3,11 @@ import * as Phaser from "phaser";
 import RootNode from "./rootNode";
 import ApiHelper from "../helpers/apiHelper";
 import { response } from "express";
+import PreloadScene from "./preloadScene";
 
 export default class LoginView extends Phaser.Scene {
     rootNode: RootNode;
+    // preloadScene = new PreloadScene();
     private apiHelper: ApiHelper = new ApiHelper();
 
     constructor() {
@@ -58,6 +60,7 @@ export default class LoginView extends Phaser.Scene {
 
     private startGame(userData:any) {
         console.log(userData)
+        console.log("### STARTING GAME")
         this.apiHelper.getStateData().then((data:any) => {
             console.log("### STARTING GAME")
             console.log(data.state_data);
@@ -70,8 +73,10 @@ export default class LoginView extends Phaser.Scene {
             }else{
                 this.rootNode = new RootNode();
             }
-            this.scene.add("Play", this.rootNode);
-            this.scene.launch("Play");
+            this.scene.add("rootNode", this.rootNode)
+            this.scene.start('PreloadScene', { rootNode: this.rootNode });
+            // this.scene.add("rootNode", this.rootNode);
+            // this.scene.launch("rootNode");
             this.scene.remove(this);
         }).catch((error) => console.error(error));
     }

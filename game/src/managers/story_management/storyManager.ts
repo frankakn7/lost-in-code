@@ -14,15 +14,16 @@ export default class StoryManager {
     private _storyEvents = {}; // Stores ChatFlow objects for each room and event.
     private _rootNode : RootNode; // The root node of the game or application.
 
-    private _finishedStuff = {
-        hangar: [],
-        commonRoom: [],
-        engine: [],
-        laboratory: [],
-        bridge: []
-    };  // Stores the IDs of the events that have been finished for each room.
+    // private _finishedStuff = {
+    //     hangar: [],
+    //     commonRoom: [],
+    //     engine: [],
+    //     laboratory: [],
+    //     bridge: []
+    // };  // Stores the IDs of the events that have been finished for each room.
+    //
+    // private _textHistory: string[][] = []; // Stores the text history for the current game or application.
 
-    private _textHistory: string[][] = []; // Stores the text history for the current game or application.
 
     /**
      * Constructs a new instance of the class.
@@ -33,7 +34,7 @@ export default class StoryManager {
         this._rootNode = rootNode;
 
         // Load potential data from the game state.
-        this.loadData();
+        // this.loadData();
 
         // Iterate over each 'room' in the 'storyJson' object.
         for(let room in storyJson) {
@@ -46,7 +47,7 @@ export default class StoryManager {
 
                 // If the current index 'i' is present in the '_finishedStuff[room]' array,
                 // skip this iteration to avoid processing already encountered events.
-                if (this._finishedStuff[room].includes(i.toString())) {
+                if (this._rootNode.gameStateManager.story[room].includes(i.toString())) {
                     continue;
                 }
 
@@ -76,7 +77,7 @@ export default class StoryManager {
     public checkIfEventAvailable(roomId, eventId) {
         // Check if the provided 'eventId' is present in the '_finishedStuff[roomId]' array.
         // If it is present, the event is considered finished, and it is not available.
-        if (this._finishedStuff[roomId].includes(eventId)) return false;
+        if (this._rootNode.gameStateManager.story[roomId].includes(eventId)) return false;
         // Check if the provided 'eventId' is a valid key in 'storyJson[roomId]'.
         // If it is a valid key, the event is available.
         if (storyJson[roomId][eventId]) return true;
@@ -92,7 +93,7 @@ export default class StoryManager {
      * @returns {ChatFlow} A new ChatFlow object for the specified roomId and eventId.
      */
     public pullEventIdChatFlow(roomId, eventId) {
-        this._finishedStuff[roomId].push(eventId);
+        this._rootNode.gameStateManager.story[roomId].push(eventId);
         return new ChatFlow(this.reconstructChatNodeTreeRecursively(roomId, storyJson, eventId));
     }
 
@@ -139,7 +140,7 @@ export default class StoryManager {
         let key = this._storyEvents[room].keys().next().value;
         let value = this._storyEvents[room].get(key);
 
-        this._finishedStuff[room].push(key);
+        this._rootNode.gameStateManager.story[room].push(key);
         this._storyEvents[room].delete(key);
 
         return value;
@@ -150,30 +151,30 @@ export default class StoryManager {
      * @param {string[][]} newTexts - An array of text entries to be added to the text history.
      */
     public addTextHistory(newTexts: string[][]){
-        this._textHistory = this._textHistory.concat(newTexts);
+        this._rootNode.gameStateManager.story.history = this._rootNode.gameStateManager.story.history.concat(newTexts);
     }
 
     /**
      * Load data from the game state.
      */
-    public loadData() {
-        let {history, ...finishedStuff} = this._rootNode.getState().story;
-        this._finishedStuff = finishedStuff;
-        this._textHistory = history ?? [];
-    }
+    // public loadData() {
+    //     let {history, ...finishedStuff} = this._rootNode.gameStateManager.story;
+    //     this._finishedStuff = finishedStuff;
+    //     this._textHistory = history ?? [];
+    // }
 
     /**
      * Return saveable data for game state.
      */
-    public saveAll() {
-        return {...this._finishedStuff, history: this._textHistory};
-    }
+    // public saveAll() {
+    //     return {...this._finishedStuff, history: this._textHistory};
+    // }
 
     /**
      * Check if the entry story bit for a given room has been played.
      * @param roomId
      */
     public checkIfRoomStoryPlayed(roomId) {
-        return this._finishedStuff[roomId].includes("0");
+        return this._rootNode.gameStateManager.story[roomId].includes("0");
     }
 }

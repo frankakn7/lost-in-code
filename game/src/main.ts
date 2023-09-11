@@ -3,6 +3,7 @@ import RootNode from "./views/rootNode";
 import './font.css';
 import Center = Phaser.Scale.Center;
 import LoginView from "./views/loginView";
+import PreloadScene from "./views/preloadScene";
 
 
 /**
@@ -56,7 +57,8 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
     },
     autoCenter: Center.CENTER_BOTH,
     // scene: new RootNode(),
-    scene: new LoginView(),
+    // scene: new LoginView(),
+    scene: [LoginView, PreloadScene],
     // scene: new ChatView(),
     parent: "game",
     dom: {

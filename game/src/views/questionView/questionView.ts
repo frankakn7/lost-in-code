@@ -294,7 +294,7 @@ export default class QuestionView extends Phaser.Scene {
      * Sends this scene to sleep and reawakes all the other scenes
      */
     private exitQuestion(): void {
-        this.scene.wake("Play");
+        this.scene.wake("rootNode");
         this.scene.wake("Room");
         this.scene.wake("controlPad");
         this.scene.wake("pauseChatButtons");

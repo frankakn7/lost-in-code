@@ -42,7 +42,7 @@ export default class TaskManager {
 
     private loadQuestions() {
         return new Promise((resolve, reject) => {
-            this.apiHandler.getFullChapter(this._rootNode.user.chapterNumber)
+            this.apiHandler.getFullChapter(this._rootNode.gameStateManager.user.chapterNumber)
                 .then((response:any) => {
                     this.availableQuestions = response.questions;
                     this.currentChapterMaxDifficulty = Math.max(
@@ -81,7 +81,7 @@ export default class TaskManager {
             return map;
         }, {});
 
-        for (let i = this._rootNode.user.performanceIndex; i <= this.currentChapterMaxDifficulty; i++) {
+        for (let i = this._rootNode.gameStateManager.user.performanceIndex; i <= this.currentChapterMaxDifficulty; i++) {
             let questionsWithDifficulty = availableQuestionsMap[i];
             let j = 0;
             let increasing = true
@@ -109,14 +109,14 @@ export default class TaskManager {
     }
 
     private checkNextChapter() {
-        this._rootNode.user.increaseRepairedObjectsThisChapter();
-        if (this._rootNode.user.repairedObjectsThisChapter == 2) {
-            this._rootNode.user.increaseChapterNumber();
-            this._rootNode.user.repairedObjectsThisChapter = 0;
-            this._rootNode.user.newChapter = true;
-            this._rootNode.user.performanceIndex --;
+        this._rootNode.gameStateManager.increaseRepairedObjectsThisChapter();
+        if (this._rootNode.gameStateManager.user.repairedObjectsThisChapter == 2) {
+            this._rootNode.gameStateManager.increaseChapterNumber();
+            this._rootNode.gameStateManager.user.repairedObjectsThisChapter = 0;
+            this._rootNode.gameStateManager.user.newChapter = true;
+            this._rootNode.gameStateManager.user.performanceIndex --;
             this.loadQuestions()
-            this._rootNode.docView.chapterManager.updateCurrentChapterOrder(this._rootNode.user.chapterNumber);
+            this._rootNode.docView.chapterManager.updateCurrentChapterOrder(this._rootNode.gameStateManager.user.chapterNumber);
             this._rootNode.docView.chapterManager.updateChapters()
         }
     }
@@ -151,13 +151,13 @@ export default class TaskManager {
         }
         console.log(currentQuestion)
         this.answeredQuestions.push(currentQuestion);
-        this._rootNode.user.addAnsweredQuestionIds(currentQuestion.id);
+        this._rootNode.gameStateManager.addAnsweredQuestionIds(currentQuestion.id);
         this.currentQuestionSetForObject.shift();
         this.currentDoneQuestions++;
         if (this.currentQuestionSetForObject.length === 0) {
             this.onObjectRepaired();
         } else {
-            this._rootNode.user.performanceIndex = currentQuestion.difficulty + 1;
+            this._rootNode.gameStateManager.user.performanceIndex = currentQuestion.difficulty + 1;
         }
 
 
@@ -165,8 +165,8 @@ export default class TaskManager {
     }
 
     public questionAnsweredIncorrectly() {
-        this._rootNode.user.performanceIndex > 1
-            ? this._rootNode.user.performanceIndex--
+        this._rootNode.gameStateManager.user.performanceIndex > 1
+            ? this._rootNode.gameStateManager.user.performanceIndex--
             : null;
         this.onObjectFailed();
         globalEventBus.emit("taskmanager_task_incorrect");
@@ -185,7 +185,7 @@ export default class TaskManager {
         // console.log(rootNode.user)
 
         this.loadQuestions().then((result => {
-            this.loadState(rootNode.user.answeredQuestionIds);
+            this.loadState(rootNode.gameStateManager.user.answeredQuestionIds);
             this.populateNewQuestionSet();
         })).catch(error => console.error(error));
 

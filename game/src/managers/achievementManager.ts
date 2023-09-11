@@ -113,12 +113,12 @@ export default class AchievementManager {
 
 
     public loadData() {
-        this.unlocked = this._rootNode.getState().achievements.unlocked;
-        this._tasksCounter = this._rootNode.getState().achievements.taskCounter;
-        this._incorrectCounter = this._rootNode.getState().achievements.incorrectCounter;
-        this._currentStreak = this._rootNode.getState().achievements.currentStreak;
-        this._longestStreak = this._rootNode.getState().achievements.longestStreak;
-        this._fastestTaskTime = this._rootNode.getState().achievements.fastestTaskTime;
+        this.unlocked = this._rootNode.gameStateManager.achievements.unlocked;
+        this._tasksCounter = this._rootNode.gameStateManager.achievements.taskCounter;
+        this._incorrectCounter = this._rootNode.gameStateManager.achievements.incorrectCounter;
+        this._currentStreak = this._rootNode.gameStateManager.achievements.currentStreak;
+        this._longestStreak = this._rootNode.gameStateManager.achievements.longestStreak;
+        this._fastestTaskTime = this._rootNode.gameStateManager.achievements.fastestTaskTime;
     }
 
     get tasksCounter(): number {

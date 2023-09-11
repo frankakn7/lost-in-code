@@ -34,7 +34,7 @@ export default class HatObject extends InteractiveObject {
     }
 
     public interact(): void {
-        this.room.getRootNode().hatView.unlock(this._hatId);
+        this.room.rootNode.hatView.unlock(this._hatId);
         this.destroy();
     }
 
@@ -42,8 +42,8 @@ export default class HatObject extends InteractiveObject {
         // if (this.room.getPlayView().user.unlockedHats.includes(this._hatId)
         // ||  this.room.getPlayView().user.unlockedHats.includes(this._hatId)) {
         console.log("CHECKING HATS UNLOCKED")
-        console.log(this.room.getRootNode().user)
-        if (this.room.getRootNode().user.unlockedHats.includes(this._hatId)) {
+        console.log(this.room.rootNode.user)
+        if (this.room.rootNode.gameStateManager.user.unlockedHats.includes(this._hatId)) {
             this.destroy();
         }
     }

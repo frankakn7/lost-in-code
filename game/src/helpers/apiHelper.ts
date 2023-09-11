@@ -1,4 +1,4 @@
-import {GamestateType} from "../types/gamestateType";
+import {GameStateType} from "../types/gameStateType";
 
 /**
  * Helper class for making API requests related to the game.
@@ -126,10 +126,10 @@ export default class ApiHelper {
 
     /**
      * Update the game state data for the current user.
-     * @param {GamestateType} state_data - The new game state data to be updated.
+     * @param {GameStateType} state_data - The new game state data to be updated.
      * @returns {Promise} - A Promise that resolves with the updated game state data or rejects with an error message.
      */
-    public updateStateData(state_data: GamestateType
+    public updateStateData(state_data: GameStateType
     ) {
         console.log(state_data)
         const gameState = {game_state: state_data}

@@ -60,7 +60,7 @@ export default class PortalObject extends InteractiveObject {
         if (this.room.getDoorUnlocked()) {
             console.log("Open Door");
             // Fade out the camera and then change the room
-            this.room.getRootNode().getToRoomViaId(this.room.getNextRoom());
+            this.room.rootNode.getToRoomViaId(this.room.getNextRoom());
             this.room.cameras.main.fadeOut(1000, 0, 0, 0)
         }
     }

@@ -1,10 +1,8 @@
 import {UserStateType} from "./userStateType";
 
-export type GamestateType = {
-    rootNode: {
-        currentRoom: string;
-        gameFinished: boolean;
-    };
+export type GameStateType = {
+    currentRoom: string;
+    gameFinished: boolean;
     room: {
         finishedTaskObjects: boolean[];
     };
@@ -24,5 +22,13 @@ export type GamestateType = {
         fastestTaskTime: number;
         unlocked: string[];
     };
-    user: UserStateType
+    user: {
+        newChapter: boolean;
+        answeredQuestionIds: number[],
+        chapterNumber: number,
+        performanceIndex: number
+        repairedObjectsThisChapter: number,
+        selectedHat: string,
+        unlockedHats: string[],
+    }
 };

@@ -289,10 +289,10 @@ export default class RoomScene extends Phaser.Scene {
         }
 
         // Check if the room's story has been played, and if not, start it after a specific time delay.
-        if (!this.getRootNode().getStoryManager().checkIfRoomStoryPlayed(this._roomId)) {
+        if (!this.rootNode.getStoryManager().checkIfRoomStoryPlayed(this._roomId)) {
             this._timeSinceRoomEnter += delta;
             if (this._timeSinceRoomEnter > this._timeUntilStoryStartsInRoom) {
-                this.getRootNode().openStoryChatView();
+                this.rootNode.openStoryChatView();
                 this.player.setCanMove(true);
             }
         } else {
@@ -301,8 +301,7 @@ export default class RoomScene extends Phaser.Scene {
         }
     }
 
-    // Get root node
-    public getRootNode() {
+    get rootNode() {
         return this._rootNode;
     }
 
@@ -350,8 +349,8 @@ export default class RoomScene extends Phaser.Scene {
 
     // Load the rooms data from the game state
     public loadData() {
-        this.setDoorUnlocked(this.getRootNode().getState().room.doorUnlocked);
-        this._onStartupFinishedTaskObjects = this.getRootNode().getState().room.finishedTaskObjects;
+        this.setDoorUnlocked(this.rootNode.gameStateManager.room.doorUnlocked);
+        this._onStartupFinishedTaskObjects = this.rootNode.gameStateManager.room.finishedTaskObjects;
     }
 
     // Set the door unlocked
