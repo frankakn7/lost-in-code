@@ -6,7 +6,6 @@ import RootNode from "./rootNode";
 import {HatMap} from "../constants/hats";
 import DeviceButton from "../ui/deviceButton";
 import {formatTime, globalEventBus} from "../helpers/globalEventBus";
-import {game} from "../main";
 
 
 export default class EvaluationView extends Phaser.Scene {

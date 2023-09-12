@@ -36,6 +36,7 @@ import ProgressBar from "../ui/progress";
 import User from "../classes/user";
 import EvaluationView from "./evaluationView";
 import {GameStateManager} from "../managers/gameStateManager";
+import {UserType} from "../types/userType";
 
 
 /**
@@ -288,29 +289,7 @@ export default class RootNode extends Phaser.Scene {
         }
     }
 
-    /**
-     * Constructs the RootNode scene, responsible for setting up the entire game.
-     * @param {any} userData - Data related to the user, such as ID and username.
-     * @param {GameStateType} state - The state of the game, indicating the progress and data of the user's playthrough.
-     */
-    constructor(
-        userData?: any,
-        state?: GameStateType,
-    ) {
-        console.log("### CONSTRUCTING ROOT NODE")
-        super("rootNode");
-
-        state? this._gameStateManager.initialiseExisting(state) : null;
-
-        console.log(state)
-        console.log("### GameStateManager")
-        console.log(this._gameStateManager)
-
-        // initialise new _gameStateManager
-
-        // Create a new User instance with the provided user data if available, otherwise create a new User with default data.
-        this._user = userData ? new User(userData.id, userData.username) : new User();
-
+    private setupRoomScenes(){
         // Create and set up the various RoomScene instances for different rooms in the game.
         // Each RoomScene represents a specific room in the game with its tilemap, layers, and player position.
         this.roomMap.set("hangar", new RoomScene({
@@ -353,6 +332,27 @@ export default class RootNode extends Phaser.Scene {
             collisionLayer: "Walls",
             objectsLayer: "Objects"
         }, "bridge", this).setPlayerPosition(32 * 2, 32 * 10));
+    }
+
+    /**
+     * Constructs the RootNode scene, responsible for setting up the entire game.
+     * @param {any} userData - Data related to the user, such as ID and username.
+     * @param {GameStateType} state - The state of the game, indicating the progress and data of the user's playthrough.
+     */
+    constructor(
+        userData?: UserType,
+        state?: GameStateType,
+    ) {
+        super("rootNode");
+
+        state? this._gameStateManager.initialiseExisting(state) : null;
+
+        // initialise new _gameStateManager
+
+        // Create a new User instance with the provided user data if available, otherwise create a new User with default data.
+        this._user = userData ? new User(userData) : new User();
+
+        this.setupRoomScenes();
 
         // Load the required data for the game.
         this.loadData();
