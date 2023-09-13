@@ -1,5 +1,5 @@
 import * as Phaser from "phaser";
-import RootNode from "../views/rootNode";
+import WorldViewScene from "../scenes/worldViewScene";
 import {globalEventBus} from "../helpers/globalEventBus";
 
 /**
@@ -7,15 +7,15 @@ import {globalEventBus} from "../helpers/globalEventBus";
  */
 export default class ProgressBar extends Phaser.Scene {
     private _bar; // The progress bar graphics object.
-    private _rootNode; // The root node of the game or application.
+    private _worldViewScene; // The root node of the game or application.
 
     /**
      * Creates an instance of ProgressBar.
-     * @param rootNode
+     * @param worldViewScene
      */
-    constructor(rootNode: RootNode) {
+    constructor(worldViewScene: WorldViewScene) {
         super("Progress Bar");
-        this._rootNode = rootNode;
+        this._worldViewScene = worldViewScene;
     }
 
     /**
@@ -36,7 +36,7 @@ export default class ProgressBar extends Phaser.Scene {
      * Updates the progress bar.
      */
     public updateBar() {
-        const progress = this._rootNode.getCurrentRoom().getFinishedTaskObjectsCount() / this._rootNode.getCurrentRoom().getTaskObjectCount();
+        const progress = this._worldViewScene._roomSceneController.currentRoomScene.getFinishedTaskObjectsCount() / this._worldViewScene._roomSceneController.currentRoomScene.getTaskObjectCount();
         console.log(progress)
         const totalWidthInner = this.cameras.main.displayWidth - 100 - 10;
         this._bar.fillStyle(0xFCFBF4, 1);

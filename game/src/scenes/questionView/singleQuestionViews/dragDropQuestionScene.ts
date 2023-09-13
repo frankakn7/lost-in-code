@@ -7,7 +7,7 @@ import { ChoiceQuestionElement, OrderQuestionElement } from "../../../classes/qu
 import ChoiceButton from "../../../ui/choiceButton";
 import DraggableCodeBlock from "../../../ui/question/draggableCodeBlock";
 
-export default class DragDropQuestionView extends Phaser.Scene {
+export default class DragDropQuestionScene extends Phaser.Scene {
     private currentQuestion: Question;
 
     private choiceButtons: ChoiceButton[] = [];
@@ -21,7 +21,7 @@ export default class DragDropQuestionView extends Phaser.Scene {
 
 
     constructor(questionText: Phaser.GameObjects.Text, currentQuestion: Question) {
-        super("DragDropQuestionView");
+        super("DragDropQuestionScene");
         this.questionText = questionText;
         this.currentQuestion = currentQuestion;
     }

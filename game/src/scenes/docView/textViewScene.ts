@@ -1,9 +1,9 @@
 import Phaser from "phaser";
 import ChatTextContainer from "../../ui/chatTextContainer";
-import DocView from "./docView";
+import DocViewScene from "./docViewScene";
 import SpriteButton from "../../ui/SpriteButton";
 
-export default class TextView extends Phaser.Scene {
+export default class TextViewScene extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite;
 
     private chatTextContainer;
@@ -12,14 +12,14 @@ export default class TextView extends Phaser.Scene {
 
     private textObjectToDisplay: Phaser.GameObjects.Text;
 
-    private docView: DocView;
+    private docView: DocViewScene;
 
     private resumeButton;
 
     private textStyle;
 
-    constructor(docView: DocView, textToDisplay) {
-        super("TextView");
+    constructor(docView: DocViewScene, textToDisplay) {
+        super("TextViewScene");
         this.docView = docView;
         this.textToDisplay = textToDisplay;
     }

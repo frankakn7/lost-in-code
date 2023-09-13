@@ -1,17 +1,17 @@
 import loginFormHtml from "../assets/html/login.html";
 import * as Phaser from "phaser";
-import RootNode from "./rootNode";
+import WorldViewScene from "./worldViewScene";
 import ApiHelper from "../helpers/apiHelper";
 import { response } from "express";
 import PreloadScene from "./preloadScene";
 
-export default class LoginView extends Phaser.Scene {
-    rootNode: RootNode;
+export default class LoginScene extends Phaser.Scene {
+    worldViewScene: WorldViewScene;
     // preloadScene = new PreloadScene();
     private apiHelper: ApiHelper = new ApiHelper();
 
     constructor() {
-        super("LoginView");
+        super("LoginScene");
     }
 
     preload() {
@@ -67,16 +67,16 @@ export default class LoginView extends Phaser.Scene {
             console.log("### USER DATA")
             console.log(userData)
             if(data.state_data){
-                this.rootNode = new RootNode(userData, data.state_data);
+                this.worldViewScene = new WorldViewScene(userData, data.state_data);
             }else if(userData){
-                this.rootNode = new RootNode(userData);
+                this.worldViewScene = new WorldViewScene(userData);
             }else{
-                this.rootNode = new RootNode();
+                this.worldViewScene = new WorldViewScene();
             }
-            this.scene.add("rootNode", this.rootNode)
-            this.scene.start('PreloadScene', { rootNode: this.rootNode });
-            // this.scene.add("rootNode", this.rootNode);
-            // this.scene.launch("rootNode");
+            this.scene.add("worldViewScene", this.worldViewScene)
+            this.scene.start('PreloadScene', { worldViewScene: this.worldViewScene });
+            // this.scene.add("worldViewScene", this.worldViewScene);
+            // this.scene.launch("worldViewScene");
             this.scene.remove(this);
         }).catch((error) => console.error(error));
     }

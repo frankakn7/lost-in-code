@@ -21,15 +21,15 @@ export default class ClueObject extends InteractiveObject {
             }
         })
 
-        if (!room.rootNode.getStoryManager().checkIfEventAvailable(this.room.getRoomId(), this._eventId)) {
+        if (!room.worldViewScene.getStoryManager().checkIfEventAvailable(this.room.getRoomId(), this._eventId)) {
             this.destroy();
         }
     }
 
     public interact() {
-        if (!this.room.rootNode.getStoryManager().checkIfEventAvailable(this.room.getRoomId(), this._eventId)) return;
+        if (!this.room.worldViewScene.getStoryManager().checkIfEventAvailable(this.room.getRoomId(), this._eventId)) return;
 
-        this.room.rootNode.openEventChatView(this.room.getRoomId(), this._eventId);
+        this.room.worldViewScene.openEventChatView(this.room.getRoomId(), this._eventId);
         this.destroy();
     }
 }

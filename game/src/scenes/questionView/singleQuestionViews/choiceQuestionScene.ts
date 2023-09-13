@@ -6,7 +6,7 @@ import "highlight.js/styles/night-owl.css";
 import { ChoiceQuestionElement } from "../../../classes/question/questionElement";
 import ChoiceButton from "../../../ui/choiceButton";
 
-export default class ChoiceQuestionView extends Phaser.Scene {
+export default class ChoiceQuestionScene extends Phaser.Scene {
     private currentQuestion: Question;
 
     private choiceButtons: ChoiceButton[] = [];
@@ -25,7 +25,7 @@ export default class ChoiceQuestionView extends Phaser.Scene {
         questionText: Phaser.GameObjects.Text,
         currentQuestion: Question
     ) {
-        super("ChoiceQuestionView");
+        super("ChoiceQuestionScene");
         this.questionText = questionText;
         this.currentQuestion = currentQuestion;
     }

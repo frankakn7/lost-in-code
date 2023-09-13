@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
 import {text} from "express";
-import RootNode from "../views/rootNode";
+import WorldViewScene from "../scenes/worldViewScene";
 
 /**
  * NewsPopup is a popup that displays a message to the player.
@@ -12,7 +12,7 @@ export default class NewsPopup extends Phaser.Scene {
     private label; // The label that displays the message.
     private lifespan: number; // The lifespan of the popup in milliseconds.
     private _timeLived: number = 0; // The time the popup has been alive in milliseconds.
-    private _rootNode: RootNode; // The root node of the game or application.
+    private _worldViewScene: WorldViewScene; // The root node of the game or application.
 
     private _fadeOutDur: number = 300; // The duration of the fade out animation in milliseconds.
     private _fadeOutTween;
@@ -26,19 +26,19 @@ export default class NewsPopup extends Phaser.Scene {
 
     /**
      * Creates a new NewsPopup instance.
-     * @param rootNode - The RootNode scene instance.
+     * @param worldViewScene - The WorldViewScene scene instance.
      * @param sceneId - The ID of the scene.
      * @param message - The news message to display in the popup.
      * @param lifespan - The duration in milliseconds for which the popup will be displayed.
      * @param achievementTextureKey - The texture key of an achievement associated with the news (optional).
      */
-    constructor(rootNode: RootNode, sceneId: string, message, lifespan= 300, achievementTextureKey?: string) {
+    constructor(worldViewScene: WorldViewScene, sceneId: string, message, lifespan= 300, achievementTextureKey?: string) {
         super(sceneId);
         this._message = message;
         this.lifespan = lifespan;
-        this._rootNode = rootNode;
-        this.width = this._rootNode.cameras.main.width;
-        this.height = this._rootNode.cameras.main.height;
+        this._worldViewScene = worldViewScene;
+        this.width = this._worldViewScene.cameras.main.width;
+        this.height = this._worldViewScene.cameras.main.height;
 
         this._textureKey = achievementTextureKey;
 
@@ -128,7 +128,7 @@ export default class NewsPopup extends Phaser.Scene {
      */
     public kill() {
         if(this._fadeOutTween) this.tweens.remove(this._fadeOutTween);
-        this._rootNode.scene.remove(this);
+        this._worldViewScene.scene.remove(this);
     }
 
 

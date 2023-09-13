@@ -28,7 +28,7 @@ import PaperTexture from "../assets/gameobjects/paper2.png";
 import InteractiveObject from "./objects/interactiveObject";
 import storyJson from "../managers/story_management/storyFormatExample.json";
 import StoryManager from "../managers/story_management/storyManager";
-import RootNode from "../views/rootNode";
+import WorldViewScene from "../scenes/worldViewScene";
 import TaskObject from "./objects/taskObjects";
 import {globalEventBus} from "../helpers/globalEventBus";
 import EnemyObject from "./objects/enemyObject";
@@ -55,7 +55,7 @@ export default class RoomScene extends Phaser.Scene {
     private _onStartupFinishedTaskObjects = [false, false, false, false]; // The task objects that are finished on startup due to load
     // private controls;
 
-    private _rootNode; // The root node of the game
+    private _worldViewScene; // The root node of the game
     private _doorUnlocked = false; // Whether the door is unlocked or not
 
     private _timeUntilStoryStartsInRoom = 2500; // The time until the story starts in the room
@@ -69,13 +69,15 @@ export default class RoomScene extends Phaser.Scene {
     constructor(
         tilemapConfig: TilemapConfig,
         roomId: string,
-        rootNode : RootNode
+        worldViewScene : WorldViewScene
         // settingsConfig?: string | Phaser.Types.Scenes.SettingsConfig
     ) {
         super("Room_" + roomId);
         this.tilemapConfig = tilemapConfig;
         
-        this._rootNode = rootNode;
+        this._worldViewScene = worldViewScene;
+        console.log("### WORLD VIEW SCENE")
+        console.log(this._worldViewScene)
         this._roomId = roomId;
     }
 
@@ -147,7 +149,8 @@ export default class RoomScene extends Phaser.Scene {
 
 
         // Create and position the player sprite using the Player class.
-        this.player = new Player(this, this._playerDefaultX, this._playerDefaultY, "playerTexture", this._rootNode);
+        //TODO save player x and y in gamestate and load it from there
+        this.player = new Player(this, this._playerDefaultX, this._playerDefaultY, "playerTexture", this._worldViewScene);
         this.physics.add.collider(this.player, collisionLayer);
         this.player.setCanMove(false);
 
@@ -289,10 +292,10 @@ export default class RoomScene extends Phaser.Scene {
         }
 
         // Check if the room's story has been played, and if not, start it after a specific time delay.
-        if (!this.rootNode.getStoryManager().checkIfRoomStoryPlayed(this._roomId)) {
+        if (!this._worldViewScene.getStoryManager().checkIfRoomStoryPlayed(this._roomId)) {
             this._timeSinceRoomEnter += delta;
             if (this._timeSinceRoomEnter > this._timeUntilStoryStartsInRoom) {
-                this.rootNode.openStoryChatView();
+                this._worldViewScene.openStoryChatView();
                 this.player.setCanMove(true);
             }
         } else {
@@ -301,8 +304,8 @@ export default class RoomScene extends Phaser.Scene {
         }
     }
 
-    get rootNode() {
-        return this._rootNode;
+    get worldViewScene() {
+        return this._worldViewScene;
     }
 
     /**
@@ -349,8 +352,8 @@ export default class RoomScene extends Phaser.Scene {
 
     // Load the rooms data from the game state
     public loadData() {
-        this.setDoorUnlocked(this.rootNode.gameStateManager.room.doorUnlocked);
-        this._onStartupFinishedTaskObjects = this.rootNode.gameStateManager.room.finishedTaskObjects;
+        this.setDoorUnlocked(this._worldViewScene.gameStateManager.room.doorUnlocked);
+        this._onStartupFinishedTaskObjects = this._worldViewScene.gameStateManager.room.finishedTaskObjects;
     }
 
     // Set the door unlocked

@@ -1,7 +1,7 @@
 import { text } from "express";
 import ControlPadScene from "../../ui/ControlPadScene";
 import { Vector } from "matter";
-import RootNode from "../../views/rootNode";
+import WorldViewScene from "../../scenes/worldViewScene";
 
 /**
  * The Player class. This represents the player on the map and contains all the logic for movement, animations etc.
@@ -11,7 +11,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     private _breathCalcHelperVar = 0; // Helper variable for the breathing animation
     private _walkingRotationHelperVar = 0; // Helper variable for the walking animation
     private _isMoving = false; // Is the player currently moving?
-    private _rootNode : RootNode; // The root node of the game
+    private _worldViewScene : WorldViewScene; // The root node of the game
 
     private shadow : Phaser.GameObjects.Sprite; // The shadow of the player
     private shadowYOffset = 0; // The offset of the shadow from the player
@@ -36,12 +36,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
      * @param x  The x position of the player
      * @param y  The y position of the player
      * @param texture  The texture of the player
-     * @param rootNode  The root node of the game
+     * @param worldViewScene  The root node of the game
      */
-    constructor(scene, x, y, texture, rootNode) {
+    constructor(scene, x, y, texture, worldViewScene) {
         // Basic scene setup
         super(scene, x, y, texture);
-        this._rootNode = rootNode;
+        this._worldViewScene = worldViewScene;
         this.scene = scene;
 
         // Shadow setup
@@ -219,12 +219,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     public updateHat() {
         // Check if a hat view exists in the root node.
         // If not, return as there is nothing to update.
-        if (this._rootNode.hatView === undefined) {
+        if (this._worldViewScene.hatView === undefined) {
             return;
         }
 
         // Get the selected hat ID from the hat view.
-        const hatId = this._rootNode.hatView.getSelectedHatId();
+        const hatId = this._worldViewScene.hatView.getSelectedHatId();
 
         // Check if a hat is selected (hatId is not "None").
         if (hatId !== "None") {
@@ -235,7 +235,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             const height = 64;
             let renderTexture = this.scene.make.renderTexture({ width, height }, false);
             renderTexture.draw("playerTexture", 0, 32);
-            renderTexture.draw(this._rootNode.hatMap[hatId].texture, 0, 32 + this.hatYOffset);
+            renderTexture.draw(this._worldViewScene.hatMap[hatId].texture, 0, 32 + this.hatYOffset);
 
             // Define a texture key for the player's texture with the selected hat.
             // If this texture key does not already exist, save the render texture as a new texture.

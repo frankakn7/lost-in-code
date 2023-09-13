@@ -1,7 +1,7 @@
 import * as Phaser from "phaser";
 import DeviceButton from "../ui/deviceButton";
 import SpriteButton from "../ui/SpriteButton";
-import RootNode from "./rootNode";
+import WorldViewScene from "./worldViewScene";
 
 import AntennaAppTexture from "../assets/ui/apps/Antenna-app-icon.png";
 import ResumeButtonTexture from "../assets/ui/Resume-Button.png";
@@ -9,24 +9,24 @@ import SettingsButtonTexture from "../assets/ui/apps/Settings-app-icon.png";
 import KnowledgeButtonTexture from "../assets/ui/apps/knowledge-app-icon.png";
 import HatAppTexture from "../assets/ui/apps/Hat-app-icon.png";
 import LogoutButtonTexture from "../assets/ui/Logout-Button.png";
-import HatView from "./hatView";
+import HatViewScene from "./hatViewScene";
 import ApiHelper from "../helpers/apiHelper";
 
 import AchievementsAppTexture from "../assets/ui/apps/Achievements-app-icon.png";
 import AchievementManager from "../managers/achievementManager";
-import AchievementView from "./achievementView";
+import AchievementViewScene from "./achievementViewScene";
 
-export default class MenuView extends Phaser.Scene {
+export default class MenuViewScene extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite;
-    private _rootNode: RootNode;
+    private _worldViewScene: WorldViewScene;
 
-    private hatView: HatView;
+    private hatView: HatViewScene;
 
     private _columns = 2;
 
     private apiHelper: ApiHelper = new ApiHelper();
 
-    private _achievementView : AchievementView;
+    private _achievementView : AchievementViewScene;
 
     public preload() {
         this.load.image("antennaAppTexture", AntennaAppTexture);
@@ -39,13 +39,13 @@ export default class MenuView extends Phaser.Scene {
     }
 
     constructor(
-        rootNode: RootNode,
+        worldViewScene: WorldViewScene,
         settingsConfig?: string | Phaser.Types.Scenes.SettingsConfig
     ) {
         super(settingsConfig);
-        this._rootNode = rootNode;
-        // this.hatView = new HatView();
-        this._achievementView = new AchievementView(this._rootNode, this._rootNode.achievementManager);
+        this._worldViewScene = worldViewScene;
+        // this.hatView = new HatViewScene();
+        this._achievementView = new AchievementViewScene(this._worldViewScene, this._worldViewScene.achievementManager);
     }
 
     public create() {
@@ -90,7 +90,7 @@ export default class MenuView extends Phaser.Scene {
             "antennaAppTexture",
             (this.scale.width / (this._columns + 1)) * 1,
             1000,
-            () => {this._rootNode.openStoryChatViewWithoutPulling()}
+            () => {this._worldViewScene.openStoryChatViewWithoutPulling()}
         ).setScale(1.25);
         this.add.existing(chatButton);
 
@@ -109,12 +109,12 @@ export default class MenuView extends Phaser.Scene {
             (this.scale.width / (this._columns + 1)) * 2,
             1300,
             () => {
-                this.openSubMenu(this._rootNode.hatView);
+                this.openSubMenu(this._worldViewScene.hatView);
             }
         ).setScale(1.25);
         this.add.existing(hatButton);
         if (this.scene.get("Hat View") == null)
-            this.scene.add("hatView", this._rootNode.hatView);
+            this.scene.add("hatView", this._worldViewScene.hatView);
 
         const achievementsButton = new SpriteButton(
             this,
@@ -128,7 +128,7 @@ export default class MenuView extends Phaser.Scene {
         this.add.existing(achievementsButton);
 
         if (this.scene.get("DocView") == null)
-            this.scene.add("DocView", this._rootNode.docView);
+            this.scene.add("DocView", this._worldViewScene.docView);
 
         if (this.scene.get("AchievementView") == null)
             this.scene.add("achievementView", this._achievementView);
@@ -136,7 +136,7 @@ export default class MenuView extends Phaser.Scene {
 
     private _resumeGame() {
         this.scene.sleep(this);
-        this._rootNode.pauseOrResumeGame(false);
+        this._worldViewScene.pauseOrResumeGame(false);
     }
 
     private openSubMenu(menu) {

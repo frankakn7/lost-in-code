@@ -2,16 +2,16 @@ import Phaser from "phaser";
 import ChapterManager, {ChapterType} from "../../managers/chapterManager";
 import SpriteButton from "../../ui/SpriteButton";
 import ReturnButtonTexture from "../../assets/ui/Return-Button.png";
-import RootNode from "../rootNode";
+import WorldViewScene from "../worldViewScene";
 import DeviceButton from "../../ui/deviceButton";
-import TextView from "./textView";
+import TextViewScene from "./textViewScene";
 
-export default class DocView extends Phaser.Scene {
+export default class DocViewScene extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite;
 
     public chapterManager: ChapterManager;
 
-    private _rootNode: RootNode;
+    private _worldViewScene: WorldViewScene;
 
     private resumeButton;
 
@@ -21,10 +21,10 @@ export default class DocView extends Phaser.Scene {
 
     private textView;
 
-    constructor(rootNode: RootNode, chapterNumber: number) {
-        super("DocView");
+    constructor(worldViewScene: WorldViewScene, chapterNumber: number) {
+        super("DocViewScene");
         this.chapterManager = new ChapterManager(chapterNumber)
-        this._rootNode = rootNode;
+        this._worldViewScene = worldViewScene;
     }
 
     private createChapterButtons() {
@@ -72,12 +72,12 @@ export default class DocView extends Phaser.Scene {
     }
 
     private _backToMenu() {
-        this._rootNode.menuView.scene.resume();
+        this._worldViewScene.menuView.scene.resume();
         this.scene.sleep();
     }
 
     private openTextMenu(textToShow) {
-        this.textView = new TextView(this,textToShow)
+        this.textView = new TextViewScene(this,textToShow)
         this.scene.add("TextView",this.textView)
         this.scene.launch(this.textView);
         this.scene.pause();

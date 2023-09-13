@@ -62,6 +62,6 @@ export default class PreloadScene extends Phaser.Scene {
     }
 
     create(data) {
-        this.scene.start('rootNode', { rootNode: data.rootNode });
+        this.scene.start('worldViewScene', { worldViewScene: data.worldViewScene });
     }
 }

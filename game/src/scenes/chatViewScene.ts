@@ -5,13 +5,13 @@ import DeviceButton from "../ui/deviceButton";
 import ChatTextContainer from "../ui/chatTextContainer";
 import deviceBackgroundTilePng from "../assets/Device-Background-Tile.png";
 import {globalEventBus} from "../helpers/globalEventBus";
-import RootNode from "./rootNode";
+import WorldViewScene from "./worldViewScene";
 
 /**
- * The ChatView displaying the chat
+ * The ChatViewScene displaying the chat
  * Handles the animation of the text as well as displaying choice buttons
  */
-export default class ChatView extends Phaser.Scene {
+export default class ChatViewScene extends Phaser.Scene {
 
     /**
      * The current {@link ChatFlow} being handled by the chatView
@@ -68,7 +68,7 @@ export default class ChatView extends Phaser.Scene {
 
     private textToSave: string[][] = [];
 
-    private rootNode: RootNode;
+    private worldViewScene: WorldViewScene;
 
     private chatHistory: string[][] = [];
 
@@ -77,10 +77,10 @@ export default class ChatView extends Phaser.Scene {
      *
      * @param chatFlow The first {@link ChatFlow} to be handled by the chat view
      */
-    constructor(rootNode: RootNode, chatFlow?: ChatFlow, chatHistory?: string[][], sceneName?:string, destroyOnExit?:boolean, customExitFunc?:Function) {
+    constructor(worldViewScene: WorldViewScene, chatFlow?: ChatFlow, chatHistory?: string[][], sceneName?:string, destroyOnExit?:boolean, customExitFunc?:Function) {
 
         super(sceneName ?? "chatView");
-        this.rootNode = rootNode;
+        this.worldViewScene = worldViewScene;
 
         this.chatHistory = chatHistory;
         destroyOnExit ? this.destroyOnExit = destroyOnExit : null;
@@ -324,13 +324,13 @@ export default class ChatView extends Phaser.Scene {
      * Sends this scene to sleep and reawakes all the other scenes
      */
     private exitChat(): void {
-        this.scene.wake("rootNode");
+        this.scene.wake("worldViewScene");
         this.scene.wake("Room");
         this.scene.wake("controlPad");
         this.scene.wake("pauseChatButtons");
 
         console.log(this.textToSave);
-        this.rootNode.getStoryManager().addTextHistory(this.textToSave);
+        this.worldViewScene.getStoryManager().addTextHistory(this.textToSave);
         this.textToSave = [];
         globalEventBus.emit("save_game")
 

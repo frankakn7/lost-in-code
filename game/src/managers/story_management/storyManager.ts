@@ -3,7 +3,7 @@ import ChatFlow from "../../classes/chat/chatFlow";
 import storyJson from "../../assets/story.json";
 import { ChatFlowNode } from "../../classes/chat/chatFlowNode";
 import { json } from "express";
-import RootNode from "../../views/rootNode";
+import WorldViewScene from "../../scenes/worldViewScene";
 
 
 /**
@@ -12,7 +12,7 @@ import RootNode from "../../views/rootNode";
  */
 export default class StoryManager {
     private _storyEvents = {}; // Stores ChatFlow objects for each room and event.
-    private _rootNode : RootNode; // The root node of the game or application.
+    private _worldViewScene : WorldViewScene; // The root node of the game or application.
 
     // private _finishedStuff = {
     //     hangar: [],
@@ -27,11 +27,11 @@ export default class StoryManager {
 
     /**
      * Constructs a new instance of the class.
-     * @param {RootNode} rootNode - The root node of the game or application.
+     * @param {WorldViewScene} worldViewScene - The root node of the game or application.
      */
-    constructor(rootNode: RootNode) {
-        // Store the provided 'rootNode' as a private property '_rootNode'.
-        this._rootNode = rootNode;
+    constructor(worldViewScene: WorldViewScene) {
+        // Store the provided 'worldViewScene' as a private property '_worldViewScene'.
+        this._worldViewScene = worldViewScene;
 
         // Load potential data from the game state.
         // this.loadData();
@@ -47,7 +47,7 @@ export default class StoryManager {
 
                 // If the current index 'i' is present in the '_finishedStuff[room]' array,
                 // skip this iteration to avoid processing already encountered events.
-                if (this._rootNode.gameStateManager.story[room].includes(i.toString())) {
+                if (this._worldViewScene.gameStateManager.story[room].includes(i.toString())) {
                     continue;
                 }
 
@@ -77,7 +77,7 @@ export default class StoryManager {
     public checkIfEventAvailable(roomId, eventId) {
         // Check if the provided 'eventId' is present in the '_finishedStuff[roomId]' array.
         // If it is present, the event is considered finished, and it is not available.
-        if (this._rootNode.gameStateManager.story[roomId].includes(eventId)) return false;
+        if (this._worldViewScene.gameStateManager.story[roomId].includes(eventId)) return false;
         // Check if the provided 'eventId' is a valid key in 'storyJson[roomId]'.
         // If it is a valid key, the event is available.
         if (storyJson[roomId][eventId]) return true;
@@ -93,7 +93,7 @@ export default class StoryManager {
      * @returns {ChatFlow} A new ChatFlow object for the specified roomId and eventId.
      */
     public pullEventIdChatFlow(roomId, eventId) {
-        this._rootNode.gameStateManager.story[roomId].push(eventId);
+        this._worldViewScene.gameStateManager.story[roomId].push(eventId);
         return new ChatFlow(this.reconstructChatNodeTreeRecursively(roomId, storyJson, eventId));
     }
 
@@ -121,7 +121,7 @@ export default class StoryManager {
         // This node will include the optionText, text, and the choices Map created above.
         let newNode : ChatFlowNode = {
             optionText: json[room][nodeId]["optionText"],
-            text: json[room][nodeId]["text"].replace("astronaut", "astronaut " + this._rootNode.user.username).replace("Astronaut", "Astronaut " + this._rootNode.user.username),
+            text: json[room][nodeId]["text"].replace("astronaut", "astronaut " + this._worldViewScene.user.username).replace("Astronaut", "Astronaut " + this._worldViewScene.user.username),
             choices: choices
         }
 
@@ -140,7 +140,7 @@ export default class StoryManager {
         let key = this._storyEvents[room].keys().next().value;
         let value = this._storyEvents[room].get(key);
 
-        this._rootNode.gameStateManager.story[room].push(key);
+        this._worldViewScene.gameStateManager.story[room].push(key);
         this._storyEvents[room].delete(key);
 
         return value;
@@ -151,14 +151,14 @@ export default class StoryManager {
      * @param {string[][]} newTexts - An array of text entries to be added to the text history.
      */
     public addTextHistory(newTexts: string[][]){
-        this._rootNode.gameStateManager.story.history = this._rootNode.gameStateManager.story.history.concat(newTexts);
+        this._worldViewScene.gameStateManager.story.history = this._worldViewScene.gameStateManager.story.history.concat(newTexts);
     }
 
     /**
      * Load data from the game state.
      */
     // public loadData() {
-    //     let {history, ...finishedStuff} = this._rootNode.gameStateManager.story;
+    //     let {history, ...finishedStuff} = this._worldViewScene.gameStateManager.story;
     //     this._finishedStuff = finishedStuff;
     //     this._textHistory = history ?? [];
     // }
@@ -175,6 +175,6 @@ export default class StoryManager {
      * @param roomId
      */
     public checkIfRoomStoryPlayed(roomId) {
-        return this._rootNode.gameStateManager.story[roomId].includes("0");
+        return this._worldViewScene.gameStateManager.story[roomId].includes("0");
     }
 }

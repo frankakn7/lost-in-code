@@ -1,7 +1,7 @@
 import * as Phaser from "phaser";
-import RootNode from "./views/rootNode";
-import LoginView from "./views/loginView";
-import PreloadScene from "./views/preloadScene";
+import WorldViewScene from "./scenes/worldViewScene";
+import LoginScene from "./scenes/loginScene";
+import PreloadScene from "./scenes/preloadScene";
 import './font.css';
 import {GameStateManager} from "./managers/gameStateManager";
 import Center = Phaser.Scale.Center;
@@ -58,10 +58,10 @@ class GameController {
 
             },
             autoCenter: Center.CENTER_BOTH,
-            // scene: new RootNode(),
-            // scene: new LoginView(),
-            scene: [LoginView, PreloadScene],
-            // scene: new ChatView(),
+            // scene: new WorldViewScene(),
+            // scene: new LoginScene(),
+            scene: [LoginScene, PreloadScene],
+            // scene: new ChatViewScene(),
             parent: "game",
             dom: {
                 createContainer: true

@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
 import RoomScene from "../room";
-import RootNode from "../../views/rootNode";
+import WorldViewScene from "../../scenes/worldViewScene";
 
 /**
  * InteractiveObject is a base class for objects that can be interacted with in a RoomScene.

@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
 import InteractiveObject from "./interactiveObject";
-import RootNode from "../../views/rootNode";
+import WorldViewScene from "../../scenes/worldViewScene";
 import RoomScene from "../room";
 import {globalEventBus} from "../../helpers/globalEventBus";
 import Clock = Phaser.Time.Clock;
@@ -60,7 +60,7 @@ export default class PortalObject extends InteractiveObject {
         if (this.room.getDoorUnlocked()) {
             console.log("Open Door");
             // Fade out the camera and then change the room
-            this.room.rootNode.getToRoomViaId(this.room.getNextRoom());
+            this.room.worldViewScene.getToRoomViaId(this.room.getNextRoom());
             this.room.cameras.main.fadeOut(1000, 0, 0, 0)
         }
     }

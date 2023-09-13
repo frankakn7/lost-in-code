@@ -5,15 +5,15 @@ import Question from "../../classes/question/question";
 import {QuestionType} from "../../types/questionType";
 import deviceBackgroundTilePng from "../../assets/Device-Background-Tile.png";
 import DeviceButton from "../../ui/deviceButton";
-import ChoiceQuestionView from "./singleQuestionViews/choiceQuestionView";
-import InputQuestionView from "./singleQuestionViews/inputQuestionView";
-import DragDropQuestionView from "./singleQuestionViews/dragDropQuestionView";
-import ClozeQuestionView from "./singleQuestionViews/clozeQuestionView";
-import SelectOneQuestionView from "./singleQuestionViews/selectOneQuestionView";
-import CreateQuestionView from "./singleQuestionViews/createQuestionView";
+import ChoiceQuestionScene from "./singleQuestionViews/choiceQuestionScene";
+import InputQuestionScene from "./singleQuestionViews/inputQuestionScene";
+import DragDropQuestionScene from "./singleQuestionViews/dragDropQuestionScene";
+import ClozeQuestionScene from "./singleQuestionViews/clozeQuestionScene";
+import SelectOneQuestionScene from "./singleQuestionViews/selectOneQuestionScene";
+import CreateQuestionScene from "./singleQuestionViews/createQuestionScene";
 import {globalEventBus} from "../../helpers/globalEventBus";
 
-export default class QuestionView extends Phaser.Scene {
+export default class QuestionViewScene extends Phaser.Scene {
     private taskManager: TaskManager;
     private currentQuestion: Question;
 
@@ -31,15 +31,15 @@ export default class QuestionView extends Phaser.Scene {
     private progressBar: Phaser.GameObjects.Graphics;
 
     private currentQuestionView:
-        | ChoiceQuestionView
-        | InputQuestionView
-        | DragDropQuestionView
-        | ClozeQuestionView
-        | SelectOneQuestionView
-        | CreateQuestionView;
+        | ChoiceQuestionScene
+        | InputQuestionScene
+        | DragDropQuestionScene
+        | ClozeQuestionScene
+        | SelectOneQuestionScene
+        | CreateQuestionScene;
 
     constructor(taskManager: TaskManager) {
-        super("QuestionView");
+        super("QuestionViewScene");
         this.taskManager = taskManager;
     }
 
@@ -143,7 +143,7 @@ export default class QuestionView extends Phaser.Scene {
         switch (this.currentQuestion.type) {
             case QuestionType.CHOICE:
                 // console.log("Choice");
-                this.currentQuestionView = new ChoiceQuestionView(
+                this.currentQuestionView = new ChoiceQuestionScene(
                     this.questionText,
                     this.currentQuestion
                 );
@@ -152,7 +152,7 @@ export default class QuestionView extends Phaser.Scene {
                 break;
             case QuestionType.SINGLE_INPUT:
                 // console.log("single input");
-                this.currentQuestionView = new InputQuestionView(
+                this.currentQuestionView = new InputQuestionScene(
                     this.questionText,
                     this.currentQuestion
                 );
@@ -161,7 +161,7 @@ export default class QuestionView extends Phaser.Scene {
                 break;
             case QuestionType.DRAG_DROP:
                 // console.log("drag drop");
-                this.currentQuestionView = new DragDropQuestionView(
+                this.currentQuestionView = new DragDropQuestionScene(
                     this.questionText,
                     this.currentQuestion
                 );
@@ -173,7 +173,7 @@ export default class QuestionView extends Phaser.Scene {
                 break;
             case QuestionType.CLOZE:
                 // console.log("cloze");
-                this.currentQuestionView = new ClozeQuestionView(
+                this.currentQuestionView = new ClozeQuestionScene(
                     this.questionText,
                     this.currentQuestion
                 );
@@ -182,7 +182,7 @@ export default class QuestionView extends Phaser.Scene {
                 break;
             case QuestionType.SELECT_ONE:
                 // console.log("select one");
-                this.currentQuestionView = new SelectOneQuestionView(
+                this.currentQuestionView = new SelectOneQuestionScene(
                     this.questionText,
                     this.currentQuestion
                 );
@@ -193,7 +193,7 @@ export default class QuestionView extends Phaser.Scene {
                 this.scene.launch("SelectOneQuestionView");
                 break;
             case QuestionType.CREATE:
-                this.currentQuestionView = new CreateQuestionView(
+                this.currentQuestionView = new CreateQuestionScene(
                     this.questionText,
                     this.currentQuestion
                 )
@@ -294,7 +294,7 @@ export default class QuestionView extends Phaser.Scene {
      * Sends this scene to sleep and reawakes all the other scenes
      */
     private exitQuestion(): void {
-        this.scene.wake("rootNode");
+        this.scene.wake("worldViewScene");
         this.scene.wake("Room");
         this.scene.wake("controlPad");
         this.scene.wake("pauseChatButtons");

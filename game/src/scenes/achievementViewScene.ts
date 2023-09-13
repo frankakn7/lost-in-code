@@ -2,7 +2,7 @@ import * as Phaser from "phaser";
 import AchievementManager from "../managers/achievementManager";
 import ReturnButtonTexture from "../assets/ui/Return-Button.png";
 import SpriteButton from "../ui/SpriteButton";
-import RootNode from "./rootNode";
+import WorldViewScene from "./worldViewScene";
 import {achievements} from "../constants/achievements";
 
 
@@ -11,10 +11,10 @@ import TrophyTexture from "../assets/achievements/trophy.png";
 
 
 
-export default class AchievementView extends Phaser.Scene {
+export default class AchievementViewScene extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite; // Background
     private _manager: AchievementManager; // Reference to the achievement manager
-    private _rootNode: RootNode; // Reference to the root node
+    private _worldViewScene: WorldViewScene; // Reference to the root node
 
     private _sprites = [] // Array of achievement sprites to be drawn
     private _margin = 30; // Margin between the sprites
@@ -25,13 +25,13 @@ export default class AchievementView extends Phaser.Scene {
 
     /**
      * Constructs a new instance of the class.
-     * @param rootNode
+     * @param worldViewScene
      * @param manager
      */
-    constructor(rootNode, manager) {
-        super("AchievementView");
+    constructor(worldViewScene, manager) {
+        super("AchievementViewScene");
         this._manager = manager;
-        this._rootNode = rootNode;
+        this._worldViewScene = worldViewScene;
     }
 
     /**
@@ -119,7 +119,7 @@ export default class AchievementView extends Phaser.Scene {
      * Called when the "returnButtonTexture" (resume button) is clicked.
      */
     private _backToMenu() {
-        this._rootNode.menuView.scene.resume();
+        this._worldViewScene.menuView.scene.resume();
         this.scene.sleep();
     }
 }

@@ -8,7 +8,7 @@ import ChoiceButton from "../../../ui/choiceButton";
 import DeviceButton from "../../../ui/deviceButton";
 import ApiHelper from "../../../helpers/apiHelper";
 
-export default class CreateQuestionView extends Phaser.Scene {
+export default class CreateQuestionScene extends Phaser.Scene {
 
     private currentQuestion: Question;
 
@@ -30,7 +30,7 @@ export default class CreateQuestionView extends Phaser.Scene {
 
 
     constructor(questionText: Phaser.GameObjects.Text, currentQuestion: Question) {
-        super("CreateQuestionView");
+        super("CreateQuestionScene");
         this.questionText = questionText;
         this.currentQuestion = currentQuestion;
     }

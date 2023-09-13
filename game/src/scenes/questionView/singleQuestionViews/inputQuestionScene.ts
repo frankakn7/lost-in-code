@@ -4,7 +4,7 @@ import hljs from "highlight.js/lib/core";
 import php from "highlight.js/lib/languages/php";
 import "highlight.js/styles/night-owl.css";
 
-export default class InputQuestionView extends Phaser.Scene {
+export default class InputQuestionScene extends Phaser.Scene {
     private currentQuestion: Question;
 
     private questionText: Phaser.GameObjects.Text;
@@ -21,7 +21,7 @@ export default class InputQuestionView extends Phaser.Scene {
         questionText: Phaser.GameObjects.Text,
         currentQuestion: Question
     ) {
-        super("InputQuestionView");
+        super("InputQuestionScene");
         this.questionText = questionText;
         this.currentQuestion = currentQuestion;
     }

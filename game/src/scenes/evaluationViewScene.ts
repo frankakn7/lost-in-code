@@ -2,22 +2,22 @@ import * as Phaser from "phaser";
 import SpriteButton from "../ui/SpriteButton";
 import ReturnButtonTexture from "../assets/ui/Return-Button.png";
 import AchievementManager from "../managers/achievementManager";
-import RootNode from "./rootNode";
+import WorldViewScene from "./worldViewScene";
 import {HatMap} from "../constants/hats";
 import DeviceButton from "../ui/deviceButton";
 import {formatTime, globalEventBus} from "../helpers/globalEventBus";
 
 
-export default class EvaluationView extends Phaser.Scene {
+export default class EvaluationViewScene extends Phaser.Scene {
     private _tilesprite;
-    private _rootNode;
+    private _worldViewScene;
     private _defaultLabelStyle;
     private _xOffset = 60;
     private _am : AchievementManager;
 
-    constructor(rootNode: RootNode, achievementManager: AchievementManager) {
-        super("EvaluationView");
-        this._rootNode = rootNode;
+    constructor(worldViewScene: WorldViewScene, achievementManager: AchievementManager) {
+        super("EvaluationViewScene");
+        this._worldViewScene = worldViewScene;
         this._am = achievementManager;
     }
 
@@ -82,7 +82,7 @@ export default class EvaluationView extends Phaser.Scene {
             + "\n" + "- Mistakes made: " + this._am.incorrectCounter
             + "\n" + "- Fastest solving time: " + formatTime(this._am.fastestTaskTime)
             + "\n" + "- Badges earned: " + this._am.badgesEarned
-            + "\n" + "- Hats found: " + this._rootNode.user.unlockedHats.filter((value, index, self) => self.indexOf(value) === index) + " out of " + Object.keys(HatMap).length
+            + "\n" + "- Hats found: " + this._worldViewScene.user.unlockedHats.filter((value, index, self) => self.indexOf(value) === index) + " out of " + Object.keys(HatMap).length
 
         let headerLabel = this.add.text(this.cameras.main.displayWidth / 2 - 360, 200,
             "Congratulations!\n You finished the game!", h1LabelStyle);
@@ -112,7 +112,7 @@ export default class EvaluationView extends Phaser.Scene {
     }
 
     private _backToMenu() {
-        this._rootNode.menuView.scene.resume();
+        this._worldViewScene.menuView.scene.resume();
         this.scene.sleep();
     }
 

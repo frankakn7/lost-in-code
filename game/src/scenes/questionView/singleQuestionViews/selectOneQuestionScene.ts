@@ -7,7 +7,7 @@ import { ChoiceQuestionElement } from "../../../classes/question/questionElement
 import ChoiceButton from "../../../ui/choiceButton";
 import SelectableCodeBlock from "../../../ui/question/selectableCodeBlock";
 
-export default class SelectOneQuestionView extends Phaser.Scene {
+export default class SelectOneQuestionScene extends Phaser.Scene {
     private currentQuestion: Question;
 
     private choiceButtons: ChoiceButton[] = [];
@@ -23,7 +23,7 @@ export default class SelectOneQuestionView extends Phaser.Scene {
         questionText: Phaser.GameObjects.Text,
         currentQuestion: Question
     ) {
-        super("SelectOneQuestionView");
+        super("SelectOneQuestionScene");
         this.questionText = questionText;
         this.currentQuestion = currentQuestion;
     }
