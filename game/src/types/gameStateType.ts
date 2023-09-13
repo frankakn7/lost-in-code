@@ -5,6 +5,7 @@ export type GameStateType = {
     gameFinished: boolean;
     room: {
         finishedTaskObjects: boolean[];
+        doorUnlocked: boolean;
     };
     story: {
         hangar: string[];

@@ -6,6 +6,7 @@ import engineJson from "../assets/tilemaps/engine.json";
 import labJson from "../assets/tilemaps/laboratory.json";
 import bridgeJson from "../assets/tilemaps/bridge.json";
 import WorldViewScene from "../scenes/worldViewScene";
+import {gameController} from "../main";
 
 export default class RoomSceneController {
 
@@ -20,9 +21,7 @@ export default class RoomSceneController {
         this.setupRoomScenes();
 
         // Add each RoomScene to the game as a separate scene using the roomMap.
-        console.log("### ROOM MAP")
         this.roomMap.forEach((value, key) => {
-            console.log(value+" : "+key)
             this._worldViewScene.scene.add(key, this.roomMap.get(key));
         })
     }
@@ -101,7 +100,7 @@ export default class RoomSceneController {
         // Initialize the 'finishedTaskObjects' property of the game state for the next room.
         // The 'finishedTaskObjects' property is an array that tracks the completion status of tasks in the room.
         // It is set to an array of false values with the length equal to the number of task objects in the next room.
-        this._worldViewScene.gameStateManager.room.finishedTaskObjects = Array(nextRoom.getTaskObjectCount()).fill(false);
+        gameController.gameStateManager.room.finishedTaskObjects = Array(nextRoom.getTaskObjectCount()).fill(false);
 
         // Launch the next room scene to activate it.
         this._worldViewScene.scene.launch(this.roomMap.get(id));

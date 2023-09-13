@@ -18,6 +18,12 @@ class GameController {
     readonly MAX_SIZE_HEIGHT_SCREEN= 1624*2;
     readonly MIN_SIZE_WIDTH_SCREEN = 375*2;
     readonly MIN_SIZE_HEIGHT_SCREEN = 812*2;
+
+
+    get gameStateManager(): GameStateManager {
+        return this._gameStateManager;
+    }
+
     constructor() {
         this._gameConfig = {
             type: Phaser.WEBGL,

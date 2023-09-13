@@ -4,6 +4,7 @@ import storyJson from "../../assets/story.json";
 import { ChatFlowNode } from "../../classes/chat/chatFlowNode";
 import { json } from "express";
 import WorldViewScene from "../../scenes/worldViewScene";
+import {gameController} from "../../main";
 
 
 /**
@@ -47,7 +48,7 @@ export default class StoryManager {
 
                 // If the current index 'i' is present in the '_finishedStuff[room]' array,
                 // skip this iteration to avoid processing already encountered events.
-                if (this._worldViewScene.gameStateManager.story[room].includes(i.toString())) {
+                if (gameController.gameStateManager.story[room].includes(i.toString())) {
                     continue;
                 }
 
@@ -77,7 +78,7 @@ export default class StoryManager {
     public checkIfEventAvailable(roomId, eventId) {
         // Check if the provided 'eventId' is present in the '_finishedStuff[roomId]' array.
         // If it is present, the event is considered finished, and it is not available.
-        if (this._worldViewScene.gameStateManager.story[roomId].includes(eventId)) return false;
+        if (gameController.gameStateManager.story[roomId].includes(eventId)) return false;
         // Check if the provided 'eventId' is a valid key in 'storyJson[roomId]'.
         // If it is a valid key, the event is available.
         if (storyJson[roomId][eventId]) return true;
@@ -93,7 +94,7 @@ export default class StoryManager {
      * @returns {ChatFlow} A new ChatFlow object for the specified roomId and eventId.
      */
     public pullEventIdChatFlow(roomId, eventId) {
-        this._worldViewScene.gameStateManager.story[roomId].push(eventId);
+        gameController.gameStateManager.story[roomId].push(eventId);
         return new ChatFlow(this.reconstructChatNodeTreeRecursively(roomId, storyJson, eventId));
     }
 
@@ -140,7 +141,7 @@ export default class StoryManager {
         let key = this._storyEvents[room].keys().next().value;
         let value = this._storyEvents[room].get(key);
 
-        this._worldViewScene.gameStateManager.story[room].push(key);
+        gameController.gameStateManager.story[room].push(key);
         this._storyEvents[room].delete(key);
 
         return value;
@@ -151,14 +152,14 @@ export default class StoryManager {
      * @param {string[][]} newTexts - An array of text entries to be added to the text history.
      */
     public addTextHistory(newTexts: string[][]){
-        this._worldViewScene.gameStateManager.story.history = this._worldViewScene.gameStateManager.story.history.concat(newTexts);
+        gameController.gameStateManager.story.history = gameController.gameStateManager.story.history.concat(newTexts);
     }
 
     /**
      * Load data from the game state.
      */
     // public loadData() {
-    //     let {history, ...finishedStuff} = this._worldViewScene.gameStateManager.story;
+    //     let {history, ...finishedStuff} = gameController.gameStateManager.story;
     //     this._finishedStuff = finishedStuff;
     //     this._textHistory = history ?? [];
     // }
@@ -175,6 +176,6 @@ export default class StoryManager {
      * @param roomId
      */
     public checkIfRoomStoryPlayed(roomId) {
-        return this._worldViewScene.gameStateManager.story[roomId].includes("0");
+        return gameController.gameStateManager.story[roomId].includes("0");
     }
 }

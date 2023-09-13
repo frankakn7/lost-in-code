@@ -2,6 +2,8 @@ import {globalEventBus} from "../helpers/globalEventBus";
 import {achievements} from "../constants/achievements";
 import WorldViewScene from "../scenes/worldViewScene";
 
+import {gameController} from "../main";
+
 /**
  * Achievement manager, handles the achievement flow, loading from json, saving to game state,
  */
@@ -16,7 +18,7 @@ export default class AchievementManager {
 
     private _achievements = achievements;  // Stores the achievements from the 'achievements' file.
 
-    private _worldViewScene : WorldViewScene; // The root node of the game or application.
+    private _worldViewScene: WorldViewScene; // The root node of the game or application.
 
     /**
      * Creates an instance of the Achievement Manager.
@@ -40,7 +42,9 @@ export default class AchievementManager {
 
         // Listen for the "door_was_unlocked" event emitted when a door is unlocked in a room.
         // Call the _checkForLevelAchievement method to check for level-related achievements.
-        globalEventBus.on("door_was_unlocked", ((room) => {this._checkForLevelAchievement(room)}).bind(this));
+        globalEventBus.on("door_was_unlocked", ((room) => {
+            this._checkForLevelAchievement(room)
+        }).bind(this));
     }
 
     /**
@@ -113,20 +117,22 @@ export default class AchievementManager {
 
 
     public loadData() {
-        this.unlocked = this._worldViewScene.gameStateManager.achievements.unlocked;
-        this._tasksCounter = this._worldViewScene.gameStateManager.achievements.taskCounter;
-        this._incorrectCounter = this._worldViewScene.gameStateManager.achievements.incorrectCounter;
-        this._currentStreak = this._worldViewScene.gameStateManager.achievements.currentStreak;
-        this._longestStreak = this._worldViewScene.gameStateManager.achievements.longestStreak;
-        this._fastestTaskTime = this._worldViewScene.gameStateManager.achievements.fastestTaskTime;
+        this.unlocked = gameController.gameStateManager.achievements.unlocked;
+        this._tasksCounter = gameController.gameStateManager.achievements.taskCounter;
+        this._incorrectCounter = gameController.gameStateManager.achievements.incorrectCounter;
+        this._currentStreak = gameController.gameStateManager.achievements.currentStreak;
+        this._longestStreak = gameController.gameStateManager.achievements.longestStreak;
+        this._fastestTaskTime = gameController.gameStateManager.achievements.fastestTaskTime;
     }
 
     get tasksCounter(): number {
         return this._tasksCounter;
     }
+
     get longestStreak(): number {
         return this._longestStreak;
     }
+
     get incorrectCounter(): number {
         return this._incorrectCounter;
     }

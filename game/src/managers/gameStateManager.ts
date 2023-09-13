@@ -5,6 +5,7 @@ export class GameStateManager {
     gameFinished: boolean;
     room: {
         finishedTaskObjects: boolean[];
+        doorUnlocked: boolean;
     };
     story: {
         hangar: string[];
@@ -39,6 +40,7 @@ export class GameStateManager {
         this.gameFinished = false
         this.room = {
             finishedTaskObjects: [],
+            doorUnlocked: false
         };
         this.story = {
             hangar: [],

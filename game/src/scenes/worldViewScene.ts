@@ -35,16 +35,18 @@ import {achievements} from "../constants/achievements";
 import ProgressBar from "../ui/progress";
 import User from "../classes/user";
 import EvaluationViewScene from "./evaluationViewScene";
-import {GameStateManager} from "../managers/gameStateManager";
+// import {GameStateManager} from "../managers/gameStateManager";
 import {UserType} from "../types/userType";
 import RoomSceneController from "../controllers/roomSceneController";
+
+import {gameController} from "../main";
 
 
 /**
  * Represents the view in which the rooms and player are explorable (default playing view)
  */
 export default class WorldViewScene extends Phaser.Scene {
-    private _gameStateManager = new GameStateManager();
+    // private gameController.gameStateManager = new GameStateManager();
 
     private controlPad = new ControlPadScene(); // The control pad scene for handling player movement.
 
@@ -99,7 +101,7 @@ export default class WorldViewScene extends Phaser.Scene {
             this.scene.wake(this.storyChatView);
         } else {
             // Create a new chat view with the history from _state.story
-            this.storyChatView = new ChatViewScene(this, null, this._gameStateManager.story.history, "StoryChatView");
+            this.storyChatView = new ChatViewScene(this, null, gameController.gameStateManager.story.history, "StoryChatView");
             //add chat view to the scene
             this.scene.add("StoryChatView", this.storyChatView);
             //launch the chat view
@@ -121,7 +123,7 @@ export default class WorldViewScene extends Phaser.Scene {
             //If the chat view hasn't been launched yet
         } else {
             //create a new chat view
-            this.storyChatView = new ChatViewScene(this, this._storyManager.pullNextStoryBit(this._roomSceneController.currentRoomScene.getRoomId()), this._gameStateManager.story.history, "StoryChatView");
+            this.storyChatView = new ChatViewScene(this, this._storyManager.pullNextStoryBit(this._roomSceneController.currentRoomScene.getRoomId()), gameController.gameStateManager.story.history, "StoryChatView");
             //add chat view to the scene
             this.scene.add("StoryChatView", this.storyChatView);
             //launch the chat view
@@ -140,7 +142,7 @@ export default class WorldViewScene extends Phaser.Scene {
             this.storyChatView.startNewChatFlow(cf);
             this.scene.wake(this.storyChatView);
         } else {
-            this.storyChatView = new ChatViewScene(this, cf, this._gameStateManager.story.history, "StoryChatView");
+            this.storyChatView = new ChatViewScene(this, cf, gameController.gameStateManager.story.history, "StoryChatView");
             this.scene.add("StoryChatView", this.storyChatView);
             //launch the chat view
             this.scene.launch(this.storyChatView);
@@ -242,7 +244,7 @@ export default class WorldViewScene extends Phaser.Scene {
      */
     private openQuestionView() {
         //If the chat view already exists and is sleeping
-        if (!this._gameStateManager.user.newChapter) {
+        if (!gameController.gameStateManager.user.newChapter) {
 
             this.scene.sleep(this);
             this.scene.sleep("controlPad");
@@ -263,9 +265,9 @@ export default class WorldViewScene extends Phaser.Scene {
                 this.scene.launch(this.questionView);
             }
         } else {
-            this._gameStateManager.user.newChapter = false
+            gameController.gameStateManager.user.newChapter = false
             this.docView.chapterManager.updateChapters().then((chapters: ChapterType[]) => {
-                this.openTextChatView(chapters.find(chapter => chapter.order_position == this._gameStateManager.user.chapterNumber).material, () => {
+                this.openTextChatView(chapters.find(chapter => chapter.order_position == gameController.gameStateManager.user.chapterNumber).material, () => {
                     this.scene.remove("ChatTextView");
                     if (this.scene.isSleeping(this.questionView)) {
                         this.scene.wake(this.questionView);
@@ -297,13 +299,15 @@ export default class WorldViewScene extends Phaser.Scene {
     ) {
         super("worldViewScene");
 
-        state? this._gameStateManager.initialiseExisting(state) : null;
+        state? gameController.gameStateManager.initialiseExisting(state) : null;
 
-        // initialise new _gameStateManager
+        console.log("### LOADED GAME STATE")
+        console.log(gameController.gameStateManager);
+
+        // initialise new gameController.gameStateManager
 
         // Create a new User instance with the provided user data if available, otherwise create a new User with default data.
         this._user = userData ? new User(userData) : new User();
-
 
         // Load the required data for the game.
         this.hatView = new HatViewScene(this)
@@ -311,14 +315,6 @@ export default class WorldViewScene extends Phaser.Scene {
         this.taskManager = new TaskManager(this)
 
         this.questionView = new QuestionViewScene(this.taskManager);
-    }
-
-    get gameStateManager(): GameStateManager {
-        return this._gameStateManager;
-    }
-
-    set gameStateManager(value: GameStateManager) {
-        this._gameStateManager = value;
     }
 
     /**
@@ -329,7 +325,7 @@ export default class WorldViewScene extends Phaser.Scene {
 
         this._roomSceneController = new RoomSceneController(this);
 
-        this._roomSceneController.currentRoomScene = this._roomSceneController.roomMap.get(this._gameStateManager.currentRoom);
+        this._roomSceneController.currentRoomScene = this._roomSceneController.roomMap.get(gameController.gameStateManager.currentRoom);
         console.log(this._roomSceneController.currentRoomScene);
 
         console.log("### CREATING ROOT NODE")
@@ -340,12 +336,12 @@ export default class WorldViewScene extends Phaser.Scene {
         })
 
         // Set up event listener to save the game state when 'save_game' event is emitted.
-        globalEventBus.on("save_game", () => this.apiHelper.updateStateData(this._gameStateManager).catch((error) => {
+        globalEventBus.on("save_game", () => this.apiHelper.updateStateData(gameController.gameStateManager).catch((error) => {
             console.error(error);
         }))
 
         // Create and initialize the DocViewScene instance for handling documentation view.
-        this.docView = new DocViewScene(this, this._gameStateManager.user.chapterNumber);
+        this.docView = new DocViewScene(this, gameController.gameStateManager.user.chapterNumber);
 
 
         //Adds the pause button scene and launches it
@@ -375,13 +371,13 @@ export default class WorldViewScene extends Phaser.Scene {
 
         // Set up an event listener for the 'game_finished' event to handle the game completion.
         globalEventBus.once("game_finished", (() => {
-            this._gameStateManager.gameFinished = true;
+            gameController.gameStateManager.gameFinished = true;
             globalEventBus.emit("save_game");
         }).bind(this))
 
         // Set up an event listener for the 'chat_closed' event to open the evaluation view when the game is finished.
         globalEventBus.on("chat_closed", (() => {
-            if (this._gameStateManager.gameFinished) {
+            if (gameController.gameStateManager.gameFinished) {
                 let evalView = new EvaluationViewScene(this, this.achievementManager);
                 this.scene.add("EvaluationView", evalView);
                 this.scene.launch(evalView)
@@ -389,7 +385,7 @@ export default class WorldViewScene extends Phaser.Scene {
         }).bind(this));
 
         // Check if the game is already finished and launch the EvaluationViewScene if necessary.
-        if (this._gameStateManager.gameFinished) {
+        if (gameController.gameStateManager.gameFinished) {
             let evalView = new EvaluationViewScene(this, this.achievementManager);
             this.scene.add("EvaluationView", evalView);
             this.scene.launch(evalView);

@@ -11,6 +11,7 @@ import DocViewScene from "../scenes/docView/docViewScene";
 import {ChapterType} from "./chapterManager";
 import ApiHelper from "../helpers/apiHelper";
 import availableQuestions from "./availableQuestionsTestData";
+import {gameController} from "../main";
 
 /**
  * Manages tasks and questions for the game.
@@ -42,7 +43,7 @@ export default class TaskManager {
 
     private loadQuestions() {
         return new Promise((resolve, reject) => {
-            this.apiHandler.getFullChapter(this._worldViewScene.gameStateManager.user.chapterNumber)
+            this.apiHandler.getFullChapter(gameController.gameStateManager.user.chapterNumber)
                 .then((response:any) => {
                     this.availableQuestions = response.questions;
                     this.currentChapterMaxDifficulty = Math.max(
@@ -81,7 +82,7 @@ export default class TaskManager {
             return map;
         }, {});
 
-        for (let i = this._worldViewScene.gameStateManager.user.performanceIndex; i <= this.currentChapterMaxDifficulty; i++) {
+        for (let i = gameController.gameStateManager.user.performanceIndex; i <= this.currentChapterMaxDifficulty; i++) {
             let questionsWithDifficulty = availableQuestionsMap[i];
             let j = 0;
             let increasing = true
@@ -109,14 +110,14 @@ export default class TaskManager {
     }
 
     private checkNextChapter() {
-        this._worldViewScene.gameStateManager.increaseRepairedObjectsThisChapter();
-        if (this._worldViewScene.gameStateManager.user.repairedObjectsThisChapter == 2) {
-            this._worldViewScene.gameStateManager.increaseChapterNumber();
-            this._worldViewScene.gameStateManager.user.repairedObjectsThisChapter = 0;
-            this._worldViewScene.gameStateManager.user.newChapter = true;
-            this._worldViewScene.gameStateManager.user.performanceIndex --;
+        gameController.gameStateManager.increaseRepairedObjectsThisChapter();
+        if (gameController.gameStateManager.user.repairedObjectsThisChapter == 2) {
+            gameController.gameStateManager.increaseChapterNumber();
+            gameController.gameStateManager.user.repairedObjectsThisChapter = 0;
+            gameController.gameStateManager.user.newChapter = true;
+            gameController.gameStateManager.user.performanceIndex --;
             this.loadQuestions()
-            this._worldViewScene.docView.chapterManager.updateCurrentChapterOrder(this._worldViewScene.gameStateManager.user.chapterNumber);
+            this._worldViewScene.docView.chapterManager.updateCurrentChapterOrder(gameController.gameStateManager.user.chapterNumber);
             this._worldViewScene.docView.chapterManager.updateChapters()
         }
     }
@@ -151,13 +152,13 @@ export default class TaskManager {
         }
         console.log(currentQuestion)
         this.answeredQuestions.push(currentQuestion);
-        this._worldViewScene.gameStateManager.addAnsweredQuestionIds(currentQuestion.id);
+        gameController.gameStateManager.addAnsweredQuestionIds(currentQuestion.id);
         this.currentQuestionSetForObject.shift();
         this.currentDoneQuestions++;
         if (this.currentQuestionSetForObject.length === 0) {
             this.onObjectRepaired();
         } else {
-            this._worldViewScene.gameStateManager.user.performanceIndex = currentQuestion.difficulty + 1;
+            gameController.gameStateManager.user.performanceIndex = currentQuestion.difficulty + 1;
         }
 
 
@@ -165,8 +166,8 @@ export default class TaskManager {
     }
 
     public questionAnsweredIncorrectly() {
-        this._worldViewScene.gameStateManager.user.performanceIndex > 1
-            ? this._worldViewScene.gameStateManager.user.performanceIndex--
+        gameController.gameStateManager.user.performanceIndex > 1
+            ? gameController.gameStateManager.user.performanceIndex--
             : null;
         this.onObjectFailed();
         globalEventBus.emit("taskmanager_task_incorrect");
@@ -185,7 +186,7 @@ export default class TaskManager {
         // console.log(worldViewScene.user)
 
         this.loadQuestions().then((result => {
-            this.loadState(worldViewScene.gameStateManager.user.answeredQuestionIds);
+            this.loadState(gameController.gameStateManager.user.answeredQuestionIds);
             this.populateNewQuestionSet();
         })).catch(error => console.error(error));
 

@@ -33,6 +33,7 @@ import TaskObject from "./objects/taskObjects";
 import {globalEventBus} from "../helpers/globalEventBus";
 import EnemyObject from "./objects/enemyObject";
 import ClueObject from "./objects/clueObject";
+import {gameController} from "../main";
 
 
 
@@ -76,8 +77,6 @@ export default class RoomScene extends Phaser.Scene {
         this.tilemapConfig = tilemapConfig;
         
         this._worldViewScene = worldViewScene;
-        console.log("### WORLD VIEW SCENE")
-        console.log(this._worldViewScene)
         this._roomId = roomId;
     }
 
@@ -352,8 +351,8 @@ export default class RoomScene extends Phaser.Scene {
 
     // Load the rooms data from the game state
     public loadData() {
-        this.setDoorUnlocked(this._worldViewScene.gameStateManager.room.doorUnlocked);
-        this._onStartupFinishedTaskObjects = this._worldViewScene.gameStateManager.room.finishedTaskObjects;
+        this.setDoorUnlocked(gameController.gameStateManager.room.doorUnlocked);
+        this._onStartupFinishedTaskObjects = gameController.gameStateManager.room.finishedTaskObjects;
     }
 
     // Set the door unlocked

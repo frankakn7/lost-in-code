@@ -5,12 +5,12 @@ import Question from "../../classes/question/question";
 import {QuestionType} from "../../types/questionType";
 import deviceBackgroundTilePng from "../../assets/Device-Background-Tile.png";
 import DeviceButton from "../../ui/deviceButton";
-import ChoiceQuestionScene from "./singleQuestionViews/choiceQuestionScene";
-import InputQuestionScene from "./singleQuestionViews/inputQuestionScene";
-import DragDropQuestionScene from "./singleQuestionViews/dragDropQuestionScene";
-import ClozeQuestionScene from "./singleQuestionViews/clozeQuestionScene";
-import SelectOneQuestionScene from "./singleQuestionViews/selectOneQuestionScene";
-import CreateQuestionScene from "./singleQuestionViews/createQuestionScene";
+import ChoiceQuestionScene from "./singleQuestionScenes/choiceQuestionScene";
+import InputQuestionScene from "./singleQuestionScenes/inputQuestionScene";
+import DragDropQuestionScene from "./singleQuestionScenes/dragDropQuestionScene";
+import ClozeQuestionScene from "./singleQuestionScenes/clozeQuestionScene";
+import SelectOneQuestionScene from "./singleQuestionScenes/selectOneQuestionScene";
+import CreateQuestionScene from "./singleQuestionScenes/createQuestionScene";
 import {globalEventBus} from "../../helpers/globalEventBus";
 
 export default class QuestionViewScene extends Phaser.Scene {
@@ -30,7 +30,7 @@ export default class QuestionViewScene extends Phaser.Scene {
 
     private progressBar: Phaser.GameObjects.Graphics;
 
-    private currentQuestionView:
+    private currentQuestionScene:
         | ChoiceQuestionScene
         | InputQuestionScene
         | DragDropQuestionScene
@@ -143,65 +143,65 @@ export default class QuestionViewScene extends Phaser.Scene {
         switch (this.currentQuestion.type) {
             case QuestionType.CHOICE:
                 // console.log("Choice");
-                this.currentQuestionView = new ChoiceQuestionScene(
+                this.currentQuestionScene = new ChoiceQuestionScene(
                     this.questionText,
                     this.currentQuestion
                 );
-                this.scene.add("ChoiceQuestionView", this.currentQuestionView);
-                this.scene.launch("ChoiceQuestionView");
+                this.scene.add("ChoiveQuestionScene", this.currentQuestionScene);
+                this.scene.launch("ChoiceQuestionScene");
                 break;
             case QuestionType.SINGLE_INPUT:
                 // console.log("single input");
-                this.currentQuestionView = new InputQuestionScene(
+                this.currentQuestionScene = new InputQuestionScene(
                     this.questionText,
                     this.currentQuestion
                 );
-                this.scene.add("InputQuestionView", this.currentQuestionView);
-                this.scene.launch("InputQuestionView");
+                this.scene.add("InputQuestionScene", this.currentQuestionScene);
+                this.scene.launch("InputQuestionScene");
                 break;
             case QuestionType.DRAG_DROP:
                 // console.log("drag drop");
-                this.currentQuestionView = new DragDropQuestionScene(
+                this.currentQuestionScene = new DragDropQuestionScene(
                     this.questionText,
                     this.currentQuestion
                 );
                 this.scene.add(
-                    "DragDropQuestionView",
-                    this.currentQuestionView
+                    "DragDropQuestionScene",
+                    this.currentQuestionScene
                 );
-                this.scene.launch("DragDropQuestionView");
+                this.scene.launch("DragDropQuestionScene");
                 break;
             case QuestionType.CLOZE:
                 // console.log("cloze");
-                this.currentQuestionView = new ClozeQuestionScene(
+                this.currentQuestionScene = new ClozeQuestionScene(
                     this.questionText,
                     this.currentQuestion
                 );
-                this.scene.add("ClozeQuestionView", this.currentQuestionView);
-                this.scene.launch("ClozeQuestionView");
+                this.scene.add("ClozeQuestionScene", this.currentQuestionScene);
+                this.scene.launch("ClozeQuestionScene");
                 break;
             case QuestionType.SELECT_ONE:
                 // console.log("select one");
-                this.currentQuestionView = new SelectOneQuestionScene(
+                this.currentQuestionScene = new SelectOneQuestionScene(
                     this.questionText,
                     this.currentQuestion
                 );
                 this.scene.add(
-                    "SelectOneQuestionView",
-                    this.currentQuestionView
+                    "SelectOneQuestionScene",
+                    this.currentQuestionScene
                 );
-                this.scene.launch("SelectOneQuestionView");
+                this.scene.launch("SelectOneQuestionScene");
                 break;
             case QuestionType.CREATE:
-                this.currentQuestionView = new CreateQuestionScene(
+                this.currentQuestionScene = new CreateQuestionScene(
                     this.questionText,
                     this.currentQuestion
                 )
                 this.scene.add(
-                    "CreateQuestionView",
-                    this.currentQuestionView
+                    "CreateQuestionScene",
+                    this.currentQuestionScene
                 );
-                this.scene.launch("CreateQuestionView");
+                this.scene.launch("CreateQuestionScene");
                 break;
             default:
                 console.log("none");
@@ -212,7 +212,7 @@ export default class QuestionViewScene extends Phaser.Scene {
     }
 
     private checkAnswer() {
-        this.currentQuestionView.checkAnswer().then(correct => {
+        this.currentQuestionScene.checkAnswer().then(correct => {
             console.log(correct)
             if (correct) {
                 this.taskManager.questionAnsweredCorrectly(this._startTime - this.time.now);
@@ -281,13 +281,13 @@ export default class QuestionViewScene extends Phaser.Scene {
     }
 
     private removeAllQuestionScenes() {
-        this.scene.remove("ChoiceQuestionView");
-        this.scene.remove("InputQuestionView");
-        this.scene.remove("DragDropQuestionView");
-        this.scene.remove("ClozeQuestionView");
-        this.scene.remove("SelectOneQuestionView");
-        this.scene.remove("CreateQuestionView");
-        // this.scene.remove(this.currentQuestionView);
+        this.scene.remove("ChoiceQuestionScene");
+        this.scene.remove("InputQuestionScene");
+        this.scene.remove("DragDropQuestionScene");
+        this.scene.remove("ClozeQuestionScene");
+        this.scene.remove("SelectOneQuestionScene");
+        this.scene.remove("CreateQuestionScene");
+        // this.scene.remove(this.currentQuestionScene);
     }
 
     /**

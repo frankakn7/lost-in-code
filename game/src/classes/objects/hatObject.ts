@@ -1,6 +1,7 @@
 import {HatMap} from "../../constants/hats";
 import RoomScene from "../room";
 import InteractiveObject from "./interactiveObject";
+import {gameController} from "../../main";
 
 
 export default class HatObject extends InteractiveObject {
@@ -43,7 +44,7 @@ export default class HatObject extends InteractiveObject {
         // ||  this.room.getPlayView().user.unlockedHats.includes(this._hatId)) {
         console.log("CHECKING HATS UNLOCKED")
         console.log(this.room.worldViewScene.user)
-        if (this.room.worldViewScene.gameStateManager.user.unlockedHats.includes(this._hatId)) {
+        if (gameController.gameStateManager.user.unlockedHats.includes(this._hatId)) {
             this.destroy();
         }
     }
