@@ -1,7 +1,8 @@
-import { text } from "express";
+import {text} from "express";
 import ControlPadScene from "../../ui/ControlPadScene";
-import { Vector } from "matter";
+import {Vector} from "matter";
 import WorldViewScene from "../../scenes/worldViewScene";
+import {gameController} from "../../main";
 
 /**
  * The Player class. This represents the player on the map and contains all the logic for movement, animations etc.
@@ -11,22 +12,22 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     private _breathCalcHelperVar = 0; // Helper variable for the breathing animation
     private _walkingRotationHelperVar = 0; // Helper variable for the walking animation
     private _isMoving = false; // Is the player currently moving?
-    private _worldViewScene : WorldViewScene; // The root node of the game
+    private _worldViewScene: WorldViewScene; // The root node of the game
 
-    private shadow : Phaser.GameObjects.Sprite; // The shadow of the player
+    private shadow: Phaser.GameObjects.Sprite; // The shadow of the player
     private shadowYOffset = 0; // The offset of the shadow from the player
 
     private hatYOffset = -16; // The offset of the hat from the player
 
     private keys; // The keyboard keys for movement
 
-    private controlPad : ControlPadScene; // The control pad for movement
+    private controlPad: ControlPadScene; // The control pad for movement
 
-    public upPress = false // Is the up button pressed?
-    public downPress = false // Is the down button pressed?
-    public leftPress = false // Is the left button pressed?
-    public rightPress = false // Is the right button pressed?
-    public interactPress = false // Is the interact button pressed?
+    // public upPress = false // Is the up button pressed?
+    // public downPress = false // Is the down button pressed?
+    // public leftPress = false // Is the left button pressed?
+    // public rightPress = false // Is the right button pressed?
+    // public interactPress = false // Is the interact button pressed?
 
     private _canMove = true; // Can the player move?
 
@@ -47,7 +48,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         // Shadow setup
         this.shadow = this.scene.physics.add.sprite(x, y + this.shadowYOffset, "shadowTexture");
         this.shadow.setDepth(0);
-        
+
         // Physics setup
         this.scene.physics.world.enable(this);
         this.setCollideWorldBounds(true);
@@ -57,11 +58,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.scale = 1;
         this.setSize(20, 32);
         this.setDepth(4);
-        
-        
+
+
         // Input setup
-        this.keys = this.scene.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.W, 'down': Phaser.Input.Keyboard.KeyCodes.S,
-                                                        'left': Phaser.Input.Keyboard.KeyCodes.A, 'right': Phaser.Input.Keyboard.KeyCodes.D},false);
+        this.keys = this.scene.input.keyboard.addKeys({
+            'up': Phaser.Input.Keyboard.KeyCodes.W, 'down': Phaser.Input.Keyboard.KeyCodes.S,
+            'left': Phaser.Input.Keyboard.KeyCodes.A, 'right': Phaser.Input.Keyboard.KeyCodes.D
+        }, false);
 
     }
 
@@ -72,7 +75,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
      */
     preUpdate(time, delta) {
 
-        
+
         // Movement
         if (this._canMove) {
             this.updateMovement(delta);
@@ -175,15 +178,15 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     private updateMovement(delta: number) {
         // Create a new object 'new_velocity' to store the updated x and y velocities of the player.
-        let new_velocity = { x: 0, y: 0 };
+        let new_velocity = {x: 0, y: 0};
 
         // Check if the 'up' or 'down' keys are pressed or any custom 'upPress' or 'downPress' flags are set.
-        if (this.keys.up.isDown || this.keys.down.isDown || this.upPress || this.downPress) {
-            if (this.keys.up.isDown || this.upPress) new_velocity.y -= this.movementSpeed * delta;
-            if (this.keys.down.isDown || this.downPress) new_velocity.y += this.movementSpeed * delta;
-        } else if (this.keys.left.isDown || this.keys.right.isDown || this.rightPress || this.leftPress) {
-            if (this.keys.left.isDown || this.leftPress) new_velocity.x -= this.movementSpeed * delta;
-            if (this.keys.right.isDown || this.rightPress) new_velocity.x += this.movementSpeed * delta;
+        if (this.keys.up.isDown || this.keys.down.isDown || gameController.controlPadButtonStates.upPress || gameController.controlPadButtonStates.downPress) {
+            if (this.keys.up.isDown || gameController.controlPadButtonStates.upPress) new_velocity.y -= this.movementSpeed * delta;
+            if (this.keys.down.isDown || gameController.controlPadButtonStates.downPress) new_velocity.y += this.movementSpeed * delta;
+        } else if (this.keys.left.isDown || this.keys.right.isDown || gameController.controlPadButtonStates.rightPress || gameController.controlPadButtonStates.leftPress) {
+            if (this.keys.left.isDown || gameController.controlPadButtonStates.leftPress) new_velocity.x -= this.movementSpeed * delta;
+            if (this.keys.right.isDown || gameController.controlPadButtonStates.rightPress) new_velocity.x += this.movementSpeed * delta;
         }
 
         // Set the players velocity
@@ -198,7 +201,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             // If the player is not moving (velocity in x and y direction is zero), set the '_isMoving' flag to false.
             this._isMoving = false;
         }
-        
+
     }
 
     /**
@@ -233,7 +236,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             // Draw the selected hat's texture on top of the player's texture at position (0, 32 + this.hatYOffset).
             const width = 32;
             const height = 64;
-            let renderTexture = this.scene.make.renderTexture({ width, height }, false);
+            let renderTexture = this.scene.make.renderTexture({width, height}, false);
             renderTexture.draw("playerTexture", 0, 32);
             renderTexture.draw(this._worldViewScene.hatMap[hatId].texture, 0, 32 + this.hatYOffset);
 

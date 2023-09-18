@@ -19,6 +19,12 @@ class GameController {
     readonly MIN_SIZE_WIDTH_SCREEN = 375*2;
     readonly MIN_SIZE_HEIGHT_SCREEN = 812*2;
 
+    public controlPadButtonStates: Record<string, boolean> = {
+        leftPress: false,
+        rightPress: false,
+        upPress: false,
+        downPress: false
+    }
 
     get gameStateManager(): GameStateManager {
         return this._gameStateManager;

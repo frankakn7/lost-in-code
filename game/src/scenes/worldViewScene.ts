@@ -1,6 +1,5 @@
 import * as Phaser from "phaser";
 import RoomScene from "../classes/room";
-import ControlPadScene from "../ui/ControlPadScene";
 import PauseChatButtons from "../ui/PauseChatButtons";
 import ChatViewScene from "./chatViewScene";
 import {ChatFlowNode} from "../classes/chat/chatFlowNode";
@@ -40,6 +39,8 @@ import {UserType} from "../types/userType";
 import RoomSceneController from "../controllers/roomSceneController";
 
 import {gameController} from "../main";
+import ControlPadGroup from "../ui/controlPadGroup";
+import UiScene from "./uiScene";
 
 
 /**
@@ -47,8 +48,6 @@ import {gameController} from "../main";
  */
 export default class WorldViewScene extends Phaser.Scene {
     // private gameController.gameStateManager = new GameStateManager();
-
-    private controlPad = new ControlPadScene(); // The control pad scene for handling player movement.
 
     private pauseChatButtons = new PauseChatButtons(); // The pause chat buttons scene for handling pausing and resuming chat.
     private progressBar = new ProgressBar(this); // The progress bar scene for displaying the progress of the game.
@@ -81,6 +80,8 @@ export default class WorldViewScene extends Phaser.Scene {
     private _user: User; // The user instance for storing user data.
 
     private _roomSceneController: RoomSceneController;
+
+    private uiScene = new UiScene();
 
 
     /**
@@ -353,8 +354,10 @@ export default class WorldViewScene extends Phaser.Scene {
         this.scene.launch(this.progressBar);
 
         // Adds the controlpad scene and launches it
-        this.scene.add("controlPad", this.controlPad);
-        this.scene.launch(this.controlPad);
+        // this.scene.add("controlPad", this.controlPad);
+        // this.scene.launch(this.controlPad);
+        this.scene.add("uiScene", this.uiScene);
+        this.scene.launch(this.uiScene);
 
         // Adds the menu scene.
         this.scene.add("menu", this.menuView);
@@ -402,35 +405,6 @@ export default class WorldViewScene extends Phaser.Scene {
      * @param delta - The time elapsed since the last frame in milliseconds.
      */
     public update(time: number, delta: number): void {
-        // Update the current room's player movement based on control pad input.
-        if (this._roomSceneController.currentRoomScene.player) {
-            this._roomSceneController.currentRoomScene.player.leftPress = this.controlPad.leftPress
-            this._roomSceneController.currentRoomScene.player.rightPress = this.controlPad.rightPress
-            this._roomSceneController.currentRoomScene.player.upPress = this.controlPad.upPress
-            this._roomSceneController.currentRoomScene.player.downPress = this.controlPad.downPress
-            this._roomSceneController.currentRoomScene.player.interactPress = this.controlPad.interactPress
-
-        }
-        // if(this.controlPad.leftPress){
-        //     // console.log("left")
-        // }
-        // if(this.controlPad.rightPress){
-        //     console.log("right")
-        //     this.currentRoom.player.rightPress = true
-        // }
-        // if(this.controlPad.upPress){
-        //     console.log("up")
-        //     this.currentRoom.player.upEPress = true
-        // }
-        // if(this.controlPad.downPress){
-        //     console.log("down")
-        //     this.currentRoom.player.downPress
-        // }
-        // if(this.controlPad.interactPress){
-        //     // console.log("interact")
-        //     globalEventBus.emit("save_game")
-        // }
-
 
         // Handle phone button press to trigger an achievement.
         if (this.pauseChatButtons.phonePressed) {
@@ -457,12 +431,13 @@ export default class WorldViewScene extends Phaser.Scene {
      * @param pause
      */
     public pauseOrResumeGame: Function = (pause) => {
+        //TODO perhaps fix problem with being able to move now in background
         if (pause) {
             this._roomSceneController.currentRoomScene.scene.pause();
-            this.controlPad.scene.pause();
+            // this.controlPad.scene.pause();
         } else {
             this._roomSceneController.currentRoomScene.scene.resume();
-            this.controlPad.scene.resume();
+            // this.controlPad.scene.resume();
         }
     }
 

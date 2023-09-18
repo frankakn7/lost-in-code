@@ -4,6 +4,7 @@ import * as Phaser from "phaser";
 import InteractiveObject from "./interactiveObject";
 import RoomScene from "../room";
 import { globalEventBus } from "../../helpers/globalEventBus";
+import {gameController} from "../../main";
 
 /**
  * TaskObject is a subclass of InteractiveObject that represents an object that can be interacted with to complete a task.
@@ -103,6 +104,9 @@ export default class TaskObject extends InteractiveObject {
         globalEventBus.off('taskmanager_object_failed', this.setClosed);
         if (!this._isFinished) {
             this.setIsFinished(true);
+
+            // gameController.gameStateManager.room.finishedTaskObjects.push(this.id)
+            gameController.gameStateManager.room.finishedTaskObjects.push(true)
 
             this._setEmitterToDone();
 
