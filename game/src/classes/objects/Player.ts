@@ -1,5 +1,4 @@
 import {text} from "express";
-import ControlPadScene from "../../ui/ControlPadScene";
 import {Vector} from "matter";
 import WorldViewScene from "../../scenes/worldViewScene";
 import {gameController} from "../../main";
@@ -21,7 +20,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     private keys; // The keyboard keys for movement
 
-    private controlPad: ControlPadScene; // The control pad for movement
+    // private controlPad: ControlPadScene; // The control pad for movement
 
     // public upPress = false // Is the up button pressed?
     // public downPress = false // Is the down button pressed?
@@ -181,12 +180,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         let new_velocity = {x: 0, y: 0};
 
         // Check if the 'up' or 'down' keys are pressed or any custom 'upPress' or 'downPress' flags are set.
-        if (this.keys.up.isDown || this.keys.down.isDown || gameController.controlPadButtonStates.upPress || gameController.controlPadButtonStates.downPress) {
-            if (this.keys.up.isDown || gameController.controlPadButtonStates.upPress) new_velocity.y -= this.movementSpeed * delta;
-            if (this.keys.down.isDown || gameController.controlPadButtonStates.downPress) new_velocity.y += this.movementSpeed * delta;
-        } else if (this.keys.left.isDown || this.keys.right.isDown || gameController.controlPadButtonStates.rightPress || gameController.controlPadButtonStates.leftPress) {
-            if (this.keys.left.isDown || gameController.controlPadButtonStates.leftPress) new_velocity.x -= this.movementSpeed * delta;
-            if (this.keys.right.isDown || gameController.controlPadButtonStates.rightPress) new_velocity.x += this.movementSpeed * delta;
+        if (this.keys.up.isDown || this.keys.down.isDown || gameController.buttonStates.upPress || gameController.buttonStates.downPress) {
+            if (this.keys.up.isDown || gameController.buttonStates.upPress) new_velocity.y -= this.movementSpeed * delta;
+            if (this.keys.down.isDown || gameController.buttonStates.downPress) new_velocity.y += this.movementSpeed * delta;
+        } else if (this.keys.left.isDown || this.keys.right.isDown || gameController.buttonStates.rightPress || gameController.buttonStates.leftPress) {
+            if (this.keys.left.isDown || gameController.buttonStates.leftPress) new_velocity.x -= this.movementSpeed * delta;
+            if (this.keys.right.isDown || gameController.buttonStates.rightPress) new_velocity.x += this.movementSpeed * delta;
         }
 
         // Set the players velocity

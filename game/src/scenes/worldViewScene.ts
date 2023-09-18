@@ -1,6 +1,5 @@
 import * as Phaser from "phaser";
 import RoomScene from "../classes/room";
-import PauseChatButtons from "../ui/PauseChatButtons";
 import ChatViewScene from "./chatViewScene";
 import {ChatFlowNode} from "../classes/chat/chatFlowNode";
 import ChatFlow from "../classes/chat/chatFlow";
@@ -13,14 +12,6 @@ import StoryManager from "../managers/story_management/storyManager";
 import {HatMap} from "../constants/hats";
 import HatViewScene from "./hatViewScene";
 
-import tilesetPng from "../assets/tileset/station_tilemap.png";
-
-import commonRoomJson from "../assets/tilemaps/common.json";
-import bridgeJson from "../assets/tilemaps/bridge.json";
-import engineJson from "../assets/tilemaps/engine.json";
-import hangarJson from "../assets/tilemaps/hangar.json";
-import labJson from "../assets/tilemaps/laboratory.json";
-
 import {GameStateType} from "../types/gameStateType";
 import {globalEventBus} from "../helpers/globalEventBus";
 import ApiHelper from "../helpers/apiHelper";
@@ -29,17 +20,14 @@ import DocViewScene from "./docView/docViewScene";
 
 import NewsPopup from "../ui/newsPopup";
 import AchievementManager from "../managers/achievementManager";
-import {achievements} from "../constants/achievements";
 
-import ProgressBar from "../ui/progress";
 import User from "../classes/user";
 import EvaluationViewScene from "./evaluationViewScene";
-// import {GameStateManager} from "../managers/gameStateManager";
 import {UserType} from "../types/userType";
 import RoomSceneController from "../controllers/roomSceneController";
 
 import {gameController} from "../main";
-import ControlPadGroup from "../ui/controlPadGroup";
+
 import UiScene from "./uiScene";
 
 
@@ -47,10 +35,6 @@ import UiScene from "./uiScene";
  * Represents the view in which the rooms and player are explorable (default playing view)
  */
 export default class WorldViewScene extends Phaser.Scene {
-    // private gameController.gameStateManager = new GameStateManager();
-
-    private pauseChatButtons = new PauseChatButtons(); // The pause chat buttons scene for handling pausing and resuming chat.
-    private progressBar = new ProgressBar(this); // The progress bar scene for displaying the progress of the game.
 
     public achievementManager: AchievementManager = new AchievementManager(this); // The achievement manager for handling achievements.
 
@@ -81,7 +65,7 @@ export default class WorldViewScene extends Phaser.Scene {
 
     private _roomSceneController: RoomSceneController;
 
-    private uiScene = new UiScene();
+    private _uiScene = new UiScene();
 
 
     /**
@@ -345,22 +329,11 @@ export default class WorldViewScene extends Phaser.Scene {
         this.docView = new DocViewScene(this, gameController.gameStateManager.user.chapterNumber);
 
 
-        //Adds the pause button scene and launches it
-        this.scene.add("pauseChatButtons", this.pauseChatButtons);
-        this.scene.launch(this.pauseChatButtons);
-
-        // Adds the progress bar scene and launches it.
-        this.scene.add("Progress Bar", this.progressBar);
-        this.scene.launch(this.progressBar);
-
-        // Adds the controlpad scene and launches it
-        // this.scene.add("controlPad", this.controlPad);
-        // this.scene.launch(this.controlPad);
-        this.scene.add("uiScene", this.uiScene);
-        this.scene.launch(this.uiScene);
-
         // Adds the menu scene.
         this.scene.add("menu", this.menuView);
+
+        this.scene.add("uiScene", this._uiScene);
+        this.scene.launch(this._uiScene);
 
         // Set up event listeners to handle broadcasting news and achievements.
         this.broadcastNews = this.broadcastNews.bind(this);
@@ -406,18 +379,9 @@ export default class WorldViewScene extends Phaser.Scene {
      */
     public update(time: number, delta: number): void {
 
-        // Handle phone button press to trigger an achievement.
-        if (this.pauseChatButtons.phonePressed) {
-            //prevent phone button from being continuously pressed by accident
-            this.pauseChatButtons.phonePressed = false;
-
-            // Broadcast the "tasks_5" achievement.
-            globalEventBus.emit("broadcast_achievement", achievements["tasks_5"]);
-        }
-
         // Handle pause button press to pause the game and open the menu.
-        if (this.pauseChatButtons.pausePressed) {
-            this.pauseChatButtons.pausePressed = false;
+        if (gameController.buttonStates.phonePressed) {
+            gameController.buttonStates.phonePressed = false;
 
             // Launch the menu scene and pause the game.
             this.scene.launch(this.menuView);
@@ -434,9 +398,11 @@ export default class WorldViewScene extends Phaser.Scene {
         //TODO perhaps fix problem with being able to move now in background
         if (pause) {
             this._roomSceneController.currentRoomScene.scene.pause();
+            this._uiScene.scene.sleep()
             // this.controlPad.scene.pause();
         } else {
             this._roomSceneController.currentRoomScene.scene.resume();
+            this._uiScene.scene.wake()
             // this.controlPad.scene.resume();
         }
     }

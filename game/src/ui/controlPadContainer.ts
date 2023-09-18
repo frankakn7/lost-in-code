@@ -1,6 +1,6 @@
 import { gameController } from "../main";
 
-export default class ControlPadGroup {
+export default class ControlPadContainer {
     private container: Phaser.GameObjects.Container;
     private scene: Phaser.Scene;
 
@@ -29,14 +29,10 @@ export default class ControlPadGroup {
 
     private create(): void {
         console.log("### CREATING CONTROLPAD");
-        this.createButton(-200, 0, "arrowLeft", gameController.controlPadButtonStates, "leftPress");
-        this.createButton(200, 0, "arrowRight", gameController.controlPadButtonStates, "rightPress");
-        this.createButton(0, -200, "arrowUp", gameController.controlPadButtonStates, "upPress");
-        this.createButton(0, 0, "arrowDown", gameController.controlPadButtonStates, "downPress");
-    }
-
-    public addToScene(): void {
-        // With a container, this method is usually not needed. The container takes care of its children.
+        this.createButton(-200, 0, "arrowLeft", gameController.buttonStates, "leftPress");
+        this.createButton(200, 0, "arrowRight", gameController.buttonStates, "rightPress");
+        this.createButton(0, -200, "arrowUp", gameController.buttonStates, "upPress");
+        this.createButton(0, 0, "arrowDown", gameController.buttonStates, "downPress");
     }
 
     public setPosition(x: number, y: number): void {
