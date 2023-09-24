@@ -3,6 +3,8 @@ import {achievements} from "../constants/achievements";
 import WorldViewScene from "../scenes/worldViewScene";
 
 import {gameController} from "../main";
+import * as Events from "events";
+import {GameEvents} from "../types/gameEvents";
 
 /**
  * Achievement manager, handles the achievement flow, loading from json, saving to game state,
@@ -18,31 +20,28 @@ export default class AchievementManager {
 
     private _achievements = achievements;  // Stores the achievements from the 'achievements' file.
 
-    private _worldViewScene: WorldViewScene; // The root node of the game or application.
-
     /**
      * Creates an instance of the Achievement Manager.
      * @param {WorldViewScene} worldViewScene - The WorldViewScene instance that serves as the root of the game scene hierarchy.
      */
-    constructor(worldViewScene: WorldViewScene) {
-        this._worldViewScene = worldViewScene;
+    constructor() {
         this.loadData();
 
 
         // Listen for the "taskmanager_task_correct" event emitted by the Task Manager.
         // When a task is correctly completed, call the _onTaskmanagerCorrect method.
-        globalEventBus.on("taskmanager_task_correct", ((duration) => {
+        globalEventBus.on(GameEvents.TASKMANAGER_TASK_CORRECT, ((duration) => {
             this._onTaskmanagerCorrect(duration)
         }).bind(this));
 
         // Listen for the "taskmanager_task_incorrect" event emitted by the Task Manager.
         // When a task is answered incorrectly, call the _onTaskManagerIncorrect method.
-        globalEventBus.on("taskmanager_task_incorrect",
+        globalEventBus.on(GameEvents.TASKMANAGER_TASK_INCORRECT,
             this._onTaskManagerIncorrect.bind(this));
 
         // Listen for the "door_was_unlocked" event emitted when a door is unlocked in a room.
         // Call the _checkForLevelAchievement method to check for level-related achievements.
-        globalEventBus.on("door_was_unlocked", ((room) => {
+        globalEventBus.on(GameEvents.DOOR_UNLOCKED, ((room) => {
             this._checkForLevelAchievement(room)
         }).bind(this));
     }

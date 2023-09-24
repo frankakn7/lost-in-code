@@ -28,7 +28,6 @@ export default class ControlPadContainer {
     }
 
     private create(): void {
-        console.log("### CREATING CONTROLPAD");
         this.createButton(-200, 0, "arrowLeft", gameController.buttonStates, "leftPress");
         this.createButton(200, 0, "arrowRight", gameController.buttonStates, "rightPress");
         this.createButton(0, -200, "arrowUp", gameController.buttonStates, "upPress");

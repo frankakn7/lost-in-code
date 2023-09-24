@@ -6,6 +6,9 @@ import ChatTextContainer from "../ui/chatTextContainer";
 import deviceBackgroundTilePng from "../assets/Device-Background-Tile.png";
 import {globalEventBus} from "../helpers/globalEventBus";
 import WorldViewScene from "./worldViewScene";
+import {gameController} from "../main";
+import {GameEvents} from "../types/gameEvents";
+import {SceneKeys} from "../types/sceneKeys";
 
 /**
  * The ChatViewScene displaying the chat
@@ -16,76 +19,78 @@ export default class ChatViewScene extends Phaser.Scene {
     /**
      * The current {@link ChatFlow} being handled by the chatView
      */
-    private currentChatFlow: ChatFlow;
+    private _currentChatFlow: ChatFlow;
 
     /**
      * The text coming TO the player that should have animation
      */
-    private textToAnimate: Phaser.GameObjects.Text;
+    private _textToAnimate: Phaser.GameObjects.Text;
     /**
      * The text coming FROM the player
      */
-    private answerText: Phaser.GameObjects.Text;
+    private _answerText: Phaser.GameObjects.Text;
 
     /**
      * Array of all the choice buttons (used for destroying buttons when choice was made)
      */
-    private choiceButtons: Array<DeviceButton> = [];
+    private _choiceButtons: Array<DeviceButton> = [];
 
     /**
      * The TimerEvent for handling delayed text character display
      */
-    private updateTextAnimationEvent: Phaser.Time.TimerEvent;
+    private _updateTextAnimationEvent: Phaser.Time.TimerEvent;
     /**
      * The delay of each character in milliseconds
      */
-    private characterDelayMilli = 50;
+    private _characterDelayMilli = 50;
 
     /**
      * Padding between choice buttons
      */
-    private buttonPadding = 80;
+    private _buttonPadding = 80;
     /**
      * Width of all the choice buttons
      */
-    private buttonWidth = 500;
+    private _buttonWidth = 500;
 
     /**
      * The container of all the texts
      */
-    private chatTextContainer: ChatTextContainer;
+    private _chatTextContainer: ChatTextContainer;
 
     /**
      * The exit button for the chat view
      */
-    private exitButton: DeviceButton;
+    private _exitButton: DeviceButton;
 
-    private tilesprite: Phaser.GameObjects.TileSprite;
+    private _tilesprite: Phaser.GameObjects.TileSprite;
 
-    private destroyOnExit = false;
+    private _destroyOnExit = false;
 
-    private exitFunction:Function = this.exitChat;
+    private _exitFunction:Function = this.exitChat;
 
-    private textToSave: string[][] = [];
+    private _textToSave: string[][] = [];
 
-    private worldViewScene: WorldViewScene;
+    private _chatHistory: string[][] = [];
 
-    private chatHistory: string[][] = [];
+    private _sceneKey: SceneKeys;
 
 
     /**
      *
      * @param chatFlow The first {@link ChatFlow} to be handled by the chat view
      */
-    constructor(worldViewScene: WorldViewScene, chatFlow?: ChatFlow, chatHistory?: string[][], sceneName?:string, destroyOnExit?:boolean, customExitFunc?:Function) {
+    // constructor(worldViewScene: WorldViewScene, chatFlow?: ChatFlow, chatHistory?: string[][], sceneKey?:string, destroyOnExit?:boolean, customExitFunc?:Function) {
+    constructor(chatFlow?: ChatFlow, chatHistory?: string[][], sceneKey?:SceneKeys, destroyOnExit?:boolean, customExitFunc?:Function) {
 
-        super(sceneName ?? "chatView");
-        this.worldViewScene = worldViewScene;
+        super(sceneKey ?? SceneKeys.STORY_CHAT_VIEW_SCENE_KEY);
 
-        this.chatHistory = chatHistory;
-        destroyOnExit ? this.destroyOnExit = destroyOnExit : null;
-        chatFlow ? this.currentChatFlow = chatFlow : null;
-        customExitFunc ? this.exitFunction = customExitFunc : null;
+        this._sceneKey = sceneKey;
+
+        this._chatHistory = chatHistory;
+        destroyOnExit ? this._destroyOnExit = destroyOnExit : null;
+        chatFlow ? this._currentChatFlow = chatFlow : null;
+        customExitFunc ? this._exitFunction = customExitFunc : null;
     }
 
     public preload(){
@@ -95,42 +100,40 @@ export default class ChatViewScene extends Phaser.Scene {
     public create() {
         //Set background color to black
         // this.cameras.main.setBackgroundColor("rgba(0,0,0,1)");
-        this.tilesprite = this.add.tileSprite(0,0,this.cameras.main.displayWidth / 3, this.cameras.main.displayHeight / 3, "backgroundTile").setOrigin(0,0).setScale(3)
+        this._tilesprite = this.add.tileSprite(0,0,this.cameras.main.displayWidth / 3, this.cameras.main.displayHeight / 3, "backgroundTile").setOrigin(0,0).setScale(3)
 
         //create the text container
-        this.chatTextContainer = new ChatTextContainer(this, 0, 0);
+        this._chatTextContainer = new ChatTextContainer(this, 0, 0);
 
-        this.chatHistory?.length ? this.applyChatHistory() : null;
+        this._chatHistory?.length ? this.applyChatHistory() : null;
 
 
         //start the new chat flow
 
         this.input.on('pointerdown', () => this.skipTextAnimation());
 
-        console.log("CURRENT CHAT FLOW")
-        console.log(this.currentChatFlow);
-        this.currentChatFlow ? this.startNewChatFlow(this.currentChatFlow) : this.showExitButton();
+        this._currentChatFlow ? this.startNewChatFlow(this._currentChatFlow) : this.showExitButton();
     }
 
     private applyChatHistory() {
-        this.chatHistory.forEach(message => {
-            message[0] === "M" ? this.chatTextContainer.addFullRecievedText(message[1]) : null;
-            message[0] === "A" ? this.chatTextContainer.addAnswerText(message[1]) : null;
+        this._chatHistory.forEach(message => {
+            message[0] === "M" ? this._chatTextContainer.addFullRecievedText(message[1]) : null;
+            message[0] === "A" ? this._chatTextContainer.addAnswerText(message[1]) : null;
         })
     }
 
     private skipTextAnimation(): void {
-        if (this.updateTextAnimationEvent) {
+        if (this._updateTextAnimationEvent) {
             // Remove the animation event
-            this.updateTextAnimationEvent.remove(false);
+            this._updateTextAnimationEvent.remove(false);
 
             // Show the full text
-            this.textToAnimate.setText(this.currentChatFlow.getCurrentText());
+            this._textToAnimate.setText(this._currentChatFlow.getCurrentText());
 
-            this.chatTextContainer.calculateNewInputHitArea()
+            this._chatTextContainer.calculateNewInputHitArea()
 
             // Display the choices
-            this.showChoices(this.currentChatFlow.getCurrentChoices());
+            this.showChoices(this._currentChatFlow.getCurrentChoices());
         }
     }
 
@@ -141,21 +144,21 @@ export default class ChatViewScene extends Phaser.Scene {
      */
     public startNewChatFlow(chatFlow: ChatFlow) {
         //Sets the given chat Flow to the current one
-        this.currentChatFlow = chatFlow;
+        this._currentChatFlow = chatFlow;
 
         //If a previous exit button still exists => destroy it
-        if(this.exitButton){
-            this.exitButton.destroy()
+        if(this._exitButton){
+            this._exitButton.destroy()
         }
 
         //Add a new text element for animation
-        this.textToAnimate = this.chatTextContainer.addReceivedText()
+        this._textToAnimate = this._chatTextContainer.addReceivedText()
 
         //Animate the text then show the choices
         this.showTextThenChoices(
-            this.textToAnimate,
-            this.currentChatFlow.getCurrentText(),
-            this.currentChatFlow.getCurrentChoices()
+            this._textToAnimate,
+            this._currentChatFlow.getCurrentText(),
+            this._currentChatFlow.getCurrentChoices()
         );
     }
 
@@ -173,11 +176,11 @@ export default class ChatViewScene extends Phaser.Scene {
         //remaining text has to be an object to be able to pass it by reference
         let remainingText = { text: fullText };
         //create a new timer event for the animation
-        this.updateTextAnimationEvent = this.time.addEvent({
-            delay: this.characterDelayMilli,    //delay is the defined characterDelay
+        this._updateTextAnimationEvent = this.time.addEvent({
+            delay: this._characterDelayMilli,    //delay is the defined characterDelay
             callback: this.onAnimateTextEvent,  //calls the onAnimateTextEvent function
             args: [textToAnimate, remainingText, onAnimationEnd],       //the arguments that need to be passed to the function
-            repeat: this.currentChatFlow.getCurrentText().length - 1,   //repeat it exactly as often as there are characters in the string to be animated
+            repeat: this._currentChatFlow.getCurrentText().length - 1,   //repeat it exactly as often as there are characters in the string to be animated
             callbackScope: this,
         });
     }
@@ -201,7 +204,7 @@ export default class ChatViewScene extends Phaser.Scene {
         //if remaining text is empty
         if (!remainingText.text) {
             //remove the timer event
-            this.updateTextAnimationEvent.remove(false);
+            this._updateTextAnimationEvent.remove(false);
             //call the given animation end function
             onAnimationEnd();
         }
@@ -218,7 +221,7 @@ export default class ChatViewScene extends Phaser.Scene {
         text: string,
         choices: Array<string>
     ) {
-        this.textToSave.push(["M",text])
+        this._textToSave.push(["M",text])
         //start the animation
         this.startTextAnimation(textObject, text, () => {
             //when animation is over show the choices as buttons
@@ -241,9 +244,9 @@ export default class ChatViewScene extends Phaser.Scene {
                 //Create a new choice button
                 let choiceButton = new DeviceButton(
                     this,
-                    this.cameras.main.displayWidth / 2 - this.buttonWidth / 2,  //center it horizontally
-                    previousY - this.buttonPadding,     //add padding above the last button
-                    this.buttonWidth,
+                    this.cameras.main.displayWidth / 2 - this._buttonWidth / 2,  //center it horizontally
+                    previousY - this._buttonPadding,     //add padding above the last button
+                    this._buttonWidth,
                     () => {
                         //when choice button is clicked
                         this.onChoiceClick(choiceString);
@@ -257,7 +260,7 @@ export default class ChatViewScene extends Phaser.Scene {
                 previousY = newY;
                 //add the button to the scene and to the buttons array
                 this.add.existing(choiceButton);
-                this.choiceButtons.push(choiceButton);
+                this._choiceButtons.push(choiceButton);
             });
         //if there are no choices
         } else {
@@ -267,78 +270,72 @@ export default class ChatViewScene extends Phaser.Scene {
 
     private showExitButton(){
         //create the exit button
-        this.exitButton = new DeviceButton(
+        this._exitButton = new DeviceButton(
             this,
-            this.cameras.main.displayWidth / 2 - this.buttonWidth / 2,  //center button horizontally
-            this.cameras.main.displayHeight - this.buttonPadding,
-            this.buttonWidth,
+            this.cameras.main.displayWidth / 2 - this._buttonWidth / 2,  //center button horizontally
+            this.cameras.main.displayHeight - this._buttonPadding,
+            this._buttonWidth,
             () => {
                 //call exit chat function on click
                 // this.exitChat();
-                this.exitFunction()
+                this._exitFunction()
             }, //needs to be anonymous function for this to equal
             "Exit"  //text to be displayed on the button
         );
         //set y to include the button height
-        this.exitButton.setY(this.exitButton.y - this.exitButton.height);
+        this._exitButton.setY(this._exitButton.y - this._exitButton.height);
         //add exit button to the scene
-        this.add.existing(this.exitButton);
+        this.add.existing(this._exitButton);
     }
 
     /**
      * Function to be executed when a choice is clicked
      * Handles:
-     * - the selection of a new choice in the {@link currentChatFlow}
-     * - the destruction of all the other {@link choiceButtons}
+     * - the selection of a new choice in the {@link _currentChatFlow}
+     * - the destruction of all the other {@link _choiceButtons}
      * - the start if a new loop {@link showTextThenChoices}
      * @param choiceText the string of the selected choice
      */
     private onChoiceClick(choiceText: string) {
-        this.textToSave.push(["A",choiceText]);
+        this._textToSave.push(["A",choiceText]);
         //Adds the answer text to the scene and container without animation
-        this.answerText = this.chatTextContainer.addAnswerText(choiceText);
+        this._answerText = this._chatTextContainer.addAnswerText(choiceText);
         //Create a new text object for animation
-        this.textToAnimate = this.chatTextContainer.addReceivedText();
+        this._textToAnimate = this._chatTextContainer.addReceivedText();
 
         //Select the selected choice in the current chat flow
-        this.currentChatFlow.selectChoice(choiceText);
+        this._currentChatFlow.selectChoice(choiceText);
         //destroy all other existing buttons
-        this.choiceButtons.forEach((button) => {
+        this._choiceButtons.forEach((button) => {
             button.destroy();
         });
         //empty the references from the array
-        this.choiceButtons = [];
+        this._choiceButtons = [];
         //Start a new loop sequence
         this.showTextThenChoices(
-            this.textToAnimate,
-            this.currentChatFlow.getCurrentText(),
-            this.currentChatFlow.getCurrentChoices()
+            this._textToAnimate,
+            this._currentChatFlow.getCurrentText(),
+            this._currentChatFlow.getCurrentChoices()
         );
     }
 
     public getSavedText() {
-        return this.textToSave;
+        return this._textToSave;
     }
 
+    //TODO remove this function
     /**
      * Sends this scene to sleep and reawakes all the other scenes
      */
     private exitChat(): void {
-        this.scene.wake("worldViewScene");
-        this.scene.wake("Room");
-        this.scene.wake("controlPad");
-        this.scene.wake("pauseChatButtons");
+        gameController.storyManager.addTextHistory(this._textToSave);
 
-        console.log(this.textToSave);
-        this.worldViewScene.getStoryManager().addTextHistory(this.textToSave);
-        this.textToSave = [];
-        globalEventBus.emit("save_game")
+        this._textToSave = [];
 
-        globalEventBus.emit("chat_closed");
-        if(!this.destroyOnExit){
-            this.scene.sleep(this);
-        }else{
-            this.scene.remove();
-        }
+        globalEventBus.emit(GameEvents.SAVE_GAME)
+        globalEventBus.emit(GameEvents.CHAT_CLOSED);
+
+        gameController.chatSceneController.exitChat(this._sceneKey, this._destroyOnExit)
+        gameController.worldSceneController.resumeWorldViewScenes();
     }
 }

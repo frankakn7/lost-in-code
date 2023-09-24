@@ -4,6 +4,7 @@ import WorldViewScene from "../../scenes/worldViewScene";
 import RoomScene from "../room";
 import {globalEventBus} from "../../helpers/globalEventBus";
 import Clock = Phaser.Time.Clock;
+import {gameController} from "../../main";
 
 /**
  * PortalObject is a subclass of InteractiveObject that represents an object that can be interacted with to get to the next room.
@@ -60,7 +61,8 @@ export default class PortalObject extends InteractiveObject {
         if (this.room.getDoorUnlocked()) {
             console.log("Open Door");
             // Fade out the camera and then change the room
-            this.room.worldViewScene.getToRoomViaId(this.room.getNextRoom());
+            // this.room.worldViewScene.getToRoomViaId(this.room.getNextRoom());
+            gameController.roomSceneController.getToRoomViaId(this.room.nextRoom)
             this.room.cameras.main.fadeOut(1000, 0, 0, 0)
         }
     }

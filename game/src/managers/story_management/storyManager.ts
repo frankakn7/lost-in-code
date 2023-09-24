@@ -3,7 +3,6 @@ import ChatFlow from "../../classes/chat/chatFlow";
 import storyJson from "../../assets/story.json";
 import { ChatFlowNode } from "../../classes/chat/chatFlowNode";
 import { json } from "express";
-import WorldViewScene from "../../scenes/worldViewScene";
 import {gameController} from "../../main";
 
 
@@ -12,17 +11,8 @@ import {gameController} from "../../main";
  * reconstructing the chat flow tree from json, etc
  */
 export default class StoryManager {
-    private _storyEvents = {}; // Stores ChatFlow objects for each room and event.
-    private _worldViewScene : WorldViewScene; // The root node of the game or application.
+    private _storyEvents: {[room: string]: Map<string,ChatFlow>} = {}; // Stores ChatFlow objects for each room and event.
 
-    // private _finishedStuff = {
-    //     hangar: [],
-    //     commonRoom: [],
-    //     engine: [],
-    //     laboratory: [],
-    //     bridge: []
-    // };  // Stores the IDs of the events that have been finished for each room.
-    //
     // private _textHistory: string[][] = []; // Stores the text history for the current game or application.
 
 
@@ -30,9 +20,7 @@ export default class StoryManager {
      * Constructs a new instance of the class.
      * @param {WorldViewScene} worldViewScene - The root node of the game or application.
      */
-    constructor(worldViewScene: WorldViewScene) {
-        // Store the provided 'worldViewScene' as a private property '_worldViewScene'.
-        this._worldViewScene = worldViewScene;
+    constructor() {
 
         // Load potential data from the game state.
         // this.loadData();
@@ -93,7 +81,7 @@ export default class StoryManager {
      * @param {string} eventId - The ID of the event to update as finished and construct the ChatFlow.
      * @returns {ChatFlow} A new ChatFlow object for the specified roomId and eventId.
      */
-    public pullEventIdChatFlow(roomId, eventId) {
+    public pullEventIdChatFlow(roomId, eventId): ChatFlow {
         gameController.gameStateManager.story[roomId].push(eventId);
         return new ChatFlow(this.reconstructChatNodeTreeRecursively(roomId, storyJson, eventId));
     }
@@ -122,7 +110,7 @@ export default class StoryManager {
         // This node will include the optionText, text, and the choices Map created above.
         let newNode : ChatFlowNode = {
             optionText: json[room][nodeId]["optionText"],
-            text: json[room][nodeId]["text"].replace("astronaut", "astronaut " + this._worldViewScene.user.username).replace("Astronaut", "Astronaut " + this._worldViewScene.user.username),
+            text: json[room][nodeId]["text"].replace("astronaut", "astronaut " + gameController.gameStateManager.user.username).replace("Astronaut", "Astronaut " + gameController.gameStateManager.user.username),
             choices: choices
         }
 
@@ -137,9 +125,9 @@ export default class StoryManager {
      * @param {string} room - The ID of the room from which to pull the next story bit.
      * @returns {ChatFlow} The pulled ChatFlow representing the next story bit to be processed.
      */
-    public pullNextStoryBit(room) {
+    public pullNextStoryBit(room: string): ChatFlow {
         let key = this._storyEvents[room].keys().next().value;
-        let value = this._storyEvents[room].get(key);
+        let value: ChatFlow = this._storyEvents[room].get(key);
 
         gameController.gameStateManager.story[room].push(key);
         this._storyEvents[room].delete(key);

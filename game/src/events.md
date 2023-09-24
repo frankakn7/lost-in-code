@@ -6,7 +6,7 @@
 - game_finished
 - chat_closed
 
-## Evaluation Events
+## Evaluation GameEvents
 - eval_task_solved
   - With time during which the task view was open
 - eval_task_failed

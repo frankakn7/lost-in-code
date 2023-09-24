@@ -12,6 +12,7 @@ import {ChapterType} from "./chapterManager";
 import ApiHelper from "../helpers/apiHelper";
 import availableQuestions from "./availableQuestionsTestData";
 import {gameController} from "../main";
+import {GameEvents} from "../types/gameEvents";
 
 /**
  * Manages tasks and questions for the game.
@@ -30,7 +31,7 @@ export default class TaskManager {
     public currentDoneQuestions: number;
     public currentTotalQuestions: number;
 
-    private _worldViewScene: WorldViewScene;
+    // private _worldViewScene: WorldViewScene;
 
     private apiHandler = new ApiHelper();
 
@@ -117,30 +118,32 @@ export default class TaskManager {
             gameController.gameStateManager.user.newChapter = true;
             gameController.gameStateManager.user.performanceIndex --;
             this.loadQuestions()
-            this._worldViewScene.docView.chapterManager.updateCurrentChapterOrder(gameController.gameStateManager.user.chapterNumber);
-            this._worldViewScene.docView.chapterManager.updateChapters()
+            // this._worldViewScene.docView.chapterManager.updateCurrentChapterOrder(gameController.gameStateManager.user.chapterNumber);
+            // this._worldViewScene.docView.chapterManager.updateChapters()
+            gameController.chapterManager.updateChapters();
         }
     }
 
     private onObjectFailed() {
         console.log("FAILED")
-        if (this._worldViewScene.scene.isSleeping(this._worldViewScene)) {
-            this._worldViewScene.queueTask(() => {
-                globalEventBus.emit("taskmanager_object_failed");
-            });
-        } else {
-            globalEventBus.emit("taskmanager_object_failed");
-        }
+        //TODO Why was it queued until it wasnt sleeping anymore? What is suppposed to happen when object failed?
+        // if (this._worldViewScene.scene.isSleeping(this._worldViewScene)) {
+        //     this._worldViewScene.queueTask(() => {
+        //         globalEventBus.emit(GameEvents.TASKMANAGER_OBJECT_FAILED);
+        //     });
+        // } else {
+            globalEventBus.emit(GameEvents.TASKMANAGER_OBJECT_FAILED);
+        // }
     }
 
     private onObjectRepaired() {
-        if (this._worldViewScene.scene.isSleeping(this._worldViewScene)) {
-            this._worldViewScene.queueTask(() => {
-                globalEventBus.emit("taskmanager_object_finished");
-            });
-        } else {
-            globalEventBus.emit("taskmanager_object_finished");
-        }
+        // if (this._worldViewScene.scene.isSleeping(this._worldViewScene)) {
+        //     this._worldViewScene.queueTask(() => {
+        //         globalEventBus.emit(GameEvents.TASKMANAGER_OBJECT_FINISHED);
+        //     });
+        // } else {
+            globalEventBus.emit(GameEvents.TASKMANAGER_OBJECT_FINISHED);
+        // }
         this.checkNextChapter();
     }
 
@@ -178,8 +181,8 @@ export default class TaskManager {
         this.availableQuestions = this.availableQuestions.filter(question => !answeredQuestionIds.includes(question.id))
     }
 
-    constructor(worldViewScene: WorldViewScene) {
-        this._worldViewScene = worldViewScene;
+    constructor() {
+        // this._worldViewScene = worldViewScene;
 
         //Test data!
         //this.availableQuestions = availableQuestions;

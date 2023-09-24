@@ -5,19 +5,57 @@ import PreloadScene from "./scenes/preloadScene";
 import './font.css';
 import {GameStateManager} from "./managers/gameStateManager";
 import Center = Phaser.Scale.Center;
+import StoryManager from "./managers/story_management/storyManager";
+import MasterSceneController from "./controllers/masterSceneController";
+import ChatSceneController from "./controllers/chatSceneController";
+
+// @ts-ignore
+import SceneWatcherPlugin from 'phaser-plugin-scene-watcher';
+import PopupSceneController from "./controllers/popupSceneController";
+import AchievementManager from "./managers/achievementManager";
+import ApiHelper from "./helpers/apiHelper";
+import User from "./classes/user";
+import HatManager from "./managers/hatManager";
+import ChapterManager from "./managers/chapterManager";
+import DocSceneController from "./controllers/docSceneController";
+import MenuSceneController from "./controllers/menuSceneController";
+import RoomSceneController from "./controllers/roomSceneController";
+import TaskManager from "./managers/taskManager";
+import QuestionSceneController from "./controllers/questionSceneController";
+import {SceneKeys} from "./types/sceneKeys";
+import WorldSceneController from "./controllers/worldSceneController";
 
 class GameController {
     private _gameConfig: Phaser.Types.Core.GameConfig;
-    private _game: Phaser.Game;
-    private _gameStateManager: GameStateManager;
-    private _currentScene: string;
 
-    readonly SIZE_WIDTH_SCREEN = 375*2.5;
-    readonly SIZE_HEIGHT_SCREEN = 812*2.5;
-    readonly MAX_SIZE_WIDTH_SCREEN = 750*2;
-    readonly MAX_SIZE_HEIGHT_SCREEN= 1624*2;
-    readonly MIN_SIZE_WIDTH_SCREEN = 375*2;
-    readonly MIN_SIZE_HEIGHT_SCREEN = 812*2;
+    private _game: Phaser.Game;
+
+    private _gameStateManager: GameStateManager;
+    private _storyManager: StoryManager;
+    private _acheivementManager: AchievementManager;
+    private _hatManager: HatManager;
+    private _chapterManager: ChapterManager;
+    private _taskManager: TaskManager;
+
+    private _apiHelper: ApiHelper;
+
+    private _user: User;
+
+    private _masterSceneController: MasterSceneController;
+    private _chatSceneController: ChatSceneController;
+    private _popupSceneController: PopupSceneController;
+    private _docSceneController: DocSceneController;
+    private _menuSceneController: MenuSceneController;
+    private _roomSceneController: RoomSceneController;
+    private _questionSceneController: QuestionSceneController;
+    private _worldSceneController: WorldSceneController;
+
+    readonly SIZE_WIDTH_SCREEN = 375 * 2.5;
+    readonly SIZE_HEIGHT_SCREEN = 812 * 2.5;
+    readonly MAX_SIZE_WIDTH_SCREEN = 750 * 2;
+    readonly MAX_SIZE_HEIGHT_SCREEN = 1624 * 2;
+    readonly MIN_SIZE_WIDTH_SCREEN = 375 * 2;
+    readonly MIN_SIZE_HEIGHT_SCREEN = 812 * 2;
 
     public buttonStates: Record<string, boolean> = {
         leftPress: false,
@@ -31,7 +69,121 @@ class GameController {
         return this._gameStateManager;
     }
 
+    get storyManager(): StoryManager {
+        return this._storyManager;
+    }
+
+    get masterSceneController(): MasterSceneController {
+        return this._masterSceneController;
+    }
+
+    get chatSceneController(): ChatSceneController {
+        return this._chatSceneController;
+    }
+
+    get popupSceneController(): PopupSceneController {
+        return this._popupSceneController;
+    }
+
+    get acheivementManager(): AchievementManager {
+        return this._acheivementManager;
+    }
+
+    get apiHelper(): ApiHelper {
+        return this._apiHelper;
+    }
+
+    get user(): User {
+        return this._user;
+    }
+
+    set user(value: User) {
+        this._user = value;
+    }
+
+    get hatManager(): HatManager {
+        return this._hatManager;
+    }
+
+    get chapterManager(): ChapterManager {
+        return this._chapterManager;
+    }
+
+    get docSceneController(): DocSceneController {
+        return this._docSceneController;
+    }
+
+    get menuSceneController(): MenuSceneController {
+        return this._menuSceneController;
+    }
+
+    get roomSceneController(): RoomSceneController {
+        return this._roomSceneController;
+    }
+
+    get taskManager(): TaskManager {
+        return this._taskManager;
+    }
+
+    get questionSceneController(): QuestionSceneController {
+        return this._questionSceneController;
+    }
+
+    get worldSceneController(): WorldSceneController {
+        return this._worldSceneController;
+    }
+
     constructor() {
+
+        this.configureGame();
+        this._game = new Phaser.Game(this._gameConfig);
+
+    }
+
+    initManagersAndHelpers(){
+        this._gameStateManager = new GameStateManager();
+        this._storyManager = new StoryManager();
+        this._acheivementManager = new AchievementManager();
+        this._hatManager = new HatManager();
+        this._chapterManager = new ChapterManager();
+
+        this._apiHelper = new ApiHelper();
+
+        this._masterSceneController = new MasterSceneController();
+    }
+
+    initSceneControllers(){
+        this._chatSceneController = new ChatSceneController(this._masterSceneController);
+        this._popupSceneController = new PopupSceneController(this._masterSceneController);
+        this._docSceneController = new DocSceneController(this._masterSceneController);
+        this._menuSceneController = new MenuSceneController(this._masterSceneController);
+        this._roomSceneController = new RoomSceneController(this._masterSceneController);
+        this._worldSceneController = new WorldSceneController(this._masterSceneController, this._roomSceneController);
+    }
+
+    startGame(userData:any) {
+        this.apiHelper.getStateData().then((data:any) => {
+            if(data.state_data){
+                this.gameStateManager.initialiseExisting(data.state_data);
+            }
+            if(userData){
+                this.user = new User(userData);
+            }else{
+                this.user = new User();
+            }
+            //Preload scene is not tracked by masterSceneController
+            // this.startScene(SceneKeys.PRELOAD_SCENE_KEY, { worldViewScene: this.worldViewScene });
+            this.startScene(SceneKeys.PRELOAD_SCENE_KEY);
+        }).catch((error) => console.error(error));
+    }
+
+    initialWorldViewStart(){
+        this.initSceneControllers();
+        this._worldSceneController.addWorldViewScenes();
+        this._worldSceneController.startWorldViewScenes();
+    }
+
+    private configureGame() {
         this._gameConfig = {
             type: Phaser.WEBGL,
             width: 375,
@@ -40,7 +192,7 @@ class GameController {
             physics: {
                 default: "arcade",
                 arcade: {
-                    gravity: { y: 0 },
+                    gravity: {y: 0},
                     debug: false,
                 },
             },
@@ -80,20 +232,39 @@ class GameController {
                 createContainer: true
             },
             backgroundColor: "#000000",
+            plugins: {
+                global: [
+                    { key: 'SceneWatcher', plugin: SceneWatcherPlugin, start: true }
+                ]
+            },
         };
-
-        this._game = new Phaser.Game(this._gameConfig);
-        this._gameStateManager = new GameStateManager();  // Placeholder for your game state data
-        this._currentScene = "LoginView";
     }
 
-    // Your methods to manage game state, switch scenes, etc.
-    switchScene(newScene: string) {
-        this._game.scene.stop(this._currentScene);
-        this._game.scene.start(newScene);
-        this._currentScene = newScene;
+    addScene(key: string, scene: Phaser.Scene) {
+        this._game.scene.add(key, scene);
+    }
+
+    startScene(key: string | Phaser.Scene, data?: object) {
+        this._game.scene.start(key);
+    }
+
+    stopScene(key: string | Phaser.Scene) {
+        this._game.scene.stop(key);
+    }
+
+    sleepScene(key: string | Phaser.Scene) {
+        this._game.scene.sleep(key);
+    }
+
+    wakeScene(key: string | Phaser.Scene) {
+        this._game.scene.wake(key);
+    }
+
+    removeScene(key: string) {
+        this._game.scene.remove(key)
     }
 }
 
 // Initialize GameController and start the game
 export const gameController = new GameController();
+gameController.initManagersAndHelpers();

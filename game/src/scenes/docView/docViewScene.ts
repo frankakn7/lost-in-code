@@ -5,13 +5,13 @@ import ReturnButtonTexture from "../../assets/ui/Return-Button.png";
 import WorldViewScene from "../worldViewScene";
 import DeviceButton from "../../ui/deviceButton";
 import TextViewScene from "./textViewScene";
+import {SceneKeys} from "../../types/sceneKeys";
+import {gameController} from "../../main";
 
 export default class DocViewScene extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite;
 
     public chapterManager: ChapterManager;
-
-    private _worldViewScene: WorldViewScene;
 
     private resumeButton;
 
@@ -21,19 +21,16 @@ export default class DocViewScene extends Phaser.Scene {
 
     private textView;
 
-    constructor(worldViewScene: WorldViewScene, chapterNumber: number) {
-        super("DocViewScene");
-        this.chapterManager = new ChapterManager(chapterNumber)
-        this._worldViewScene = worldViewScene;
+    constructor() {
+        super(SceneKeys.DOC_VIEW_SCENE_KEY);
     }
 
     private createChapterButtons() {
         let previousY = this.resumeButton.y + this.resumeButton.height;
-        this.chapterManager.getChapters().forEach((chapter: ChapterType) => {
+        gameController.chapterManager.chapters.forEach((chapter: ChapterType) => {
             const buttonWidth = this.cameras.main.displayWidth * 0.7;
             let newButton = new DeviceButton(this, this.cameras.main.displayWidth / 2 - buttonWidth / 2, previousY + this.buttonSpacing, buttonWidth, () => {
-                console.log("Open chat view for"+chapter.name)
-                this.openTextMenu(chapter.material)
+                gameController.docSceneController.openTextViewScene(chapter.material)
             }, chapter.name)
             previousY = newButton.y + newButton.height;
             this.add.existing(newButton);
@@ -72,14 +69,10 @@ export default class DocViewScene extends Phaser.Scene {
     }
 
     private _backToMenu() {
-        this._worldViewScene.menuView.scene.resume();
-        this.scene.sleep();
+        // this._worldViewScene.menuView.scene.resume();
+        // this.scene.sleep();
+        gameController.menuSceneController.backToMenuScene();
     }
 
-    private openTextMenu(textToShow) {
-        this.textView = new TextViewScene(this,textToShow)
-        this.scene.add("TextView",this.textView)
-        this.scene.launch(this.textView);
-        this.scene.pause();
-    }
+
 }

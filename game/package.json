@@ -31,6 +31,7 @@
         "dotenv-webpack": "^8.0.1",
         "html-loader": "^4.2.0",
         "html-webpack-plugin": "^5.5.3",
+        "phaser-plugin-scene-watcher": "^6.0.0",
         "style-loader": "^3.3.3",
         "ts-loader": "^9.4.3",
         "typescript": "^5.1.3",

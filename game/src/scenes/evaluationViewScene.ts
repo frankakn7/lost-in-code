@@ -3,22 +3,21 @@ import SpriteButton from "../ui/SpriteButton";
 import ReturnButtonTexture from "../assets/ui/Return-Button.png";
 import AchievementManager from "../managers/achievementManager";
 import WorldViewScene from "./worldViewScene";
-import {HatMap} from "../constants/hats";
+import {HatMap} from "../constants/hatMap";
 import DeviceButton from "../ui/deviceButton";
 import {formatTime, globalEventBus} from "../helpers/globalEventBus";
+import {gameController} from "../main";
+import {SceneKeys} from "../types/sceneKeys";
+import {GameEvents} from "../types/gameEvents";
 
 
 export default class EvaluationViewScene extends Phaser.Scene {
     private _tilesprite;
-    private _worldViewScene;
     private _defaultLabelStyle;
     private _xOffset = 60;
-    private _am : AchievementManager;
 
-    constructor(worldViewScene: WorldViewScene, achievementManager: AchievementManager) {
-        super("EvaluationViewScene");
-        this._worldViewScene = worldViewScene;
-        this._am = achievementManager;
+    constructor() {
+        super(SceneKeys.EVALUATION_VIEW_SCENE_KEY);
     }
 
     preload() {
@@ -77,12 +76,12 @@ export default class EvaluationViewScene extends Phaser.Scene {
             }
         }
 
-        let evaluationString = "- Tasks correctly solved: " + this._am.tasksCounter
-            + "\n" + "- Longest streak: " + this._am.longestStreak
-            + "\n" + "- Mistakes made: " + this._am.incorrectCounter
-            + "\n" + "- Fastest solving time: " + formatTime(this._am.fastestTaskTime)
-            + "\n" + "- Badges earned: " + this._am.badgesEarned
-            + "\n" + "- Hats found: " + this._worldViewScene.user.unlockedHats.filter((value, index, self) => self.indexOf(value) === index) + " out of " + Object.keys(HatMap).length
+        let evaluationString = "- Tasks correctly solved: " + gameController.acheivementManager.tasksCounter
+            + "\n" + "- Longest streak: " + gameController.acheivementManager.longestStreak
+            + "\n" + "- Mistakes made: " + gameController.acheivementManager.incorrectCounter
+            + "\n" + "- Fastest solving time: " + formatTime(gameController.acheivementManager.fastestTaskTime)
+            + "\n" + "- Badges earned: " + gameController.acheivementManager.badgesEarned
+            + "\n" + "- Hats found: " + gameController.gameStateManager.user.unlockedHats.filter((value, index, self) => self.indexOf(value) === index) + " out of " + Object.keys(HatMap).length
 
         let headerLabel = this.add.text(this.cameras.main.displayWidth / 2 - 360, 200,
             "Congratulations!\n You finished the game!", h1LabelStyle);
@@ -101,9 +100,9 @@ export default class EvaluationViewScene extends Phaser.Scene {
                 // game.domContainer
                 navigator.clipboard.writeText(clipboardString)
                     .then(() => {
-                        globalEventBus.emit("broadcast_news", "Copied to clipboard")
+                        globalEventBus.emit(GameEvents.BROADCAST_NEWS, "Copied to clipboard")
                     }, () => {
-                        globalEventBus.emit("broadcast_news", "Could not copy to clipboard")
+                        globalEventBus.emit(GameEvents.BROADCAST_NEWS, "Could not copy to clipboard")
                     });
             }),
             "Copy to Clipboard"
@@ -111,9 +110,9 @@ export default class EvaluationViewScene extends Phaser.Scene {
         this.add.existing(shareButton);
     }
 
-    private _backToMenu() {
-        this._worldViewScene.menuView.scene.resume();
-        this.scene.sleep();
-    }
+    // private _backToMenu() {
+    //     this._worldViewScene.menuView.scene.resume();
+    //     this.scene.sleep();
+    // }
 
 }

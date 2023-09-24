@@ -1,10 +1,10 @@
 import * as Phaser from "phaser";
-import { TilemapConfig } from "../types/tilemapConfig";
-import { Player } from "./objects/Player";
+import {TilemapConfig} from "../types/tilemapConfig";
+import {Player} from "./objects/Player";
 import PlayerTexture from "../assets/player.png";
 import ShadowTexture from "../assets/shadow.png"
 import Mask from "../assets/mask.png";
-import { GameObjectMap } from "../gameobjects";
+import {GameObjectMap} from "../gameobjects";
 
 import DoorTexture from "../assets/gameobjects/door.png";
 import EngineTexture from "../assets/gameobjects/engine.png";
@@ -34,7 +34,8 @@ import {globalEventBus} from "../helpers/globalEventBus";
 import EnemyObject from "./objects/enemyObject";
 import ClueObject from "./objects/clueObject";
 import {gameController} from "../main";
-
+import {SceneKeys} from "../types/sceneKeys";
+import {roomMap} from "../constants/roomMap";
 
 
 /**
@@ -42,41 +43,38 @@ import {gameController} from "../main";
  */
 export default class RoomScene extends Phaser.Scene {
     private tilemapConfig: TilemapConfig; // Config for loading the tilemaps
-    public player : Player; // The player object
+    public player: Player; // The player object
     private vision; // The vision of the player
     private fow; // The fog of war
     private _roomId; // The id of the room
-    private _playerDefaultX = 32*4; // The default x position of the player
-    private _playerDefaultY = 32*4; // The default y position of the player
+    private _playerDefaultX = 32 * 4; // The default x position of the player
+    private _playerDefaultY = 32 * 4; // The default y position of the player
     private _nextRoom = "hangar"; // The next room to load
 
+    //TODO make this into room manager
     private _interactiveObjects = []; // The interactive objects in the room
     private _taskObjects: TaskObject[] = []; // The task objects in the room
     private _clues = []; // The clues in the room
     private _onStartupFinishedTaskObjects = [false, false, false, false]; // The task objects that are finished on startup due to load
     // private controls;
 
-    private _worldViewScene; // The root node of the game
     private _doorUnlocked = false; // Whether the door is unlocked or not
 
     private _timeUntilStoryStartsInRoom = 2500; // The time until the story starts in the room
     private _timeSinceRoomEnter = 0; // The time since the room was entered
-    
+
     /**
      * Room constructor
      * @param tilemapConfig config for loading the tilemaps
-     * @param settingsConfig normal setting config for scenes
+     * @param roomId the room id of this room
      */
     constructor(
         tilemapConfig: TilemapConfig,
         roomId: string,
-        worldViewScene : WorldViewScene
-        // settingsConfig?: string | Phaser.Types.Scenes.SettingsConfig
     ) {
-        super("Room_" + roomId);
+        super(SceneKeys.ROOM_SCENE_KEY_IDENTIFIER + roomId);
         this.tilemapConfig = tilemapConfig;
-        
-        this._worldViewScene = worldViewScene;
+
         this._roomId = roomId;
     }
 
@@ -89,35 +87,32 @@ export default class RoomScene extends Phaser.Scene {
          */
         const tilemapJson = this.tilemapConfig.tilemapJson;
         this.load.tilemapTiledJSON("tilemap" + this._roomId, tilemapJson);
-        this.load.image("playerTexture", PlayerTexture);
-        this.load.image("shadowTexture", ShadowTexture);
-        this.load.image("mask", Mask);
-        this.load.image("door", DoorTexture);
-        this.load.image("engine", EngineTexture);
-        this.load.image("locker", LockerTexture);
-        
-        this.load.image("barrel", BarrelTexture);
-        this.load.image("crate2", Crate2Texture);
-        this.load.image("crate", CrateTexture);
-        this.load.image("crate4", Crate4Texture);
-        this.load.image("computer", ComputerTexture);
-        this.load.image("cannon", CannonTexture);
-        this.load.image("tableseatleft", TableSeatLeftTexture);
-        this.load.image("tableseatright", TableSeatRightTexture);
-        this.load.image("firstaidkittexture", FirstAidKitTexture);
-        this.load.image("bed", BedTexture);
-        this.load.image("doorSingle", DoorSingleTexture);
-        this.load.image("doorDouble", DoorDoubleTexture);
-        this.load.image("engineBroken", EngineBrokenTexture);
-        this.load.image("enemy", EnemyTexture);
-
-        this.load.image("paper", PaperTexture);
+        // this.load.image("playerTexture", PlayerTexture);
+        // this.load.image("shadowTexture", ShadowTexture);
+        // this.load.image("mask", Mask);
+        // this.load.image("door", DoorTexture);
+        // this.load.image("engine", EngineTexture);
+        // this.load.image("locker", LockerTexture);
+        //
+        // this.load.image("barrel", BarrelTexture);
+        // this.load.image("crate2", Crate2Texture);
+        // this.load.image("crate", CrateTexture);
+        // this.load.image("crate4", Crate4Texture);
+        // this.load.image("computer", ComputerTexture);
+        // this.load.image("cannon", CannonTexture);
+        // this.load.image("tableseatleft", TableSeatLeftTexture);
+        // this.load.image("tableseatright", TableSeatRightTexture);
+        // this.load.image("firstaidkittexture", FirstAidKitTexture);
+        // this.load.image("bed", BedTexture);
+        // this.load.image("doorSingle", DoorSingleTexture);
+        // this.load.image("doorDouble", DoorDoubleTexture);
+        // this.load.image("engineBroken", EngineBrokenTexture);
+        // this.load.image("enemy", EnemyTexture);
+        //
+        // this.load.image("paper", PaperTexture);
     }
 
-    /**
-     * Get the room id
-     */
-    public getRoomId() {
+    get roomId() {
         return this._roomId;
     }
 
@@ -135,7 +130,7 @@ export default class RoomScene extends Phaser.Scene {
         this.loadData();
 
         // Create and add the tilemap layers for the room.
-        const tilemap = this.make.tilemap({ key: "tilemap" + this._roomId });
+        const tilemap = this.make.tilemap({key: "tilemap" + this._roomId});
         const tileset = tilemap.addTilesetImage(this.tilemapConfig.tilesetName, "tilesetImage");
         const floorLayer = tilemap.createLayer(this.tilemapConfig.floorLayer, tileset);
         const collisionLayer = tilemap.createLayer(this.tilemapConfig.collisionLayer, tileset);
@@ -149,7 +144,7 @@ export default class RoomScene extends Phaser.Scene {
 
         // Create and position the player sprite using the Player class.
         //TODO save player x and y in gamestate and load it from there
-        this.player = new Player(this, this._playerDefaultX, this._playerDefaultY, "playerTexture", this._worldViewScene);
+        this.player = new Player(this, this._playerDefaultX, this._playerDefaultY, "playerTexture");
         this.physics.add.collider(this.player, collisionLayer);
         this.player.setCanMove(false);
 
@@ -172,7 +167,9 @@ export default class RoomScene extends Phaser.Scene {
             });
 
             // Check if the gameobjectID exists in the GameObjectMap.
-            if (!(gameobjectID in GameObjectMap)) { return; }
+            if (!(gameobjectID in GameObjectMap)) {
+                return;
+            }
 
 
             // Calculate the position (x, y) for the game object based on the tilemap data.
@@ -208,7 +205,7 @@ export default class RoomScene extends Phaser.Scene {
         });
 
         // Set the finished status for task objects based on the onStartupFinishedTaskObjects array.
-        for(let i = 0; i < this._taskObjects.length; i++) {
+        for (let i = 0; i < this._taskObjects.length; i++) {
             this._taskObjects[i].setIsFinished(this._onStartupFinishedTaskObjects[i] ?? false);
         }
 
@@ -281,7 +278,7 @@ export default class RoomScene extends Phaser.Scene {
      * @param {number} time - The current timestamp.
      * @param {number} delta - The delta time between the current and previous frame.
      */
-    update (time, delta){
+    update(time, delta) {
         // Update the position of the player's vision (circular mask) to follow the player.
         if (this.vision) {
             this.vision.x = this.player.x;
@@ -291,20 +288,16 @@ export default class RoomScene extends Phaser.Scene {
         }
 
         // Check if the room's story has been played, and if not, start it after a specific time delay.
-        if (!this._worldViewScene.getStoryManager().checkIfRoomStoryPlayed(this._roomId)) {
+        if (!gameController.storyManager.checkIfRoomStoryPlayed(this._roomId)) {
             this._timeSinceRoomEnter += delta;
             if (this._timeSinceRoomEnter > this._timeUntilStoryStartsInRoom) {
-                this._worldViewScene.openStoryChatView();
+                gameController.chatSceneController.openStoryChatView();
                 this.player.setCanMove(true);
             }
         } else {
             // If the room's story has been played, enable the player's movement.
             this.player.setCanMove(true);
         }
-    }
-
-    get worldViewScene() {
-        return this._worldViewScene;
     }
 
     /**
@@ -334,11 +327,11 @@ export default class RoomScene extends Phaser.Scene {
         return this;
     }
 
-    public getNextRoom() {
+    get nextRoom(): string {
         return this._nextRoom;
     }
 
-    // Save the rooms data for the game state
+// Save the rooms data for the game state
     public saveAll() {
         let res = {finishedTaskObjects: []}
         this._taskObjects.forEach(o => {
@@ -386,8 +379,7 @@ export default class RoomScene extends Phaser.Scene {
             this.setDoorUnlocked(true);
             globalEventBus.emit("door_was_unlocked", this._roomId);
             globalEventBus.emit("broadcast_news", "Door unlocked!");
-        }
-        else {
+        } else {
             globalEventBus.emit("game_finished");
         }
     }
@@ -408,10 +400,10 @@ export default class RoomScene extends Phaser.Scene {
     public getFinishedTaskObjectsCount() {
         let c = 0;
         this._taskObjects.forEach(obj => {
-           if (obj.isFinished()) c++;
+            if (obj.isFinished()) c++;
         });
         return c;
     }
-    
+
 
 }

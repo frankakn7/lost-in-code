@@ -1,54 +1,29 @@
 import * as Phaser from "phaser";
-import DeviceButton from "../ui/deviceButton";
-import SpriteButton from "../ui/SpriteButton";
-import WorldViewScene from "./worldViewScene";
 
-import AntennaAppTexture from "../assets/ui/apps/Antenna-app-icon.png";
-import ResumeButtonTexture from "../assets/ui/Resume-Button.png";
-import SettingsButtonTexture from "../assets/ui/apps/Settings-app-icon.png";
-import KnowledgeButtonTexture from "../assets/ui/apps/knowledge-app-icon.png";
-import HatAppTexture from "../assets/ui/apps/Hat-app-icon.png";
-import LogoutButtonTexture from "../assets/ui/Logout-Button.png";
-import HatViewScene from "./hatViewScene";
+import SpriteButton from "../ui/SpriteButton";
+
 import ApiHelper from "../helpers/apiHelper";
 
-import AchievementsAppTexture from "../assets/ui/apps/Achievements-app-icon.png";
-import AchievementManager from "../managers/achievementManager";
-import AchievementViewScene from "./achievementViewScene";
+import {gameController} from "../main";
+import {SceneKeys} from "../types/sceneKeys";
 
 export default class MenuViewScene extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite;
-    private _worldViewScene: WorldViewScene;
-
-    private hatView: HatViewScene;
 
     private _columns = 2;
 
     private apiHelper: ApiHelper = new ApiHelper();
 
-    private _achievementView : AchievementViewScene;
-
-    public preload() {
-        this.load.image("antennaAppTexture", AntennaAppTexture);
-        this.load.image("knowledgeAppTexture", KnowledgeButtonTexture);
-        this.load.image("settingsAppTexture", SettingsButtonTexture);
-        this.load.image("resumeButtonTexture", ResumeButtonTexture);
-        this.load.image("logoutButtonTexture", LogoutButtonTexture);
-        this.load.image("achievementsAppTexture", AchievementsAppTexture);
-        this.load.image("hatAppTexture", HatAppTexture);
+    constructor() {
+        super(SceneKeys.MENU_VIEW_SCENE_KEY);
     }
 
-    constructor(
-        worldViewScene: WorldViewScene,
-        settingsConfig?: string | Phaser.Types.Scenes.SettingsConfig
-    ) {
-        super(settingsConfig);
-        this._worldViewScene = worldViewScene;
-        // this.hatView = new HatViewScene();
-        this._achievementView = new AchievementViewScene(this._worldViewScene, this._worldViewScene.achievementManager);
+    preload(){
+        console.log("### preloading menu")
     }
 
-    public create() {
+    create() {
+        console.log("### Creating Menu View")
         this._tilesprite = this.add
             .tileSprite(
                 0,
@@ -66,7 +41,7 @@ export default class MenuViewScene extends Phaser.Scene {
             180,
             225,
             () => {
-                this._resumeGame();
+                gameController.worldSceneController.resumeWorldViewScenes();
             }
         );
         this.add.existing(resumeButton);
@@ -90,7 +65,9 @@ export default class MenuViewScene extends Phaser.Scene {
             "antennaAppTexture",
             (this.scale.width / (this._columns + 1)) * 1,
             1000,
-            () => {this._worldViewScene.openStoryChatViewWithoutPulling()}
+            () => {
+                gameController.chatSceneController.openStoryChatViewWithoutPulling()
+            }
         ).setScale(1.25);
         this.add.existing(chatButton);
 
@@ -99,7 +76,9 @@ export default class MenuViewScene extends Phaser.Scene {
             "knowledgeAppTexture",
             (this.scale.width / (this._columns + 1)) * 2,
             1000,
-            () => {this.openSubMenu("DocView")}
+            () => {
+                gameController.menuSceneController.openDocViewScene();
+            }
         ).setScale(1.25);
         this.add.existing(knowledgeButton);
 
@@ -109,12 +88,11 @@ export default class MenuViewScene extends Phaser.Scene {
             (this.scale.width / (this._columns + 1)) * 2,
             1300,
             () => {
-                this.openSubMenu(this._worldViewScene.hatView);
+                gameController.menuSceneController.openHatViewScene();
             }
         ).setScale(1.25);
         this.add.existing(hatButton);
-        if (this.scene.get("Hat View") == null)
-            this.scene.add("hatView", this._worldViewScene.hatView);
+
 
         const achievementsButton = new SpriteButton(
             this,
@@ -122,25 +100,19 @@ export default class MenuViewScene extends Phaser.Scene {
             (this.scale.width / (this._columns + 1)) * 1,
             1300,
             () => {
-                this.openSubMenu(this._achievementView)
+                gameController.menuSceneController.openAcheivementViewScene();
             }
         ).setScale(1.25);
         this.add.existing(achievementsButton);
-
-        if (this.scene.get("DocView") == null)
-            this.scene.add("DocView", this._worldViewScene.docView);
-
-        if (this.scene.get("AchievementView") == null)
-            this.scene.add("achievementView", this._achievementView);
     }
 
-    private _resumeGame() {
-        this.scene.sleep(this);
-        this._worldViewScene.pauseOrResumeGame(false);
-    }
+    // private _resumeGame() {
+    //     this.scene.sleep(this);
+    //     this._worldViewScene.pauseOrResumeGame(false);
+    // }
 
-    private openSubMenu(menu) {
-        this.scene.launch(menu);
-        this.scene.pause();
-    }
+    // private openSubMenu(menu) {
+    //     this.scene.launch(menu);
+    //     this.scene.pause();
+    // }
 }

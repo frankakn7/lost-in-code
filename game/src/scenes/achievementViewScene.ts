@@ -8,13 +8,15 @@ import {achievements} from "../constants/achievements";
 
 
 import TrophyTexture from "../assets/achievements/trophy.png";
+import {SceneKeys} from "../types/sceneKeys";
+import {gameController} from "../main";
 
 
 
 export default class AchievementViewScene extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite; // Background
-    private _manager: AchievementManager; // Reference to the achievement manager
-    private _worldViewScene: WorldViewScene; // Reference to the root node
+    // private _manager: AchievementManager; // Reference to the achievement manager
+    // private _worldViewScene: WorldViewScene; // Reference to the root node
 
     private _sprites = [] // Array of achievement sprites to be drawn
     private _margin = 30; // Margin between the sprites
@@ -28,10 +30,8 @@ export default class AchievementViewScene extends Phaser.Scene {
      * @param worldViewScene
      * @param manager
      */
-    constructor(worldViewScene, manager) {
-        super("AchievementViewScene");
-        this._manager = manager;
-        this._worldViewScene = worldViewScene;
+    constructor() {
+        super(SceneKeys.ACHIEVEMENT_VIEW_SCENE_KEY);
     }
 
     /**
@@ -74,7 +74,7 @@ export default class AchievementViewScene extends Phaser.Scene {
      * Renders each unlocked achievement as an image on a grid-like layout.
      */
     private _drawAchievements() {
-        let unlocked = this._manager.unlocked;
+        let unlocked = gameController.acheivementManager.unlocked;
         let canvasWidth = this.cameras.main.displayWidth;
 
         // Calculate the number of achievement objects that can fit in a row.
@@ -89,7 +89,7 @@ export default class AchievementViewScene extends Phaser.Scene {
         let y = horizontalSPacing + 830;
 
         // Loop through each unlocked achievement and render them as images on the Achievement View.
-        for(let i = 0; i < this._manager.unlocked.length; i++) {
+        for(let i = 0; i < gameController.acheivementManager.unlocked.length; i++) {
             // Create a render texture to represent the achievement's background with a border.
             let rt = this.add.renderTexture(x + this._achievementWidth / 2, y + this._achievementHeight / 2, this._achievementWidth + this.borderThickness, this._achievementHeight + this.borderThickness).setOrigin(0.5, 0.5);
             rt.fill(0x00c8ff);
@@ -119,7 +119,8 @@ export default class AchievementViewScene extends Phaser.Scene {
      * Called when the "returnButtonTexture" (resume button) is clicked.
      */
     private _backToMenu() {
-        this._worldViewScene.menuView.scene.resume();
+        // this._worldViewScene.menuView.scene.resume();
         this.scene.sleep();
+        //TODO make back to menu function in masterSceneController
     }
 }

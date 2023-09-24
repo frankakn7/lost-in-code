@@ -5,6 +5,7 @@ import InteractiveObject from "./interactiveObject";
 import RoomScene from "../room";
 import { globalEventBus } from "../../helpers/globalEventBus";
 import {gameController} from "../../main";
+import {GameEvents} from "../../types/gameEvents";
 
 /**
  * TaskObject is a subclass of InteractiveObject that represents an object that can be interacted with to complete a task.
@@ -79,9 +80,9 @@ export default class TaskObject extends InteractiveObject {
         if(!this._isFinished && !this._isOpenRightNow){
             console.log("Interacted with ");
             this._isOpenRightNow = true;
-            globalEventBus.once('taskmanager_object_finished', this.setDone);
-            globalEventBus.once('taskmanager_object_failed', this.setClosed);
-            this.room.worldViewScene.openQuestionView();
+            globalEventBus.once(GameEvents.TASKMANAGER_OBJECT_FINISHED, this.setDone);
+            globalEventBus.once(GameEvents.TASKMANAGER_OBJECT_FAILED, this.setClosed);
+            gameController.questionSceneController.openQuestionView();
         }
 
     }
@@ -114,7 +115,8 @@ export default class TaskObject extends InteractiveObject {
             globalEventBus.emit("object_repaired")
             if (this._isStoryObject) {
                 // this.room.getPlayView().pullNextStoryBit(this.room.getRoomId());
-                this.room.worldViewScene.openStoryChatView();
+                // this.room.worldViewScene.openStoryChatView();
+                gameController.chatSceneController.openStoryChatView();
             }
 
             // TODO Should be able to stay, as this function wont be called after the door was successfully unlocked anyways

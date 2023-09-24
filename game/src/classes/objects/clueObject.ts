@@ -1,6 +1,7 @@
 import * as Phaser from "phaser";
 import InteractiveObject from "./interactiveObject";
 import RoomScene from "../room";
+import {gameController} from "../../main";
 
 export default class ClueObject extends InteractiveObject {
     private _eventId: string;
@@ -21,15 +22,15 @@ export default class ClueObject extends InteractiveObject {
             }
         })
 
-        if (!room.worldViewScene.getStoryManager().checkIfEventAvailable(this.room.getRoomId(), this._eventId)) {
+        if (!gameController.storyManager.checkIfEventAvailable(this.room.roomId, this._eventId)) {
             this.destroy();
         }
     }
 
     public interact() {
-        if (!this.room.worldViewScene.getStoryManager().checkIfEventAvailable(this.room.getRoomId(), this._eventId)) return;
+        if (!gameController.storyManager.checkIfEventAvailable(this.room.roomId, this._eventId)) return;
 
-        this.room.worldViewScene.openEventChatView(this.room.getRoomId(), this._eventId);
+        gameController.chatSceneController.openEventChatView(this.room.roomId, this._eventId);
         this.destroy();
     }
 }

@@ -1,7 +1,7 @@
 import {GameStateType} from "../types/gameStateType";
 
 export class GameStateManager {
-    currentRoom: string;
+    currentRoomId: string;
     gameFinished: boolean;
     room: {
         finishedTaskObjects: boolean[];
@@ -31,12 +31,13 @@ export class GameStateManager {
         repairedObjectsThisChapter: number;
         selectedHat: string;
         unlockedHats: string[];
+        username: string;
     };
 
 
 
     initialiseEmpty() {
-        this.currentRoom = "hangar"
+        this.currentRoomId = "hangar"
         this.gameFinished = false
         this.room = {
             finishedTaskObjects: [],
@@ -66,11 +67,12 @@ export class GameStateManager {
             repairedObjectsThisChapter: 0,
             selectedHat: "None",
             unlockedHats: [],
+            username: "Peter"
         };
     }
 
     initialiseExisting(existingGameState: GameStateType) {
-        this.currentRoom = existingGameState.currentRoom;
+        this.currentRoomId = existingGameState.currentRoomId;
         this.gameFinished = existingGameState.gameFinished;
         this.room = existingGameState.room;
         this.story = existingGameState.story;

@@ -1,7 +1,7 @@
 import {UserStateType} from "./userStateType";
 
 export type GameStateType = {
-    currentRoom: string;
+    currentRoomId: string;
     gameFinished: boolean;
     room: {
         finishedTaskObjects: boolean[];
@@ -31,5 +31,6 @@ export type GameStateType = {
         repairedObjectsThisChapter: number,
         selectedHat: string,
         unlockedHats: string[],
+        username: string
     }
 };

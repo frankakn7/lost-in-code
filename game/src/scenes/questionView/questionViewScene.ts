@@ -12,9 +12,10 @@ import ClozeQuestionScene from "./singleQuestionScenes/clozeQuestionScene";
 import SelectOneQuestionScene from "./singleQuestionScenes/selectOneQuestionScene";
 import CreateQuestionScene from "./singleQuestionScenes/createQuestionScene";
 import {globalEventBus} from "../../helpers/globalEventBus";
+import {SceneKeys} from "../../types/sceneKeys";
+import {gameController} from "../../main";
 
 export default class QuestionViewScene extends Phaser.Scene {
-    private taskManager: TaskManager;
     private currentQuestion: Question;
 
     private questionText: Phaser.GameObjects.Text;
@@ -38,9 +39,8 @@ export default class QuestionViewScene extends Phaser.Scene {
         | SelectOneQuestionScene
         | CreateQuestionScene;
 
-    constructor(taskManager: TaskManager) {
-        super("QuestionViewScene");
-        this.taskManager = taskManager;
+    constructor() {
+        super(SceneKeys.QUESTION_VIEW_SCENE_KEY);
     }
 
     preload() {
@@ -78,7 +78,7 @@ export default class QuestionViewScene extends Phaser.Scene {
         // this.cameras.main.setBackgroundColor("rgba(6,24,92,1)");
 
 
-        this.taskManager.populateNewQuestionSet();
+        gameController.taskManager.populateNewQuestionSet();
         this.getAndDisplayNewQuestion();
 
         this.progressBar = this.add.graphics();
@@ -94,7 +94,7 @@ export default class QuestionViewScene extends Phaser.Scene {
     }
 
     private updateProgressBar(correct = true) {
-        const progress = this.taskManager.currentDoneQuestions / this.taskManager.currentTotalQuestions;
+        const progress = gameController.taskManager.currentDoneQuestions / gameController.taskManager.currentTotalQuestions;
         const totalWidth = this.cameras.main.displayWidth - 100 - 10;  // Adjust the width of the bar as per your need. 100 is the sum of left and right padding (50 each).
         // this.progressBar.clear();  // Clear previous drawing
         // this.progressBar.fillStyle(0x00c8ff, 1);
@@ -108,7 +108,7 @@ export default class QuestionViewScene extends Phaser.Scene {
 
     private getAndDisplayNewQuestion() {
         this.currentQuestion =
-            this.taskManager.getCurrentQuestionFromQuestionSet();
+            gameController.taskManager.getCurrentQuestionFromQuestionSet();
         if (this.currentQuestion) {
             this.displayQuestion();
         } else {
@@ -215,12 +215,12 @@ export default class QuestionViewScene extends Phaser.Scene {
         this.currentQuestionScene.checkAnswer().then(correct => {
             console.log(correct)
             if (correct) {
-                this.taskManager.questionAnsweredCorrectly(this._startTime - this.time.now);
+                gameController.taskManager.questionAnsweredCorrectly(this._startTime - this.time.now);
                 this.showNextButton();
                 this.updateProgressBar()
             } else {
                 this.updateProgressBar(false)
-                this.taskManager.questionAnsweredIncorrectly()
+                gameController.taskManager.questionAnsweredIncorrectly()
                 this.showExitButton();
             }
         });

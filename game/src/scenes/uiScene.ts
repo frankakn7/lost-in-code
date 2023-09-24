@@ -6,6 +6,7 @@ import ArrowDownPng from "../assets/ui/Arrow-Button-Down.png";
 import PhoneButtonPng from "../assets/ui/phone-button.png";
 import {gameController} from "../main";
 import ProgressBarContainer from "../ui/progressBarContainer";
+import {SceneKeys} from "../types/sceneKeys";
 
 export default class UiScene extends Phaser.Scene {
 
@@ -13,7 +14,7 @@ export default class UiScene extends Phaser.Scene {
     private phoneButton: Phaser.GameObjects.Image;
     private progressBarContainer: ProgressBarContainer;
     constructor() {
-        super({ key: 'uiScene' });
+        super(SceneKeys.UI_SCENE_KEY);
     }
 
     preload() {

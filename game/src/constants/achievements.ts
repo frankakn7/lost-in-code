@@ -1,4 +1,6 @@
-export const achievements = {
+import {AchievementType} from "../types/achievementType";
+
+export const achievements: Record<string, AchievementType> = {
     tasks_5: {
         texture: "badge_tasks_5",
         text: "You finished 5 exercises!"

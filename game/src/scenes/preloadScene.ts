@@ -24,14 +24,44 @@ import crownTexture from "../assets/hats/crown.png";
 import pirateHat from "../assets/hats/pirateHat.png";
 import flaresPng from "../assets/particles/flares.png";
 import flaresJson from "../assets/particles/flares.json";
+import {gameController} from "../main";
+import {SceneKeys} from "../types/sceneKeys";
+import PlayerTexture from "../assets/player.png";
+import ShadowTexture from "../assets/shadow.png";
+import Mask from "../assets/mask.png";
+import DoorTexture from "../assets/gameobjects/door.png";
+import EngineTexture from "../assets/gameobjects/engine.png";
+import LockerTexture from "../assets/gameobjects/locker.png";
+import BarrelTexture from "../assets/gameobjects/barrel.png";
+import Crate2Texture from "../assets/gameobjects/crate2.png";
+import CrateTexture from "../assets/gameobjects/crate.png";
+import Crate4Texture from "../assets/gameobjects/crate4.png";
+import ComputerTexture from "../assets/gameobjects/computer.png";
+import CannonTexture from "../assets/gameobjects/cannon.png";
+import TableSeatLeftTexture from "../assets/gameobjects/tableSeatLeft.png";
+import TableSeatRightTexture from "../assets/gameobjects/tableSeatRight.png";
+import FirstAidKitTexture from "../assets/gameobjects/firstAidKit.png";
+import BedTexture from "../assets/gameobjects/bed.png";
+import DoorSingleTexture from "../assets/gameobjects/doorSingle.png";
+import DoorDoubleTexture from "../assets/gameobjects/doorDouble.png";
+import EngineBrokenTexture from "../assets/gameobjects/engineBroken.png";
+import EnemyTexture from "../assets/gameobjects/enemy.png";
+import PaperTexture from "../assets/gameobjects/paper2.png";
+import AntennaAppTexture from "../assets/ui/apps/Antenna-app-icon.png";
+import KnowledgeButtonTexture from "../assets/ui/apps/knowledge-app-icon.png";
+import SettingsButtonTexture from "../assets/ui/apps/Settings-app-icon.png";
+import ResumeButtonTexture from "../assets/ui/Resume-Button.png";
+import LogoutButtonTexture from "../assets/ui/Logout-Button.png";
+import AchievementsAppTexture from "../assets/ui/apps/Achievements-app-icon.png";
+import HatAppTexture from "../assets/ui/apps/Hat-app-icon.png";
 
 export default class PreloadScene extends Phaser.Scene {
     constructor() {
-        super({ key: 'PreloadScene' });
+        super(SceneKeys.PRELOAD_SCENE_KEY);
     }
 
     preload() {
-        console.log("### PRELOADING")
+
         this.load.image("badge_tasks_5", ATask5Texture);
         this.load.image("badge_tasks_10", ATask10Texture);
         this.load.image("badge_tasks_20", ATask20Texture);
@@ -59,9 +89,42 @@ export default class PreloadScene extends Phaser.Scene {
         this.load.image("pirateHat", pirateHat);
 
         this.load.atlas("flares", flaresPng, flaresJson);
+
+        // this.load.image("playerTexture", PlayerTexture);
+        this.load.image("playerTexture", PlayerTexture);
+        this.load.image("shadowTexture", ShadowTexture);
+        this.load.image("mask", Mask);
+        this.load.image("door", DoorTexture);
+        this.load.image("engine", EngineTexture);
+        this.load.image("locker", LockerTexture);
+
+        this.load.image("barrel", BarrelTexture);
+        this.load.image("crate2", Crate2Texture);
+        this.load.image("crate", CrateTexture);
+        this.load.image("crate4", Crate4Texture);
+        this.load.image("computer", ComputerTexture);
+        this.load.image("cannon", CannonTexture);
+        this.load.image("tableseatleft", TableSeatLeftTexture);
+        this.load.image("tableseatright", TableSeatRightTexture);
+        this.load.image("firstaidkittexture", FirstAidKitTexture);
+        this.load.image("bed", BedTexture);
+        this.load.image("doorSingle", DoorSingleTexture);
+        this.load.image("doorDouble", DoorDoubleTexture);
+        this.load.image("engineBroken", EngineBrokenTexture);
+        this.load.image("enemy", EnemyTexture);
+
+        this.load.image("paper", PaperTexture);
+
+        this.load.image("antennaAppTexture", AntennaAppTexture);
+        this.load.image("knowledgeAppTexture", KnowledgeButtonTexture);
+        this.load.image("settingsAppTexture", SettingsButtonTexture);
+        this.load.image("resumeButtonTexture", ResumeButtonTexture);
+        this.load.image("logoutButtonTexture", LogoutButtonTexture);
+        this.load.image("achievementsAppTexture", AchievementsAppTexture);
+        this.load.image("hatAppTexture", HatAppTexture);
     }
 
-    create(data) {
-        this.scene.start('worldViewScene', { worldViewScene: data.worldViewScene });
+    create() {
+        gameController.initialWorldViewStart()
     }
 }

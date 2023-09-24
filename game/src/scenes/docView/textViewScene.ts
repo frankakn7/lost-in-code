@@ -2,26 +2,25 @@ import Phaser from "phaser";
 import ChatTextContainer from "../../ui/chatTextContainer";
 import DocViewScene from "./docViewScene";
 import SpriteButton from "../../ui/SpriteButton";
+import {SceneKeys} from "../../types/sceneKeys";
+import {gameController} from "../../main";
 
 export default class TextViewScene extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite;
 
-    private chatTextContainer;
+    private _chatTextContainer;
 
-    private textToDisplay;
+    private _textToDisplay;
 
-    private textObjectToDisplay: Phaser.GameObjects.Text;
+    private _textObjectToDisplay: Phaser.GameObjects.Text;
 
-    private docView: DocViewScene;
+    private _resumeButton;
 
-    private resumeButton;
+    private _textStyle;
 
-    private textStyle;
-
-    constructor(docView: DocViewScene, textToDisplay) {
-        super("TextViewScene");
-        this.docView = docView;
-        this.textToDisplay = textToDisplay;
+    constructor(textToDisplay) {
+        super(SceneKeys.TEXT_VIEW_SCENE_KEY);
+        this._textToDisplay = textToDisplay;
     }
 
     public create() {
@@ -35,24 +34,19 @@ export default class TextViewScene extends Phaser.Scene {
             )
             .setOrigin(0, 0)
             .setScale(3);
-        this.resumeButton = new SpriteButton(
+        this._resumeButton = new SpriteButton(
             this,
             "returnButtonTexture",
             180,
             180,
             () => {
-                this._backToMenu()
+                gameController.menuSceneController.backToDocViewScene();
             }
         ).setDepth(2);
-        this.add.existing(this.resumeButton);
+        this.add.existing(this._resumeButton);
 
-        this.chatTextContainer = new ChatTextContainer(this, 0, this.resumeButton.y + this.resumeButton.height);
-        this.chatTextContainer.addFullRecievedText(this.textToDisplay);
+        this._chatTextContainer = new ChatTextContainer(this, 0, this._resumeButton.y + this._resumeButton.height);
+        this._chatTextContainer.addFullRecievedText(this._textToDisplay);
         // this.chatTextContainer.addAnswerText(this.textToDisplay);
-    }
-
-    private _backToMenu() {
-        this.docView.scene.resume();
-        this.scene.remove();
     }
 }

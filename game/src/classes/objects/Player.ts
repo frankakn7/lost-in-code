@@ -2,6 +2,7 @@ import {text} from "express";
 import {Vector} from "matter";
 import WorldViewScene from "../../scenes/worldViewScene";
 import {gameController} from "../../main";
+import {HatMap} from "../../constants/hatMap";
 
 /**
  * The Player class. This represents the player on the map and contains all the logic for movement, animations etc.
@@ -11,7 +12,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     private _breathCalcHelperVar = 0; // Helper variable for the breathing animation
     private _walkingRotationHelperVar = 0; // Helper variable for the walking animation
     private _isMoving = false; // Is the player currently moving?
-    private _worldViewScene: WorldViewScene; // The root node of the game
 
     private shadow: Phaser.GameObjects.Sprite; // The shadow of the player
     private shadowYOffset = 0; // The offset of the shadow from the player
@@ -19,14 +19,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     private hatYOffset = -16; // The offset of the hat from the player
 
     private keys; // The keyboard keys for movement
-
-    // private controlPad: ControlPadScene; // The control pad for movement
-
-    // public upPress = false // Is the up button pressed?
-    // public downPress = false // Is the down button pressed?
-    // public leftPress = false // Is the left button pressed?
-    // public rightPress = false // Is the right button pressed?
-    // public interactPress = false // Is the interact button pressed?
 
     private _canMove = true; // Can the player move?
 
@@ -38,10 +30,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
      * @param texture  The texture of the player
      * @param worldViewScene  The root node of the game
      */
-    constructor(scene, x, y, texture, worldViewScene) {
+    constructor(scene, x, y, texture) {
         // Basic scene setup
         super(scene, x, y, texture);
-        this._worldViewScene = worldViewScene;
         this.scene = scene;
 
         // Shadow setup
@@ -221,12 +212,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     public updateHat() {
         // Check if a hat view exists in the root node.
         // If not, return as there is nothing to update.
-        if (this._worldViewScene.hatView === undefined) {
-            return;
-        }
+        // if (this._worldViewScene.hatView === undefined) {
+        //     return;
+        // }
 
         // Get the selected hat ID from the hat view.
-        const hatId = this._worldViewScene.hatView.getSelectedHatId();
+        // const hatId = this._worldViewScene.hatView.getSelectedHatId();
+        const hatId = gameController.gameStateManager.user.selectedHat;
 
         // Check if a hat is selected (hatId is not "None").
         if (hatId !== "None") {
@@ -237,7 +229,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             const height = 64;
             let renderTexture = this.scene.make.renderTexture({width, height}, false);
             renderTexture.draw("playerTexture", 0, 32);
-            renderTexture.draw(this._worldViewScene.hatMap[hatId].texture, 0, 32 + this.hatYOffset);
+            renderTexture.draw(HatMap[hatId].texture, 0, 32 + this.hatYOffset);
 
             // Define a texture key for the player's texture with the selected hat.
             // If this texture key does not already exist, save the render texture as a new texture.
