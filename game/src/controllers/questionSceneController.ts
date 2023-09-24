@@ -3,6 +3,13 @@ import MasterSceneController from "./masterSceneController";
 import {SceneKeys} from "../types/sceneKeys";
 import QuestionViewScene from "../scenes/questionView/questionViewScene";
 import {ChapterType} from "../managers/chapterManager";
+import ChoiceQuestionScene from "../scenes/questionView/singleQuestionScenes/choiceQuestionScene";
+import {Scene} from "phaser";
+import InputQuestionScene from "../scenes/questionView/singleQuestionScenes/inputQuestionScene";
+import DragDropQuestionScene from "../scenes/questionView/singleQuestionScenes/dragDropQuestionScene";
+import ClozeQuestionScene from "../scenes/questionView/singleQuestionScenes/clozeQuestionScene";
+import SelectOneQuestionScene from "../scenes/questionView/singleQuestionScenes/selectOneQuestionScene";
+import CreateQuestionScene from "../scenes/questionView/singleQuestionScenes/createQuestionScene";
 
 export default class QuestionSceneController {
 
@@ -50,5 +57,49 @@ export default class QuestionSceneController {
                 })
             });
         }
+    }
+
+    public addAndStartChoiceQuestionScene(choiceQuestionScene: ChoiceQuestionScene){
+        this._masterSceneController.addScene(SceneKeys.CHOICE_QUESTION_SCENE_KEY, choiceQuestionScene);
+        this._masterSceneController.startScene(SceneKeys.CHOICE_QUESTION_SCENE_KEY);
+    }
+
+    public addAndStartInputQuestionScene(inputQuestionScene: InputQuestionScene){
+        this._masterSceneController.addScene(SceneKeys.INPUT_QUESTION_SCENE_KEY, inputQuestionScene);
+        this._masterSceneController.startScene(SceneKeys.INPUT_QUESTION_SCENE_KEY);
+    }
+
+    public addAndStartDragDropQuestionScene(dragDropQuestionScene: DragDropQuestionScene){
+        this._masterSceneController.addScene(SceneKeys.DRAG_DROP_QUESTION_SCENE_KEY, dragDropQuestionScene);
+        this._masterSceneController.startScene(SceneKeys.DRAG_DROP_QUESTION_SCENE_KEY);
+    }
+
+    public addAndStartClozeQuestionScene(clozeQuestionScene: ClozeQuestionScene){
+        this._masterSceneController.addScene(SceneKeys.CLOZE_QUESTION_SCENE_KEY, clozeQuestionScene);
+        this._masterSceneController.startScene(SceneKeys.CLOZE_QUESTION_SCENE_KEY);
+    }
+
+    public addAndStartSelectOneQuestionScene(selectOneQuestionScene: SelectOneQuestionScene){
+        this._masterSceneController.addScene(SceneKeys.SELECT_ONE_QUESTION_SCENE_KEY, selectOneQuestionScene);
+        this._masterSceneController.startScene(SceneKeys.SELECT_ONE_QUESTION_SCENE_KEY);
+    }
+
+    public addAndStartCreateQuestionScene(createQuestionScene: CreateQuestionScene){
+        this._masterSceneController.addScene(SceneKeys.CREATE_QUESTION_SCENE_KEY, createQuestionScene);
+        this._masterSceneController.startScene(SceneKeys.CREATE_QUESTION_SCENE_KEY);
+    }
+
+    public removeAllQuestionScenes(){
+        this._masterSceneController.removeScene(SceneKeys.CHOICE_QUESTION_SCENE_KEY)
+        this._masterSceneController.removeScene(SceneKeys.INPUT_QUESTION_SCENE_KEY)
+        this._masterSceneController.removeScene(SceneKeys.DRAG_DROP_QUESTION_SCENE_KEY)
+        this._masterSceneController.removeScene(SceneKeys.CLOZE_QUESTION_SCENE_KEY)
+        this._masterSceneController.removeScene(SceneKeys.SELECT_ONE_QUESTION_SCENE_KEY)
+        this._masterSceneController.removeScene(SceneKeys.CREATE_QUESTION_SCENE_KEY)
+    }
+
+    public exitQuestionView(){
+        this.removeAllQuestionScenes()
+        this._masterSceneController.removeScene(SceneKeys.QUESTION_VIEW_SCENE_KEY)
     }
 }

@@ -1,6 +1,5 @@
 import "highlight.js/styles/night-owl.css";
 import * as Phaser from "phaser";
-import TaskManager from "../../managers/taskManager";
 import Question from "../../classes/question/question";
 import {QuestionType} from "../../types/questionType";
 import deviceBackgroundTilePng from "../../assets/Device-Background-Tile.png";
@@ -14,6 +13,7 @@ import CreateQuestionScene from "./singleQuestionScenes/createQuestionScene";
 import {globalEventBus} from "../../helpers/globalEventBus";
 import {SceneKeys} from "../../types/sceneKeys";
 import {gameController} from "../../main";
+import {GameEvents} from "../../types/gameEvents";
 
 export default class QuestionViewScene extends Phaser.Scene {
     private currentQuestion: Question;
@@ -112,7 +112,7 @@ export default class QuestionViewScene extends Phaser.Scene {
         if (this.currentQuestion) {
             this.displayQuestion();
         } else {
-            this.removeAllQuestionScenes();
+            gameController.questionSceneController.removeAllQuestionScenes();
             this.questionText?.destroy(true);
             const repairedStyle = {...this.textStyle}
             repairedStyle.color = "#00ff7b";
@@ -139,72 +139,52 @@ export default class QuestionViewScene extends Phaser.Scene {
                 this.textStyle
             )
             .setOrigin(0.5, 0);
-        this.removeAllQuestionScenes();
+        gameController.questionSceneController.removeAllQuestionScenes();
         switch (this.currentQuestion.type) {
             case QuestionType.CHOICE:
-                // console.log("Choice");
                 this.currentQuestionScene = new ChoiceQuestionScene(
                     this.questionText,
                     this.currentQuestion
                 );
-                this.scene.add("ChoiveQuestionScene", this.currentQuestionScene);
-                this.scene.launch("ChoiceQuestionScene");
+                gameController.questionSceneController.addAndStartChoiceQuestionScene(this.currentQuestionScene);
                 break;
             case QuestionType.SINGLE_INPUT:
-                // console.log("single input");
                 this.currentQuestionScene = new InputQuestionScene(
                     this.questionText,
                     this.currentQuestion
                 );
-                this.scene.add("InputQuestionScene", this.currentQuestionScene);
-                this.scene.launch("InputQuestionScene");
+                gameController.questionSceneController.addAndStartInputQuestionScene(this.currentQuestionScene)
                 break;
             case QuestionType.DRAG_DROP:
-                // console.log("drag drop");
                 this.currentQuestionScene = new DragDropQuestionScene(
                     this.questionText,
                     this.currentQuestion
                 );
-                this.scene.add(
-                    "DragDropQuestionScene",
-                    this.currentQuestionScene
-                );
-                this.scene.launch("DragDropQuestionScene");
+                gameController.questionSceneController.addAndStartDragDropQuestionScene(this.currentQuestionScene);
                 break;
             case QuestionType.CLOZE:
-                // console.log("cloze");
                 this.currentQuestionScene = new ClozeQuestionScene(
                     this.questionText,
                     this.currentQuestion
                 );
-                this.scene.add("ClozeQuestionScene", this.currentQuestionScene);
-                this.scene.launch("ClozeQuestionScene");
+                gameController.questionSceneController.addAndStartClozeQuestionScene(this.currentQuestionScene);
                 break;
             case QuestionType.SELECT_ONE:
-                // console.log("select one");
                 this.currentQuestionScene = new SelectOneQuestionScene(
                     this.questionText,
                     this.currentQuestion
                 );
-                this.scene.add(
-                    "SelectOneQuestionScene",
-                    this.currentQuestionScene
-                );
-                this.scene.launch("SelectOneQuestionScene");
+                gameController.questionSceneController.addAndStartSelectOneQuestionScene(this.currentQuestionScene);
                 break;
             case QuestionType.CREATE:
                 this.currentQuestionScene = new CreateQuestionScene(
                     this.questionText,
                     this.currentQuestion
                 )
-                this.scene.add(
-                    "CreateQuestionScene",
-                    this.currentQuestionScene
-                );
-                this.scene.launch("CreateQuestionScene");
+                gameController.questionSceneController.addAndStartCreateQuestionScene(this.currentQuestionScene)
                 break;
             default:
-                console.log("none");
+                console.error("question type does not exist");
                 break;
         }
         // this.scene.bringToTop();
@@ -280,26 +260,13 @@ export default class QuestionViewScene extends Phaser.Scene {
     update(time: number, delta: number): void {
     }
 
-    private removeAllQuestionScenes() {
-        this.scene.remove("ChoiceQuestionScene");
-        this.scene.remove("InputQuestionScene");
-        this.scene.remove("DragDropQuestionScene");
-        this.scene.remove("ClozeQuestionScene");
-        this.scene.remove("SelectOneQuestionScene");
-        this.scene.remove("CreateQuestionScene");
-        // this.scene.remove(this.currentQuestionScene);
-    }
-
+    //TODO put this inside the scene manager
     /**
      * Sends this scene to sleep and reawakes all the other scenes
      */
     private exitQuestion(): void {
-        this.scene.wake("worldViewScene");
-        this.scene.wake("Room");
-        this.scene.wake("controlPad");
-        this.scene.wake("pauseChatButtons");
-        this.removeAllQuestionScenes();
-        this.scene.remove(this);
-        globalEventBus.emit("save_game")
+        gameController.questionSceneController.exitQuestionView();
+        gameController.worldSceneController.resumeWorldViewScenes();
+        globalEventBus.emit(GameEvents.SAVE_GAME)
     }
 }
