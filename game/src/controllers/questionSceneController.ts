@@ -4,7 +4,6 @@ import {SceneKeys} from "../types/sceneKeys";
 import QuestionViewScene from "../scenes/questionView/questionViewScene";
 import {ChapterType} from "../managers/chapterManager";
 import ChoiceQuestionScene from "../scenes/questionView/singleQuestionScenes/choiceQuestionScene";
-import {Scene} from "phaser";
 import InputQuestionScene from "../scenes/questionView/singleQuestionScenes/inputQuestionScene";
 import DragDropQuestionScene from "../scenes/questionView/singleQuestionScenes/dragDropQuestionScene";
 import ClozeQuestionScene from "../scenes/questionView/singleQuestionScenes/clozeQuestionScene";

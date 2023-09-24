@@ -11,8 +11,6 @@ import {gameController} from "../../main";
 export default class DocViewScene extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite;
 
-    public chapterManager: ChapterManager;
-
     private resumeButton;
 
     private allChapterButtons: DeviceButton[] = [];
@@ -43,7 +41,7 @@ export default class DocViewScene extends Phaser.Scene {
     }
 
     public create() {
-        this.chapterManager.updateChapters()
+        gameController.chapterManager.updateChapters()
         this._tilesprite = this.add
             .tileSprite(
                 0,

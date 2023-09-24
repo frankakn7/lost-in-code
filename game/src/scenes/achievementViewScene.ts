@@ -119,8 +119,6 @@ export default class AchievementViewScene extends Phaser.Scene {
      * Called when the "returnButtonTexture" (resume button) is clicked.
      */
     private _backToMenu() {
-        // this._worldViewScene.menuView.scene.resume();
-        this.scene.sleep();
-        //TODO make back to menu function in masterSceneController
+        gameController.menuSceneController.backToMenuScene();
     }
 }
