@@ -6,32 +6,37 @@ import "highlight.js/styles/night-owl.css";
 import { ChoiceQuestionElement } from "../../../classes/question/questionElement";
 import ChoiceButton from "../../../ui/choiceButton";
 import SelectableCodeBlock from "../../../ui/question/selectableCodeBlock";
+import {SceneKeys} from "../../../types/sceneKeys";
 
 export default class SelectOneQuestionScene extends Phaser.Scene {
-    private currentQuestion: Question;
+    private _currentQuestion: Question;
 
-    private choiceButtons: ChoiceButton[] = [];
+    private _choiceButtons: ChoiceButton[] = [];
 
-    private questionText: Phaser.GameObjects.Text;
+    private _questionText: Phaser.GameObjects.Text;
 
-    private selectableCodeBlocks: SelectableCodeBlock[] = [];
+    private _selectableCodeBlocks: SelectableCodeBlock[] = [];
 
-    private correctAnswer: Phaser.GameObjects.Text;
-    private correctTextStyle;
+    private _correctAnswer: Phaser.GameObjects.Text;
+    private _correctTextStyle;
+
+    readonly _sceneKey: SceneKeys;
 
     constructor(
         questionText: Phaser.GameObjects.Text,
         currentQuestion: Question
     ) {
-        super("SelectOneQuestionScene");
-        this.questionText = questionText;
-        this.currentQuestion = currentQuestion;
+        let sceneKey = SceneKeys.SELECT_ONE_QUESTION_SCENE_KEY;
+        super(sceneKey);
+        this._sceneKey = sceneKey;
+        this._questionText = questionText;
+        this._currentQuestion = currentQuestion;
     }
 
     create() {
         this.displaySelectOneQuestion();
 
-        this.correctTextStyle = {
+        this._correctTextStyle = {
             fontSize: "35px",
             fontFamily: "forwardRegular",
             // color: "#00c8ff",
@@ -46,9 +51,9 @@ export default class SelectOneQuestionScene extends Phaser.Scene {
     }
 
     private async displaySelectOneQuestion() {
-        let previousBottomY = this.questionText.y + this.questionText.height;
-        for (let i = 0; i < this.currentQuestion.elements.length; i++) {
-            let element = this.currentQuestion.elements[i];
+        let previousBottomY = this._questionText.y + this._questionText.height;
+        for (let i = 0; i < this._currentQuestion.elements.length; i++) {
+            let element = this._currentQuestion.elements[i];
 
             let selectableCodeBlock = new SelectableCodeBlock(
                 this,
@@ -64,40 +69,40 @@ export default class SelectOneQuestionScene extends Phaser.Scene {
             selectableCodeBlock.setY(
                 selectableCodeBlock.y + selectableCodeBlock.height / 2
             );
-            this.selectableCodeBlocks.push(selectableCodeBlock);
+            this._selectableCodeBlocks.push(selectableCodeBlock);
             previousBottomY =
                 selectableCodeBlock.y + selectableCodeBlock.height / 2;
         }
     }
 
     private selectCodeBlock(elementId: number) {
-        let selectedBlock: SelectableCodeBlock = this.selectableCodeBlocks.find(
+        let selectedBlock: SelectableCodeBlock = this._selectableCodeBlocks.find(
             (block) => block.getSelected()
         );
         selectedBlock ? selectedBlock.deselect() : null;
-        this.selectableCodeBlocks
+        this._selectableCodeBlocks
             .find((block) => block.getElementId() === elementId)
             .select();
     }
 
     private showCorrectText() {
         let previousY =
-            this.selectableCodeBlocks[this.selectableCodeBlocks.length - 1].y +
-            this.selectableCodeBlocks[this.selectableCodeBlocks.length - 1]
+            this._selectableCodeBlocks[this._selectableCodeBlocks.length - 1].y +
+            this._selectableCodeBlocks[this._selectableCodeBlocks.length - 1]
                 .height;
-        this.correctAnswer = this.add
+        this._correctAnswer = this.add
             .text(
                 this.cameras.main.displayWidth / 2,
                 previousY + 100,
                 "Correct",
-                this.correctTextStyle
+                this._correctTextStyle
             )
             .setOrigin(0.5, 0);
     }
 
     public checkAnswer() {
-        let allCorrect = this.selectableCodeBlocks.every((block) => {
-            const blockIsCorrect = this.currentQuestion.elements.find(
+        let allCorrect = this._selectableCodeBlocks.every((block) => {
+            const blockIsCorrect = this._currentQuestion.elements.find(
                 (element: ChoiceQuestionElement) =>
                     element.id == block.getElementId()
             ).is_correct

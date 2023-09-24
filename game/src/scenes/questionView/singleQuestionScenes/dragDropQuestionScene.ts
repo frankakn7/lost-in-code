@@ -6,24 +6,29 @@ import "highlight.js/styles/night-owl.css";
 import { ChoiceQuestionElement, OrderQuestionElement } from "../../../classes/question/questionElement";
 import ChoiceButton from "../../../ui/choiceButton";
 import DraggableCodeBlock from "../../../ui/question/draggableCodeBlock";
+import {SceneKeys} from "../../../types/sceneKeys";
 
 export default class DragDropQuestionScene extends Phaser.Scene {
-    private currentQuestion: Question;
+    private _currentQuestion: Question;
 
-    private choiceButtons: ChoiceButton[] = [];
+    private _choiceButtons: ChoiceButton[] = [];
 
-    private questionText: Phaser.GameObjects.Text;
+    private _questionText: Phaser.GameObjects.Text;
 
-    private draggableCodeBlocks: DraggableCodeBlock[] = [];
+    private _draggableCodeBlocks: DraggableCodeBlock[] = [];
 
-    private correctAnswer: Phaser.GameObjects.Text;
-    private correctTextStyle;
+    private _correctAnswer: Phaser.GameObjects.Text;
+    private _correctTextStyle;
+
+    readonly _sceneKey: SceneKeys;
 
 
     constructor(questionText: Phaser.GameObjects.Text, currentQuestion: Question) {
-        super("DragDropQuestionScene");
-        this.questionText = questionText;
-        this.currentQuestion = currentQuestion;
+        let sceneKey = SceneKeys.DRAG_DROP_QUESTION_SCENE_KEY;
+        super(sceneKey);
+        this._sceneKey = sceneKey;
+        this._questionText = questionText;
+        this._currentQuestion = currentQuestion;
     }
 
     create(){
@@ -33,7 +38,7 @@ export default class DragDropQuestionScene extends Phaser.Scene {
             this.reorderBlocks(droppedBlock);
         });
 
-        this.correctTextStyle = {
+        this._correctTextStyle = {
             fontSize: "35px",
             fontFamily: "forwardRegular",
             // color: "#00c8ff",
@@ -48,9 +53,9 @@ export default class DragDropQuestionScene extends Phaser.Scene {
     }
     
     private async displayDragDropQuestion() {
-        let previousBottomY = this.questionText.y + this.questionText.height;
-        for (let i = 0; i < this.currentQuestion.elements.length; i++) {
-            let element = this.currentQuestion.elements[i];
+        let previousBottomY = this._questionText.y + this._questionText.height;
+        for (let i = 0; i < this._currentQuestion.elements.length; i++) {
+            let element = this._currentQuestion.elements[i];
 
             let draggableCodeBlock = new DraggableCodeBlock(
                 this,
@@ -63,37 +68,37 @@ export default class DragDropQuestionScene extends Phaser.Scene {
             draggableCodeBlock.setY(
                 draggableCodeBlock.y + draggableCodeBlock.height / 2
             );
-            this.draggableCodeBlocks.push(draggableCodeBlock);
+            this._draggableCodeBlocks.push(draggableCodeBlock);
             previousBottomY =
                 draggableCodeBlock.y + draggableCodeBlock.height / 2;
         }
     }
 
     private reorderBlocks(droppedBlock: DraggableCodeBlock) {
-        this.draggableCodeBlocks.sort((a, b) => a.y - b.y);
+        this._draggableCodeBlocks.sort((a, b) => a.y - b.y);
         // Update positions of all blocks
-        let previousBottomY = this.questionText.y + this.questionText.height;
-        this.draggableCodeBlocks.forEach((block, index) => {
+        let previousBottomY = this._questionText.y + this._questionText.height;
+        this._draggableCodeBlocks.forEach((block, index) => {
             block.setY(previousBottomY + 50 + block.height / 2);
             previousBottomY = block.y + block.height / 2;
         });
     }
 
     private showCorrectText(){
-        let previousY = this.draggableCodeBlocks[this.draggableCodeBlocks.length -1 ].y + this.draggableCodeBlocks[this.draggableCodeBlocks.length -1 ].height
-        this.correctAnswer = this.add.text(
+        let previousY = this._draggableCodeBlocks[this._draggableCodeBlocks.length -1 ].y + this._draggableCodeBlocks[this._draggableCodeBlocks.length -1 ].height
+        this._correctAnswer = this.add.text(
             this.cameras.main.displayWidth / 2,
             previousY + 100,
             "Correct",
-            this.correctTextStyle
+            this._correctTextStyle
         ).setOrigin(0.5,0);
     }
 
     public checkAnswer() {
         let correct = true;
-        this.draggableCodeBlocks.forEach((block, index) => {
+        this._draggableCodeBlocks.forEach((block, index) => {
             let element: OrderQuestionElement = <OrderQuestionElement>(
-                this.currentQuestion.elements.find(
+                this._currentQuestion.elements.find(
                     (element: OrderQuestionElement) => {
                         return element.id === block.getElementId();
                     }

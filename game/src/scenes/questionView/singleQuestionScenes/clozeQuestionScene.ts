@@ -5,33 +5,38 @@ import php from "highlight.js/lib/languages/php";
 import "highlight.js/styles/night-owl.css";
 import { ChoiceQuestionElement } from "../../../classes/question/questionElement";
 import ChoiceButton from "../../../ui/choiceButton";
+import {SceneKeys} from "../../../types/sceneKeys";
 
 export default class ClozeQuestionScene extends Phaser.Scene {
 
-    private currentQuestion: Question;
+    private _currentQuestion: Question;
 
     // private choiceButtons: ChoiceButton[] = [];
 
-    private questionText: Phaser.GameObjects.Text;
+    private _questionText: Phaser.GameObjects.Text;
 
-    private correctAnswer: Phaser.GameObjects.Text;
-    private correctAnswerStyle:Phaser.Types.GameObjects.Text.TextStyle;
+    private _correctAnswer: Phaser.GameObjects.Text;
+    private _correctAnswerStyle:Phaser.Types.GameObjects.Text.TextStyle;
 
-    private codeBlock;
+    private _codeBlock;
 
-    private correctTextStyle;
+    private _correctTextStyle;
+
+    readonly _sceneKey: SceneKeys;
 
 
     constructor(questionText: Phaser.GameObjects.Text, currentQuestion: Question) {
-        super("ClozeQuestionScene");
-        this.questionText = questionText;
-        this.currentQuestion = currentQuestion;
+        let sceneKey = SceneKeys.CLOZE_QUESTION_SCENE_KEY;
+        super(sceneKey);
+        this._sceneKey = sceneKey;
+        this._questionText = questionText;
+        this._currentQuestion = currentQuestion;
     }
 
     create(){
         this.displayClozeQuestion();
 
-        this.correctAnswerStyle = {
+        this._correctAnswerStyle = {
             fontSize: "35px",
             fontFamily: "forwardRegular",
             // color: "#00c8ff",
@@ -44,7 +49,7 @@ export default class ClozeQuestionScene extends Phaser.Scene {
             align: "center",
         }
 
-        this.correctTextStyle = {
+        this._correctTextStyle = {
             fontSize: "35px",
             fontFamily: "forwardRegular",
             // color: "#00c8ff",
@@ -59,8 +64,8 @@ export default class ClozeQuestionScene extends Phaser.Scene {
     }
 
     private async displayClozeQuestion() {
-        this.codeBlock = this.displayCodeBlockCloze(
-            this.currentQuestion.code_text
+        this._codeBlock = this.displayCodeBlockCloze(
+            this._currentQuestion.code_text
         );
     }
 
@@ -143,40 +148,40 @@ export default class ClozeQuestionScene extends Phaser.Scene {
         return this.add
             .dom(
                 this.cameras.main.displayWidth / 2,
-                this.questionText.y + this.questionText.height + 10,
+                this._questionText.y + this._questionText.height + 10,
                 dummyPre
             )
             .setOrigin(0.5, 0);
     }
 
     private showCorrectText(){
-        let previousY = this.codeBlock.y + this.codeBlock.height
-        this.correctAnswer = this.add.text(
+        let previousY = this._codeBlock.y + this._codeBlock.height
+        this._correctAnswer = this.add.text(
             this.cameras.main.displayWidth / 2,
             previousY + 100,
             "Correct",
-            this.correctTextStyle
+            this._correctTextStyle
         ).setOrigin(0.5,0);
     }
 
     private showCorrectAnswers(correctAnswers: [string[]]) {
-        let previousY = this.codeBlock.y + this.codeBlock.height
-        this.correctAnswer = this.add.text(
+        let previousY = this._codeBlock.y + this._codeBlock.height
+        this._correctAnswer = this.add.text(
             this.cameras.main.displayWidth / 2,
             previousY + 100,
             "Correct answers would have been:",
-            this.correctAnswerStyle
+            this._correctAnswerStyle
         ).setOrigin(0.5,0);
         correctAnswers.forEach((answers) => {
-            this.correctAnswer.appendText(answers.join(" / "))
+            this._correctAnswer.appendText(answers.join(" / "))
         })
-        console.log(this.correctAnswer.text);
+        console.log(this._correctAnswer.text);
     }
 
     public checkAnswer() {
         let correct = true;
         let correctAnswers:any = [];
-        this.currentQuestion.elements.forEach((element) => {
+        this._currentQuestion.elements.forEach((element) => {
             let inputField = <HTMLInputElement>(
                 document.getElementById(element.element_identifier)
             );

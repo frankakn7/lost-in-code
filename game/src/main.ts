@@ -146,6 +146,7 @@ class GameController {
         this._acheivementManager = new AchievementManager();
         this._hatManager = new HatManager();
         this._chapterManager = new ChapterManager();
+        this._taskManager = new TaskManager();
 
         this._apiHelper = new ApiHelper();
 
@@ -158,6 +159,7 @@ class GameController {
         this._docSceneController = new DocSceneController(this._masterSceneController);
         this._menuSceneController = new MenuSceneController(this._masterSceneController);
         this._roomSceneController = new RoomSceneController(this._masterSceneController);
+        this._questionSceneController = new QuestionSceneController(this._masterSceneController);
         this._worldSceneController = new WorldSceneController(this._masterSceneController, this._roomSceneController);
     }
 

@@ -3,33 +3,38 @@ import Question from "../../../classes/question/question";
 import hljs from "highlight.js/lib/core";
 import php from "highlight.js/lib/languages/php";
 import "highlight.js/styles/night-owl.css";
+import {SceneKeys} from "../../../types/sceneKeys";
 
 export default class InputQuestionScene extends Phaser.Scene {
-    private currentQuestion: Question;
+    private _currentQuestion: Question;
 
-    private questionText: Phaser.GameObjects.Text;
+    private _questionText: Phaser.GameObjects.Text;
 
-    private correctAnswer: Phaser.GameObjects.Text;
-    private correctAnswerStyle:Phaser.Types.GameObjects.Text.TextStyle;
+    private _correctAnswer: Phaser.GameObjects.Text;
+    private _correctAnswerStyle:Phaser.Types.GameObjects.Text.TextStyle;
 
-    private codeBlock;
-    private inputField;
+    private _codeBlock;
+    private _inputField;
 
-    private correctTextStyle;
+    private _correctTextStyle;
+
+    readonly _sceneKey: SceneKeys;
 
     constructor(
         questionText: Phaser.GameObjects.Text,
         currentQuestion: Question
     ) {
-        super("InputQuestionScene");
-        this.questionText = questionText;
-        this.currentQuestion = currentQuestion;
+        let sceneKey = SceneKeys.INPUT_QUESTION_SCENE_KEY;
+        super(sceneKey);
+        this._sceneKey = sceneKey;
+        this._questionText = questionText;
+        this._currentQuestion = currentQuestion;
     }
 
     create() {
         this.displayInputQuestion();
 
-        this.correctAnswerStyle = {
+        this._correctAnswerStyle = {
             fontSize: "35px",
             fontFamily: "forwardRegular",
             // color: "#00c8ff",
@@ -42,7 +47,7 @@ export default class InputQuestionScene extends Phaser.Scene {
             align: "center",
         }
 
-        this.correctTextStyle = {
+        this._correctTextStyle = {
             fontSize: "35px",
             fontFamily: "forwardRegular",
             // color: "#00c8ff",
@@ -89,18 +94,18 @@ export default class InputQuestionScene extends Phaser.Scene {
         return this.add
             .dom(
                 this.cameras.main.displayWidth / 2,
-                this.questionText.y + this.questionText.height + 10,
+                this._questionText.y + this._questionText.height + 10,
                 dummyPre
             )
             .setOrigin(0.5, 0);
     }
 
     private displayInputQuestion(): void {
-        this.currentQuestion.code_text ? this.codeBlock = this.displayCodeBlock(this.currentQuestion.code_text) : null;
-        this.inputField = this.displayInputField(
-            this.currentQuestion.elements[0].element_identifier,
-            this.codeBlock.y,
-            this.codeBlock.height
+        this._currentQuestion.code_text ? this._codeBlock = this.displayCodeBlock(this._currentQuestion.code_text) : null;
+        this._inputField = this.displayInputField(
+            this._currentQuestion.elements[0].element_identifier,
+            this._codeBlock.y,
+            this._codeBlock.height
         );
     }
 
@@ -132,39 +137,39 @@ export default class InputQuestionScene extends Phaser.Scene {
     }
 
     private showCorrectAnswers(correctAnswers: [string[]]) {
-        let previousY = this.inputField.y + this.inputField.height
-        this.correctAnswer = this.add.text(
+        let previousY = this._inputField.y + this._inputField.height
+        this._correctAnswer = this.add.text(
             this.cameras.main.displayWidth / 2,
             previousY + 100,
             "Correct answers would have been:",
-            this.correctAnswerStyle
+            this._correctAnswerStyle
         ).setOrigin(0.5,0);
         correctAnswers.forEach((answers) => {
-            this.correctAnswer.appendText(answers.join(" / "))
+            this._correctAnswer.appendText(answers.join(" / "))
         })
-        console.log(this.correctAnswer.text);
+        console.log(this._correctAnswer.text);
     }
 
     private showCorrectText(){
-        let previousY = this.inputField.y + this.inputField.height
-        this.correctAnswer = this.add.text(
+        let previousY = this._inputField.y + this._inputField.height
+        this._correctAnswer = this.add.text(
             this.cameras.main.displayWidth / 2,
             previousY + 100,
             "Correct",
-            this.correctTextStyle
+            this._correctTextStyle
         ).setOrigin(0.5,0);
     }
 
     public checkAnswer() {
         let correct = true;
-        let correctAnswers:any = [this.currentQuestion.elements[0].correct_answers];
+        let correctAnswers:any = [this._currentQuestion.elements[0].correct_answers];
         let inputField = <HTMLInputElement>(
             document.getElementById(
-                this.currentQuestion.elements[0].element_identifier
+                this._currentQuestion.elements[0].element_identifier
             )
         );
         if (
-            !this.currentQuestion.elements[0].correct_answers.includes(
+            !this._currentQuestion.elements[0].correct_answers.includes(
                 inputField.value
             )
         ) {

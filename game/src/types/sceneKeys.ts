@@ -7,7 +7,14 @@ export enum SceneKeys {
     MENU_VIEW_SCENE_KEY = "MenuViewScene",
     DOC_VIEW_SCENE_KEY = "DocViewScene",
     TEXT_VIEW_SCENE_KEY = "TextViewScene",
+
     QUESTION_VIEW_SCENE_KEY = "QuestionViewScene",
+    CHOICE_QUESTION_SCENE_KEY = "ChoiceQuestionScene",
+    CLOZE_QUESTION_SCENE_KEY = "ClozeQuestionScene",
+    CREATE_QUESTION_SCENE_KEY = "CreateQuestionScene",
+    DRAG_DROP_QUESTION_SCENE_KEY = "DragDropQuestionScene",
+    INPUT_QUESTION_SCENE_KEY = "InputQuestionScene",
+    SELECT_ONE_QUESTION_SCENE_KEY = "SelectOneQuestionScene",
 
     ROOM_SCENE_KEY_IDENTIFIER = "Room_",
 

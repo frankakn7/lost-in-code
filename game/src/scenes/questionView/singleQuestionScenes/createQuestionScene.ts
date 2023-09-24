@@ -7,38 +7,43 @@ import {ChoiceQuestionElement} from "../../../classes/question/questionElement";
 import ChoiceButton from "../../../ui/choiceButton";
 import DeviceButton from "../../../ui/deviceButton";
 import ApiHelper from "../../../helpers/apiHelper";
+import {SceneKeys} from "../../../types/sceneKeys";
 
 export default class CreateQuestionScene extends Phaser.Scene {
 
-    private currentQuestion: Question;
+    private _currentQuestion: Question;
 
     // private choiceButtons: ChoiceButton[] = [];
 
-    private questionText: Phaser.GameObjects.Text;
+    private _questionText: Phaser.GameObjects.Text;
 
-    private correctAnswer: Phaser.GameObjects.Text;
-    private correctAnswerStyle: Phaser.Types.GameObjects.Text.TextStyle;
-    private outputTextStyle: Phaser.Types.GameObjects.Text.TextStyle;
+    private _correctAnswer: Phaser.GameObjects.Text;
+    private _correctAnswerStyle: Phaser.Types.GameObjects.Text.TextStyle;
+    private _outputTextStyle: Phaser.Types.GameObjects.Text.TextStyle;
 
-    private codeBlock;
+    private _codeBlock;
 
-    private correctTextStyle;
+    private _correctTextStyle;
 
-    private evaluateButton: DeviceButton;
+    private _evaluateButton: DeviceButton;
 
-    private apiHelper: ApiHelper = new ApiHelper();
+    private _apiHelper: ApiHelper = new ApiHelper();
+
+    readonly _sceneKey: SceneKeys;
 
 
     constructor(questionText: Phaser.GameObjects.Text, currentQuestion: Question) {
-        super("CreateQuestionScene");
-        this.questionText = questionText;
-        this.currentQuestion = currentQuestion;
+        let sceneKey = SceneKeys.CREATE_QUESTION_SCENE_KEY;
+        super(sceneKey);
+        this._sceneKey = sceneKey;
+        this._questionText = questionText;
+        this._currentQuestion = currentQuestion;
     }
 
     create() {
         this.displayCreateQuestion();
 
-        this.correctAnswerStyle = {
+        this._correctAnswerStyle = {
             fontSize: "35px",
             fontFamily: "forwardRegular",
             // color: "#00c8ff",
@@ -51,7 +56,7 @@ export default class CreateQuestionScene extends Phaser.Scene {
             align: "center",
         }
 
-        this.correctTextStyle = {
+        this._correctTextStyle = {
             fontSize: "35px",
             fontFamily: "forwardRegular",
             // color: "#00c8ff",
@@ -64,7 +69,7 @@ export default class CreateQuestionScene extends Phaser.Scene {
             align: "center",
         }
 
-        this.outputTextStyle = {
+        this._outputTextStyle = {
             fontSize: "35px",
             fontFamily: "forwardRegular",
             // color: "#00c8ff",
@@ -79,27 +84,27 @@ export default class CreateQuestionScene extends Phaser.Scene {
     }
 
     private async displayCreateQuestion() {
-        this.codeBlock = this.displayCodeBlockCloze(
-            this.currentQuestion.code_text + this.currentQuestion.elements[0].content
+        this._codeBlock = this.displayCodeBlockCloze(
+            this._currentQuestion.code_text + this._currentQuestion.elements[0].content
         );
         const buttonWidth = this.cameras.main.displayWidth / 2;
-        this.evaluateButton = new DeviceButton(
+        this._evaluateButton = new DeviceButton(
             this,
             this.cameras.main.displayWidth / 2 - buttonWidth / 2,
-            this.codeBlock.y + this.codeBlock.height + 100,
+            this._codeBlock.y + this._codeBlock.height + 100,
             buttonWidth,
             () => {
                 this.evaluateCode()
             },
             "Evaluate"
         )
-        this.add.existing(this.evaluateButton)
+        this.add.existing(this._evaluateButton)
     }
 
     private evaluateCode() {
         console.log(this.getCode());
         let code = this.getCode();
-        this.apiHelper.evaluateCode(code)
+        this._apiHelper.evaluateCode(code)
             .then((result: any) => result.json()
                 .then(data => {
                     console.log(data)
@@ -111,7 +116,7 @@ export default class CreateQuestionScene extends Phaser.Scene {
 
     private testCode(code: string) {
         return new Promise((resolve,reject) => {
-            this.apiHelper.evaluateCode(code)
+            this._apiHelper.evaluateCode(code)
                 .then((result: any) => result.json()
                     .then(data => {
                         console.log(data)
@@ -196,55 +201,55 @@ export default class CreateQuestionScene extends Phaser.Scene {
         return this.add
             .dom(
                 this.cameras.main.displayWidth / 2,
-                this.questionText.y + this.questionText.height + 10,
+                this._questionText.y + this._questionText.height + 10,
                 dummyPre
             )
             .setOrigin(0.5, 0);
     }
 
     private showCorrectText() {
-        let previousY = this.evaluateButton.y + this.evaluateButton.height
-        this.correctAnswer?.destroy(true);
-        this.correctAnswer = this.add.text(
+        let previousY = this._evaluateButton.y + this._evaluateButton.height
+        this._correctAnswer?.destroy(true);
+        this._correctAnswer = this.add.text(
             this.cameras.main.displayWidth / 2,
             previousY + 100,
             "These Tests were Passed",
-            this.correctTextStyle
+            this._correctTextStyle
         ).setOrigin(0.5, 0);
-        this.correctAnswer.appendText(this.currentQuestion.elements[0].correct_answers.join("\n"))
+        this._correctAnswer.appendText(this._currentQuestion.elements[0].correct_answers.join("\n"))
     }
 
     private showWrongText(text:string) {
-        let previousY = this.evaluateButton.y + this.evaluateButton.height
-        this.correctAnswer?.destroy(true);
-        this.correctAnswer = this.add.text(
+        let previousY = this._evaluateButton.y + this._evaluateButton.height
+        this._correctAnswer?.destroy(true);
+        this._correctAnswer = this.add.text(
             this.cameras.main.displayWidth / 2,
             previousY + 100,
             "One of these tests failed with the output: "+text,
-            this.correctAnswerStyle
+            this._correctAnswerStyle
         ).setOrigin(0.5, 0);
-        this.correctAnswer.appendText(this.currentQuestion.elements[0].correct_answers.join("\n"))
+        this._correctAnswer.appendText(this._currentQuestion.elements[0].correct_answers.join("\n"))
     }
 
     private showOutputText(text) {
-        let previousY = this.evaluateButton.y + this.evaluateButton.height
-        this.correctAnswer?.destroy(true);
-        this.correctAnswer = this.add.text(
+        let previousY = this._evaluateButton.y + this._evaluateButton.height
+        this._correctAnswer?.destroy(true);
+        this._correctAnswer = this.add.text(
             this.cameras.main.displayWidth / 2,
             previousY + 100,
             "The output is: " + text,
-            this.outputTextStyle
+            this._outputTextStyle
         ).setOrigin(0.5, 0);
     }
 
     private showError(text: string) {
-        let previousY = this.evaluateButton.y + this.evaluateButton.height
-        this.correctAnswer?.destroy(true);
-        this.correctAnswer = this.add.text(
+        let previousY = this._evaluateButton.y + this._evaluateButton.height
+        this._correctAnswer?.destroy(true);
+        this._correctAnswer = this.add.text(
             this.cameras.main.displayWidth / 2,
             previousY + 100,
             "Error: " + text,
-            this.correctAnswerStyle
+            this._correctAnswerStyle
         ).setOrigin(0.5, 0);
     }
 
@@ -252,13 +257,13 @@ export default class CreateQuestionScene extends Phaser.Scene {
         let regex = /###INPUT\|(.+?)\|(.+?)\|(.+?)###/g;
         let match;
         let fullCode;
-        while ((match = regex.exec(this.currentQuestion.code_text)) !== null) {
+        while ((match = regex.exec(this._currentQuestion.code_text)) !== null) {
 
             let inputField = <HTMLInputElement>(
-                document.getElementById(this.currentQuestion.elements[0].element_identifier)
+                document.getElementById(this._currentQuestion.elements[0].element_identifier)
             );
 
-            fullCode = (this.currentQuestion.code_text).replace(
+            fullCode = (this._currentQuestion.code_text).replace(
                 match[0],
                 inputField.value
             );
@@ -268,13 +273,13 @@ export default class CreateQuestionScene extends Phaser.Scene {
 
     private getCode() {
 
-        return this.getUserCodeWithFunciton() + this.currentQuestion.elements[0].content;
+        return this.getUserCodeWithFunciton() + this._currentQuestion.elements[0].content;
     }
 
     public async checkAnswer() {
         let correct = false;
 
-        let testCondition = this.currentQuestion.elements[0].correct_answers.join(' && ')
+        let testCondition = this._currentQuestion.elements[0].correct_answers.join(' && ')
 
         const ifStatement = "\necho " + testCondition +" ? 1 : 0;";
 
@@ -283,7 +288,7 @@ export default class CreateQuestionScene extends Phaser.Scene {
         console.log(fullTestCode)
 
         let inputField = <HTMLInputElement>(
-            document.getElementById(this.currentQuestion.elements[0].element_identifier)
+            document.getElementById(this._currentQuestion.elements[0].element_identifier)
         );
 
         const result:any = await this.testCode(fullTestCode)
