@@ -6,6 +6,7 @@ export default class EnemyObject extends TaskObject {
     private _breathCalcHelperVar = 0;
 
     constructor(
+        id: number,
         scene: Phaser.Scene,
         room: RoomScene,
         x: number,
@@ -13,7 +14,7 @@ export default class EnemyObject extends TaskObject {
         params,
         properties
     ) {
-        super(scene, room, x, y, params, properties);
+        super(id, scene, room, x, y, params, properties);
         // TODO Remove this
 
         this._emitter.visible = false;

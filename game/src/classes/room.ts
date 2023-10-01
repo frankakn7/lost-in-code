@@ -6,36 +6,14 @@ import ShadowTexture from "../assets/shadow.png"
 import Mask from "../assets/mask.png";
 import {GameObjectMap} from "../gameobjects";
 
-import DoorTexture from "../assets/gameobjects/door.png";
-import EngineTexture from "../assets/gameobjects/engine.png";
-import EngineBrokenTexture from "../assets/gameobjects/engineBroken.png";
-import LockerTexture from "../assets/gameobjects/locker.png"
-import BarrelTexture from "../assets/gameobjects/barrel.png";
-import CrateTexture from "../assets/gameobjects/crate.png";
-import Crate2Texture from "../assets/gameobjects/crate2.png";
-import Crate4Texture from "../assets/gameobjects/crate4.png";
-import ComputerTexture from "../assets/gameobjects/computer.png";
-import CannonTexture from "../assets/gameobjects/cannon.png";
-import TableSeatLeftTexture from "../assets/gameobjects/tableSeatLeft.png";
-import TableSeatRightTexture from "../assets/gameobjects/tableSeatRight.png";
-import FirstAidKitTexture from "../assets/gameobjects/firstAidKit.png";
-import BedTexture from "../assets/gameobjects/bed.png";
-import DoorSingleTexture from "../assets/gameobjects/doorSingle.png";
-import DoorDoubleTexture from "../assets/gameobjects/doorDouble.png";
-import EnemyTexture from "../assets/gameobjects/enemy.png";
-import PaperTexture from "../assets/gameobjects/paper2.png";
-
-import InteractiveObject from "./objects/interactiveObject";
-import storyJson from "../managers/story_management/storyFormatExample.json";
-import StoryManager from "../managers/story_management/storyManager";
-import WorldViewScene from "../scenes/worldViewScene";
 import TaskObject from "./objects/taskObjects";
 import {globalEventBus} from "../helpers/globalEventBus";
-import EnemyObject from "./objects/enemyObject";
+
 import ClueObject from "./objects/clueObject";
 import {gameController} from "../main";
 import {SceneKeys} from "../types/sceneKeys";
-import {roomMap} from "../constants/roomMap";
+import {GameEvents} from "../types/gameEvents";
+
 
 
 /**
@@ -55,10 +33,7 @@ export default class RoomScene extends Phaser.Scene {
     private _interactiveObjects = []; // The interactive objects in the room
     private _taskObjects: TaskObject[] = []; // The task objects in the room
     private _clues = []; // The clues in the room
-    private _onStartupFinishedTaskObjects = [false, false, false, false]; // The task objects that are finished on startup due to load
-    // private controls;
-
-    private _doorUnlocked = false; // Whether the door is unlocked or not
+    // private _onStartupFinishedTaskObjects = [false, false, false, false]; // The task objects that are finished on startup due to load
 
     private _timeUntilStoryStartsInRoom = 2500; // The time until the story starts in the room
     private _timeSinceRoomEnter = 0; // The time since the room was entered
@@ -87,29 +62,6 @@ export default class RoomScene extends Phaser.Scene {
          */
         const tilemapJson = this.tilemapConfig.tilemapJson;
         this.load.tilemapTiledJSON("tilemap" + this._roomId, tilemapJson);
-        // this.load.image("playerTexture", PlayerTexture);
-        // this.load.image("shadowTexture", ShadowTexture);
-        // this.load.image("mask", Mask);
-        // this.load.image("door", DoorTexture);
-        // this.load.image("engine", EngineTexture);
-        // this.load.image("locker", LockerTexture);
-        //
-        // this.load.image("barrel", BarrelTexture);
-        // this.load.image("crate2", Crate2Texture);
-        // this.load.image("crate", CrateTexture);
-        // this.load.image("crate4", Crate4Texture);
-        // this.load.image("computer", ComputerTexture);
-        // this.load.image("cannon", CannonTexture);
-        // this.load.image("tableseatleft", TableSeatLeftTexture);
-        // this.load.image("tableseatright", TableSeatRightTexture);
-        // this.load.image("firstaidkittexture", FirstAidKitTexture);
-        // this.load.image("bed", BedTexture);
-        // this.load.image("doorSingle", DoorSingleTexture);
-        // this.load.image("doorDouble", DoorDoubleTexture);
-        // this.load.image("engineBroken", EngineBrokenTexture);
-        // this.load.image("enemy", EnemyTexture);
-        //
-        // this.load.image("paper", PaperTexture);
     }
 
     get roomId() {
@@ -126,8 +78,6 @@ export default class RoomScene extends Phaser.Scene {
      * Checks if tasks are finished and unlocks the door if needed.
      */
     public create() {
-        // Load data from the game state.
-        this.loadData();
 
         // Create and add the tilemap layers for the room.
         const tilemap = this.make.tilemap({key: "tilemap" + this._roomId});
@@ -161,13 +111,15 @@ export default class RoomScene extends Phaser.Scene {
         tilemap.objects[0].objects.forEach(obj => {
             // Check if the object has properties.
             if (!obj.properties) return;
-            let gameobjectID = "";
+            let gameobjectType = "";
+            let objectId: number = 0;
             obj.properties.forEach(p => {
-                if (p["name"] == "gameobject_id") gameobjectID = p["value"];
+                if (p["name"] == "gameobject_type") gameobjectType = p["value"];
+                if (p["name"] == "object_id") objectId = p["value"];
             });
 
-            // Check if the gameobjectID exists in the GameObjectMap.
-            if (!(gameobjectID in GameObjectMap)) {
+            // Check if the gameobjectType exists in the GameObjectMap.
+            if (!(gameobjectType in GameObjectMap)) {
                 return;
             }
 
@@ -177,11 +129,11 @@ export default class RoomScene extends Phaser.Scene {
             let y = (Math.ceil(obj.y / 32) * 32) - 32;
 
             // Get the parameters and texture for the game object.
-            let params = GameObjectMap[gameobjectID].params
+            let params = GameObjectMap[gameobjectType].params
             let texture = params.texture;
 
             // Create a new instance of the game object based on its class from the GameObjectMap.
-            let newObj = new GameObjectMap[gameobjectID].class(this, this, x, y, params, obj.properties);
+            let newObj = new GameObjectMap[gameobjectType].class(objectId, this, this, x, y, params, obj.properties);
 
             // Perform a null check to ensure that the newObj is active and attached to the scene.
             if (!newObj.active && newObj.scene == null) {
@@ -205,8 +157,10 @@ export default class RoomScene extends Phaser.Scene {
         });
 
         // Set the finished status for task objects based on the onStartupFinishedTaskObjects array.
-        for (let i = 0; i < this._taskObjects.length; i++) {
-            this._taskObjects[i].setIsFinished(this._onStartupFinishedTaskObjects[i] ?? false);
+        for (let taskObject of this._taskObjects) {
+            if(gameController.gameStateManager.room.finishedTaskObjects.includes(taskObject.id)){
+                taskObject.setIsFinished(true);
+            }
         }
 
         // Set up the Fog of War (FOW) for the room.
@@ -214,7 +168,7 @@ export default class RoomScene extends Phaser.Scene {
 
         // Emit an event for hats unlock check and another for room entrance.
         this.events.emit("hats_unlock_check");
-        globalEventBus.emit("room_entered");
+        globalEventBus.emit(GameEvents.ROOM_ENTERED);
 
 
         // Check if the door should be unlocked.
@@ -225,8 +179,8 @@ export default class RoomScene extends Phaser.Scene {
 
         if (!res) return;
 
-        this.setDoorUnlocked(true);
-        globalEventBus.emit("save_game");
+        gameController.gameStateManager.setDoorUnlocked(true);
+        globalEventBus.emit(GameEvents.SAVE_GAME);
     }
 
 
@@ -331,34 +285,6 @@ export default class RoomScene extends Phaser.Scene {
         return this._nextRoom;
     }
 
-// Save the rooms data for the game state
-    public saveAll() {
-        let res = {finishedTaskObjects: []}
-        this._taskObjects.forEach(o => {
-            res.finishedTaskObjects.push(o.isFinished());
-        });
-        console.log("RESSSSS")
-        console.log(res)
-        return res;
-    }
-
-    // Load the rooms data from the game state
-    public loadData() {
-        this.setDoorUnlocked(gameController.gameStateManager.room.doorUnlocked);
-        this._onStartupFinishedTaskObjects = gameController.gameStateManager.room.finishedTaskObjects;
-    }
-
-    // Set the door unlocked
-    public setDoorUnlocked(locked) {
-        this._doorUnlocked = locked;
-    }
-
-    // Get if the door is unlocked
-    public getDoorUnlocked() {
-
-        return this._doorUnlocked;
-    }
-
     /**
      * Checks if all tasks in the room are finished and performs further actions accordingly.
      * If all tasks are completed, it unlocks the door and emits events to notify about the unlocked door.
@@ -376,11 +302,11 @@ export default class RoomScene extends Phaser.Scene {
 
         // If all tasks are finished, perform further actions based on the room's ID.
         if (this._roomId != "bridge") {
-            this.setDoorUnlocked(true);
-            globalEventBus.emit("door_was_unlocked", this._roomId);
-            globalEventBus.emit("broadcast_news", "Door unlocked!");
+            gameController.gameStateManager.setDoorUnlocked(true)
+            globalEventBus.emit(GameEvents.DOOR_UNLOCKED, this._roomId);
+            globalEventBus.emit(GameEvents.BROADCAST_NEWS, "Door unlocked!");
         } else {
-            globalEventBus.emit("game_finished");
+            globalEventBus.emit(GameEvents.GAME_FINISHED);
         }
     }
 

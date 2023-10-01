@@ -18,7 +18,7 @@ export default class HatViewScene extends Phaser.Scene {
     private _columns = 4; // Number of columns to display the hats in.
 
     // Save references to all buttons so to be able to delete them if redraw is necessary.
-    private buttonMap = new Map();
+    private _buttonMap = new Map();
 
     /**
      * Preload assets.
@@ -29,8 +29,6 @@ export default class HatViewScene extends Phaser.Scene {
 
     /**
      * Constructs a new instance of the class.
-     * @param worldViewScene
-     * @param settingsConfig
      */
     constructor() {
         super(SceneKeys.HAT_VIEW_SCENE_KEY);
@@ -146,7 +144,7 @@ export default class HatViewScene extends Phaser.Scene {
                 this.add.existing(hatButton);
 
                 // Store the hat and its corresponding button in the buttonMap for further reference.
-                this.buttonMap.set(hat, hatButton);
+                this._buttonMap.set(hat, hatButton);
             }
         }
 
@@ -171,11 +169,11 @@ export default class HatViewScene extends Phaser.Scene {
      * It iterates through the buttonMap, destroys each button sprite, and clears the buttonMap.
      */
     public deleteAllHatButtons() {
-        this.buttonMap.forEach((value, key) => {
+        this._buttonMap.forEach((value, key) => {
             value.destroy();
         });
 
-        this.buttonMap.clear();
+        this._buttonMap.clear();
     }
 
     /**
@@ -183,8 +181,6 @@ export default class HatViewScene extends Phaser.Scene {
      * @private
      */
     private _backToMenu() {
-        // this._worldViewScene.menuView.scene.resume();
-        // this.scene.sleep();
         gameController.menuSceneController.backToMenuScene();
     }
 

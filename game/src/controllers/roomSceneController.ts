@@ -58,6 +58,6 @@ export default class RoomSceneController {
 
     updateCurrentRoomScene(){
         this._currentRoomScene = roomMap.get(gameController.gameStateManager.currentRoomId);
-        this._masterSceneController.startScene(SceneKeys.ROOM_SCENE_KEY_IDENTIFIER + this._currentRoomScene.roomId)
+        // this._masterSceneController.startScene(SceneKeys.ROOM_SCENE_KEY_IDENTIFIER + this._currentRoomScene.roomId)
     }
 }

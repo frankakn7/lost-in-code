@@ -8,17 +8,17 @@ import {HatMap} from "../../constants/hatMap";
  * The Player class. This represents the player on the map and contains all the logic for movement, animations etc.
  */
 export class Player extends Phaser.Physics.Arcade.Sprite {
-    private movementSpeed = 10; // Players movement speed in pixels per second
+    private _movementSpeed = 10; // Players movement speed in pixels per second
     private _breathCalcHelperVar = 0; // Helper variable for the breathing animation
     private _walkingRotationHelperVar = 0; // Helper variable for the walking animation
     private _isMoving = false; // Is the player currently moving?
 
-    private shadow: Phaser.GameObjects.Sprite; // The shadow of the player
-    private shadowYOffset = 0; // The offset of the shadow from the player
+    private _shadow: Phaser.GameObjects.Sprite; // The shadow of the player
+    private _shadowYOffset = 0; // The offset of the shadow from the player
 
-    private hatYOffset = -16; // The offset of the hat from the player
+    private _hatYOffset = -16; // The offset of the hat from the player
 
-    private keys; // The keyboard keys for movement
+    private _keys; // The keyboard keys for movement
 
     private _canMove = true; // Can the player move?
 
@@ -36,8 +36,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene = scene;
 
         // Shadow setup
-        this.shadow = this.scene.physics.add.sprite(x, y + this.shadowYOffset, "shadowTexture");
-        this.shadow.setDepth(0);
+        this._shadow = this.scene.physics.add.sprite(x, y + this._shadowYOffset, "shadowTexture");
+        this._shadow.setDepth(0);
 
         // Physics setup
         this.scene.physics.world.enable(this);
@@ -51,7 +51,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
 
         // Input setup
-        this.keys = this.scene.input.keyboard.addKeys({
+        this._keys = this.scene.input.keyboard.addKeys({
             'up': Phaser.Input.Keyboard.KeyCodes.W, 'down': Phaser.Input.Keyboard.KeyCodes.S,
             'left': Phaser.Input.Keyboard.KeyCodes.A, 'right': Phaser.Input.Keyboard.KeyCodes.D
         }, false);
@@ -90,7 +90,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
      */
     private updateBreathAnimation(delta: number, breathSpeed: number, breathScope: number) {
         // Breathing animation only occurs if the object is not moving.
-        if (!this.getIsMoving()) {
+        if (!this._isMoving) {
             // Increment the helper variable _breathCalcHelperVar with the time delta
             this._breathCalcHelperVar += delta / breathSpeed;
 
@@ -121,7 +121,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
      */
     private updateWalkAnimation(delta: number, wobbleSpeed: number, wobbleScope: number) {
         // Walk animation occurs only when the object is moving.
-        if (this.getIsMoving()) {
+        if (this._isMoving) {
             // Increment the helper variable _walkingRotationHelperVar with the time delta.
             this._walkingRotationHelperVar += delta / wobbleSpeed;
 
@@ -141,11 +141,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.body.velocity.x < 0) {
             // If the object is moving to the left (negative velocity in the x-direction), flip it horizontally.
             this.flipX = true;
-            this.shadow.flipX = true;
+            this._shadow.flipX = true;
         } else if (this.body.velocity.x > 0) {
             // If the object is moving to the right (positive velocity in the x-direction), reset flipping.
             this.flipX = false;
-            this.shadow.flipX = false;
+            this._shadow.flipX = false;
         }
     }
 
@@ -154,16 +154,16 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
      * @private
      */
     private updateShadow() {
-        this.shadow.body.velocity.x = this.body.velocity.x;
-        this.shadow.body.velocity.y = this.body.velocity.y;
+        this._shadow.body.velocity.x = this.body.velocity.x;
+        this._shadow.body.velocity.y = this.body.velocity.y;
 
         // Set the shadow's y position to the main sprite's y position plus the shadowYOffset.
         // This will adjust the shadow's vertical position relative to the main sprite.
-        this.shadow.setY(this.y + this.shadowYOffset);
+        this._shadow.setY(this.y + this._shadowYOffset);
 
         // Set the shadow's x position to match the main sprite's x position.
         // This will keep the shadow horizontally aligned with the main sprite.
-        this.shadow.setX(this.x);
+        this._shadow.setX(this.x);
     }
 
     private updateMovement(delta: number) {
@@ -171,12 +171,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         let new_velocity = {x: 0, y: 0};
 
         // Check if the 'up' or 'down' keys are pressed or any custom 'upPress' or 'downPress' flags are set.
-        if (this.keys.up.isDown || this.keys.down.isDown || gameController.buttonStates.upPress || gameController.buttonStates.downPress) {
-            if (this.keys.up.isDown || gameController.buttonStates.upPress) new_velocity.y -= this.movementSpeed * delta;
-            if (this.keys.down.isDown || gameController.buttonStates.downPress) new_velocity.y += this.movementSpeed * delta;
-        } else if (this.keys.left.isDown || this.keys.right.isDown || gameController.buttonStates.rightPress || gameController.buttonStates.leftPress) {
-            if (this.keys.left.isDown || gameController.buttonStates.leftPress) new_velocity.x -= this.movementSpeed * delta;
-            if (this.keys.right.isDown || gameController.buttonStates.rightPress) new_velocity.x += this.movementSpeed * delta;
+        if (this._keys.up.isDown || this._keys.down.isDown || gameController.buttonStates.upPress || gameController.buttonStates.downPress) {
+            if (this._keys.up.isDown || gameController.buttonStates.upPress) new_velocity.y -= this._movementSpeed * delta;
+            if (this._keys.down.isDown || gameController.buttonStates.downPress) new_velocity.y += this._movementSpeed * delta;
+        } else if (this._keys.left.isDown || this._keys.right.isDown || gameController.buttonStates.rightPress || gameController.buttonStates.leftPress) {
+            if (this._keys.left.isDown || gameController.buttonStates.leftPress) new_velocity.x -= this._movementSpeed * delta;
+            if (this._keys.right.isDown || gameController.buttonStates.rightPress) new_velocity.x += this._movementSpeed * delta;
         }
 
         // Set the players velocity
@@ -194,15 +194,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     }
 
-    /**
-     * Returns the current movement speed of the player.
-     *
-     * @returns The current movement speed of the player.
-     */
-    public getIsMoving() {
+
+    get isMoving(): boolean {
         return this._isMoving;
     }
-
 
     /**
      * Update the player's hat appearance based on the selected hat.
@@ -210,14 +205,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
      * If no hat is selected ("None"), the player's default appearance will be used.
      */
     public updateHat() {
-        // Check if a hat view exists in the root node.
-        // If not, return as there is nothing to update.
-        // if (this._worldViewScene.hatView === undefined) {
-        //     return;
-        // }
 
-        // Get the selected hat ID from the hat view.
-        // const hatId = this._worldViewScene.hatView.getSelectedHatId();
         const hatId = gameController.gameStateManager.user.selectedHat;
 
         // Check if a hat is selected (hatId is not "None").
@@ -229,7 +217,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             const height = 64;
             let renderTexture = this.scene.make.renderTexture({width, height}, false);
             renderTexture.draw("playerTexture", 0, 32);
-            renderTexture.draw(HatMap[hatId].texture, 0, 32 + this.hatYOffset);
+            renderTexture.draw(HatMap[hatId].texture, 0, 32 + this._hatYOffset);
 
             // Define a texture key for the player's texture with the selected hat.
             // If this texture key does not already exist, save the render texture as a new texture.

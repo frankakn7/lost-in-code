@@ -11,17 +11,19 @@ import WorldViewScene from "../../scenes/worldViewScene";
  */
 export default class InteractiveObject extends Phaser.Physics.Arcade.Sprite {
     protected room: RoomScene;
+    protected _id: number;
 
     constructor(
+        id:number,
         scene: Phaser.Scene,
         room: RoomScene,
         x: number,
         y: number,
         params,
-        properties
     ) {
         super(scene, x, y, params.texture);
         this.room = room;
+        this._id = id;
         this.setInteractive().on("pointerdown", () => {
             // console.log("Got clicked!!")
             this.interact();
@@ -38,8 +40,11 @@ export default class InteractiveObject extends Phaser.Physics.Arcade.Sprite {
      * Function to be executed when player interacts with object
      */
     public interact(){
-        console.log("Interacted with "+this);
+        // console.log("Interacted with "+this);
         this.scene.events.emit("interacted_question_object");
-        
+    }
+
+    get id(): number {
+        return this._id;
     }
 }

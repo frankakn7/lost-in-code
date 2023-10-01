@@ -42,7 +42,7 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"doorSingle"
                         }, 
@@ -50,6 +50,11 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":18
                         }],
                  "rotation":0,
                  "type":"",
@@ -65,7 +70,7 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"crate"
                         }, 
@@ -73,6 +78,11 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":12
                         }],
                  "rotation":0,
                  "type":"",
@@ -88,7 +98,7 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"barrel"
                         }, 
@@ -96,6 +106,11 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":21
                         }],
                  "rotation":0,
                  "type":"",
@@ -111,7 +126,7 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"computer"
                         }, 
@@ -119,6 +134,11 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":8
                         }],
                  "rotation":0,
                  "type":"",
@@ -134,7 +154,7 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"firstAidKit"
                         }, 
@@ -142,6 +162,11 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":11
                         }],
                  "rotation":0,
                  "type":"",
@@ -157,9 +182,14 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"tableSeatRight"
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":17
                         }],
                  "rotation":0,
                  "type":"",
@@ -180,9 +210,14 @@
                          "value":"event_loveletter"
                         }, 
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"paper2"
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":13
                         }],
                  "rotation":0,
                  "type":"",
@@ -198,7 +233,7 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"bed"
                         }, 
@@ -211,6 +246,11 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":15
                         }],
                  "rotation":0,
                  "type":"",
@@ -226,7 +266,7 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"doorDouble"
                         }, 
@@ -234,6 +274,11 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":19
                         }],
                  "rotation":0,
                  "type":"",
@@ -254,9 +299,14 @@
                          "value":"common_right"
                         }, 
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"door"
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":20
                         }, 
                         {
                          "name":"target_id",
@@ -277,7 +327,7 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"tableSeatLeft"
                         }, 
@@ -290,6 +340,11 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":16
                         }],
                  "rotation":0,
                  "type":"",
@@ -305,9 +360,14 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"tableSeatRight"
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":14
                         }],
                  "rotation":0,
                  "type":"",
@@ -323,7 +383,7 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"hat"
                         }, 
@@ -331,6 +391,11 @@
                          "name":"hat_id",
                          "type":"string",
                          "value":"blackHat"
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":10
                         }],
                  "rotation":0,
                  "type":"",
@@ -346,7 +411,7 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"hat"
                         }, 
@@ -354,6 +419,11 @@
                          "name":"hat_id",
                          "type":"string",
                          "value":"propellerHat"
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":9
                         }],
                  "rotation":0,
                  "type":"",

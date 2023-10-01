@@ -42,7 +42,7 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"cannon"
                         }, 
@@ -55,6 +55,11 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":45
                         }, 
                         {
                          "name":"story_id",
@@ -75,7 +80,7 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"cannon"
                         }, 
@@ -88,6 +93,11 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":46
                         }, 
                         {
                          "name":"story_id",
@@ -108,7 +118,7 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"enemy"
                         }, 
@@ -121,6 +131,11 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":40
                         }, 
                         {
                          "name":"story_id",
@@ -141,7 +156,7 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"enemy"
                         }, 
@@ -154,6 +169,11 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":43
                         }, 
                         {
                          "name":"story_id",
@@ -174,7 +194,7 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"enemy"
                         }, 
@@ -187,6 +207,11 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":41
                         }, 
                         {
                          "name":"story_id",
@@ -207,7 +232,7 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"enemy"
                         }, 
@@ -220,6 +245,11 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":42
                         }, 
                         {
                          "name":"story_id",
@@ -240,7 +270,7 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"hat"
                         }, 
@@ -248,6 +278,11 @@
                          "name":"hat_id",
                          "type":"string",
                          "value":"crown"
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":44
                         }],
                  "rotation":0,
                  "type":"",

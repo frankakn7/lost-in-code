@@ -55,7 +55,7 @@ export default class ApiHelper {
             fetch(url, {method: "GET", credentials: "include"})
                 .then((response) => {
                     response.json().then((data) => {
-                        console.log("Getting chapters")
+                        console.log("### Getting chapters")
                         console.log(data)
                         resolve(data)
                     })
@@ -131,6 +131,7 @@ export default class ApiHelper {
      */
     public updateStateData(state_data: GameStateType
     ) {
+        console.log("### SAVING GAME STATE DATA")
         console.log(state_data)
         const gameState = {game_state: state_data}
         console.log(JSON.stringify(gameState))

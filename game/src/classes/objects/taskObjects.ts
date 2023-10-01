@@ -23,8 +23,20 @@ export default class TaskObject extends InteractiveObject {
     protected _emitter : Phaser.GameObjects.Particles.ParticleEmitter; // Stores the particle emitter for the object.
 
 
+    private _redParticleEmitterConfig: Phaser.Types.GameObjects.Particles.ParticleEmitterConfig = {
+        frame: { frames: ['red'], cycle: true},
+        speed: 2,
+        blendMode: 'ADD',
+        lifespan: 5000,
+        quantity: 1,
+        scale: { start: 0.5, end: 0.1 },
+        frequency: 800,
+    }
+    private _greenParticleEmitterConfig: Phaser.Types.GameObjects.Particles.ParticleEmitterConfig = {...this._redParticleEmitterConfig, frame: {frames: ['green'], cycle: true}}
+
     /**
      * Creates an instance of TaskObject.
+     * @param id
      * @param scene
      * @param room
      * @param x
@@ -33,6 +45,7 @@ export default class TaskObject extends InteractiveObject {
      * @param properties
      */
     constructor(
+        id: number,
         scene: Phaser.Scene,
         room: RoomScene,
         x: number,
@@ -40,7 +53,7 @@ export default class TaskObject extends InteractiveObject {
         params,
         properties
     ) {
-        super(scene, room, x, y, params, properties);
+        super(id, scene, room, x, y, params);
         this.setDone = this.setDone.bind(this);
         this.setClosed = this.setClosed.bind(this);
         this._isStoryObject = params.isStoryObject
@@ -50,15 +63,7 @@ export default class TaskObject extends InteractiveObject {
         });
 
         const shape = new Phaser.Geom.Rectangle(0, 0, this.width, this.height);
-        this._emitter = this.scene.add.particles(this.x, this.y, 'flares', { 
-            frame: { frames: ['red'], cycle: true},
-            speed: 2,
-            blendMode: 'ADD',
-            lifespan: 5000,
-            quantity: 1,
-            scale: { start: 0.5, end: 0.1 },
-            frequency: 800,
-        });
+        this._emitter = this.scene.add.particles(this.x, this.y, 'flares', this._redParticleEmitterConfig);
 
         if (this.isFinished()) {
             this._setEmitterToDone();
@@ -78,7 +83,7 @@ export default class TaskObject extends InteractiveObject {
         //TODO: Build general interactivity function
         
         if(!this._isFinished && !this._isOpenRightNow){
-            console.log("Interacted with ");
+            // console.log("Interacted with ");
             this._isOpenRightNow = true;
             globalEventBus.once(GameEvents.TASKMANAGER_OBJECT_FINISHED, this.setDone);
             globalEventBus.once(GameEvents.TASKMANAGER_OBJECT_FAILED, this.setClosed);
@@ -93,7 +98,7 @@ export default class TaskObject extends InteractiveObject {
      */
     public setClosed(){
         this._isOpenRightNow = false;
-        globalEventBus.off("taskmanager_object_finished",this.setDone);
+        globalEventBus.off(GameEvents.TASKMANAGER_OBJECT_FINISHED,this.setDone);
     }
 
     /**
@@ -102,17 +107,16 @@ export default class TaskObject extends InteractiveObject {
      */
     public setDone() {
 
-        globalEventBus.off('taskmanager_object_failed', this.setClosed);
+        globalEventBus.off(GameEvents.TASKMANAGER_OBJECT_FAILED, this.setClosed);
         if (!this._isFinished) {
             this.setIsFinished(true);
 
-            // gameController.gameStateManager.room.finishedTaskObjects.push(this.id)
-            gameController.gameStateManager.room.finishedTaskObjects.push(true)
-
+            gameController.gameStateManager.room.finishedTaskObjects.push(this._id)
+            // gameController.gameStateManager.room.finishedTaskObjects.push(true)
             this._setEmitterToDone();
 
-            globalEventBus.emit("save_game")
-            globalEventBus.emit("object_repaired")
+            globalEventBus.emit(GameEvents.SAVE_GAME)
+            globalEventBus.emit(GameEvents.OBJECT_REPAIRED)
             if (this._isStoryObject) {
                 // this.room.getPlayView().pullNextStoryBit(this.room.getRoomId());
                 // this.room.worldViewScene.openStoryChatView();
@@ -129,15 +133,7 @@ export default class TaskObject extends InteractiveObject {
      * Sets the particle emitter to show the "done" effect when the task is completed.
      */
     private _setEmitterToDone() {
-        this._emitter.setConfig({
-            frame: { frames: ['green'], cycle: true},
-            speed: 2,
-            blendMode: 'ADD',
-            lifespan: 5000,
-            quantity: 1,
-            scale: { start: 0.5, end: 0.1 },
-            frequency: 1000,
-        });
+        this._emitter.setConfig(this._greenParticleEmitterConfig);
     }
 
     /**
@@ -145,7 +141,7 @@ export default class TaskObject extends InteractiveObject {
      * @returns {boolean} Whether the task is finished or not.
      */
     public isFinished() {
-        console.log(this._isFinished);
+        // console.log(this._isFinished);
         return this._isFinished;
     }
 

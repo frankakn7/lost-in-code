@@ -5,6 +5,7 @@ import RoomScene from "../room";
 import {globalEventBus} from "../../helpers/globalEventBus";
 import Clock = Phaser.Time.Clock;
 import {gameController} from "../../main";
+import {GameEvents} from "../../types/gameEvents";
 
 /**
  * PortalObject is a subclass of InteractiveObject that represents an object that can be interacted with to get to the next room.
@@ -14,6 +15,7 @@ export default class PortalObject extends InteractiveObject {
 
     /**
      * Creates an instance of PortalObject.
+     * @param id
      * @param scene
      * @param room
      * @param x
@@ -22,6 +24,7 @@ export default class PortalObject extends InteractiveObject {
      * @param properties
      */
     constructor(
+        id:number,
         scene: Phaser.Scene,
         room: RoomScene,
         x: number,
@@ -29,7 +32,7 @@ export default class PortalObject extends InteractiveObject {
         params,
         properties
     ) {
-        super(scene, room, x, y, params, properties);
+        super(id, scene, room, x, y, params);
 
         const shape = new Phaser.Geom.Line(0, 0, 0, this.height);
         const shape1 = new Phaser.Geom.Rectangle(0, 0, this.width, this.height);
@@ -49,7 +52,7 @@ export default class PortalObject extends InteractiveObject {
         this._emitter.addEmitZone({type: 'edge', source: shape, total: 1, quantity: 64});
 
         this.unlock = this.unlock.bind(this);
-        globalEventBus.once("door_was_unlocked", this.unlock);
+        globalEventBus.once(GameEvents.DOOR_UNLOCKED, this.unlock);
     }
 
     private unlock() {
@@ -58,8 +61,7 @@ export default class PortalObject extends InteractiveObject {
 
     public interact(): void {
         // Check if the door is unlocked
-        if (this.room.getDoorUnlocked()) {
-            console.log("Open Door");
+        if (gameController.gameStateManager.room.doorUnlocked) {
             // Fade out the camera and then change the room
             // this.room.worldViewScene.getToRoomViaId(this.room.getNextRoom());
             gameController.roomSceneController.getToRoomViaId(this.room.nextRoom)

@@ -4,7 +4,7 @@ export class GameStateManager {
     currentRoomId: string;
     gameFinished: boolean;
     room: {
-        finishedTaskObjects: boolean[];
+        finishedTaskObjects: number[];
         doorUnlocked: boolean;
     };
     story: {
@@ -102,5 +102,9 @@ export class GameStateManager {
 
     addAnsweredQuestionIds(id) {
         this.user.answeredQuestionIds.push(id);
+    }
+
+    setDoorUnlocked(unlocked: boolean){
+        this.room.doorUnlocked = unlocked;
     }
 }

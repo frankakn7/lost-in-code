@@ -7,6 +7,7 @@ export default class ClueObject extends InteractiveObject {
     private _eventId: string;
 
     constructor(
+        id: number,
         scene: Phaser.Scene,
         room: RoomScene,
         x: number,
@@ -14,7 +15,7 @@ export default class ClueObject extends InteractiveObject {
         params,
         properties
     ) {
-        super(scene, room, x, y, params, properties);
+        super(id, scene, room, x, y, params);
 
         properties.forEach(p => {
             if (p["name"] == "event_id") {

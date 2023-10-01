@@ -24,6 +24,7 @@ import TaskManager from "./managers/taskManager";
 import QuestionSceneController from "./controllers/questionSceneController";
 import {SceneKeys} from "./types/sceneKeys";
 import WorldSceneController from "./controllers/worldSceneController";
+import EventBusController from "./controllers/eventBusController";
 
 class GameController {
     private _gameConfig: Phaser.Types.Core.GameConfig;
@@ -49,6 +50,8 @@ class GameController {
     private _roomSceneController: RoomSceneController;
     private _questionSceneController: QuestionSceneController;
     private _worldSceneController: WorldSceneController;
+
+    private _eventBusController: EventBusController;
 
     readonly SIZE_WIDTH_SCREEN = 375 * 2.5;
     readonly SIZE_HEIGHT_SCREEN = 812 * 2.5;
@@ -161,6 +164,8 @@ class GameController {
         this._roomSceneController = new RoomSceneController(this._masterSceneController);
         this._questionSceneController = new QuestionSceneController(this._masterSceneController);
         this._worldSceneController = new WorldSceneController(this._masterSceneController, this._roomSceneController);
+
+        this._eventBusController = new EventBusController(this._popupSceneController,this._worldSceneController,this._gameStateManager,this._apiHelper);
     }
 
     startGame(userData:any) {
@@ -181,8 +186,12 @@ class GameController {
 
     initialWorldViewStart(){
         this.initSceneControllers();
-        this._worldSceneController.addWorldViewScenes();
-        this._worldSceneController.startWorldViewScenes();
+        if(this.gameStateManager.gameFinished){
+            this._worldSceneController.startEvaluationScene();
+        }else{
+            this._worldSceneController.addWorldViewScenes();
+            this._worldSceneController.startWorldViewScenes();
+        }
     }
 
     private configureGame() {

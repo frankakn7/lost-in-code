@@ -4,7 +4,7 @@ export type GameStateType = {
     currentRoomId: string;
     gameFinished: boolean;
     room: {
-        finishedTaskObjects: boolean[];
+        finishedTaskObjects: number[];
         doorUnlocked: boolean;
     };
     story: {

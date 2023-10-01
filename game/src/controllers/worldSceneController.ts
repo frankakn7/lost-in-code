@@ -42,8 +42,10 @@ export default class WorldSceneController {
     }
 
     startWorldViewScenes(){
+        // Check if the game is already finished and launch the EvaluationViewScene if necessary.
         this._masterSceneController.startScene(SceneKeys.WORLD_VIEW_SCENE_KEY);
         this._masterSceneController.startScene(SceneKeys.UI_SCENE_KEY)
+        this._masterSceneController.startScene(SceneKeys.ROOM_SCENE_KEY_IDENTIFIER + this._roomSceneController.currentRoomScene.roomId);
     }
 
     startEvaluationScene(){

@@ -74,23 +74,6 @@ export default class WorldViewScene extends Phaser.Scene {
         //     console.log("SLEEPING WORLD VIEW")
         // })
 
-        // Create and initialize the DocViewScene instance for handling documentation view.
-        // this.docView = new DocViewScene(this, gameController.gameStateManager.user.chapterNumber);
-
-
-        // Adds the menu scene.
-        // this.scene.add("menu", this.menuView);
-        //
-        // this.scene.add("uiScene", this._uiScene);
-        // this.scene.launch(this._uiScene);
-
-        // Check if the game is already finished and launch the EvaluationViewScene if necessary.
-        if (gameController.gameStateManager.gameFinished) {
-            gameController.worldSceneController.startEvaluationScene()
-        } else {
-            gameController.masterSceneController.startScene(SceneKeys.ROOM_SCENE_KEY_IDENTIFIER + gameController.roomSceneController.currentRoomScene.roomId);
-        }
-
     }
 
 

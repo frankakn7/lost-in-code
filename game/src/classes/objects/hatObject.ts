@@ -8,6 +8,7 @@ export default class HatObject extends InteractiveObject {
     protected _hatId = "sorcerersHat";
 
     constructor(
+        id: number,
         scene: Phaser.Scene,
         room: RoomScene,
         x: number,
@@ -15,7 +16,7 @@ export default class HatObject extends InteractiveObject {
         params,
         properties
     ) {
-        super(scene, room, x, y, params, properties);
+        super(id, scene, room, x, y, params);
         this.body.enable = false;
         this.body.setOffset(0, 0);
 

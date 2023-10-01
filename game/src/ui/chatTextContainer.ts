@@ -136,7 +136,6 @@ export default class ChatTextContainer extends Phaser.GameObjects.Container {
      * @returns the newly created text object
      */
     public addAnswerText(text: string): Phaser.GameObjects.Text {
-        console.log(this.answerStyle)
         let answer = this.scene.add
             .text(
                 this.scene.cameras.main.displayWidth - this.textSidePadding,
