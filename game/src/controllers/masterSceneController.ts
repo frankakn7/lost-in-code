@@ -23,9 +23,9 @@ export default class MasterSceneController {
         }
     }
 
-    startScene(key: string, data?: object) {
+    runScene(key: string, data?: object) {
         // console.log(this._sceneStates)
-        gameController.startScene(key, data)
+        gameController.runScene(key, data)
         this._sceneStates[key] = SceneStates.RUNNNING;
     }
 

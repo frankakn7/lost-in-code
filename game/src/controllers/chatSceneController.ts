@@ -26,16 +26,14 @@ export default class ChatSceneController {
         this._masterSceneController.prepScenesForChat()
 
         // Check if the story chat view is already open
-        if (this._masterSceneController.isSceneSleeping(SceneKeys.STORY_CHAT_VIEW_SCENE_KEY)) {
-            this._masterSceneController.wakeScene(SceneKeys.STORY_CHAT_VIEW_SCENE_KEY);
-        } else {
+        if (!this._masterSceneController.isSceneSleeping(SceneKeys.STORY_CHAT_VIEW_SCENE_KEY)) {
             // Create a new chat view with the history from _state.story
             this._storyChatView = new ChatViewScene(null, gameController.gameStateManager.story.history, SceneKeys.STORY_CHAT_VIEW_SCENE_KEY);
             //add chat view to the scene
             this._masterSceneController.addScene(SceneKeys.STORY_CHAT_VIEW_SCENE_KEY, this._storyChatView);
             //start the chat view
-            this._masterSceneController.startScene(SceneKeys.STORY_CHAT_VIEW_SCENE_KEY);
         }
+        this._masterSceneController.runScene(SceneKeys.STORY_CHAT_VIEW_SCENE_KEY);
     }
 
     /**
@@ -51,7 +49,7 @@ export default class ChatSceneController {
         if (this._masterSceneController.isSceneSleeping(SceneKeys.STORY_CHAT_VIEW_SCENE_KEY)) {
             //start a new chat flow and awake the scene
             this._storyChatView.startNewChatFlow(newChatFlow);
-            this._masterSceneController.wakeScene(SceneKeys.STORY_CHAT_VIEW_SCENE_KEY);
+            // this._masterSceneController.wakeScene(SceneKeys.STORY_CHAT_VIEW_SCENE_KEY);
             //If the chat view hasn't been launched yet
         } else {
             //create a new chat view
@@ -59,8 +57,8 @@ export default class ChatSceneController {
             //add chat view to the scene
             this._masterSceneController.addScene(SceneKeys.STORY_CHAT_VIEW_SCENE_KEY, this._storyChatView);
             //launch the chat view
-            this._masterSceneController.startScene(SceneKeys.STORY_CHAT_VIEW_SCENE_KEY);
         }
+            this._masterSceneController.runScene(SceneKeys.STORY_CHAT_VIEW_SCENE_KEY);
     }
 
     /**
@@ -75,13 +73,13 @@ export default class ChatSceneController {
 
         if (this._masterSceneController.isSceneSleeping(SceneKeys.STORY_CHAT_VIEW_SCENE_KEY)) {
             this._storyChatView.startNewChatFlow(eventChatFlow);
-            this._masterSceneController.wakeScene(SceneKeys.STORY_CHAT_VIEW_SCENE_KEY);
+            // this._masterSceneController.wakeScene(SceneKeys.STORY_CHAT_VIEW_SCENE_KEY);
         } else {
             this._storyChatView = new ChatViewScene(eventChatFlow, gameController.gameStateManager.story.history, SceneKeys.STORY_CHAT_VIEW_SCENE_KEY);
             this._masterSceneController.addScene(SceneKeys.STORY_CHAT_VIEW_SCENE_KEY, this._storyChatView);
             //launch the chat view
-            this._masterSceneController.startScene(SceneKeys.STORY_CHAT_VIEW_SCENE_KEY);
         }
+        this._masterSceneController.runScene(SceneKeys.STORY_CHAT_VIEW_SCENE_KEY);
     }
 
     /**
@@ -101,7 +99,7 @@ export default class ChatSceneController {
 
         // this._masterSceneController.addScene("ChatTextView", textChatView)
         this._masterSceneController.addScene(SceneKeys.SINGLE_TEXT_CHAT_VIEW_SCENE_KEY, textChatView)
-        this._masterSceneController.startScene(SceneKeys.SINGLE_TEXT_CHAT_VIEW_SCENE_KEY)
+        this._masterSceneController.runScene(SceneKeys.SINGLE_TEXT_CHAT_VIEW_SCENE_KEY)
     }
 
     public removeTextChatView(){

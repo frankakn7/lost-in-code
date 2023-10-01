@@ -50,7 +50,7 @@ export default class RoomSceneController {
 
         // Launch the next room scene to activate it.
 
-        this._masterSceneController.startScene(SceneKeys.ROOM_SCENE_KEY_IDENTIFIER + nextRoom.roomId);
+        this._masterSceneController.runScene(SceneKeys.ROOM_SCENE_KEY_IDENTIFIER + nextRoom.roomId);
 
         this._currentRoomScene = nextRoom;
 

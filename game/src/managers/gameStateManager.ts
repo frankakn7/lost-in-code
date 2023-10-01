@@ -101,7 +101,9 @@ export class GameStateManager {
     }
 
     addAnsweredQuestionIds(id) {
-        this.user.answeredQuestionIds.push(id);
+        if(!this.user.answeredQuestionIds.includes(id)){
+            this.user.answeredQuestionIds.push(id);
+        }
     }
 
     setDoorUnlocked(unlocked: boolean){

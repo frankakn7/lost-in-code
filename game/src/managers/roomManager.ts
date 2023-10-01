@@ -133,8 +133,6 @@ export default class RoomManager {
             tilemapObject.properties,
         );
 
-        console.log(newObject)
-
         return newObject
     }
 

@@ -180,7 +180,7 @@ class GameController {
             }
             //Preload scene is not tracked by masterSceneController
             // this.startScene(SceneKeys.PRELOAD_SCENE_KEY, { worldViewScene: this.worldViewScene });
-            this.startScene(SceneKeys.PRELOAD_SCENE_KEY);
+            this.runScene(SceneKeys.PRELOAD_SCENE_KEY);
         }).catch((error) => console.error(error));
     }
 
@@ -245,7 +245,7 @@ class GameController {
             backgroundColor: "#000000",
             plugins: {
                 global: [
-                    // { key: 'SceneWatcher', plugin: SceneWatcherPlugin, start: true }
+                    { key: 'SceneWatcher', plugin: SceneWatcherPlugin, start: true }
                 ]
             },
         };
@@ -255,8 +255,8 @@ class GameController {
         this._game.scene.add(key, scene);
     }
 
-    startScene(key: string | Phaser.Scene, data?: object) {
-        this._game.scene.start(key);
+    runScene(key: string | Phaser.Scene, data?: object) {
+        this._game.scene.run(key);
     }
 
     stopScene(key: string | Phaser.Scene) {

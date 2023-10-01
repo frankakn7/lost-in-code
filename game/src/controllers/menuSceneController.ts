@@ -55,13 +55,13 @@ export default class MenuSceneController {
         if(this._masterSceneController.isSceneSleeping(SceneKeys.MENU_VIEW_SCENE_KEY)){
             this._masterSceneController.wakeScene(SceneKeys.MENU_VIEW_SCENE_KEY);
         }else{
-            this._masterSceneController.startScene(SceneKeys.MENU_VIEW_SCENE_KEY)
+            this._masterSceneController.runScene(SceneKeys.MENU_VIEW_SCENE_KEY)
         }
     }
 
     private startSubMenuScene(subMenuSceneKey: string) {
         this._masterSceneController.sleepAllScenes();
-        this._masterSceneController.startScene(subMenuSceneKey);
+        this._masterSceneController.runScene(subMenuSceneKey);
     }
 
     openHatViewScene(){

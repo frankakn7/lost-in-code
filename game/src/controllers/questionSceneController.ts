@@ -36,7 +36,7 @@ export default class QuestionSceneController {
                 //add question view to the scene
                 gameController.masterSceneController.addScene(SceneKeys.QUESTION_VIEW_SCENE_KEY, this._questionView);
                 //launch the question view
-                gameController.masterSceneController.startScene(SceneKeys.QUESTION_VIEW_SCENE_KEY);
+                gameController.masterSceneController.runScene(SceneKeys.QUESTION_VIEW_SCENE_KEY);
             }
         } else {
             gameController.gameStateManager.user.newChapter = false
@@ -51,7 +51,7 @@ export default class QuestionSceneController {
                         //add question view to the scene
                         this._masterSceneController.addScene(SceneKeys.QUESTION_VIEW_SCENE_KEY, this._questionView)
                         //launch the question view
-                        this._masterSceneController.startScene(SceneKeys.QUESTION_VIEW_SCENE_KEY);
+                        this._masterSceneController.runScene(SceneKeys.QUESTION_VIEW_SCENE_KEY);
                     }
                 })
             });
@@ -60,32 +60,32 @@ export default class QuestionSceneController {
 
     public addAndStartChoiceQuestionScene(choiceQuestionScene: ChoiceQuestionScene){
         this._masterSceneController.addScene(SceneKeys.CHOICE_QUESTION_SCENE_KEY, choiceQuestionScene);
-        this._masterSceneController.startScene(SceneKeys.CHOICE_QUESTION_SCENE_KEY);
+        this._masterSceneController.runScene(SceneKeys.CHOICE_QUESTION_SCENE_KEY);
     }
 
     public addAndStartInputQuestionScene(inputQuestionScene: InputQuestionScene){
         this._masterSceneController.addScene(SceneKeys.INPUT_QUESTION_SCENE_KEY, inputQuestionScene);
-        this._masterSceneController.startScene(SceneKeys.INPUT_QUESTION_SCENE_KEY);
+        this._masterSceneController.runScene(SceneKeys.INPUT_QUESTION_SCENE_KEY);
     }
 
     public addAndStartDragDropQuestionScene(dragDropQuestionScene: DragDropQuestionScene){
         this._masterSceneController.addScene(SceneKeys.DRAG_DROP_QUESTION_SCENE_KEY, dragDropQuestionScene);
-        this._masterSceneController.startScene(SceneKeys.DRAG_DROP_QUESTION_SCENE_KEY);
+        this._masterSceneController.runScene(SceneKeys.DRAG_DROP_QUESTION_SCENE_KEY);
     }
 
     public addAndStartClozeQuestionScene(clozeQuestionScene: ClozeQuestionScene){
         this._masterSceneController.addScene(SceneKeys.CLOZE_QUESTION_SCENE_KEY, clozeQuestionScene);
-        this._masterSceneController.startScene(SceneKeys.CLOZE_QUESTION_SCENE_KEY);
+        this._masterSceneController.runScene(SceneKeys.CLOZE_QUESTION_SCENE_KEY);
     }
 
     public addAndStartSelectOneQuestionScene(selectOneQuestionScene: SelectOneQuestionScene){
         this._masterSceneController.addScene(SceneKeys.SELECT_ONE_QUESTION_SCENE_KEY, selectOneQuestionScene);
-        this._masterSceneController.startScene(SceneKeys.SELECT_ONE_QUESTION_SCENE_KEY);
+        this._masterSceneController.runScene(SceneKeys.SELECT_ONE_QUESTION_SCENE_KEY);
     }
 
     public addAndStartCreateQuestionScene(createQuestionScene: CreateQuestionScene){
         this._masterSceneController.addScene(SceneKeys.CREATE_QUESTION_SCENE_KEY, createQuestionScene);
-        this._masterSceneController.startScene(SceneKeys.CREATE_QUESTION_SCENE_KEY);
+        this._masterSceneController.runScene(SceneKeys.CREATE_QUESTION_SCENE_KEY);
     }
 
     public removeAllQuestionScenes(){

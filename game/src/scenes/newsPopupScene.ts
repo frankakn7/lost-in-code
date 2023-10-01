@@ -40,30 +40,7 @@ export default class NewsPopupScene extends Phaser.Scene {
         this._sceneId = sceneId;
         this._message = message;
         this.lifespan = lifespan;
-
-        this.width = this.cameras.main.width;
-        this.height = this.cameras.main.height;
-
         this._textureKey = achievementTextureKey;
-
-        this.defaultLabelStyle = {
-            fontSize: "50px",
-            color: "#FCFBF4",
-            fontFamily: "forwardRegular",
-            wordWrap: {
-                width: this.width,
-                useAdvancedWrap: true,
-            },
-            align: "center",
-            shadow: {
-                color: "#000",
-                offsetX: 10,
-                offsetY: 10,
-                fill: true,
-                stroke: true,
-                blur: 1
-            }
-        }
     }
 
     /**
@@ -143,6 +120,28 @@ export default class NewsPopupScene extends Phaser.Scene {
      * The render texture, text label, and image sprite are faded in using tweens for a smooth transition.
      */
     public create() {
+
+        this.width = this.cameras.main.width;
+        this.height = this.cameras.main.height;
+
+        this.defaultLabelStyle = {
+            fontSize: "50px",
+            color: "#FCFBF4",
+            fontFamily: "forwardRegular",
+            wordWrap: {
+                width: this.width,
+                useAdvancedWrap: true,
+            },
+            align: "center",
+            shadow: {
+                color: "#000",
+                offsetX: 10,
+                offsetY: 10,
+                fill: true,
+                stroke: true,
+                blur: 1
+            }
+        }
 
         this._rt = this.add.renderTexture(this.cameras.main.displayWidth / 2, this.cameras.main.displayHeight / 2, this.cameras.main.displayWidth, this.cameras.main.displayHeight).setOrigin(0.5, 0.5);
         this._rt.fill(0x000, 0.5);

@@ -16,7 +16,7 @@ export default class DocSceneController {
         this._textViewScene = new TextViewScene(textToShow)
         this._masterSceneController.addScene(SceneKeys.TEXT_VIEW_SCENE_KEY,this._textViewScene)
         this._masterSceneController.sleepAllScenes();
-        this._masterSceneController.startScene(SceneKeys.TEXT_VIEW_SCENE_KEY)
+        this._masterSceneController.runScene(SceneKeys.TEXT_VIEW_SCENE_KEY)
     }
 
     backToDocView(){

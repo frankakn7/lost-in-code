@@ -24,12 +24,12 @@ export default class EventBusController {
     }
 
     private subscribeToEvents() {
-        const broadcastNews = this._popupSceneController.broadcastNews;
+        const broadcastNews = this._popupSceneController.broadcastNews.bind(this._popupSceneController);
         globalEventBus.on(GameEvents.BROADCAST_NEWS, (message) => {
             broadcastNews(message)
         })
 
-        const broadcastAchievement = this._popupSceneController.broadcastAchievement;
+        const broadcastAchievement = this._popupSceneController.broadcastAchievement.bind(this._popupSceneController);
         globalEventBus.on(GameEvents.BROADCAST_ACHIEVEMENT, (achievement) => {
             broadcastAchievement(achievement)
         });
@@ -49,9 +49,9 @@ export default class EventBusController {
 
         // Set up event listener to save the game state when 'save_game' event is emitted.
         globalEventBus.on(GameEvents.SAVE_GAME, () => {
-            this._apiHelper.updateStateData(this._gameStateManager).catch((error) => {
-                console.error(error);
-            })
+            // this._apiHelper.updateStateData(this._gameStateManager).catch((error) => {
+            //     console.error(error);
+            // })
         })
     }
 }

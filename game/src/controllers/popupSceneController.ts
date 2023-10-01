@@ -5,8 +5,8 @@ import MasterSceneController from "./masterSceneController";
 
 export default class PopupSceneController {
 
-    private _newsCounter: number;
-    private _currentlyDisplayedNews: [NewsPopupScene];
+    private _newsCounter: number = 0;
+    private _currentlyDisplayedNews: NewsPopupScene[] = [];
 
     private _masterSceneController: MasterSceneController;
 
@@ -42,7 +42,7 @@ export default class PopupSceneController {
      */
     private addNewsPopupScene(newsId: string, newsPopup: NewsPopupScene){
         this._masterSceneController.addScene(newsId, newsPopup);
-        this._masterSceneController.startScene(newsId);
+        this._masterSceneController.runScene(newsId);
 
         if (this._currentlyDisplayedNews.length > 0) {
             this._currentlyDisplayedNews.forEach((n) => {

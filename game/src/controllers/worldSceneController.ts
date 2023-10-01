@@ -24,6 +24,10 @@ export default class WorldSceneController {
         this._uiScene = new UiScene();
     }
 
+    queueWorldViewTask(task: () => void){
+        this._worldViewScene.queueTask(task);
+    }
+
     addWorldViewScenes(){
         this._masterSceneController.addScene(SceneKeys.WORLD_VIEW_SCENE_KEY, this._worldViewScene)
         this._masterSceneController.addScene(SceneKeys.UI_SCENE_KEY, this._uiScene)
@@ -43,13 +47,13 @@ export default class WorldSceneController {
 
     startWorldViewScenes(){
         // Check if the game is already finished and launch the EvaluationViewScene if necessary.
-        this._masterSceneController.startScene(SceneKeys.WORLD_VIEW_SCENE_KEY);
-        this._masterSceneController.startScene(SceneKeys.UI_SCENE_KEY)
-        this._masterSceneController.startScene(SceneKeys.ROOM_SCENE_KEY_IDENTIFIER + this._roomSceneController.currentRoomScene.roomId);
+        this._masterSceneController.runScene(SceneKeys.WORLD_VIEW_SCENE_KEY);
+        this._masterSceneController.runScene(SceneKeys.UI_SCENE_KEY)
+        this._masterSceneController.runScene(SceneKeys.ROOM_SCENE_KEY_IDENTIFIER + this._roomSceneController.currentRoomScene.roomId);
     }
 
     startEvaluationScene(){
         this._masterSceneController.addScene(SceneKeys.EVALUATION_VIEW_SCENE_KEY,this._evaluationViewScene);
-        this._masterSceneController.startScene(SceneKeys.EVALUATION_VIEW_SCENE_KEY);
+        this._masterSceneController.runScene(SceneKeys.EVALUATION_VIEW_SCENE_KEY);
     }
 }
