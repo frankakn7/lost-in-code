@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
 import {TilemapConfig} from "../types/tilemapConfig";
-import {Player} from "./objects/Player";
+import {Player} from "./Player";
 import PlayerTexture from "../assets/player.png";
 import ShadowTexture from "../assets/shadow.png"
 import Mask from "../assets/mask.png";
@@ -96,7 +96,7 @@ export default class RoomScene extends Phaser.Scene {
         //TODO save player x and y in gamestate and load it from there
         this.player = new Player(this, this._playerDefaultX, this._playerDefaultY, "playerTexture");
         this.physics.add.collider(this.player, collisionLayer);
-        this.player.setCanMove(false);
+        // this.player.setCanMove(false);
 
 
         // Add the player to the scene and make the camera follow the player.
@@ -246,11 +246,7 @@ export default class RoomScene extends Phaser.Scene {
             this._timeSinceRoomEnter += delta;
             if (this._timeSinceRoomEnter > this._timeUntilStoryStartsInRoom) {
                 gameController.chatSceneController.openStoryChatView();
-                this.player.setCanMove(true);
             }
-        } else {
-            // If the room's story has been played, enable the player's movement.
-            this.player.setCanMove(true);
         }
     }
 

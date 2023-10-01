@@ -2,6 +2,7 @@ import * as Phaser from "phaser";
 import WorldViewScene from "../scenes/worldViewScene";
 import { globalEventBus } from "../helpers/globalEventBus";
 import {gameController} from "../main";
+import {GameEvents} from "../types/gameEvents";
 
 export default class ProgressBarContainer {
     private _bar: Phaser.GameObjects.Graphics; // The progress bar graphics object.
@@ -27,16 +28,17 @@ export default class ProgressBarContainer {
         this._container.add(this._bar);
 
         this.drawOutline();
+        this.updateBarFilling();
 
-        globalEventBus.on("object_repaired", this.updateBarFilling.bind(this));
-        globalEventBus.on("room_entered", () => {
+        globalEventBus.on(GameEvents.OBJECT_REPAIRED, this.updateBarFilling.bind(this));
+        globalEventBus.on(GameEvents.ROOM_ENTERED, () => {
             this._barFilling.clear();
             this.updateBarFilling();
         });
     }
 
     public updateBarFilling() {
-        const progress = 0.5 //TODO fix the implementation of the progress: gameController.gameStateManager.room.finishedTaskObjects.length / this._worldViewScene._roomSceneController.currentRoomScene.getTaskObjectCount();
+        const progress = gameController.gameStateManager.room.finishedTaskObjects.length / gameController.roomSceneController.currentRoomScene.getTaskObjectCount();
         const totalWidthInner = this._container.scene.cameras.main.displayWidth - 100 - 10;
 
         this._bar.fillStyle(0xFCFBF4, 1);

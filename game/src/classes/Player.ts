@@ -1,26 +1,38 @@
 import {text} from "express";
-import {Vector} from "matter";
-import WorldViewScene from "../../scenes/worldViewScene";
-import {gameController} from "../../main";
-import {HatMap} from "../../constants/hatMap";
+import {BodyType, Vector} from "matter";
+import WorldViewScene from "../scenes/worldViewScene";
+import {gameController} from "../main";
+import {HatMap} from "../constants/hatMap";
+import StaticBody = Phaser.Physics.Arcade.StaticBody;
 
 /**
  * The Player class. This represents the player on the map and contains all the logic for movement, animations etc.
  */
-export class Player extends Phaser.Physics.Arcade.Sprite {
-    private _movementSpeed = 10; // Players movement speed in pixels per second
+// export class Player extends Phaser.Physics.Arcade.Sprite {
+export class Player extends Phaser.GameObjects.Container {
+
+    private _config = {
+        movementSpeed: 10,
+        breathSpeed: 300,
+        breathScope: 30,
+        wobbleSpeed: 40,
+        wobbleScope: 10
+    }
+
     private _breathCalcHelperVar = 0; // Helper variable for the breathing animation
     private _walkingRotationHelperVar = 0; // Helper variable for the walking animation
+
     private _isMoving = false; // Is the player currently moving?
 
-    private _shadow: Phaser.GameObjects.Sprite; // The shadow of the player
-    private _shadowYOffset = 0; // The offset of the shadow from the player
-
+    private _playerFeetOffset = -3;
     private _hatYOffset = -16; // The offset of the hat from the player
 
     private _keys; // The keyboard keys for movement
 
-    private _canMove = true; // Can the player move?
+    private _playerSprite: Phaser.GameObjects.Sprite;
+    private _shadowSprite: Phaser.GameObjects.Sprite;
+
+    body: Phaser.Physics.Arcade.Body;
 
     /**
      * The constructor of the player class
@@ -28,27 +40,27 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
      * @param x  The x position of the player
      * @param y  The y position of the player
      * @param texture  The texture of the player
-     * @param worldViewScene  The root node of the game
      */
     constructor(scene, x, y, texture) {
         // Basic scene setup
-        super(scene, x, y, texture);
-        this.scene = scene;
+        super(scene, x, y);
 
-        // Shadow setup
-        this._shadow = this.scene.physics.add.sprite(x, y + this._shadowYOffset, "shadowTexture");
-        this._shadow.setDepth(0);
-
-        // Physics setup
         this.scene.physics.world.enable(this);
-        this.setCollideWorldBounds(true);
 
-        // Animation and graphics setup
-        this.flipX = false;
-        this.scale = 1;
-        this.setSize(20, 32);
+        this.body.setCollideWorldBounds(true);
+        this.body.setSize(16, 10)
         this.setDepth(4);
 
+        this._playerSprite = this.scene.add.sprite(this.body.width / 2, this.body.height + this._playerFeetOffset, texture);
+        this._shadowSprite = this.scene.add.sprite(this.body.width / 2, this.body.height, "shadowTexture")
+
+        this.add(this._shadowSprite);
+        this.add(this._playerSprite);
+
+        // Animation and graphics setup
+        this._playerSprite.flipX = false;
+        this._playerSprite.setOrigin(0.5, 1);
+        this._shadowSprite.setOrigin(0.5, 1)
 
         // Input setup
         this._keys = this.scene.input.keyboard.addKeys({
@@ -65,20 +77,16 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
      */
     preUpdate(time, delta) {
 
-
         // Movement
-        if (this._canMove) {
-            this.updateMovement(delta);
-        }
-        // Shadow update
-        this.updateShadow();
+        this.updateMovement(delta);
 
         // Animation updates
-        this.updateBreathAnimation(delta, 300, 30);
-        this.updateWalkAnimation(delta, 40, 10);
+        this.updateBreathAnimation(delta, this._config.breathSpeed, this._config.breathScope);
+        this.updateWalkAnimation(delta, this._config.wobbleSpeed, this._config.wobbleScope);
 
         // Hat update
         this.updateHat();
+
     }
 
     /**
@@ -101,14 +109,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
             // Adjust the scaleY (vertical scale) of the object based on the calculated factor fac.
             // The object will oscillate between 1 - breathScope and 1 + breathScope.
-            this.scaleY = 1 + fac;
+            this._playerSprite.scaleY = 1 + fac;
 
             // Set the origin of the object to (0.5, 1).
             // This will make the object scale from the bottom center during breathing.
-            this.setOrigin(0.5, 1);
         } else {
             // If the object is moving, reset the scale to 1 to maintain its original size.
-            this.scale = 1;
+            this._playerSprite.scale = 1;
         }
     }
 
@@ -131,39 +138,22 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             let rot_fac = Math.sin(this._walkingRotationHelperVar) * wobbleScope;
 
             // Set the angle of the object to the calculated rotation factor rot_fac.
-            this.angle = rot_fac;
+            this._playerSprite.angle = rot_fac;
         } else {
             // If the object is not moving, reset the angle to 0 to keep it upright.
-            this.angle = 0;
+            this._playerSprite.angle = 0;
         }
 
         // Flipping the object and its shadow based on the direction of movement.
         if (this.body.velocity.x < 0) {
             // If the object is moving to the left (negative velocity in the x-direction), flip it horizontally.
-            this.flipX = true;
-            this._shadow.flipX = true;
+            this._playerSprite.flipX = true;
+            // this._shadowSprite.flipX = true;
         } else if (this.body.velocity.x > 0) {
             // If the object is moving to the right (positive velocity in the x-direction), reset flipping.
-            this.flipX = false;
-            this._shadow.flipX = false;
+            this._playerSprite.flipX = false;
+            // this._shadowSprite.flipX = false;
         }
-    }
-
-    /**
-     * The shadow update function of the player, gets called every frame.
-     * @private
-     */
-    private updateShadow() {
-        this._shadow.body.velocity.x = this.body.velocity.x;
-        this._shadow.body.velocity.y = this.body.velocity.y;
-
-        // Set the shadow's y position to the main sprite's y position plus the shadowYOffset.
-        // This will adjust the shadow's vertical position relative to the main sprite.
-        this._shadow.setY(this.y + this._shadowYOffset);
-
-        // Set the shadow's x position to match the main sprite's x position.
-        // This will keep the shadow horizontally aligned with the main sprite.
-        this._shadow.setX(this.x);
     }
 
     private updateMovement(delta: number) {
@@ -172,31 +162,22 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         // Check if the 'up' or 'down' keys are pressed or any custom 'upPress' or 'downPress' flags are set.
         if (this._keys.up.isDown || this._keys.down.isDown || gameController.buttonStates.upPress || gameController.buttonStates.downPress) {
-            if (this._keys.up.isDown || gameController.buttonStates.upPress) new_velocity.y -= this._movementSpeed * delta;
-            if (this._keys.down.isDown || gameController.buttonStates.downPress) new_velocity.y += this._movementSpeed * delta;
+            if (this._keys.up.isDown || gameController.buttonStates.upPress) new_velocity.y -= this._config.movementSpeed * delta;
+            if (this._keys.down.isDown || gameController.buttonStates.downPress) new_velocity.y += this._config.movementSpeed * delta;
         } else if (this._keys.left.isDown || this._keys.right.isDown || gameController.buttonStates.rightPress || gameController.buttonStates.leftPress) {
-            if (this._keys.left.isDown || gameController.buttonStates.leftPress) new_velocity.x -= this._movementSpeed * delta;
-            if (this._keys.right.isDown || gameController.buttonStates.rightPress) new_velocity.x += this._movementSpeed * delta;
+            if (this._keys.left.isDown || gameController.buttonStates.leftPress) new_velocity.x -= this._config.movementSpeed * delta;
+            if (this._keys.right.isDown || gameController.buttonStates.rightPress) new_velocity.x += this._config.movementSpeed * delta;
         }
 
         // Set the players velocity
-        this.setVelocityY(new_velocity.y);
-        this.setVelocityX(new_velocity.x);
+        this.body.setVelocityY(new_velocity.y);
+        this.body.setVelocityX(new_velocity.x);
 
-        // Check if the player's velocity in either x or y direction is non-zero.
-        if (this.body.velocity.x != 0 || this.body.velocity.y != 0) {
-            // If the player is moving (velocity in x or y direction is non-zero), set the '_isMoving' flag to true.
-            this._isMoving = true;
+        if (new_velocity.x != 0 || new_velocity.y != 0) {
+            this._isMoving = true
         } else {
-            // If the player is not moving (velocity in x and y direction is zero), set the '_isMoving' flag to false.
-            this._isMoving = false;
+            this._isMoving = false
         }
-
-    }
-
-
-    get isMoving(): boolean {
-        return this._isMoving;
     }
 
     /**
@@ -215,6 +196,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             // Draw the selected hat's texture on top of the player's texture at position (0, 32 + this.hatYOffset).
             const width = 32;
             const height = 64;
+
             let renderTexture = this.scene.make.renderTexture({width, height}, false);
             renderTexture.draw("playerTexture", 0, 32);
             renderTexture.draw(HatMap[hatId].texture, 0, 32 + this._hatYOffset);
@@ -222,31 +204,15 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             // Define a texture key for the player's texture with the selected hat.
             // If this texture key does not already exist, save the render texture as a new texture.
             let textureKey = "playerTextureWith" + hatId;
-            if (!this.scene.textures.exists(textureKey))
+            if (!this.scene.textures.exists(textureKey)) {
                 renderTexture.saveTexture(textureKey);
+            }
 
             // Set the player's texture to the newly created texture with the selected hat.
-            this.setTexture(textureKey);
-
-            // Adjust the player's body size and offset to fit the new texture with the hat.
-            // The player's body size becomes (20, 32), and the body offset becomes (6, 30).
-            this.body.setSize(20, 32);
-            this.body.setOffset(6, 30);
+            this._playerSprite.setTexture(textureKey);
         } else {
-            // If no hat is selected, set the player's texture to the default "playerTexture".
-            // Reset the player's body size to (20, 32), and the body offset to (6, 0).
-            this.setTexture("playerTexture");
-            this.body.setSize(20, 32);
-            this.body.setOffset(6, 0);
+            this._playerSprite.setTexture("playerTexture");
         }
-    }
-
-    /**
-     * Returns the current movement speed of the player.
-     * @param can  The new movement speed of the player.
-     */
-    public setCanMove(can) {
-        this._canMove = can;
     }
 
 }
