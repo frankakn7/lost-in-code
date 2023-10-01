@@ -178,6 +178,7 @@ class GameController {
             }else{
                 this.user = new User();
             }
+            this.storyManager.initialiseStoryEvents();
             //Preload scene is not tracked by masterSceneController
             // this.startScene(SceneKeys.PRELOAD_SCENE_KEY, { worldViewScene: this.worldViewScene });
             this.runScene(SceneKeys.PRELOAD_SCENE_KEY);

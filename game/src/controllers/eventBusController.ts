@@ -49,9 +49,9 @@ export default class EventBusController {
 
         // Set up event listener to save the game state when 'save_game' event is emitted.
         globalEventBus.on(GameEvents.SAVE_GAME, () => {
-            // this._apiHelper.updateStateData(this._gameStateManager).catch((error) => {
-            //     console.error(error);
-            // })
+            this._apiHelper.updateStateData(this._gameStateManager).catch((error) => {
+                console.error(error);
+            })
         })
     }
 }

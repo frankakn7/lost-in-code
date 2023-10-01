@@ -18,24 +18,32 @@ export default class StoryManager {
 
     /**
      * Constructs a new instance of the class.
-     * @param {WorldViewScene} worldViewScene - The root node of the game or application.
      */
-    constructor() {
+    // constructor() {
+    //
+    //     // Load potential data from the game state.
+    //     // this.loadData();
+    //
+    //
+    // }
 
-        // Load potential data from the game state.
-        // this.loadData();
-
+    public initialiseStoryEvents(){
         // Iterate over each 'room' in the 'storyJson' object.
         for(let room in storyJson) {
             // If the '_storyEvents' map does not have an entry for the current 'room',
+            console.log(room)
             // create a new entry with an empty Map to store ChatFlow objects.
             if (!(room in this._storyEvents)) this._storyEvents[room] = new Map<string, ChatFlow>();
 
             // Iterate over each index 'i' in the 'storyJson[room]'. Those will be the main story lines.
             for (var i = 0; i < Object.keys(storyJson[room]).length; i++) {
+                // for(let i of Object.keys(storyJson[room]))
 
                 // If the current index 'i' is present in the '_finishedStuff[room]' array,
                 // skip this iteration to avoid processing already encountered events.
+                console.log("### FILTERING STORY")
+                console.log(gameController.gameStateManager.story[room])
+                console.log(i.toString());
                 if (gameController.gameStateManager.story[room].includes(i.toString())) {
                     continue;
                 }
@@ -44,10 +52,10 @@ export default class StoryManager {
                 // This involves reconstructing the ChatNode tree recursively for the specified 'room' and 'i'.
                 if (i.toString() in storyJson[room]) {
                     let cf : ChatFlow = new ChatFlow(this.reconstructChatNodeTreeRecursively(
-                            room,
-                            storyJson,
-                            i.toString()
-                            ));
+                        room,
+                        storyJson,
+                        i.toString()
+                    ));
 
                     this._storyEvents[room].set(i.toString(), cf);
 
@@ -69,9 +77,8 @@ export default class StoryManager {
         if (gameController.gameStateManager.story[roomId].includes(eventId)) return false;
         // Check if the provided 'eventId' is a valid key in 'storyJson[roomId]'.
         // If it is a valid key, the event is available.
-        if (storyJson[roomId][eventId]) return true;
+        return !!storyJson[roomId][eventId];
 
-        return false;
     }
 
     /**
