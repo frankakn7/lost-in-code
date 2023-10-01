@@ -122,9 +122,8 @@ export default class TaskObject extends InteractiveObject {
                 // this.room.worldViewScene.openStoryChatView();
                 gameController.chatSceneController.openStoryChatView();
             }
-
-            // TODO Should be able to stay, as this function wont be called after the door was successfully unlocked anyways
-            this.room.checkIfRoomFinished();
+            
+            this.room.roomManager.checkIfRoomFinished();
         }
 
     }

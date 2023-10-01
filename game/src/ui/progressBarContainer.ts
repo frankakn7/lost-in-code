@@ -38,7 +38,7 @@ export default class ProgressBarContainer {
     }
 
     public updateBarFilling() {
-        const progress = gameController.gameStateManager.room.finishedTaskObjects.length / gameController.roomSceneController.currentRoomScene.getTaskObjectCount();
+        const progress = gameController.gameStateManager.room.finishedTaskObjects.length / gameController.roomSceneController.currentRoomScene.roomManager.getTaskObjectCount();
         const totalWidthInner = this._container.scene.cameras.main.displayWidth - 100 - 10;
 
         this._bar.fillStyle(0xFCFBF4, 1);

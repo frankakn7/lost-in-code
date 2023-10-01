@@ -5,15 +5,29 @@ import TaskObject from "./classes/objects/taskObjects";
 import DoorObject from "./classes/objects/doorObject";
 import EnemyObject from "./classes/objects/enemyObject";
 import ClueObject from "./classes/objects/clueObject";
+import RoomScene from "./classes/room";
 
-export const GameObjectMap = {
+interface GameObjectConfig {
+    class: new (
+        objectId: number,
+        scene: Phaser.Scene,
+        roomScene: RoomScene,
+        x: number,
+        y: number,
+        params,
+        properties,
+    ) => InteractiveObject;
+    params: Record<string, any>;
+}
+
+export const GameObjectMap: Record<string, GameObjectConfig> = {
     door: {
         class: PortalObject,
         params: {
             texture: "door",
             width: 18,
-            height: 64
-        }
+            height: 64,
+        },
     },
     hat: {
         class: HatObject,
@@ -21,8 +35,8 @@ export const GameObjectMap = {
             texture: "sorcerersHat",
             hat_id: "sorcerersHat",
             width: 32,
-            height: 32
-        }
+            height: 32,
+        },
     },
     engine: {
         class: InteractiveObject,
@@ -30,8 +44,8 @@ export const GameObjectMap = {
             texture: "engine",
             width: 60,
             height: 60,
-            isStoryObject: false
-        }
+            isStoryObject: false,
+        },
     },
     engineBroken: {
         class: TaskObject,
@@ -39,8 +53,8 @@ export const GameObjectMap = {
             texture: "engineBroken",
             width: 60,
             height: 60,
-            isStoryObject: false
-        }
+            isStoryObject: false,
+        },
     },
     locker: {
         class: TaskObject,
@@ -48,8 +62,8 @@ export const GameObjectMap = {
             texture: "locker",
             width: 80,
             height: 40,
-            isStoryObject: false
-        }
+            isStoryObject: false,
+        },
     },
     barrel: {
         class: TaskObject,
@@ -57,8 +71,8 @@ export const GameObjectMap = {
             texture: "barrel",
             width: 32,
             height: 32,
-            isStoryObject: false
-        }
+            isStoryObject: false,
+        },
     },
     crate: {
         class: TaskObject,
@@ -67,8 +81,7 @@ export const GameObjectMap = {
             width: 32,
             height: 32,
             isStoryObject: false,
-            
-        }
+        },
     },
     crate2: {
         class: TaskObject,
@@ -77,18 +90,17 @@ export const GameObjectMap = {
             width: 32,
             height: 32,
             isStoryObject: false,
-            
-        }
+        },
     },
-    
+
     crate4: {
         class: TaskObject,
         params: {
             texture: "crate4",
             width: 64,
             height: 40,
-            isStoryObject: false
-        }
+            isStoryObject: false,
+        },
     },
 
     computer: {
@@ -97,18 +109,18 @@ export const GameObjectMap = {
             texture: "computer",
             width: 32,
             height: 32,
-            isStoryObject: false
-        }
+            isStoryObject: false,
+        },
     },
-    
+
     cannon: {
         class: TaskObject,
         params: {
             texture: "cannon",
             width: 35,
             height: 35,
-            isStoryObject: false
-        }
+            isStoryObject: false,
+        },
     },
 
     tableSeatLeft: {
@@ -117,8 +129,8 @@ export const GameObjectMap = {
             texture: "tableseatleft",
             width: 32,
             height: 32,
-            isStoryObject: true
-        }
+            isStoryObject: true,
+        },
     },
 
     tableSeatRight: {
@@ -127,8 +139,8 @@ export const GameObjectMap = {
             texture: "tableseatright",
             width: 32,
             height: 32,
-            isStoryObject: false
-        }
+            isStoryObject: false,
+        },
     },
 
     firstAidKit: {
@@ -137,9 +149,8 @@ export const GameObjectMap = {
             texture: "firstaidkittexture",
             width: 32,
             height: 32,
-            isStoryObject: false
-        }
-
+            isStoryObject: false,
+        },
     },
 
     bed: {
@@ -148,9 +159,8 @@ export const GameObjectMap = {
             texture: "bed",
             width: 32,
             height: 64,
-            isStoryObject: true
-        }
-
+            isStoryObject: true,
+        },
     },
 
     doorSingle: {
@@ -159,8 +169,8 @@ export const GameObjectMap = {
             texture: "doorSingle",
             width: 32,
             height: 32,
-            isStoryObject: false
-        }
+            isStoryObject: false,
+        },
     },
 
     doorDouble: {
@@ -169,8 +179,8 @@ export const GameObjectMap = {
             texture: "doorDouble",
             width: 64,
             height: 32,
-            isStoryObject: false
-        }
+            isStoryObject: false,
+        },
     },
 
     enemy: {
@@ -179,8 +189,8 @@ export const GameObjectMap = {
             texture: "enemy",
             width: 5,
             height: 5,
-            isStoryObject: false
-        }
+            isStoryObject: false,
+        },
     },
 
     paper2: {
@@ -188,7 +198,7 @@ export const GameObjectMap = {
         params: {
             texture: "paper",
             width: 20,
-            height: 20
-        }
-    }
-}
+            height: 20,
+        },
+    },
+};

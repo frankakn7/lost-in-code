@@ -245,7 +245,7 @@ class GameController {
             backgroundColor: "#000000",
             plugins: {
                 global: [
-                    { key: 'SceneWatcher', plugin: SceneWatcherPlugin, start: true }
+                    // { key: 'SceneWatcher', plugin: SceneWatcherPlugin, start: true }
                 ]
             },
         };
