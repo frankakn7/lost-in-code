@@ -51,8 +51,12 @@ export default class PortalObject extends InteractiveObject {
 
         this._emitter.addEmitZone({type: 'edge', source: shape, total: 1, quantity: 64});
 
-        this.unlock = this.unlock.bind(this);
-        globalEventBus.once(GameEvents.DOOR_UNLOCKED, this.unlock);
+        if(gameController.gameStateManager.room.doorUnlocked){
+            this.unlock();
+        }else{
+            this.unlock = this.unlock.bind(this);
+            globalEventBus.once(GameEvents.DOOR_UNLOCKED, this.unlock);
+        }
     }
 
     private unlock() {
@@ -61,11 +65,12 @@ export default class PortalObject extends InteractiveObject {
 
     public interact(): void {
         // Check if the door is unlocked
+        console.log("Interacted with door")
         if (gameController.gameStateManager.room.doorUnlocked) {
             // Fade out the camera and then change the room
             // this.room.worldViewScene.getToRoomViaId(this.room.getNextRoom());
-            gameController.roomSceneController.getToRoomViaId(this.room.nextRoom)
             this.room.cameras.main.fadeOut(1000, 0, 0, 0)
+            setTimeout(() => gameController.roomSceneController.changeRoomSceneViaId(this.room.nextRoom), 1000);
         }
     }
 }

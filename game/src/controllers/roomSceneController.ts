@@ -37,27 +37,25 @@ export default class RoomSceneController {
      * Navigates the player to a new room in the game based on the provided room ID.
      * @param {string} id - The ID of the room to navigate to.
      */
-    public getToRoomViaId(id: string) {
+    public changeRoomSceneViaId(id: string) {
+        console.log("changing room")
         let nextRoom = roomMap.get(id);
+        console.log("getting next room")
 
+        // this._currentRoomScene.deleteRoomManager();
         this._masterSceneController.stopScene(SceneKeys.ROOM_SCENE_KEY_IDENTIFIER + this._currentRoomScene.roomId)
+        // console.log("stopped scene")
+        this._masterSceneController.removeScene(SceneKeys.ROOM_SCENE_KEY_IDENTIFIER + this._currentRoomScene.roomId);
 
         // Initialize the 'finishedTaskObjects' property of the game state for the next room.
-        // The 'finishedTaskObjects' property is an array that tracks the completion status of tasks in the room.
-        // It is set to an array of false values with the length equal to the number of task objects in the next room.
-        //TODO make finished task objects into array of task object ids
-        //gameController.gameStateManager.room.finishedTaskObjects = Array(nextRoom.getTaskObjectCount()).fill(false);
-
+        gameController.gameStateManager.room.finishedTaskObjects = [];
         // Launch the next room scene to activate it.
-
         this._masterSceneController.runScene(SceneKeys.ROOM_SCENE_KEY_IDENTIFIER + nextRoom.roomId);
 
         this._currentRoomScene = nextRoom;
-
     }
 
     updateCurrentRoomScene(){
         this._currentRoomScene = roomMap.get(gameController.gameStateManager.currentRoomId);
-        // this._masterSceneController.startScene(SceneKeys.ROOM_SCENE_KEY_IDENTIFIER + this._currentRoomScene.roomId)
     }
 }

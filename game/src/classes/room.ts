@@ -165,4 +165,9 @@ export default class RoomScene extends Phaser.Scene {
     get roomManager(): RoomManager {
         return this._roomManager;
     }
+
+    deleteRoomManager() {
+        // this._roomManager.destroyAllInteractiveObjects();
+        delete this._roomManager;
+    }
 }

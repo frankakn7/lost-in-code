@@ -261,7 +261,9 @@ class GameController {
     }
 
     stopScene(key: string | Phaser.Scene) {
+        console.log("stopping scene")
         this._game.scene.stop(key);
+        console.log("stopped scene")
     }
 
     sleepScene(key: string | Phaser.Scene) {

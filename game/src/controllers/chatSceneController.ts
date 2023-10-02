@@ -48,6 +48,7 @@ export default class ChatSceneController {
         //If the chat view already exists and is sleeping
         if (this._masterSceneController.isSceneSleeping(SceneKeys.STORY_CHAT_VIEW_SCENE_KEY)) {
             //start a new chat flow and awake the scene
+            console.log(newChatFlow);
             this._storyChatView.startNewChatFlow(newChatFlow);
             // this._masterSceneController.wakeScene(SceneKeys.STORY_CHAT_VIEW_SCENE_KEY);
             //If the chat view hasn't been launched yet

@@ -133,7 +133,11 @@ export default class RoomManager {
             tilemapObject.properties,
         );
 
-        return newObject
+        if(!newObject.scene){
+            return null;
+        }else{
+            return newObject
+        }
     }
 
     private createObject(
@@ -152,5 +156,11 @@ export default class RoomManager {
         }
         // throw new Error("Invalid gameobjectType");
         console.error("Invalid gameObjectType: " + gameObjectType);
+    }
+
+    public destroyAllInteractiveObjects(){
+        for(let obj of this._interactiveObjects){
+            obj.destroy()
+        }
     }
 }

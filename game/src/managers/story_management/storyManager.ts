@@ -41,9 +41,6 @@ export default class StoryManager {
 
                 // If the current index 'i' is present in the '_finishedStuff[room]' array,
                 // skip this iteration to avoid processing already encountered events.
-                console.log("### FILTERING STORY")
-                console.log(gameController.gameStateManager.story[room])
-                console.log(i.toString());
                 if (gameController.gameStateManager.story[room].includes(i.toString())) {
                     continue;
                 }
