@@ -6,6 +6,7 @@ import "highlight.js/styles/night-owl.css";
 import { ChoiceQuestionElement } from "../../../classes/question/questionElement";
 import ChoiceButton from "../../../ui/choiceButton";
 import {SceneKeys} from "../../../types/sceneKeys";
+import {debugHelper} from "../../../helpers/debugHelper";
 
 export default class ClozeQuestionScene extends Phaser.Scene {
 
@@ -175,7 +176,7 @@ export default class ClozeQuestionScene extends Phaser.Scene {
         correctAnswers.forEach((answers) => {
             this._correctAnswer.appendText(answers.join(" / "))
         })
-        console.log(this._correctAnswer.text);
+        debugHelper.logValue("correct answer text", this._correctAnswer.text)
     }
 
     public checkAnswer() {

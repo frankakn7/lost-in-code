@@ -8,6 +8,7 @@ import ChoiceButton from "../../../ui/choiceButton";
 import DeviceButton from "../../../ui/deviceButton";
 import ApiHelper from "../../../helpers/apiHelper";
 import {SceneKeys} from "../../../types/sceneKeys";
+import {debugHelper} from "../../../helpers/debugHelper";
 
 export default class CreateQuestionScene extends Phaser.Scene {
 
@@ -102,12 +103,11 @@ export default class CreateQuestionScene extends Phaser.Scene {
     }
 
     private evaluateCode() {
-        console.log(this.getCode());
         let code = this.getCode();
         this._apiHelper.evaluateCode(code)
             .then((result: any) => result.json()
                 .then(data => {
-                    console.log(data)
+                    debugHelper.logValue("evaluate code response",data);
                     this.showOutput(data);
                 })
                 .catch(error => console.error(error)))
@@ -119,7 +119,7 @@ export default class CreateQuestionScene extends Phaser.Scene {
             this._apiHelper.evaluateCode(code)
                 .then((result: any) => result.json()
                     .then(data => {
-                        console.log(data)
+                        debugHelper.logValue("evaluate code response", data)
                         if(data.error){
                             resolve(data.error)
                         }else{
@@ -285,7 +285,7 @@ export default class CreateQuestionScene extends Phaser.Scene {
 
         const fullTestCode = this.getUserCodeWithFunciton() + ifStatement;
 
-        console.log(fullTestCode)
+        debugHelper.logValue("full test code", fullTestCode);
 
         let inputField = <HTMLInputElement>(
             document.getElementById(this._currentQuestion.elements[0].element_identifier)

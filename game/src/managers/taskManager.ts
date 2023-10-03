@@ -15,6 +15,7 @@ import availableQuestions from "./availableQuestionsTestData";
 import { gameController } from "../main";
 import { GameEvents } from "../types/gameEvents";
 import { SceneKeys } from "../types/sceneKeys";
+import {debugHelper} from "../helpers/debugHelper";
 
 /**
  * Manages tasks and questions for the game.
@@ -49,7 +50,6 @@ export default class TaskManager {
                 .then((response: any) => {
                     this.availableQuestions = response.questions;
                     this.currentChapterMaxDifficulty = Math.max(...this.availableQuestions.map((q) => q.difficulty));
-                    console.log(availableQuestions);
                     resolve(null);
                 })
                 .catch((error) => reject(error));
@@ -102,8 +102,6 @@ export default class TaskManager {
             this.currentQuestionSetForObject.push(question);
         }
 
-        console.log(this.currentQuestionSetForObject);
-
         this.currentDoneQuestions = 0;
         this.currentTotalQuestions = this.currentQuestionSetForObject.length;
     }
@@ -128,7 +126,7 @@ export default class TaskManager {
     }
 
     private onObjectFailed() {
-        console.log("FAILED");
+        debugHelper.logString("failed")
         //TODO Why was it queued until it wasnt sleeping anymore? What is suppposed to happen when object failed?
         // if (gameController.masterSceneController.isSceneSleeping(SceneKeys.WORLD_VIEW_SCENE_KEY)) {
         //     this._worldViewScene.queueTask(() => {
@@ -193,13 +191,7 @@ export default class TaskManager {
         );
     }
 
-    constructor() {
-        // this._worldViewScene = worldViewScene;
-
-        //Test data!
-        //this.availableQuestions = availableQuestions;
-        // console.log(worldViewScene.user)
-
+    public initialiseQuestionSet() {
         this.loadQuestions()
             .then((result) => {
                 this.loadState(gameController.gameStateManager.user.answeredQuestionIds);
@@ -207,4 +199,14 @@ export default class TaskManager {
             })
             .catch((error) => console.error(error));
     }
+
+    // constructor() {
+    //     // this._worldViewScene = worldViewScene;
+    //
+    //     //Test data!
+    //     //this.availableQuestions = availableQuestions;
+    //     // console.log(worldViewScene.user)
+    //
+    //
+    // }
 }

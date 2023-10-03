@@ -1,9 +1,10 @@
 import {GameStateType} from "../types/gameStateType";
+import {Game} from "phaser";
 
-export class GameStateManager {
-    currentRoomId: string;
+export class GameState {
     gameFinished: boolean;
     room: {
+        id: string,
         finishedTaskObjects: number[];
         doorUnlocked: boolean;
     };
@@ -34,12 +35,10 @@ export class GameStateManager {
         username: string;
     };
 
-
-
     initialiseEmpty() {
-        this.currentRoomId = "hangar"
         this.gameFinished = false
         this.room = {
+            id: "hangar",
             finishedTaskObjects: [],
             doorUnlocked: false
         };
@@ -71,8 +70,8 @@ export class GameStateManager {
         };
     }
 
-    initialiseExisting(existingGameState: GameStateType) {
-        this.currentRoomId = existingGameState.currentRoomId;
+    initialiseExisting(existingGameState: GameState) {
+        // this.currentRoomId = existingGameState.currentRoomId;
         this.gameFinished = existingGameState.gameFinished;
         this.room = existingGameState.room;
         this.story = existingGameState.story;
@@ -80,12 +79,18 @@ export class GameStateManager {
         this.user = existingGameState.user;
     }
 
-    constructor(existingGameState?: GameStateType) {
+    constructor(existingGameState?: GameState) {
         if (existingGameState) {
             this.initialiseExisting(existingGameState);
         } else {
             this.initialiseEmpty();
         }
+    }
+
+    changeRoom(newRoomId: string){
+        this.room.id = newRoomId;
+        this.room.doorUnlocked = false;
+        this.room.finishedTaskObjects = [];
     }
 
     addUnlockedHats(hatId) {

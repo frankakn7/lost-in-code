@@ -38,17 +38,14 @@ export default class RoomSceneController {
      * @param {string} id - The ID of the room to navigate to.
      */
     public changeRoomSceneViaId(id: string) {
-        console.log("changing room")
-        let nextRoom = roomMap.get(id);
-        console.log("getting next room")
 
-        // this._currentRoomScene.deleteRoomManager();
+        let nextRoom = roomMap.get(id);
+        //stop and remove current scene
         this._masterSceneController.stopScene(SceneKeys.ROOM_SCENE_KEY_IDENTIFIER + this._currentRoomScene.roomId)
-        // console.log("stopped scene")
         this._masterSceneController.removeScene(SceneKeys.ROOM_SCENE_KEY_IDENTIFIER + this._currentRoomScene.roomId);
 
         // Initialize the 'finishedTaskObjects' property of the game state for the next room.
-        gameController.gameStateManager.room.finishedTaskObjects = [];
+        gameController.gameStateManager.changeRoom(nextRoom.roomId);
         // Launch the next room scene to activate it.
         this._masterSceneController.runScene(SceneKeys.ROOM_SCENE_KEY_IDENTIFIER + nextRoom.roomId);
 
@@ -56,6 +53,6 @@ export default class RoomSceneController {
     }
 
     updateCurrentRoomScene(){
-        this._currentRoomScene = roomMap.get(gameController.gameStateManager.currentRoomId);
+        this._currentRoomScene = roomMap.get(gameController.gameStateManager.room.id);
     }
 }

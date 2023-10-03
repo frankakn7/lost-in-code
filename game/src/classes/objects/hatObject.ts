@@ -17,8 +17,6 @@ export default class HatObject extends InteractiveObject {
         properties
     ) {
         super(id, scene, room, x, y, params);
-        console.log("### HAT SCENE")
-        console.log(this.scene)
         this.body.enable = false;
         this.body.setOffset(0, 0);
 

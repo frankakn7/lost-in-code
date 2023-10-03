@@ -31,7 +31,6 @@ export default class StoryManager {
         // Iterate over each 'room' in the 'storyJson' object.
         for(let room in storyJson) {
             // If the '_storyEvents' map does not have an entry for the current 'room',
-            console.log(room)
             // create a new entry with an empty Map to store ChatFlow objects.
             if (!(room in this._storyEvents)) this._storyEvents[room] = new Map<string, ChatFlow>();
 
@@ -55,7 +54,6 @@ export default class StoryManager {
                     ));
 
                     this._storyEvents[room].set(i.toString(), cf);
-
                 }
                 else break;
             }
@@ -131,12 +129,11 @@ export default class StoryManager {
      */
     public pullNextStoryBit(room: string): ChatFlow {
         let key = this._storyEvents[room].keys().next().value;
-        let value: ChatFlow = this._storyEvents[room].get(key);
-
+        let newChatFlow: ChatFlow = this._storyEvents[room].get(key);
         gameController.gameStateManager.story[room].push(key);
         this._storyEvents[room].delete(key);
 
-        return value;
+        return newChatFlow;
     }
 
     /**

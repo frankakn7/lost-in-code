@@ -14,6 +14,7 @@ import {globalEventBus} from "../../helpers/globalEventBus";
 import {SceneKeys} from "../../types/sceneKeys";
 import {gameController} from "../../main";
 import {GameEvents} from "../../types/gameEvents";
+import {debugHelper} from "../../helpers/debugHelper";
 
 export default class QuestionViewScene extends Phaser.Scene {
     private currentQuestion: Question;
@@ -48,7 +49,7 @@ export default class QuestionViewScene extends Phaser.Scene {
     }
 
     create() {
-        console.log("creating QUESTION VIEW")
+        debugHelper.logString("creating question view")
         this.scene;
 
         this.tilesprite = this.add
@@ -193,7 +194,6 @@ export default class QuestionViewScene extends Phaser.Scene {
 
     private checkAnswer() {
         this.currentQuestionScene.checkAnswer().then(correct => {
-            console.log(correct)
             if (correct) {
                 gameController.taskManager.questionAnsweredCorrectly(this._startTime - this.time.now);
                 this.showNextButton();

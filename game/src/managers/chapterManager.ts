@@ -37,6 +37,6 @@ export default class ChapterManager {
     }
 
     constructor() {
-        this.updateChapters().catch(error => console.log(error));
+        this.updateChapters().catch(error => console.error(error));
     }
 }

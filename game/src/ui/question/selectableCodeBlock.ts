@@ -75,7 +75,6 @@ export default class SelectableCodeBlock extends Phaser.GameObjects.Container {
 
     async createCodeBlockImage() {
         hljs.registerLanguage("php", php);
-        // console.log(this.code)
         let highlightedCode = hljs.highlight(this.code, {
             language: "php",
         }).value;

@@ -1,4 +1,6 @@
 import {GameStateType} from "../types/gameStateType";
+import {GameState} from "../managers/gameState";
+import {debugHelper} from "./debugHelper";
 
 /**
  * Helper class for making API requests related to the game.
@@ -27,7 +29,7 @@ export default class ApiHelper {
         const url = this.phpUrl;
         const formData = new FormData();
         formData.append("code", code);
-        console.log(formData)
+        debugHelper.logValue("form data", formData);
         return new Promise((resolve, reject) => {
             fetch(url, {
                 method: "POST",
@@ -55,8 +57,6 @@ export default class ApiHelper {
             fetch(url, {method: "GET", credentials: "include"})
                 .then((response) => {
                     response.json().then((data) => {
-                        console.log("### Getting chapters")
-                        console.log(data)
                         resolve(data)
                     })
                 })
@@ -71,35 +71,66 @@ export default class ApiHelper {
      * @param {number} chapterNumber - The chapter number for which to fetch the full data.
      * @returns {Promise} - A Promise that resolves with the full chapter data or rejects with an error message.
      */
-    public getFullChapter(chapterNumber: number) {
-        const url = this.apiUrl + "/users/me/curriculum_data";
-        return new Promise((resolve, reject) => {
-            fetch(url, {method: "GET", credentials: "include"})
-                .then((response) => {
-                    response
-                        .json()
-                        .then((data) => {
-                            // resolve(data);
-                            const url2 = this.apiUrl + "/chapters/";
-                            fetch(url2, {method: "GET", credentials: "include"})
-                                .then((res) => {
-                                    res.json().then((chapters: any) => {
-                                        const chapter = chapters.find(chapter => chapter.order_position == chapterNumber && chapter.curriculum_id == data.curriculum_id)
-                                        const url3 = this.apiUrl + "/chapters/" + chapter.id + "/full";
-                                        fetch(url3, {method: "GET", credentials: "include"})
-                                            .then((res) => {
-                                                console.log(res)
-                                                res.json().then((chapter: any) => {
-                                                    resolve(chapter);
-                                                }).catch((error) => reject(error));
-                                            }).catch((error) => reject(error));
-                                    }).catch((error) => reject(error));
-                                }).catch((error) => reject(error));
-                        }).catch((error) => reject(error));
-                })
-                .catch((error) => reject(error));
-        })
+    // public getFullChapter(chapterNumber: number) {
+    //     const url = this.apiUrl + "/users/me/curriculum_data";
+    //     return new Promise((resolve, reject) => {
+    //         fetch(url, {method: "GET", credentials: "include"})
+    //             .then((response) => {
+    //                 response
+    //                     .json()
+    //                     .then((data) => {
+    //                         // resolve(data);
+    //                         const url2 = this.apiUrl + "/chapters/";
+    //                         fetch(url2, {method: "GET", credentials: "include"})
+    //                             .then((res) => {
+    //                                 res.json().then((chapters: any) => {
+    //                                     const chapter = chapters.find(chapter => chapter.order_position == chapterNumber && chapter.curriculum_id == data.curriculum_id)
+    //                                     const url3 = this.apiUrl + "/chapters/" + chapter.id + "/full";
+    //                                     fetch(url3, {method: "GET", credentials: "include"})
+    //                                         .then((res) => {
+    //                                             console.log(res)
+    //                                             res.json().then((chapter: any) => {
+    //                                                 resolve(chapter);
+    //                                             }).catch((error) => reject(error));
+    //                                         }).catch((error) => reject(error));
+    //                                 }).catch((error) => reject(error));
+    //                             }).catch((error) => reject(error));
+    //                     }).catch((error) => reject(error));
+    //             })
+    //             .catch((error) => reject(error));
+    //     })
+    // }
+
+    public async getFullChapter(chapterNumber: number) {
+        try {
+            //Get curriculum Data
+            const curriculumDataUrl = `${this.apiUrl}/users/me/curriculum_data`;
+            const curriculumDataResponse = await this.getIncludingCredentials(curriculumDataUrl);
+            const curriculumData = await curriculumDataResponse.json();
+
+            //Get all chapters
+            const chaptersUrl = `${this.apiUrl}/chapters/`;
+            const chaptersResponse = await this.getIncludingCredentials(chaptersUrl);
+            const chaptersData: any = await chaptersResponse.json();
+
+            //find current chapter id
+            const chapter = chaptersData.find((chapter: any) => chapter.order_position == chapterNumber && chapter.curriculum_id == curriculumData.curriculum_id);
+
+            if (!chapter) {
+                throw new Error('Chapter not found');
+            }
+
+            //Get full chapter using id
+            const fullChapterUrl = `${this.apiUrl}/chapters/${chapter.id}/full`;
+            const fullChapterResponse = await this.getIncludingCredentials(fullChapterUrl);
+            const fullChapter: any = await fullChapterResponse.json();
+
+            return fullChapter;
+        } catch (error) {
+            throw new Error(error);
+        }
     }
+
 
     /**
      * Get the game state data for the current user.
@@ -113,8 +144,6 @@ export default class ApiHelper {
                     response
                         .json()
                         .then((data) => {
-                                console.log("GAME STATE DATA")
-                                console.log(data)
                                 resolve(data)
                             }
                         )
@@ -129,12 +158,12 @@ export default class ApiHelper {
      * @param {GameStateType} state_data - The new game state data to be updated.
      * @returns {Promise} - A Promise that resolves with the updated game state data or rejects with an error message.
      */
-    public updateStateData(state_data: GameStateType
+    // public updateStateData(state_data: GameStateType
+    public updateStateData(state_data: GameState
     ) {
-        console.log("### SAVING GAME STATE DATA")
-        console.log(state_data)
+        debugHelper.logValue("saving gamestate data", state_data)
         const gameState = {game_state: state_data}
-        console.log(JSON.stringify(gameState))
+        debugHelper.logValue("json stringified gamestate", JSON.stringify(gameState))
         const url = this.apiUrl + "/gamestates/me";
         return new Promise((resolve, reject) => {
             fetch(url, {
@@ -163,12 +192,12 @@ export default class ApiHelper {
         return new Promise((resolve, reject) => {
             fetch(url, {method: "GET", credentials: "include"})
                 .then((response) => {
-                    console.log(response)
+                    debugHelper.logValue("api/me response", response);
                     if (response.status == 200) {
                         response
                             .json()
                             .then((data) => {
-                                    console.log(data.user)
+                                    debugHelper.logValue("user data", data.user)
                                     data.user
                                         ? resolve(data)
                                         : reject("not logged in")
@@ -205,7 +234,7 @@ export default class ApiHelper {
                         response
                             .json()
                             .then((data) => {
-                                console.log(data)
+                                debugHelper.logValue("login response data",data)
                                     data.user
                                         ? resolve(data)
                                         : reject("no user data")
@@ -237,5 +266,9 @@ export default class ApiHelper {
                 })
                 .catch((error) => reject(error));
         });
+    }
+
+    private async getIncludingCredentials(url: string){
+        return fetch(url, { method: "GET", credentials: "include" });
     }
 }

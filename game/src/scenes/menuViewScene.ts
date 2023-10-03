@@ -18,12 +18,7 @@ export default class MenuViewScene extends Phaser.Scene {
         super(SceneKeys.MENU_VIEW_SCENE_KEY);
     }
 
-    preload(){
-        console.log("### preloading menu")
-    }
-
     create() {
-        console.log("### Creating Menu View")
         this._tilesprite = this.add
             .tileSprite(
                 0,

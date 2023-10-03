@@ -5,6 +5,7 @@ import WorldViewScene from "../scenes/worldViewScene";
 import {gameController} from "../main";
 import * as Events from "events";
 import {GameEvents} from "../types/gameEvents";
+import {debugHelper} from "../helpers/debugHelper";
 
 /**
  * Achievement manager, handles the achievement flow, loading from json, saving to game state,
@@ -100,7 +101,7 @@ export default class AchievementManager {
         globalEventBus.emit("broadcast_achievement", achievements[achievementKey]);
 
         this.unlocked.push(achievementKey);
-        console.log("Earned achievement: " + achievementKey);
+        debugHelper.logString("earned achievement: "+achievementKey)
     }
 
     public saveAll() {

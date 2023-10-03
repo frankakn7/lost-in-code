@@ -4,6 +4,7 @@ import hljs from "highlight.js/lib/core";
 import php from "highlight.js/lib/languages/php";
 import "highlight.js/styles/night-owl.css";
 import {SceneKeys} from "../../../types/sceneKeys";
+import {debugHelper} from "../../../helpers/debugHelper";
 
 export default class InputQuestionScene extends Phaser.Scene {
     private _currentQuestion: Question;
@@ -147,7 +148,7 @@ export default class InputQuestionScene extends Phaser.Scene {
         correctAnswers.forEach((answers) => {
             this._correctAnswer.appendText(answers.join(" / "))
         })
-        console.log(this._correctAnswer.text);
+        debugHelper.logValue("correct answer text", this._correctAnswer.text)
     }
 
     private showCorrectText(){
