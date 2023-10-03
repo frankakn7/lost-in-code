@@ -57,46 +57,7 @@ export default class QuestionSceneController {
             });
         }
     }
-
-    public addAndStartChoiceQuestionScene(choiceQuestionScene: ChoiceQuestionContainer){
-        // this._masterSceneController.addScene(SceneKeys.CHOICE_QUESTION_SCENE_KEY, choiceQuestionScene);
-        // this._masterSceneController.runScene(SceneKeys.CHOICE_QUESTION_SCENE_KEY);
-    }
-
-    public addAndStartInputQuestionScene(inputQuestionScene: InputQuestionContainer){
-        // this._masterSceneController.addScene(SceneKeys.INPUT_QUESTION_SCENE_KEY, inputQuestionScene);
-        // this._masterSceneController.runScene(SceneKeys.INPUT_QUESTION_SCENE_KEY);
-    }
-
-    public addAndStartDragDropQuestionScene(dragDropQuestionScene: DragDropQuestionContainer){
-        // this._masterSceneController.addScene(SceneKeys.DRAG_DROP_QUESTION_SCENE_KEY, dragDropQuestionScene);
-        // this._masterSceneController.runScene(SceneKeys.DRAG_DROP_QUESTION_SCENE_KEY);
-    }
-
-    public addAndStartClozeQuestionScene(clozeQuestionScene: ClozeQuestionContainer){
-        // this._masterSceneController.addScene(SceneKeys.CLOZE_QUESTION_SCENE_KEY, clozeQuestionScene);
-        // this._masterSceneController.runScene(SceneKeys.CLOZE_QUESTION_SCENE_KEY);
-    }
-
-    public addAndStartSelectOneQuestionScene(selectOneQuestionScene: SelectOneQuestionContainer){
-        // this._masterSceneController.addScene(SceneKeys.SELECT_ONE_QUESTION_SCENE_KEY, selectOneQuestionScene);
-        // this._masterSceneController.runScene(SceneKeys.SELECT_ONE_QUESTION_SCENE_KEY);
-    }
-
-    public addAndStartCreateQuestionScene(createQuestionScene: CreateQuestionContainer){
-        // this._masterSceneController.addScene(SceneKeys.CREATE_QUESTION_SCENE_KEY, createQuestionScene);
-        // this._masterSceneController.runScene(SceneKeys.CREATE_QUESTION_SCENE_KEY);
-    }
-
-    public removeAllQuestionScenes(){
-        this._masterSceneController.removeScene(SceneKeys.CHOICE_QUESTION_SCENE_KEY)
-        this._masterSceneController.removeScene(SceneKeys.INPUT_QUESTION_SCENE_KEY)
-        this._masterSceneController.removeScene(SceneKeys.DRAG_DROP_QUESTION_SCENE_KEY)
-        this._masterSceneController.removeScene(SceneKeys.CLOZE_QUESTION_SCENE_KEY)
-        this._masterSceneController.removeScene(SceneKeys.SELECT_ONE_QUESTION_SCENE_KEY)
-        this._masterSceneController.removeScene(SceneKeys.CREATE_QUESTION_SCENE_KEY)
-    }
-
+    
     public exitQuestionView(){
         // this.removeAllQuestionScenes()
         this._masterSceneController.removeScene(SceneKeys.QUESTION_VIEW_SCENE_KEY)
