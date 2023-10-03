@@ -1,14 +1,15 @@
 import * as Phaser from "phaser";
-import Question from "../../../classes/question/question";
+import Question from "../../classes/question/question";
 import hljs from "highlight.js/lib/core";
 import php from "highlight.js/lib/languages/php";
 import "highlight.js/styles/night-owl.css";
-import { ChoiceQuestionElement, OrderQuestionElement } from "../../../classes/question/questionElement";
-import ChoiceButton from "../../../ui/choiceButton";
-import DraggableCodeBlock from "../../../ui/question/draggableCodeBlock";
-import {SceneKeys} from "../../../types/sceneKeys";
+import { ChoiceQuestionElement, OrderQuestionElement } from "../../classes/question/questionElement";
+import ChoiceButton from "../choiceButton";
+import DraggableCodeBlock from "./draggableCodeBlock";
+import {SceneKeys} from "../../types/sceneKeys";
+import * as phaser from "phaser";
 
-export default class DragDropQuestionScene extends Phaser.Scene {
+export default class DragDropQuestionContainer extends Phaser.GameObjects.Container {
     private _currentQuestion: Question;
 
     private _choiceButtons: ChoiceButton[] = [];
@@ -20,21 +21,22 @@ export default class DragDropQuestionScene extends Phaser.Scene {
     private _correctAnswer: Phaser.GameObjects.Text;
     private _correctTextStyle;
 
-    readonly _sceneKey: SceneKeys;
+    // readonly _sceneKey: SceneKeys;
 
 
-    constructor(questionText: Phaser.GameObjects.Text, currentQuestion: Question) {
-        let sceneKey = SceneKeys.DRAG_DROP_QUESTION_SCENE_KEY;
-        super(sceneKey);
-        this._sceneKey = sceneKey;
+    constructor(scene: Phaser.Scene,x:number,y:number,questionText: Phaser.GameObjects.Text, currentQuestion: Question) {
+        // let sceneKey = SceneKeys.DRAG_DROP_QUESTION_SCENE_KEY;
+        super(scene,x,y);
+        // this._sceneKey = sceneKey;
         this._questionText = questionText;
         this._currentQuestion = currentQuestion;
+        this.initialiseUI();
     }
 
-    create(){
+    private initialiseUI(){
         this.displayDragDropQuestion();
 
-        this.events.on("blockDropped", (droppedBlock: DraggableCodeBlock) => {
+        this.scene.events.on("blockDropped", (droppedBlock: DraggableCodeBlock) => {
             this.reorderBlocks(droppedBlock);
         });
 
@@ -45,7 +47,7 @@ export default class DragDropQuestionScene extends Phaser.Scene {
             // color: "#f54747",
             color: "#00ff7b",
             wordWrap: {
-                width: this.cameras.main.displayWidth - 100, //once for left and once for right
+                width: this.scene.cameras.main.displayWidth - 100, //once for left and once for right
                 useAdvancedWrap: true,
             },
             align: "center",
@@ -58,10 +60,10 @@ export default class DragDropQuestionScene extends Phaser.Scene {
             let element = this._currentQuestion.elements[i];
 
             let draggableCodeBlock = new DraggableCodeBlock(
-                this,
+                this.scene,
                 element.id,
                 element.content,
-                this.cameras.main.displayWidth / 2,
+                this.scene.cameras.main.displayWidth / 2,
                 previousBottomY + 50
             );
             await draggableCodeBlock.createCodeBlockImage();
@@ -86,12 +88,13 @@ export default class DragDropQuestionScene extends Phaser.Scene {
 
     private showCorrectText(){
         let previousY = this._draggableCodeBlocks[this._draggableCodeBlocks.length -1 ].y + this._draggableCodeBlocks[this._draggableCodeBlocks.length -1 ].height
-        this._correctAnswer = this.add.text(
-            this.cameras.main.displayWidth / 2,
+        this._correctAnswer = this.scene.add.text(
+            this.scene.cameras.main.displayWidth / 2,
             previousY + 100,
             "Correct",
             this._correctTextStyle
         ).setOrigin(0.5,0);
+        this.add(this._correctAnswer);
     }
 
     public checkAnswer() {

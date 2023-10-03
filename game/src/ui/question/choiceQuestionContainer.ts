@@ -1,14 +1,15 @@
 import * as Phaser from "phaser";
-import Question from "../../../classes/question/question";
+import Question from "../../classes/question/question";
 import hljs from "highlight.js/lib/core";
 import php from "highlight.js/lib/languages/php";
 import "highlight.js/styles/night-owl.css";
-import { ChoiceQuestionElement } from "../../../classes/question/questionElement";
-import ChoiceButton from "../../../ui/choiceButton";
-import {SceneKeys} from "../../../types/sceneKeys";
+import { ChoiceQuestionElement } from "../../classes/question/questionElement";
+import ChoiceButton from "../choiceButton";
+import {SceneKeys} from "../../types/sceneKeys";
 import {Scene} from "phaser";
+import {debugHelper} from "../../helpers/debugHelper";
 
-export default class ChoiceQuestionScene extends Phaser.Scene {
+export default class ChoiceQuestionContainer extends Phaser.GameObjects.Container {
     private _currentQuestion: Question;
 
     private _choiceButtons: ChoiceButton[] = [];
@@ -26,14 +27,18 @@ export default class ChoiceQuestionScene extends Phaser.Scene {
     readonly _sceneKey: SceneKeys;
 
     constructor(
+        scene: Phaser.Scene,
+        x: number,
+        y: number,
         questionText: Phaser.GameObjects.Text,
         currentQuestion: Question
     ) {
-        let sceneKey = SceneKeys.CHOICE_QUESTION_SCENE_KEY;
-        super(sceneKey);
-        this._sceneKey = sceneKey;
+        // let sceneKey = SceneKeys.CHOICE_QUESTION_SCENE_KEY;
+        super(scene,x,y);
+        // this._sceneKey = sceneKey;
         this._questionText = questionText;
         this._currentQuestion = currentQuestion;
+        this.initialiseUI();
     }
 
     private displayCodeBlock(code: string): Phaser.GameObjects.DOMElement {
@@ -51,8 +56,8 @@ export default class ChoiceQuestionScene extends Phaser.Scene {
         dummyPre.style.lineHeight = "2";
         dummyPre.style.letterSpacing = "5px";
         // dummyPre.style.display = "inline-block";
-        dummyPre.style.width = `${this.cameras.main.displayWidth - 200}px`;
-        dummyPre.style.maxHeight = `${this.cameras.main.displayHeight / 4}px`;
+        dummyPre.style.width = `${this.scene.cameras.main.displayWidth - 200}px`;
+        dummyPre.style.maxHeight = `${this.scene.cameras.main.displayHeight / 4}px`;
         dummyPre.style.overflow = "scroll";
         dummyPre.style.overscrollBehavior = "contain";
         dummyPre.style.backgroundColor = "white";
@@ -66,13 +71,15 @@ export default class ChoiceQuestionScene extends Phaser.Scene {
         // dummyForm.appendChild(dummyPre);
 
         // Add the pre element to the Phaser DOM
-        return this.add
+        const domElement = this.scene.add
             .dom(
-                this.cameras.main.displayWidth / 2,
+                this.scene.cameras.main.displayWidth / 2,
                 this._questionText.y + this._questionText.height + 10,
                 dummyPre
             )
             .setOrigin(0.5, 0);
+        this.add(domElement)
+        return domElement
     }
 
     private displayChoiceQuestion(): void {
@@ -89,8 +96,8 @@ export default class ChoiceQuestionScene extends Phaser.Scene {
                     ? codeBlock.y + codeBlock.height
                     : this._questionText.y + this._questionText.height;
                 let answerButton = new ChoiceButton(
-                    this,
-                    this.cameras.main.displayWidth / 2 -
+                    this.scene,
+                    this.scene.cameras.main.displayWidth / 2 -
                         this._buttonWidth / 2,
                     previousButtonY + 100,
                     this._buttonWidth  ,
@@ -101,7 +108,8 @@ export default class ChoiceQuestionScene extends Phaser.Scene {
                     element.id
                 );
                 // answerButton.setY(answerButton.y - answerButton.height);
-                this.add.existing(answerButton);
+                this.scene.add.existing(answerButton);
+                this.add(answerButton);
                 this._choiceButtons.push(answerButton);
             }
         );
@@ -111,25 +119,27 @@ export default class ChoiceQuestionScene extends Phaser.Scene {
         let previousButtonY =
             this._choiceButtons[this._choiceButtons.length - 1].y +
             this._choiceButtons[this._choiceButtons.length - 1].height;
-        this._correctAnswer = this.add.text(
-            this.cameras.main.displayWidth / 2,
+        this._correctAnswer = this.scene.add.text(
+            this.scene.cameras.main.displayWidth / 2,
             previousButtonY + 50,
             "Correct",
             this._correctTextStyle
         ).setOrigin(0.5,0);
+        this.add(this._correctAnswer)
     }
 
     private showCorrectAnswers(correctAnswers: string[]) {
         let previousButtonY =
             this._choiceButtons[this._choiceButtons.length - 1].y +
             this._choiceButtons[this._choiceButtons.length - 1].height;
-        this._correctAnswer = this.add.text(
-            this.cameras.main.displayWidth / 2,
+        this._correctAnswer = this.scene.add.text(
+            this.scene.cameras.main.displayWidth / 2,
             previousButtonY + 50,
             "Correct answers would have been:",
             this._correctAnswerStyle
         ).setOrigin(0.5,0);
         this._correctAnswer.appendText(correctAnswers.join('\n'))
+        this.add(this._correctAnswer)
     }
 
     public checkAnswer() {
@@ -163,8 +173,8 @@ export default class ChoiceQuestionScene extends Phaser.Scene {
         return new Promise((resolve) => resolve(correct));
     }
 
-    create() {
-        this._buttonWidth = this.cameras.main.displayWidth - 300;
+    initialiseUI() {
+        this._buttonWidth = this.scene.cameras.main.displayWidth - 300;
         this.displayChoiceQuestion();
         this._correctAnswerStyle = {
             fontSize: "35px",
@@ -172,7 +182,7 @@ export default class ChoiceQuestionScene extends Phaser.Scene {
             // color: "#00c8ff",
             color: "#f54747",
             wordWrap: {
-                width: this.cameras.main.displayWidth - 100, //once for left and once for right
+                width: this.scene.cameras.main.displayWidth - 100, //once for left and once for right
                 useAdvancedWrap: true,
             },
             align: "center",
@@ -185,7 +195,7 @@ export default class ChoiceQuestionScene extends Phaser.Scene {
             // color: "#f54747",
             color: "#00ff7b",
             wordWrap: {
-                width: this.cameras.main.displayWidth - 100, //once for left and once for right
+                width: this.scene.cameras.main.displayWidth - 100, //once for left and once for right
                 useAdvancedWrap: true,
             },
             align: "center",

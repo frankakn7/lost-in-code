@@ -1,12 +1,12 @@
 import * as Phaser from "phaser";
-import Question from "../../../classes/question/question";
+import Question from "../../classes/question/question";
 import hljs from "highlight.js/lib/core";
 import php from "highlight.js/lib/languages/php";
 import "highlight.js/styles/night-owl.css";
-import {SceneKeys} from "../../../types/sceneKeys";
-import {debugHelper} from "../../../helpers/debugHelper";
+import {SceneKeys} from "../../types/sceneKeys";
+import {debugHelper} from "../../helpers/debugHelper";
 
-export default class InputQuestionScene extends Phaser.Scene {
+export default class InputQuestionContainer extends Phaser.GameObjects.Container {
     private _currentQuestion: Question;
 
     private _questionText: Phaser.GameObjects.Text;
@@ -22,17 +22,21 @@ export default class InputQuestionScene extends Phaser.Scene {
     readonly _sceneKey: SceneKeys;
 
     constructor(
+        scene: Phaser.Scene,
+        x: number,
+        y: number,
         questionText: Phaser.GameObjects.Text,
         currentQuestion: Question
     ) {
-        let sceneKey = SceneKeys.INPUT_QUESTION_SCENE_KEY;
-        super(sceneKey);
-        this._sceneKey = sceneKey;
+        // let sceneKey = SceneKeys.INPUT_QUESTION_SCENE_KEY;
+        super(scene,x,y);
+        // this._sceneKey = sceneKey;
         this._questionText = questionText;
         this._currentQuestion = currentQuestion;
+        this.initialiseUI();
     }
 
-    create() {
+    initialiseUI() {
         this.displayInputQuestion();
 
         this._correctAnswerStyle = {
@@ -41,7 +45,7 @@ export default class InputQuestionScene extends Phaser.Scene {
             // color: "#00c8ff",
             color: "#f54747",
             wordWrap: {
-                width: this.cameras.main.displayWidth - 100, //once for left and once for right
+                width: this.scene.cameras.main.displayWidth - 100, //once for left and once for right
                 useAdvancedWrap: true,
             },
             lineSpacing: 0,
@@ -55,7 +59,7 @@ export default class InputQuestionScene extends Phaser.Scene {
             // color: "#f54747",
             color: "#00ff7b",
             wordWrap: {
-                width: this.cameras.main.displayWidth - 100, //once for left and once for right
+                width: this.scene.cameras.main.displayWidth - 100, //once for left and once for right
                 useAdvancedWrap: true,
             },
             align: "center",
@@ -77,8 +81,8 @@ export default class InputQuestionScene extends Phaser.Scene {
         dummyPre.style.lineHeight = "2";
         dummyPre.style.letterSpacing = "5px";
         // dummyPre.style.display = "inline-block";
-        dummyPre.style.width = `${this.cameras.main.displayWidth - 200}px`;
-        dummyPre.style.maxHeight = `${this.cameras.main.displayHeight / 4}px`;
+        dummyPre.style.width = `${this.scene.cameras.main.displayWidth - 200}px`;
+        dummyPre.style.maxHeight = `${this.scene.cameras.main.displayHeight / 4}px`;
         dummyPre.style.overflow = "scroll";
         dummyPre.style.overscrollBehavior = "contain";
         dummyPre.style.backgroundColor = "white";
@@ -91,23 +95,35 @@ export default class InputQuestionScene extends Phaser.Scene {
         dummyPre.appendChild(dummyDiv);
         // dummyForm.appendChild(dummyPre);
 
+        debugHelper.logValue("dummy pre",dummyPre)
+
         // Add the pre element to the Phaser DOM
-        return this.add
+        const domElement = this.scene.add
             .dom(
-                this.cameras.main.displayWidth / 2,
+                this.scene.cameras.main.displayWidth / 2,
                 this._questionText.y + this._questionText.height + 10,
                 dummyPre
             )
             .setOrigin(0.5, 0);
+        this.add(domElement)
+        return domElement
     }
 
     private displayInputQuestion(): void {
-        this._currentQuestion.code_text ? this._codeBlock = this.displayCodeBlock(this._currentQuestion.code_text) : null;
-        this._inputField = this.displayInputField(
-            this._currentQuestion.elements[0].element_identifier,
-            this._codeBlock.y,
-            this._codeBlock.height
-        );
+        if(this._currentQuestion.code_text){
+            this._codeBlock = this.displayCodeBlock(this._currentQuestion.code_text)
+            this._inputField = this.displayInputField(
+                this._currentQuestion.elements[0].element_identifier,
+                this._codeBlock.y,
+                this._codeBlock.height
+            );
+        }else{
+            this._inputField = this.displayInputField(
+                this._currentQuestion.elements[0].element_identifier,
+                this._questionText.y,
+                this._questionText.height
+            );
+        }
     }
 
     private displayInputField(
@@ -116,7 +132,7 @@ export default class InputQuestionScene extends Phaser.Scene {
         codeBlockHeight: number
     ): Phaser.GameObjects.DOMElement {
         let inputField = document.createElement("input");
-        inputField.style.width = `${this.cameras.main.displayWidth / 2}px`;
+        inputField.style.width = `${this.scene.cameras.main.displayWidth / 2}px`;
         inputField.style.fontFamily = "forwardRegular";
         inputField.style.fontSize = "30px";
         // inputField.style.lineHeight = "2";
@@ -128,19 +144,21 @@ export default class InputQuestionScene extends Phaser.Scene {
         inputField.placeholder = "Your Input";
         inputField.id = elementId;
 
-        return this.add
+        const inputFieldDomElement = this.scene.add
             .dom(
-                this.cameras.main.displayWidth / 2,
+                this.scene.cameras.main.displayWidth / 2,
                 codeBlockY + codeBlockHeight + 100,
                 inputField
             )
             .setOrigin(0.5, 0);
+        this.add(inputFieldDomElement)
+        return inputFieldDomElement;
     }
 
     private showCorrectAnswers(correctAnswers: [string[]]) {
         let previousY = this._inputField.y + this._inputField.height
-        this._correctAnswer = this.add.text(
-            this.cameras.main.displayWidth / 2,
+        this._correctAnswer = this.scene.add.text(
+            this.scene.cameras.main.displayWidth / 2,
             previousY + 100,
             "Correct answers would have been:",
             this._correctAnswerStyle
@@ -148,17 +166,19 @@ export default class InputQuestionScene extends Phaser.Scene {
         correctAnswers.forEach((answers) => {
             this._correctAnswer.appendText(answers.join(" / "))
         })
+        this.add(this._correctAnswer);
         debugHelper.logValue("correct answer text", this._correctAnswer.text)
     }
 
     private showCorrectText(){
         let previousY = this._inputField.y + this._inputField.height
-        this._correctAnswer = this.add.text(
-            this.cameras.main.displayWidth / 2,
+        this._correctAnswer = this.scene.add.text(
+            this.scene.cameras.main.displayWidth / 2,
             previousY + 100,
             "Correct",
             this._correctTextStyle
         ).setOrigin(0.5,0);
+        this.add(this._correctAnswer);
     }
 
     public checkAnswer() {

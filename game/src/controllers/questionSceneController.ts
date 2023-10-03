@@ -3,12 +3,12 @@ import MasterSceneController from "./masterSceneController";
 import {SceneKeys} from "../types/sceneKeys";
 import QuestionViewScene from "../scenes/questionView/questionViewScene";
 import {ChapterType} from "../managers/chapterManager";
-import ChoiceQuestionScene from "../scenes/questionView/singleQuestionScenes/choiceQuestionScene";
-import InputQuestionScene from "../scenes/questionView/singleQuestionScenes/inputQuestionScene";
-import DragDropQuestionScene from "../scenes/questionView/singleQuestionScenes/dragDropQuestionScene";
-import ClozeQuestionScene from "../scenes/questionView/singleQuestionScenes/clozeQuestionScene";
-import SelectOneQuestionScene from "../scenes/questionView/singleQuestionScenes/selectOneQuestionScene";
-import CreateQuestionScene from "../scenes/questionView/singleQuestionScenes/createQuestionScene";
+import ChoiceQuestionContainer from "../ui/question/choiceQuestionContainer";
+import InputQuestionContainer from "../ui/question/inputQuestionContainer";
+import DragDropQuestionContainer from "../ui/question/dragDropQuestionContainer";
+import ClozeQuestionContainer from "../ui/question/clozeQuestionContainer";
+import SelectOneQuestionContainer from "../ui/question/selectOneQuestionContainer";
+import CreateQuestionContainer from "../ui/question/createQuestionContainer";
 
 export default class QuestionSceneController {
 
@@ -58,34 +58,34 @@ export default class QuestionSceneController {
         }
     }
 
-    public addAndStartChoiceQuestionScene(choiceQuestionScene: ChoiceQuestionScene){
-        this._masterSceneController.addScene(SceneKeys.CHOICE_QUESTION_SCENE_KEY, choiceQuestionScene);
-        this._masterSceneController.runScene(SceneKeys.CHOICE_QUESTION_SCENE_KEY);
+    public addAndStartChoiceQuestionScene(choiceQuestionScene: ChoiceQuestionContainer){
+        // this._masterSceneController.addScene(SceneKeys.CHOICE_QUESTION_SCENE_KEY, choiceQuestionScene);
+        // this._masterSceneController.runScene(SceneKeys.CHOICE_QUESTION_SCENE_KEY);
     }
 
-    public addAndStartInputQuestionScene(inputQuestionScene: InputQuestionScene){
-        this._masterSceneController.addScene(SceneKeys.INPUT_QUESTION_SCENE_KEY, inputQuestionScene);
-        this._masterSceneController.runScene(SceneKeys.INPUT_QUESTION_SCENE_KEY);
+    public addAndStartInputQuestionScene(inputQuestionScene: InputQuestionContainer){
+        // this._masterSceneController.addScene(SceneKeys.INPUT_QUESTION_SCENE_KEY, inputQuestionScene);
+        // this._masterSceneController.runScene(SceneKeys.INPUT_QUESTION_SCENE_KEY);
     }
 
-    public addAndStartDragDropQuestionScene(dragDropQuestionScene: DragDropQuestionScene){
-        this._masterSceneController.addScene(SceneKeys.DRAG_DROP_QUESTION_SCENE_KEY, dragDropQuestionScene);
-        this._masterSceneController.runScene(SceneKeys.DRAG_DROP_QUESTION_SCENE_KEY);
+    public addAndStartDragDropQuestionScene(dragDropQuestionScene: DragDropQuestionContainer){
+        // this._masterSceneController.addScene(SceneKeys.DRAG_DROP_QUESTION_SCENE_KEY, dragDropQuestionScene);
+        // this._masterSceneController.runScene(SceneKeys.DRAG_DROP_QUESTION_SCENE_KEY);
     }
 
-    public addAndStartClozeQuestionScene(clozeQuestionScene: ClozeQuestionScene){
-        this._masterSceneController.addScene(SceneKeys.CLOZE_QUESTION_SCENE_KEY, clozeQuestionScene);
-        this._masterSceneController.runScene(SceneKeys.CLOZE_QUESTION_SCENE_KEY);
+    public addAndStartClozeQuestionScene(clozeQuestionScene: ClozeQuestionContainer){
+        // this._masterSceneController.addScene(SceneKeys.CLOZE_QUESTION_SCENE_KEY, clozeQuestionScene);
+        // this._masterSceneController.runScene(SceneKeys.CLOZE_QUESTION_SCENE_KEY);
     }
 
-    public addAndStartSelectOneQuestionScene(selectOneQuestionScene: SelectOneQuestionScene){
-        this._masterSceneController.addScene(SceneKeys.SELECT_ONE_QUESTION_SCENE_KEY, selectOneQuestionScene);
-        this._masterSceneController.runScene(SceneKeys.SELECT_ONE_QUESTION_SCENE_KEY);
+    public addAndStartSelectOneQuestionScene(selectOneQuestionScene: SelectOneQuestionContainer){
+        // this._masterSceneController.addScene(SceneKeys.SELECT_ONE_QUESTION_SCENE_KEY, selectOneQuestionScene);
+        // this._masterSceneController.runScene(SceneKeys.SELECT_ONE_QUESTION_SCENE_KEY);
     }
 
-    public addAndStartCreateQuestionScene(createQuestionScene: CreateQuestionScene){
-        this._masterSceneController.addScene(SceneKeys.CREATE_QUESTION_SCENE_KEY, createQuestionScene);
-        this._masterSceneController.runScene(SceneKeys.CREATE_QUESTION_SCENE_KEY);
+    public addAndStartCreateQuestionScene(createQuestionScene: CreateQuestionContainer){
+        // this._masterSceneController.addScene(SceneKeys.CREATE_QUESTION_SCENE_KEY, createQuestionScene);
+        // this._masterSceneController.runScene(SceneKeys.CREATE_QUESTION_SCENE_KEY);
     }
 
     public removeAllQuestionScenes(){
@@ -98,7 +98,7 @@ export default class QuestionSceneController {
     }
 
     public exitQuestionView(){
-        this.removeAllQuestionScenes()
+        // this.removeAllQuestionScenes()
         this._masterSceneController.removeScene(SceneKeys.QUESTION_VIEW_SCENE_KEY)
     }
 }

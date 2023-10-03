@@ -4,12 +4,12 @@ import Question from "../../classes/question/question";
 import {QuestionType} from "../../types/questionType";
 import deviceBackgroundTilePng from "../../assets/Device-Background-Tile.png";
 import DeviceButton from "../../ui/deviceButton";
-import ChoiceQuestionScene from "./singleQuestionScenes/choiceQuestionScene";
-import InputQuestionScene from "./singleQuestionScenes/inputQuestionScene";
-import DragDropQuestionScene from "./singleQuestionScenes/dragDropQuestionScene";
-import ClozeQuestionScene from "./singleQuestionScenes/clozeQuestionScene";
-import SelectOneQuestionScene from "./singleQuestionScenes/selectOneQuestionScene";
-import CreateQuestionScene from "./singleQuestionScenes/createQuestionScene";
+import ChoiceQuestionContainer from "../../ui/question/choiceQuestionContainer";
+import InputQuestionContainer from "../../ui/question/inputQuestionContainer";
+import DragDropQuestionContainer from "../../ui/question/dragDropQuestionContainer";
+import ClozeQuestionContainer from "../../ui/question/clozeQuestionContainer";
+import SelectOneQuestionContainer from "../../ui/question/selectOneQuestionContainer";
+import CreateQuestionContainer from "../../ui/question/createQuestionContainer";
 import {globalEventBus} from "../../helpers/globalEventBus";
 import {SceneKeys} from "../../types/sceneKeys";
 import {gameController} from "../../main";
@@ -32,13 +32,13 @@ export default class QuestionViewScene extends Phaser.Scene {
 
     private progressBar: Phaser.GameObjects.Graphics;
 
-    private currentQuestionScene:
-        | ChoiceQuestionScene
-        | InputQuestionScene
-        | DragDropQuestionScene
-        | ClozeQuestionScene
-        | SelectOneQuestionScene
-        | CreateQuestionScene;
+    private _currentQuestionContainer:
+        | ChoiceQuestionContainer
+        | InputQuestionContainer
+        | DragDropQuestionContainer
+        | ClozeQuestionContainer
+        | SelectOneQuestionContainer
+        | CreateQuestionContainer;
 
     constructor() {
         super(SceneKeys.QUESTION_VIEW_SCENE_KEY);
@@ -113,7 +113,8 @@ export default class QuestionViewScene extends Phaser.Scene {
         if (this.currentQuestion) {
             this.displayQuestion();
         } else {
-            gameController.questionSceneController.removeAllQuestionScenes();
+            this._currentQuestionContainer?.destroy();
+            // gameController.questionSceneController.removeAllQuestionScenes();
             this.questionText?.destroy(true);
             const repairedStyle = {...this.textStyle}
             repairedStyle.color = "#00ff7b";
@@ -140,49 +141,74 @@ export default class QuestionViewScene extends Phaser.Scene {
                 this.textStyle
             )
             .setOrigin(0.5, 0);
-        gameController.questionSceneController.removeAllQuestionScenes();
+        // gameController.questionSceneController.removeAllQuestionScenes();
+        this._currentQuestionContainer?.destroy()
         switch (this.currentQuestion.type) {
             case QuestionType.CHOICE:
-                this.currentQuestionScene = new ChoiceQuestionScene(
+                this._currentQuestionContainer = new ChoiceQuestionContainer(
+                    this,
+                    0,
+                    0,
                     this.questionText,
                     this.currentQuestion
                 );
-                gameController.questionSceneController.addAndStartChoiceQuestionScene(this.currentQuestionScene);
+                // gameController.questionSceneController.addAndStartChoiceQuestionScene(this.currentQuestionContainer);
+                this.add.existing(this._currentQuestionContainer);
                 break;
             case QuestionType.SINGLE_INPUT:
-                this.currentQuestionScene = new InputQuestionScene(
+                this._currentQuestionContainer = new InputQuestionContainer(
+                    this,
+                    0,
+                    0,
                     this.questionText,
                     this.currentQuestion
                 );
-                gameController.questionSceneController.addAndStartInputQuestionScene(this.currentQuestionScene)
+                // gameController.questionSceneController.addAndStartInputQuestionScene(this.currentQuestionContainer)
+                this.add.existing(this._currentQuestionContainer)
                 break;
             case QuestionType.DRAG_DROP:
-                this.currentQuestionScene = new DragDropQuestionScene(
+                this._currentQuestionContainer = new DragDropQuestionContainer(
+                    this,
+                    0,
+                    0,
                     this.questionText,
                     this.currentQuestion
                 );
-                gameController.questionSceneController.addAndStartDragDropQuestionScene(this.currentQuestionScene);
+                // gameController.questionSceneController.addAndStartDragDropQuestionScene(this.currentQuestionContainer);
+                this.add.existing(this._currentQuestionContainer)
                 break;
             case QuestionType.CLOZE:
-                this.currentQuestionScene = new ClozeQuestionScene(
+                this._currentQuestionContainer = new ClozeQuestionContainer(
+                    this,
+                    0,
+                    0,
                     this.questionText,
                     this.currentQuestion
                 );
-                gameController.questionSceneController.addAndStartClozeQuestionScene(this.currentQuestionScene);
+                // gameController.questionSceneController.addAndStartClozeQuestionScene(this.currentQuestionContainer);
+                this.add.existing(this._currentQuestionContainer);
                 break;
             case QuestionType.SELECT_ONE:
-                this.currentQuestionScene = new SelectOneQuestionScene(
+                this._currentQuestionContainer = new SelectOneQuestionContainer(
+                    this,
+                    0,
+                    0,
                     this.questionText,
                     this.currentQuestion
                 );
-                gameController.questionSceneController.addAndStartSelectOneQuestionScene(this.currentQuestionScene);
+                // gameController.questionSceneController.addAndStartSelectOneQuestionScene(this.currentQuestionContainer);
+                this.add.existing(this._currentQuestionContainer)
                 break;
             case QuestionType.CREATE:
-                this.currentQuestionScene = new CreateQuestionScene(
+                this._currentQuestionContainer = new CreateQuestionContainer(
+                    this,
+                    0,
+                    0,
                     this.questionText,
                     this.currentQuestion
                 )
-                gameController.questionSceneController.addAndStartCreateQuestionScene(this.currentQuestionScene)
+                // gameController.questionSceneController.addAndStartCreateQuestionScene(this.currentQuestionContainer)
+                this.add.existing(this._currentQuestionContainer);
                 break;
             default:
                 console.error("question type does not exist");
@@ -193,7 +219,7 @@ export default class QuestionViewScene extends Phaser.Scene {
     }
 
     private checkAnswer() {
-        this.currentQuestionScene.checkAnswer().then(correct => {
+        this._currentQuestionContainer.checkAnswer().then(correct => {
             if (correct) {
                 gameController.taskManager.questionAnsweredCorrectly(this._startTime - this.time.now);
                 this.showNextButton();
@@ -207,6 +233,7 @@ export default class QuestionViewScene extends Phaser.Scene {
     }
 
     private showSubmitButton(): void {
+        debugHelper.logString("showing submit button")
         this.bottomButton?.destroy(true);
         this.bottomButton = new DeviceButton(
             this,
@@ -220,6 +247,7 @@ export default class QuestionViewScene extends Phaser.Scene {
             "Submit"
         );
         this.bottomButton.setY(this.bottomButton.y - this.bottomButton.height);
+        this.bottomButton.setDepth(5)
         this.add.existing(this.bottomButton);
     }
 
