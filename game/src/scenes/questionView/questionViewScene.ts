@@ -114,6 +114,8 @@ export default class QuestionViewScene extends Phaser.Scene {
             this.displayQuestion();
         } else {
             this._currentQuestionContainer?.destroy();
+            delete this._currentQuestionContainer;
+            debugHelper.logValue("current question container", this._currentQuestionContainer)
             // gameController.questionSceneController.removeAllQuestionScenes();
             this.questionText?.destroy(true);
             const repairedStyle = {...this.textStyle}

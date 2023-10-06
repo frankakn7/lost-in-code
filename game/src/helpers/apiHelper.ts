@@ -26,14 +26,16 @@ export default class ApiHelper {
      * @returns {Promise} - A Promise that resolves with the server response or rejects with an error message.
      */
     public evaluateCode(code: string) {
-        const url = this.phpUrl;
+        // const url = this.phpUrl;
+        const url=  "http://localhost:6500";
         const formData = new FormData();
+        debugHelper.logValue("php url",url)
         formData.append("code", code);
         debugHelper.logValue("form data", formData);
         return new Promise((resolve, reject) => {
             fetch(url, {
                 method: "POST",
-                credentials: "include",
+                // credentials: "include",
                 body: formData,
             })
                 .then((response) => {
@@ -43,7 +45,10 @@ export default class ApiHelper {
                         reject("Evalutaion failed");
                     }
                 })
-                .catch((error) => reject(error));
+                .catch((error) => {
+                    console.error(error)
+                    reject(error)
+                });
         });
     }
 

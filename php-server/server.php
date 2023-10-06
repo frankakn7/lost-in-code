@@ -9,6 +9,8 @@ function customErrorHandler($errno, $errstr, $errfile, $errline) {
 
 // Register the custom error handler
 set_error_handler("customErrorHandler");
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: Content-Type");
 
 // Register a function to be executed upon script shutdown
 register_shutdown_function(function() {

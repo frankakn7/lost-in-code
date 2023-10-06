@@ -222,7 +222,7 @@ export default class CreateQuestionContainer extends Phaser.GameObjects.Containe
 
     private showCorrectText() {
         let previousY = this._evaluateButton.y + this._evaluateButton.height;
-        this._correctAnswer?.destroy(true);
+        this._correctAnswer?.destroy(false);
         this._correctAnswer = this.scene.add
             .text(
                 this.scene.cameras.main.displayWidth / 2,
@@ -237,7 +237,7 @@ export default class CreateQuestionContainer extends Phaser.GameObjects.Containe
 
     private showWrongText(text: string) {
         let previousY = this._evaluateButton.y + this._evaluateButton.height;
-        this._correctAnswer?.destroy(true);
+        this._correctAnswer?.destroy(false);
         this._correctAnswer = this.scene.add
             .text(
                 this.scene.cameras.main.displayWidth / 2,
@@ -252,7 +252,7 @@ export default class CreateQuestionContainer extends Phaser.GameObjects.Containe
 
     private showOutputText(text) {
         let previousY = this._evaluateButton.y + this._evaluateButton.height;
-        this._correctAnswer?.destroy(true);
+        this._correctAnswer?.destroy(false);
         this._correctAnswer = this.scene.add
             .text(
                 this.scene.cameras.main.displayWidth / 2,
@@ -266,7 +266,7 @@ export default class CreateQuestionContainer extends Phaser.GameObjects.Containe
 
     private showError(text: string) {
         let previousY = this._evaluateButton.y + this._evaluateButton.height;
-        this._correctAnswer?.destroy(true);
+        this._correctAnswer?.destroy(false);
         this._correctAnswer = this.scene.add
             .text(this.scene.cameras.main.displayWidth / 2, previousY + 100, "Error: " + text, this._correctAnswerStyle)
             .setOrigin(0.5, 0);

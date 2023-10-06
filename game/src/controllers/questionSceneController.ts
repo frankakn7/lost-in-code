@@ -57,7 +57,6 @@ export default class QuestionSceneController {
             });
         }
     }
-    
     public exitQuestionView(){
         // this.removeAllQuestionScenes()
         this._masterSceneController.removeScene(SceneKeys.QUESTION_VIEW_SCENE_KEY)

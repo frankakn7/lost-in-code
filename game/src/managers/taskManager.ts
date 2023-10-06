@@ -127,27 +127,12 @@ export default class TaskManager {
 
     private onObjectFailed() {
         debugHelper.logString("failed")
-        //TODO Why was it queued until it wasnt sleeping anymore? What is suppposed to happen when object failed?
-        // if (gameController.masterSceneController.isSceneSleeping(SceneKeys.WORLD_VIEW_SCENE_KEY)) {
-        //     this._worldViewScene.queueTask(() => {
-        //         globalEventBus.emit(GameEvents.TASKMANAGER_OBJECT_FAILED);
-        //     });
-        // } else {
-        //     globalEventBus.emit(GameEvents.TASKMANAGER_OBJECT_FAILED);
-        // }
         gameController.worldSceneController.queueWorldViewTask(() => {
             globalEventBus.emit(GameEvents.TASKMANAGER_OBJECT_FAILED);
         });
     }
 
     private onObjectRepaired() {
-        // if (this._worldViewScene.scene.isSleeping(this._worldViewScene)) {
-        //     this._worldViewScene.queueTask(() => {
-        //         globalEventBus.emit(GameEvents.TASKMANAGER_OBJECT_FINISHED);
-        //     });
-        // } else {
-        // globalEventBus.emit(GameEvents.TASKMANAGER_OBJECT_FINISHED);
-        // }
         gameController.worldSceneController.queueWorldViewTask(() => {
             globalEventBus.emit(GameEvents.TASKMANAGER_OBJECT_FINISHED);
         });
@@ -199,14 +184,4 @@ export default class TaskManager {
             })
             .catch((error) => console.error(error));
     }
-
-    // constructor() {
-    //     // this._worldViewScene = worldViewScene;
-    //
-    //     //Test data!
-    //     //this.availableQuestions = availableQuestions;
-    //     // console.log(worldViewScene.user)
-    //
-    //
-    // }
 }
