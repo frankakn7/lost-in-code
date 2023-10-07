@@ -1,20 +1,20 @@
 import "highlight.js/styles/night-owl.css";
 import * as Phaser from "phaser";
-import Question from "../../classes/question/question";
-import {QuestionType} from "../../types/questionType";
-import deviceBackgroundTilePng from "../../assets/Device-Background-Tile.png";
-import DeviceButton from "../../ui/deviceButton";
-import ChoiceQuestionContainer from "../../ui/question/choiceQuestionContainer";
-import InputQuestionContainer from "../../ui/question/inputQuestionContainer";
-import DragDropQuestionContainer from "../../ui/question/dragDropQuestionContainer";
-import ClozeQuestionContainer from "../../ui/question/clozeQuestionContainer";
-import SelectOneQuestionContainer from "../../ui/question/selectOneQuestionContainer";
-import CreateQuestionContainer from "../../ui/question/createQuestionContainer";
-import {globalEventBus} from "../../helpers/globalEventBus";
-import {SceneKeys} from "../../types/sceneKeys";
-import {gameController} from "../../main";
-import {GameEvents} from "../../types/gameEvents";
-import {debugHelper} from "../../helpers/debugHelper";
+import Question from "../classes/question/question";
+import {QuestionType} from "../types/questionType";
+import deviceBackgroundTilePng from "../assets/Device-Background-Tile.png";
+import DeviceButton from "../ui/deviceButton";
+import ChoiceQuestionContainer from "../ui/question/choiceQuestionContainer";
+import InputQuestionContainer from "../ui/question/inputQuestionContainer";
+import DragDropQuestionContainer from "../ui/question/dragDropQuestionContainer";
+import ClozeQuestionContainer from "../ui/question/clozeQuestionContainer";
+import SelectOneQuestionContainer from "../ui/question/selectOneQuestionContainer";
+import CreateQuestionContainer from "../ui/question/createQuestionContainer";
+import {globalEventBus} from "../helpers/globalEventBus";
+import {SceneKeys} from "../types/sceneKeys";
+import {gameController} from "../main";
+import {GameEvents} from "../types/gameEvents";
+import {debugHelper} from "../helpers/debugHelper";
 
 export default class QuestionViewScene extends Phaser.Scene {
     private currentQuestion: Question;
@@ -113,11 +113,9 @@ export default class QuestionViewScene extends Phaser.Scene {
         if (this.currentQuestion) {
             this.displayQuestion();
         } else {
-            this._currentQuestionContainer?.destroy();
-            delete this._currentQuestionContainer;
-            debugHelper.logValue("current question container", this._currentQuestionContainer)
+            this.deleteCurrentQuestionContainer();
             // gameController.questionSceneController.removeAllQuestionScenes();
-            this.questionText?.destroy(true);
+            this.questionText?.destroy(false);
             const repairedStyle = {...this.textStyle}
             repairedStyle.color = "#00ff7b";
             this.questionText = this.add
@@ -144,7 +142,7 @@ export default class QuestionViewScene extends Phaser.Scene {
             )
             .setOrigin(0.5, 0);
         // gameController.questionSceneController.removeAllQuestionScenes();
-        this._currentQuestionContainer?.destroy()
+        this.deleteCurrentQuestionContainer();
         switch (this.currentQuestion.type) {
             case QuestionType.CHOICE:
                 this._currentQuestionContainer = new ChoiceQuestionContainer(
@@ -235,7 +233,6 @@ export default class QuestionViewScene extends Phaser.Scene {
     }
 
     private showSubmitButton(): void {
-        debugHelper.logString("showing submit button")
         this.bottomButton?.destroy(true);
         this.bottomButton = new DeviceButton(
             this,
@@ -287,10 +284,6 @@ export default class QuestionViewScene extends Phaser.Scene {
         this.add.existing(this.bottomButton);
     }
 
-    update(time: number, delta: number): void {
-    }
-
-    //TODO put this inside the scene manager
     /**
      * Sends this scene to sleep and reawakes all the other scenes
      */
@@ -298,5 +291,11 @@ export default class QuestionViewScene extends Phaser.Scene {
         gameController.questionSceneController.exitQuestionView();
         gameController.worldSceneController.resumeWorldViewScenes();
         globalEventBus.emit(GameEvents.SAVE_GAME)
+    }
+
+    private deleteCurrentQuestionContainer(){
+        this._currentQuestionContainer?.destroy();
+        delete this._currentQuestionContainer;
+        console.log(this._currentQuestionContainer);
     }
 }

@@ -21,9 +21,10 @@ export default class DraggableCodeBlock extends Phaser.GameObjects.Container {
         children?: Phaser.GameObjects.GameObject[]
     ) {
         super(scene, x, y, children);
+        this._parentContainer = parentContainer;
         this._elementId = elementId;
         this._code = code;
-        this.scene.add.existing(this);
+        this._parentContainer.add(this);
 
         this.setInteractive(
             new Phaser.Geom.Rectangle(0, 0, 100, 100),
