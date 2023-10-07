@@ -61,6 +61,7 @@ export default class SelectOneQuestionContainer extends Phaser.GameObjects.Conta
 
             let selectableCodeBlock = new SelectableCodeBlock(
                 this.scene,
+                this,
                 element.id,
                 element.content,
                 () => {
@@ -124,4 +125,6 @@ export default class SelectOneQuestionContainer extends Phaser.GameObjects.Conta
         }
         return new Promise((resolve) => resolve(allCorrect));
     }
+
+    public remove
 }

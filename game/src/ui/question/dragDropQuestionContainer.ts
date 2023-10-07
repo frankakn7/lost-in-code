@@ -61,6 +61,7 @@ export default class DragDropQuestionContainer extends Phaser.GameObjects.Contai
 
             let draggableCodeBlock = new DraggableCodeBlock(
                 this.scene,
+                this,
                 element.id,
                 element.content,
                 this.scene.cameras.main.displayWidth / 2,
