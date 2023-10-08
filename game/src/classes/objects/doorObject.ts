@@ -4,6 +4,7 @@ import {visibility} from "html2canvas/dist/types/css/property-descriptors/visibi
 
 export default class DoorObject extends TaskObject {
     constructor(
+        id: number,
         scene: Phaser.Scene,
         room: RoomScene,
         x: number,
@@ -11,7 +12,7 @@ export default class DoorObject extends TaskObject {
         params,
         properties
     ) {
-        super(scene, room, x, y, params, properties);
+        super(id, scene, room, x, y, params, properties);
     }
 
     protected preUpdate(time: number, delta: number) {

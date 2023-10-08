@@ -5,15 +5,17 @@ import html2canvas from "html2canvas";
 import * as Phaser from "phaser";
 
 export default class SelectableCodeBlock extends Phaser.GameObjects.Container {
-    private elementId: number;
-    private code: string;
-    private codeBlockImage: Phaser.GameObjects.Image;
-    private graphics: Phaser.GameObjects.Graphics;
-    private onClick: Function;
-    private selected: boolean = false;
+    private _elementId: number;
+    private _code: string;
+    private _codeBlockImage: Phaser.GameObjects.Image;
+    private _graphics: Phaser.GameObjects.Graphics;
+    private _onClick: Function;
+    private _selected: boolean = false;
+    private _parentContainer: Phaser.GameObjects.Container;
 
     constructor(
         scene: Phaser.Scene,
+        parentContainer: Phaser.GameObjects.Container,
         elementId: number,
         code: string,
         onClick: Function,
@@ -22,10 +24,12 @@ export default class SelectableCodeBlock extends Phaser.GameObjects.Container {
         children?: Phaser.GameObjects.GameObject[]
     ) {
         super(scene, x, y, children);
-        this.elementId = elementId;
-        this.code = code;
-        this.scene.add.existing(this);
-        this.onClick = onClick;
+        this._parentContainer = parentContainer;
+        this._elementId = elementId;
+        this._code = code;
+        // this.scene.add.existing(this);
+        this._parentContainer.add(this);
+        this._onClick = onClick;
 
         this.setInteractive(
             new Phaser.Geom.Rectangle(0, 0, 100, 100),
@@ -35,30 +39,30 @@ export default class SelectableCodeBlock extends Phaser.GameObjects.Container {
         // this.createCodeBlockImage();
 
         this.on("pointerdown", () => {
-            this.onClick();
+            this._onClick();
         });
     }
 
     getSelected(){
-        return this.selected;
+        return this._selected;
     }
     
     select(){
         this.markSelected();
-        this.selected = true;
+        this._selected = true;
     }
 
     deselect(){
-        this.graphics.clear()
-        this.graphics.destroy()
-        this.selected = false;
+        this._graphics.clear()
+        this._graphics.destroy()
+        this._selected = false;
     }
 
     drawMarginColor(buttonMarginColor: number){
-        this.graphics = this.scene.add.graphics();
-        this.graphics.lineStyle(20, buttonMarginColor, 1);
-        this.graphics.strokeRect(-this.width/2, -this.height/2, this.width, this.height);
-        this.add(this.graphics)
+        this._graphics = this.scene.add.graphics();
+        this._graphics.lineStyle(20, buttonMarginColor, 1);
+        this._graphics.strokeRect(-this.width/2, -this.height/2, this.width, this.height);
+        this.add(this._graphics)
     }
 
     markSelected(){
@@ -75,8 +79,7 @@ export default class SelectableCodeBlock extends Phaser.GameObjects.Container {
 
     async createCodeBlockImage() {
         hljs.registerLanguage("php", php);
-        // console.log(this.code)
-        let highlightedCode = hljs.highlight(this.code, {
+        let highlightedCode = hljs.highlight(this._code, {
             language: "php",
         }).value;
 
@@ -107,7 +110,7 @@ export default class SelectableCodeBlock extends Phaser.GameObjects.Container {
         dummyPre.style.color = "#c0c5ce";
         dummyPre.style.width = `${this.scene.cameras.main.width - 200}`;
         dummyPre.style.display = "none";
-        let dummyPreId = "codeBlock" + this.elementId;
+        let dummyPreId = "codeBlock" + this._elementId;
         dummyPre.id = dummyPreId;
 
         dummyPre.appendChild(dummyDiv);
@@ -123,16 +126,17 @@ export default class SelectableCodeBlock extends Phaser.GameObjects.Container {
         });
         // html2canvas(dummyPre, <any>{dpi: 144}).then((canvas) => {
         // Add the canvas as a texture
-        let texturekey = "codeBlockTexture" + this.elementId;
+        let texturekey = "codeBlockTexture" + this._elementId;
         this.scene.textures.remove(texturekey);
         
-        let canvasTexture = this.scene.textures.addCanvas(texturekey, canvas);
+        //let canvasTexture = this.scene.textures.addCanvas(texturekey, canvas);
+        this.scene.textures.addCanvas(texturekey, canvas);
 
         // Now you can use 'yourTextureKey' as a texture key in your game.
         // For instance:
-        this.codeBlockImage = this.scene.add.image(0, 0, texturekey);
-        this.add(this.codeBlockImage);
-        this.setSize(this.codeBlockImage.width, this.codeBlockImage.height);
+        this._codeBlockImage = this.scene.add.image(0, 0, texturekey);
+        this.add(this._codeBlockImage);
+        this.setSize(this._codeBlockImage.width, this._codeBlockImage.height);
         this.input.hitArea = new Phaser.Geom.Rectangle(
             0,
             0,
@@ -142,6 +146,6 @@ export default class SelectableCodeBlock extends Phaser.GameObjects.Container {
     }
 
     public getElementId(): number {
-        return this.elementId;
+        return this._elementId;
     }
 }

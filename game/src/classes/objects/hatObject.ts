@@ -1,12 +1,14 @@
-import {HatMap} from "../../constants/hats";
+import {HatMap} from "../../constants/hatMap";
 import RoomScene from "../room";
 import InteractiveObject from "./interactiveObject";
+import {gameController} from "../../main";
 
 
 export default class HatObject extends InteractiveObject {
     protected _hatId = "sorcerersHat";
 
     constructor(
+        id: number,
         scene: Phaser.Scene,
         room: RoomScene,
         x: number,
@@ -14,7 +16,7 @@ export default class HatObject extends InteractiveObject {
         params,
         properties
     ) {
-        super(scene, room, x, y, params, properties);
+        super(id, scene, room, x, y, params);
         this.body.enable = false;
         this.body.setOffset(0, 0);
 
@@ -34,16 +36,12 @@ export default class HatObject extends InteractiveObject {
     }
 
     public interact(): void {
-        this.room.getRootNode().hatView.unlock(this._hatId);
+        gameController.hatManager.unlock(this._hatId);
         this.destroy();
     }
 
     public checkIfUnlocked() {
-        // if (this.room.getPlayView().user.unlockedHats.includes(this._hatId)
-        // ||  this.room.getPlayView().user.unlockedHats.includes(this._hatId)) {
-        console.log("CHECKING HATS UNLOCKED")
-        console.log(this.room.getRootNode().user)
-        if (this.room.getRootNode().user.unlockedHats.includes(this._hatId)) {
+        if (gameController.gameStateManager.user.unlockedHats.includes(this._hatId)) {
             this.destroy();
         }
     }

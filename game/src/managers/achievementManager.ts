@@ -1,6 +1,11 @@
 import {globalEventBus} from "../helpers/globalEventBus";
 import {achievements} from "../constants/achievements";
-import RootNode from "../views/rootNode";
+import WorldViewScene from "../scenes/worldViewScene";
+
+import {gameController} from "../main";
+import * as Events from "events";
+import {GameEvents} from "../types/gameEvents";
+import {debugHelper} from "../helpers/debugHelper";
 
 /**
  * Achievement manager, handles the achievement flow, loading from json, saving to game state,
@@ -16,31 +21,30 @@ export default class AchievementManager {
 
     private _achievements = achievements;  // Stores the achievements from the 'achievements' file.
 
-    private _rootNode : RootNode; // The root node of the game or application.
-
     /**
      * Creates an instance of the Achievement Manager.
-     * @param {RootNode} rootNode - The RootNode instance that serves as the root of the game scene hierarchy.
+     * @param {WorldViewScene} worldViewScene - The WorldViewScene instance that serves as the root of the game scene hierarchy.
      */
-    constructor(rootNode: RootNode) {
-        this._rootNode = rootNode;
+    constructor() {
         this.loadData();
 
 
         // Listen for the "taskmanager_task_correct" event emitted by the Task Manager.
         // When a task is correctly completed, call the _onTaskmanagerCorrect method.
-        globalEventBus.on("taskmanager_task_correct", ((duration) => {
+        globalEventBus.on(GameEvents.TASKMANAGER_TASK_CORRECT, ((duration) => {
             this._onTaskmanagerCorrect(duration)
         }).bind(this));
 
         // Listen for the "taskmanager_task_incorrect" event emitted by the Task Manager.
         // When a task is answered incorrectly, call the _onTaskManagerIncorrect method.
-        globalEventBus.on("taskmanager_task_incorrect",
+        globalEventBus.on(GameEvents.TASKMANAGER_TASK_INCORRECT,
             this._onTaskManagerIncorrect.bind(this));
 
         // Listen for the "door_was_unlocked" event emitted when a door is unlocked in a room.
         // Call the _checkForLevelAchievement method to check for level-related achievements.
-        globalEventBus.on("door_was_unlocked", ((room) => {this._checkForLevelAchievement(room)}).bind(this));
+        globalEventBus.on(GameEvents.DOOR_UNLOCKED, ((room) => {
+            this._checkForLevelAchievement(room)
+        }).bind(this));
     }
 
     /**
@@ -97,7 +101,7 @@ export default class AchievementManager {
         globalEventBus.emit("broadcast_achievement", achievements[achievementKey]);
 
         this.unlocked.push(achievementKey);
-        console.log("Earned achievement: " + achievementKey);
+        debugHelper.logString("earned achievement: "+achievementKey)
     }
 
     public saveAll() {
@@ -113,20 +117,22 @@ export default class AchievementManager {
 
 
     public loadData() {
-        this.unlocked = this._rootNode.getState().achievements.unlocked;
-        this._tasksCounter = this._rootNode.getState().achievements.taskCounter;
-        this._incorrectCounter = this._rootNode.getState().achievements.incorrectCounter;
-        this._currentStreak = this._rootNode.getState().achievements.currentStreak;
-        this._longestStreak = this._rootNode.getState().achievements.longestStreak;
-        this._fastestTaskTime = this._rootNode.getState().achievements.fastestTaskTime;
+        this.unlocked = gameController.gameStateManager.achievements.unlocked;
+        this._tasksCounter = gameController.gameStateManager.achievements.taskCounter;
+        this._incorrectCounter = gameController.gameStateManager.achievements.incorrectCounter;
+        this._currentStreak = gameController.gameStateManager.achievements.currentStreak;
+        this._longestStreak = gameController.gameStateManager.achievements.longestStreak;
+        this._fastestTaskTime = gameController.gameStateManager.achievements.fastestTaskTime;
     }
 
     get tasksCounter(): number {
         return this._tasksCounter;
     }
+
     get longestStreak(): number {
         return this._longestStreak;
     }
+
     get incorrectCounter(): number {
         return this._incorrectCounter;
     }

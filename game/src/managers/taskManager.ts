@@ -1,22 +1,26 @@
-import {globalEventBus} from "../helpers/globalEventBus";
-import {QuestionType} from "../types/questionType";
-import RootNode from "../views/rootNode";
+import { globalEventBus } from "../helpers/globalEventBus";
+import { QuestionType } from "../types/questionType";
+import WorldViewScene from "../scenes/worldViewScene";
 import Question from "../classes/question/question";
 import {
-    ChoiceQuestionElement, CreateQuestionElement,
+    ChoiceQuestionElement,
+    CreateQuestionElement,
     InputQuestionElement,
     OrderQuestionElement,
 } from "../classes/question/questionElement";
-import DocView from "../views/docView/docView";
-import {ChapterType} from "./chapterManager";
+import DocViewScene from "../scenes/docView/docViewScene";
+import { ChapterType } from "./chapterManager";
 import ApiHelper from "../helpers/apiHelper";
 import availableQuestions from "./availableQuestionsTestData";
+import { gameController } from "../main";
+import { GameEvents } from "../types/gameEvents";
+import { SceneKeys } from "../types/sceneKeys";
+import { debugHelper } from "../helpers/debugHelper";
 
 /**
  * Manages tasks and questions for the game.
  */
 export default class TaskManager {
-
     private availableQuestions: Question[] = [];
 
     private answeredQuestions: Question[] = [];
@@ -25,11 +29,10 @@ export default class TaskManager {
 
     private currentQuestionSetForObject = [];
 
-
     public currentDoneQuestions: number;
     public currentTotalQuestions: number;
 
-    private _rootNode: RootNode;
+    // private _worldViewScene: WorldViewScene;
 
     private apiHandler = new ApiHelper();
 
@@ -42,17 +45,15 @@ export default class TaskManager {
 
     private loadQuestions() {
         return new Promise((resolve, reject) => {
-            this.apiHandler.getFullChapter(this._rootNode.user.chapterNumber)
-                .then((response:any) => {
+            this.apiHandler
+                .getFullChapter(gameController.gameStateManager.user.chapterNumber)
+                .then((response: any) => {
                     this.availableQuestions = response.questions;
-                    this.currentChapterMaxDifficulty = Math.max(
-                        ...this.availableQuestions.map((q) => q.difficulty)
-                    );
-                    console.log(availableQuestions)
+                    this.currentChapterMaxDifficulty = Math.max(...this.availableQuestions.map((q) => q.difficulty));
                     resolve(null);
                 })
-                .catch((error) => reject(error))
-        })
+                .catch((error) => reject(error));
+        });
     }
 
     private shuffleQuestions(questions: Question[]) {
@@ -81,23 +82,25 @@ export default class TaskManager {
             return map;
         }, {});
 
-        for (let i = this._rootNode.user.performanceIndex; i <= this.currentChapterMaxDifficulty; i++) {
+        for (
+            let i = gameController.gameStateManager.user.performanceIndex;
+            i <= this.currentChapterMaxDifficulty;
+            i++
+        ) {
             let questionsWithDifficulty = availableQuestionsMap[i];
             let j = 0;
-            let increasing = true
-            while((!questionsWithDifficulty || questionsWithDifficulty.length <= 0) && j >= 0){
-                questionsWithDifficulty = availableQuestionsMap[i+j];
+            let increasing = true;
+            while ((!questionsWithDifficulty || questionsWithDifficulty.length <= 0) && j >= 0) {
+                questionsWithDifficulty = availableQuestionsMap[i + j];
                 if (!questionsWithDifficulty || questionsWithDifficulty.length <= 0) {
-                    questionsWithDifficulty = answeredQuestionsMap[i+j];
+                    questionsWithDifficulty = answeredQuestionsMap[i + j];
                 }
                 increasing ? j++ : j--;
-                j >= this.currentChapterMaxDifficulty ? increasing = false : null;
+                j >= this.currentChapterMaxDifficulty ? (increasing = false) : null;
             }
             const question = questionsWithDifficulty.pop();
             this.currentQuestionSetForObject.push(question);
         }
-
-        console.log(this.currentQuestionSetForObject);
 
         this.currentDoneQuestions = 0;
         this.currentTotalQuestions = this.currentQuestionSetForObject.length;
@@ -109,37 +112,33 @@ export default class TaskManager {
     }
 
     private checkNextChapter() {
-        this._rootNode.user.increaseRepairedObjectsThisChapter();
-        if (this._rootNode.user.repairedObjectsThisChapter == 2) {
-            this._rootNode.user.increaseChapterNumber();
-            this._rootNode.user.repairedObjectsThisChapter = 0;
-            this._rootNode.user.newChapter = true;
-            this._rootNode.user.performanceIndex --;
-            this.loadQuestions()
-            this._rootNode.docView.chapterManager.updateCurrentChapterOrder(this._rootNode.user.chapterNumber);
-            this._rootNode.docView.chapterManager.updateChapters()
+        gameController.gameStateManager.increaseRepairedObjectsThisChapter();
+        if (
+            gameController.gameStateManager.user.repairedObjectsThisChapter == 2 &&
+            gameController.gameStateManager.user.chapterNumber < gameController.gameStateManager.user.maxChapterNumber
+        ) {
+            gameController.gameStateManager.increaseChapterNumber();
+            gameController.gameStateManager.user.repairedObjectsThisChapter = 0;
+            gameController.gameStateManager.user.newChapter = true;
+            gameController.gameStateManager.user.performanceIndex--;
+            this.loadQuestions();
+            // this._worldViewScene.docView.chapterManager.updateCurrentChapterOrder(gameController.gameStateManager.user.chapterNumber);
+            // this._worldViewScene.docView.chapterManager.updateChapters()
+            gameController.chapterManager.updateChapters();
         }
     }
 
     private onObjectFailed() {
-        console.log("FAILED")
-        if (this._rootNode.scene.isSleeping(this._rootNode)) {
-            this._rootNode.queueTask(() => {
-                globalEventBus.emit("taskmanager_object_failed");
-            });
-        } else {
-            globalEventBus.emit("taskmanager_object_failed");
-        }
+        debugHelper.logString("failed");
+        gameController.worldSceneController.queueWorldViewTask(() => {
+            globalEventBus.emit(GameEvents.TASKMANAGER_OBJECT_FAILED);
+        });
     }
 
     private onObjectRepaired() {
-        if (this._rootNode.scene.isSleeping(this._rootNode)) {
-            this._rootNode.queueTask(() => {
-                globalEventBus.emit("taskmanager_object_finished");
-            });
-        } else {
-            globalEventBus.emit("taskmanager_object_finished");
-        }
+        gameController.worldSceneController.queueWorldViewTask(() => {
+            globalEventBus.emit(GameEvents.TASKMANAGER_OBJECT_FINISHED);
+        });
         this.checkNextChapter();
     }
 
@@ -149,45 +148,43 @@ export default class TaskManager {
         if (index > -1) {
             this.availableQuestions.splice(index, 1);
         }
-        console.log(currentQuestion)
+        console.log(currentQuestion);
         this.answeredQuestions.push(currentQuestion);
-        this._rootNode.user.addAnsweredQuestionIds(currentQuestion.id);
+        gameController.gameStateManager.addAnsweredQuestionIds(currentQuestion.id);
         this.currentQuestionSetForObject.shift();
         this.currentDoneQuestions++;
         if (this.currentQuestionSetForObject.length === 0) {
             this.onObjectRepaired();
         } else {
-            this._rootNode.user.performanceIndex = currentQuestion.difficulty + 1;
+            gameController.gameStateManager.user.performanceIndex = currentQuestion.difficulty + 1;
         }
 
-
-        globalEventBus.emit("taskmanager_task_correct", duration);
+        globalEventBus.emit(GameEvents.TASKMANAGER_TASK_CORRECT, duration);
     }
 
     public questionAnsweredIncorrectly() {
-        this._rootNode.user.performanceIndex > 1
-            ? this._rootNode.user.performanceIndex--
+        gameController.gameStateManager.user.performanceIndex > 1
+            ? gameController.gameStateManager.user.performanceIndex--
             : null;
         this.onObjectFailed();
-        globalEventBus.emit("taskmanager_task_incorrect");
+        globalEventBus.emit(GameEvents.TASKMANAGER_TASK_INCORRECT);
     }
 
     private loadState(answeredQuestionIds: number[]) {
-        this.answeredQuestions = this.availableQuestions.filter(question => answeredQuestionIds.includes(question.id))
-        this.availableQuestions = this.availableQuestions.filter(question => !answeredQuestionIds.includes(question.id))
+        this.answeredQuestions = this.availableQuestions.filter((question) =>
+            answeredQuestionIds.includes(question.id),
+        );
+        this.availableQuestions = this.availableQuestions.filter(
+            (question) => !answeredQuestionIds.includes(question.id),
+        );
     }
 
-    constructor(rootNode: RootNode) {
-        this._rootNode = rootNode;
-
-        //Test data!
-        //this.availableQuestions = availableQuestions;
-        // console.log(rootNode.user)
-
-        this.loadQuestions().then((result => {
-            this.loadState(rootNode.user.answeredQuestionIds);
-            this.populateNewQuestionSet();
-        })).catch(error => console.error(error));
-
+    public initialiseQuestionSet() {
+        this.loadQuestions()
+            .then((result) => {
+                this.loadState(gameController.gameStateManager.user.answeredQuestionIds);
+                this.populateNewQuestionSet();
+            })
+            .catch((error) => console.error(error));
     }
 }

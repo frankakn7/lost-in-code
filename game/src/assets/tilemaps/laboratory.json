@@ -47,9 +47,14 @@
                          "value":"lab_right"
                         }, 
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"door"
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":39
                         }, 
                         {
                          "name":"target_id",
@@ -70,7 +75,7 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"computer"
                         }, 
@@ -78,6 +83,11 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":35
                         }],
                  "rotation":0,
                  "type":"",
@@ -93,7 +103,7 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"computer"
                         }, 
@@ -106,6 +116,11 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":36
                         }],
                  "rotation":0,
                  "type":"",
@@ -121,7 +136,7 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"cannon"
                         }, 
@@ -129,6 +144,11 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":37
                         }],
                  "rotation":0,
                  "type":"",
@@ -144,7 +164,7 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"cannon"
                         }, 
@@ -152,6 +172,11 @@
                          "name":"is_task",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":38
                         }],
                  "rotation":0,
                  "type":"",
@@ -167,7 +192,7 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"gameobject_id",
+                         "name":"gameobject_type",
                          "type":"string",
                          "value":"hat"
                         }, 
@@ -175,6 +200,11 @@
                          "name":"hat_id",
                          "type":"string",
                          "value":"truckerCap"
+                        }, 
+                        {
+                         "name":"object_id",
+                         "type":"int",
+                         "value":34
                         }],
                  "rotation":0,
                  "type":"",

@@ -30,14 +30,16 @@ export const authenticateToken = (
     const token = req.cookies.token;
 
     if (token == null){
-        return res.sendStatus(401); // if there isn't any token
+        // return res.sendStatus(401); // if there isn't any token
+        return res.status(401).json({error: "Unauthorized: no token was given"}); // if there isn't any token
     } 
 
     jwt.verify(
         token,
         process.env.JWT_SECRET || "your-secret-key",
         (err: any, user: any) => {
-            if (err) return res.sendStatus(403);
+            // if (err) return res.sendStatus(403);
+            if (err) return res.status(403).json({error: "Forbidden"});
             req.body.user = user;
             next();
         }
@@ -78,13 +80,15 @@ export const onlyAllowSelf = (
 export const loginCheck = (req: Request, res: Response) => {
     const token = req.cookies.token;
 
-    if (token == null) return res.sendStatus(401); // if there isn't any token
+    // if (token == null) return res.sendStatus(401); // if there isn't any token
+    if (token == null) return res.status(401).json({error: "Unauthorized: no token was given"})
 
     jwt.verify(
         token,
         process.env.JWT_SECRET || "your-secret-key",
         (err: any, user: any) => {
-            if (err) return res.sendStatus(403);
+            // if (err) return res.sendStatus(403);
+            if (err) return res.status(403).json({error: "Forbidden"});
 
             // If token is valid, return user details
             res.json({ user });
