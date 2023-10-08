@@ -189,7 +189,7 @@ class GameController {
             const data: any = await this.apiHelper.getStateData();
 
             if (data.state_data) {
-                this._gameStateManager.initialiseExisting(data.state_data);
+                this._gameStateManager.initialise(data.state_data);
             }
             if (userData) {
                 this.user = new User(userData);

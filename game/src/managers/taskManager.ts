@@ -15,7 +15,7 @@ import availableQuestions from "./availableQuestionsTestData";
 import { gameController } from "../main";
 import { GameEvents } from "../types/gameEvents";
 import { SceneKeys } from "../types/sceneKeys";
-import {debugHelper} from "../helpers/debugHelper";
+import { debugHelper } from "../helpers/debugHelper";
 
 /**
  * Manages tasks and questions for the game.
@@ -113,7 +113,10 @@ export default class TaskManager {
 
     private checkNextChapter() {
         gameController.gameStateManager.increaseRepairedObjectsThisChapter();
-        if (gameController.gameStateManager.user.repairedObjectsThisChapter == 2) {
+        if (
+            gameController.gameStateManager.user.repairedObjectsThisChapter == 2 &&
+            gameController.gameStateManager.user.chapterNumber < gameController.gameStateManager.user.maxChapterNumber
+        ) {
             gameController.gameStateManager.increaseChapterNumber();
             gameController.gameStateManager.user.repairedObjectsThisChapter = 0;
             gameController.gameStateManager.user.newChapter = true;
@@ -126,7 +129,7 @@ export default class TaskManager {
     }
 
     private onObjectFailed() {
-        debugHelper.logString("failed")
+        debugHelper.logString("failed");
         gameController.worldSceneController.queueWorldViewTask(() => {
             globalEventBus.emit(GameEvents.TASKMANAGER_OBJECT_FAILED);
         });

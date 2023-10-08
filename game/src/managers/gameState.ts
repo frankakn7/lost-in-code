@@ -28,6 +28,7 @@ export class GameState {
         newChapter: boolean;
         answeredQuestionIds: number[];
         chapterNumber: number;
+        maxChapterNumber: number;
         performanceIndex: number;
         repairedObjectsThisChapter: number;
         selectedHat: string;
@@ -35,7 +36,7 @@ export class GameState {
         username: string;
     };
 
-    initialiseEmpty() {
+    initialiseDefault() {
         this.gameFinished = false
         this.room = {
             id: "hangar",
@@ -62,6 +63,7 @@ export class GameState {
             newChapter: false,
             answeredQuestionIds: [],
             chapterNumber: 1,
+            maxChapterNumber: 1,
             performanceIndex: 1,
             repairedObjectsThisChapter: 0,
             selectedHat: "None",
@@ -70,21 +72,29 @@ export class GameState {
         };
     }
 
-    initialiseExisting(existingGameState: GameState) {
-        // this.currentRoomId = existingGameState.currentRoomId;
-        this.gameFinished = existingGameState.gameFinished;
-        this.room = existingGameState.room;
-        this.story = existingGameState.story;
-        this.achievements = existingGameState.achievements;
-        this.user = existingGameState.user;
+    // initialiseExisting(existingGameState: GameState) {
+    //     // this.currentRoomId = existingGameState.currentRoomId;
+    //     this.gameFinished = existingGameState.gameFinished;
+    //     this.room = existingGameState.room;
+    //     this.story = existingGameState.story;
+    //     this.achievements = existingGameState.achievements;
+    //     this.user = existingGameState.user;
+    // }
+
+    initialise(existingGameState?: GameState) {
+        this.initialiseDefault();
+        if (!existingGameState) return;
+
+        this.gameFinished = existingGameState.gameFinished ?? this.gameFinished;
+        this.room = { ...this.room, ...existingGameState.room };
+        this.story = { ...this.story, ...existingGameState.story };
+        this.achievements = { ...this.achievements, ...existingGameState.achievements };
+        this.user = { ...this.user, ...existingGameState.user };
     }
 
+
     constructor(existingGameState?: GameState) {
-        if (existingGameState) {
-            this.initialiseExisting(existingGameState);
-        } else {
-            this.initialiseEmpty();
-        }
+        this.initialise(existingGameState);
     }
 
     changeRoom(newRoomId: string){
@@ -102,7 +112,9 @@ export class GameState {
     }
 
     increaseChapterNumber() {
-        this.user.chapterNumber ++;
+        if(this.user.chapterNumber < this.user.maxChapterNumber){
+            this.user.chapterNumber ++;
+        }
     }
 
     addAnsweredQuestionIds(id) {

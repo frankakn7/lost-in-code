@@ -1,6 +1,7 @@
 import {GameStateType} from "../types/gameStateType";
 import {GameState} from "../managers/gameState";
 import {debugHelper} from "./debugHelper";
+import {gameController} from "../main";
 
 /**
  * Helper class for making API requests related to the game.
@@ -71,41 +72,6 @@ export default class ApiHelper {
         })
     }
 
-    /**
-     * Get the full chapter for the given chapter number.
-     * @param {number} chapterNumber - The chapter number for which to fetch the full data.
-     * @returns {Promise} - A Promise that resolves with the full chapter data or rejects with an error message.
-     */
-    // public getFullChapter(chapterNumber: number) {
-    //     const url = this.apiUrl + "/users/me/curriculum_data";
-    //     return new Promise((resolve, reject) => {
-    //         fetch(url, {method: "GET", credentials: "include"})
-    //             .then((response) => {
-    //                 response
-    //                     .json()
-    //                     .then((data) => {
-    //                         // resolve(data);
-    //                         const url2 = this.apiUrl + "/chapters/";
-    //                         fetch(url2, {method: "GET", credentials: "include"})
-    //                             .then((res) => {
-    //                                 res.json().then((chapters: any) => {
-    //                                     const chapter = chapters.find(chapter => chapter.order_position == chapterNumber && chapter.curriculum_id == data.curriculum_id)
-    //                                     const url3 = this.apiUrl + "/chapters/" + chapter.id + "/full";
-    //                                     fetch(url3, {method: "GET", credentials: "include"})
-    //                                         .then((res) => {
-    //                                             console.log(res)
-    //                                             res.json().then((chapter: any) => {
-    //                                                 resolve(chapter);
-    //                                             }).catch((error) => reject(error));
-    //                                         }).catch((error) => reject(error));
-    //                                 }).catch((error) => reject(error));
-    //                             }).catch((error) => reject(error));
-    //                     }).catch((error) => reject(error));
-    //             })
-    //             .catch((error) => reject(error));
-    //     })
-    // }
-
     public async getFullChapter(chapterNumber: number) {
         try {
             //Get curriculum Data
@@ -117,6 +83,8 @@ export default class ApiHelper {
             const chaptersUrl = `${this.apiUrl}/chapters/`;
             const chaptersResponse = await this.getIncludingCredentials(chaptersUrl);
             const chaptersData: any = await chaptersResponse.json();
+
+            gameController.gameStateManager.user.maxChapterNumber = chaptersData[chaptersData.length - 1];
 
             //find current chapter id
             const chapter = chaptersData.find((chapter: any) => chapter.order_position == chapterNumber && chapter.curriculum_id == curriculumData.curriculum_id);

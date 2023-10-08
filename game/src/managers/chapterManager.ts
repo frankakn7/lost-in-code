@@ -27,6 +27,7 @@ export default class ChapterManager {
             if(!this._chapters.find(chapter => chapter.order_position == gameController.gameStateManager.user.chapterNumber)){
 
                 this.apiHelper.getChapters().then((chapters:[]) => {
+                    console.log(chapters)
                     this._chapters = chapters.filter((chapter:ChapterType) => chapter.order_position <= gameController.gameStateManager.user.chapterNumber);
                     resolve(this._chapters)
                 }).catch(error => reject(error))
