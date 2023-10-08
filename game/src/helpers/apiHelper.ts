@@ -84,7 +84,7 @@ export default class ApiHelper {
             const chaptersResponse = await this.getIncludingCredentials(chaptersUrl);
             const chaptersData: any = await chaptersResponse.json();
 
-            gameController.gameStateManager.user.maxChapterNumber = chaptersData[chaptersData.length - 1];
+            gameController.gameStateManager.user.maxChapterNumber = chaptersData[chaptersData.length - 1].order_position;
 
             //find current chapter id
             const chapter = chaptersData.find((chapter: any) => chapter.order_position == chapterNumber && chapter.curriculum_id == curriculumData.curriculum_id);
