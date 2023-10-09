@@ -7,7 +7,6 @@ import {GameEvents} from "../types/gameEvents";
 export default class ProgressBarContainer {
     private _bar: Phaser.GameObjects.Graphics; // The progress bar graphics object.
     private _barOutline: Phaser.GameObjects.Graphics; // The progress bar graphics object.
-    private _barFilling: Phaser.GameObjects.Graphics; // The progress bar graphics object.
     private _container: Phaser.GameObjects.Container;
 
     constructor(scene: Phaser.Scene) {
@@ -24,7 +23,6 @@ export default class ProgressBarContainer {
     private create(scene: Phaser.Scene) {
         this._bar = scene.add.graphics();
         this._barOutline = scene.add.graphics();
-        this._barFilling = scene.add.graphics();
         this._container.add(this._bar);
 
         this.drawOutline();
@@ -32,7 +30,7 @@ export default class ProgressBarContainer {
 
         globalEventBus.on(GameEvents.OBJECT_REPAIRED, this.updateBarFilling.bind(this));
         globalEventBus.on(GameEvents.ROOM_ENTERED, () => {
-            this._barFilling.clear();
+            this._bar.clear();
             this.updateBarFilling();
         });
     }
@@ -45,7 +43,7 @@ export default class ProgressBarContainer {
         this._bar.fillRect(55, 55, progress * totalWidthInner, 40);
     }
 
-    public setPosition(x: number, y: number): void {
-        this._container.setPosition(x, y);
-    }
+    // public setPosition(x: number, y: number): void {
+    //     this._container.setPosition(x, y);
+    // }
 }

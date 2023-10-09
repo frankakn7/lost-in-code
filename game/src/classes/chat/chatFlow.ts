@@ -22,7 +22,6 @@ export default class ChatFlow {
      * @returns the text of the current node as string
      */
     public getCurrentText(): string {
-        console.log(this.currentNode);
         return this.currentNode.text;
     }
 

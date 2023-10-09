@@ -1,6 +1,3 @@
-import {GameStateType} from "../types/gameStateType";
-import {Game} from "phaser";
-
 export class GameState {
     gameFinished: boolean;
     room: {
