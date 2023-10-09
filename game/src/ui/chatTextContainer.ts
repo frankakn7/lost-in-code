@@ -92,6 +92,10 @@ export default class ChatTextContainer extends Phaser.GameObjects.Container {
         this.input.hitArea = new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.displayWidth, this.calcNewTextY())
     }
 
+    public scrollToBottom(){
+        this.y = Math.min(this.scene.cameras.main.displayHeight / 2 - this.input.hitArea.height, 0)
+    }
+
     /**
      * Calculates the new Y position for the next text
      * @returns the y coordinate the new text can be placed at

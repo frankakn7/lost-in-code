@@ -54,6 +54,7 @@ import ResumeButtonTexture from "../assets/ui/Resume-Button.png";
 import LogoutButtonTexture from "../assets/ui/Logout-Button.png";
 import AchievementsAppTexture from "../assets/ui/apps/Achievements-app-icon.png";
 import HatAppTexture from "../assets/ui/apps/Hat-app-icon.png";
+import ReturnButtonTexture from "../assets/ui/Return-Button.png";
 
 export default class PreloadScene extends Phaser.Scene {
     constructor() {
@@ -122,6 +123,8 @@ export default class PreloadScene extends Phaser.Scene {
         this.load.image("logoutButtonTexture", LogoutButtonTexture);
         this.load.image("achievementsAppTexture", AchievementsAppTexture);
         this.load.image("hatAppTexture", HatAppTexture);
+
+        this.load.image("returnButtonTexture", ReturnButtonTexture)
     }
 
     create() {

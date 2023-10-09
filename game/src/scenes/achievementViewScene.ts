@@ -1,8 +1,5 @@
 import * as Phaser from "phaser";
-import AchievementManager from "../managers/achievementManager";
-import ReturnButtonTexture from "../assets/ui/Return-Button.png";
 import SpriteButton from "../ui/SpriteButton";
-import WorldViewScene from "./worldViewScene";
 import {achievements} from "../constants/achievements";
 
 
@@ -38,8 +35,6 @@ export default class AchievementViewScene extends Phaser.Scene {
      * Preload assets.
      */
     preload() {
-        this.load.image("returnButtonTexture", ReturnButtonTexture);
-
 
         this.load.image("trophy", TrophyTexture);
     }

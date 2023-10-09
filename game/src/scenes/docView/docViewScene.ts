@@ -1,10 +1,7 @@
 import Phaser from "phaser";
 import ChapterManager, {ChapterType} from "../../managers/chapterManager";
 import SpriteButton from "../../ui/SpriteButton";
-import ReturnButtonTexture from "../../assets/ui/Return-Button.png";
-import WorldViewScene from "../worldViewScene";
 import DeviceButton from "../../ui/deviceButton";
-import TextViewScene from "./textViewScene";
 import {SceneKeys} from "../../types/sceneKeys";
 import {gameController} from "../../main";
 
@@ -34,10 +31,6 @@ export default class DocViewScene extends Phaser.Scene {
             this.add.existing(newButton);
             this.allChapterButtons.push(newButton);
         })
-    }
-
-    public preload() {
-        this.load.image("returnButtonTexture", ReturnButtonTexture);
     }
 
     public create() {

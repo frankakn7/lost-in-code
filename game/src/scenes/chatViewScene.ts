@@ -9,6 +9,7 @@ import WorldViewScene from "./worldViewScene";
 import {gameController} from "../main";
 import {GameEvents} from "../types/gameEvents";
 import {SceneKeys} from "../types/sceneKeys";
+import SpriteButton from "../ui/SpriteButton";
 
 /**
  * The ChatViewScene displaying the chat
@@ -61,7 +62,10 @@ export default class ChatViewScene extends Phaser.Scene {
     /**
      * The exit button for the chat view
      */
-    private _exitButton: DeviceButton;
+    // private _exitButton: DeviceButton;
+    private _exitButton: SpriteButton;
+
+    private _skipButton: DeviceButton;
 
     private _tilesprite: Phaser.GameObjects.TileSprite;
 
@@ -93,25 +97,18 @@ export default class ChatViewScene extends Phaser.Scene {
         customExitFunc ? this._exitFunction = customExitFunc : null;
     }
 
-    public preload(){
-
-    }
-
     public create() {
         //Set background color to black
         // this.cameras.main.setBackgroundColor("rgba(0,0,0,1)");
         this._tilesprite = this.add.tileSprite(0,0,this.cameras.main.displayWidth / 3, this.cameras.main.displayHeight / 3, "backgroundTile").setOrigin(0,0).setScale(3)
 
         //create the text container
-        this._chatTextContainer = new ChatTextContainer(this, 0, 0);
+        this._chatTextContainer = new ChatTextContainer(this, 0, 225);
 
         this._chatHistory?.length ? this.applyChatHistory() : null;
 
 
         //start the new chat flow
-
-        this.input.on('pointerdown', () => this.skipTextAnimation());
-
         this._currentChatFlow ? this.startNewChatFlow(this._currentChatFlow) : this.showExitButton();
     }
 
@@ -120,6 +117,7 @@ export default class ChatViewScene extends Phaser.Scene {
             message[0] === "M" ? this._chatTextContainer.addFullRecievedText(message[1]) : null;
             message[0] === "A" ? this._chatTextContainer.addAnswerText(message[1]) : null;
         })
+        this._chatTextContainer.scrollToBottom();
     }
 
     private skipTextAnimation(): void {
@@ -133,6 +131,7 @@ export default class ChatViewScene extends Phaser.Scene {
             this._chatTextContainer.calculateNewInputHitArea()
 
             // Display the choices
+            this.removeSkipButton();
             this.showChoices(this._currentChatFlow.getCurrentChoices());
         }
     }
@@ -183,6 +182,8 @@ export default class ChatViewScene extends Phaser.Scene {
             repeat: this._currentChatFlow.getCurrentText().length - 1,   //repeat it exactly as often as there are characters in the string to be animated
             callbackScope: this,
         });
+        //Show skip button
+        this.showSkipButton()
     }
 
     /**
@@ -225,6 +226,7 @@ export default class ChatViewScene extends Phaser.Scene {
         //start the animation
         this.startTextAnimation(textObject, text, () => {
             //when animation is over show the choices as buttons
+            this.removeSkipButton();
             this.showChoices(choices);
         });
     }
@@ -268,9 +270,10 @@ export default class ChatViewScene extends Phaser.Scene {
         }
     }
 
-    private showExitButton(){
+    private showSkipButton(){
+        // this._exitButton?.destroy(true);
         //create the exit button
-        this._exitButton = new DeviceButton(
+        this._skipButton = new DeviceButton(
             this,
             this.cameras.main.displayWidth / 2 - this._buttonWidth / 2,  //center button horizontally
             this.cameras.main.displayHeight - this._buttonPadding,
@@ -278,12 +281,30 @@ export default class ChatViewScene extends Phaser.Scene {
             () => {
                 //call exit chat function on click
                 // this.exitChat();
-                this._exitFunction()
+                this.skipTextAnimation()
             }, //needs to be anonymous function for this to equal
-            "Exit"  //text to be displayed on the button
+            "Skip"  //text to be displayed on the button
         );
         //set y to include the button height
-        this._exitButton.setY(this._exitButton.y - this._exitButton.height);
+        this._skipButton.setY(this._skipButton.y - this._skipButton.height);
+        //add exit button to the scene
+        this.add.existing(this._skipButton);
+    }
+
+    private removeSkipButton(){
+        this._skipButton?.destroy(true);
+        delete this._skipButton;
+    }
+
+    private showExitButton(){
+
+        this._exitButton = new SpriteButton(
+            this,
+            "returnButtonTexture",
+            180,
+            180,
+            () => {this._exitFunction()}
+        );
         //add exit button to the scene
         this.add.existing(this._exitButton);
     }

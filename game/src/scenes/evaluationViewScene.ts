@@ -1,8 +1,4 @@
 import * as Phaser from "phaser";
-import SpriteButton from "../ui/SpriteButton";
-import ReturnButtonTexture from "../assets/ui/Return-Button.png";
-import AchievementManager from "../managers/achievementManager";
-import WorldViewScene from "./worldViewScene";
 import {HatMap} from "../constants/hatMap";
 import DeviceButton from "../ui/deviceButton";
 import {formatTime, globalEventBus} from "../helpers/globalEventBus";
@@ -18,10 +14,6 @@ export default class EvaluationViewScene extends Phaser.Scene {
 
     constructor() {
         super(SceneKeys.EVALUATION_VIEW_SCENE_KEY);
-    }
-
-    preload() {
-        this.load.image("returnButtonTexture", ReturnButtonTexture);
     }
 
 

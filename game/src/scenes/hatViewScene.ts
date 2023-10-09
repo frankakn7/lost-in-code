@@ -1,8 +1,5 @@
-import {text} from "express";
 import {HatMap} from "../constants/hatMap";
 import SpriteButton from "../ui/SpriteButton";
-import WorldViewScene from "./worldViewScene";
-import ReturnButtonTexture from "../assets/ui/Return-Button.png"
 import DeviceButton from "../ui/deviceButton";
 import {globalEventBus} from "../helpers/globalEventBus";
 import {gameController} from "../main";
@@ -19,13 +16,6 @@ export default class HatViewScene extends Phaser.Scene {
 
     // Save references to all buttons so to be able to delete them if redraw is necessary.
     private _buttonMap = new Map();
-
-    /**
-     * Preload assets.
-     */
-    preload() {
-        this.load.image("returnButtonTexture", ReturnButtonTexture);
-    }
 
     /**
      * Constructs a new instance of the class.
