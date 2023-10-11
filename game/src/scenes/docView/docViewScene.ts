@@ -4,6 +4,7 @@ import SpriteButton from "../../ui/SpriteButton";
 import DeviceButton from "../../ui/deviceButton";
 import {SceneKeys} from "../../types/sceneKeys";
 import {gameController} from "../../main";
+import {debugHelper} from "../../helpers/debugHelper";
 
 export default class DocViewScene extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite;
@@ -22,6 +23,7 @@ export default class DocViewScene extends Phaser.Scene {
 
     private createChapterButtons() {
         let previousY = this.resumeButton.y + this.resumeButton.height;
+        debugHelper.logValue("Chapters", gameController.chapterManager.chapters);
         gameController.chapterManager.chapters.forEach((chapter: ChapterType) => {
             const buttonWidth = this.cameras.main.displayWidth * 0.7;
             let newButton = new DeviceButton(this, this.cameras.main.displayWidth / 2 - buttonWidth / 2, previousY + this.buttonSpacing, buttonWidth, () => {

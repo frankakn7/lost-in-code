@@ -182,6 +182,7 @@ class GameController {
     private initialiseManagerData(){
         this._storyManager.initialiseStoryEvents();
         this._taskManager.initialiseQuestionSet();
+        this.chapterManager.initialiseChapterData();
     }
 
     private async loadGameState(userData: any) {

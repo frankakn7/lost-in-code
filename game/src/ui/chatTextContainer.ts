@@ -7,12 +7,12 @@ export default class ChatTextContainer extends Phaser.GameObjects.Container {
     /**
      * Stores all the texts of the whole chat
      */
-    private texts: Array<Phaser.GameObjects.Text> = [];
+    protected texts: Array<Phaser.GameObjects.Text | Phaser.GameObjects.Image> = [];
 
     /**
      * The side padding / margin of the text
      */
-    private textSidePadding = 100;
+    protected textSidePadding = 100;
     /**
      * The top padding of all the texts
      */
@@ -53,15 +53,8 @@ export default class ChatTextContainer extends Phaser.GameObjects.Container {
 
         //Set the style of the text coming FROM the player (green)
         this.answerStyle = {
-            fontSize: "30px",
-            fontFamily: "forwardRegular",
+            ...this.textStyle,
             color: "#00ff7b",
-            wordWrap: {
-                width:
-                    this.scene.cameras.main.displayWidth -
-                    this.textSidePadding * 2,
-                useAdvancedWrap: true,
-            },
             align: "right",
         };
         //Adding the container itself to the scene
@@ -82,7 +75,7 @@ export default class ChatTextContainer extends Phaser.GameObjects.Container {
      * Additionally sets the hitarea to be as high as all the texts in the container (up until the last text)
      * @param text the text to be added
      */
-    private pushAndAdd(text: Phaser.GameObjects.Text): void {
+    protected pushAndAdd(text: Phaser.GameObjects.Text |Phaser.GameObjects.Image): void {
         this.texts.push(text);
         this.add(text);
         this.calculateNewInputHitArea();
@@ -100,7 +93,7 @@ export default class ChatTextContainer extends Phaser.GameObjects.Container {
      * Calculates the new Y position for the next text
      * @returns the y coordinate the new text can be placed at
      */
-    private calcNewTextY(): number {
+    protected calcNewTextY(): number {
         return this.texts.length
             ? this.texts[this.texts.length - 1].y +
             this.texts[this.texts.length - 1].height +

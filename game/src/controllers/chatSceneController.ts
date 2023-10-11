@@ -95,7 +95,21 @@ export default class ChatSceneController {
 
         const simpleChatFlow: ChatFlow = new ChatFlow(simpleChatNode)
 
-        const textChatView: ChatViewScene = new ChatViewScene(simpleChatFlow, [], SceneKeys.SINGLE_TEXT_CHAT_VIEW_SCENE_KEY, true, customExitFunction)
+        const textChatView: ChatViewScene = new ChatViewScene(simpleChatFlow, [], SceneKeys.SINGLE_TEXT_CHAT_VIEW_SCENE_KEY,false, true, customExitFunction)
+
+        // this._masterSceneController.addScene("ChatTextView", textChatView)
+        this._masterSceneController.addScene(SceneKeys.SINGLE_TEXT_CHAT_VIEW_SCENE_KEY, textChatView)
+        this._masterSceneController.runScene(SceneKeys.SINGLE_TEXT_CHAT_VIEW_SCENE_KEY)
+    }
+
+    public openChapterTextView(text: string, customExitFunction: Function) {
+        this._masterSceneController.prepScenesForChat()
+
+        const simpleChatNode: ChatFlowNode = {text: text, optionText: "Start", choices: new Map<string, ChatFlowNode>}
+
+        const simpleChatFlow: ChatFlow = new ChatFlow(simpleChatNode)
+
+        const textChatView: ChatViewScene = new ChatViewScene(simpleChatFlow, [], SceneKeys.SINGLE_TEXT_CHAT_VIEW_SCENE_KEY,true, true, customExitFunction)
 
         // this._masterSceneController.addScene("ChatTextView", textChatView)
         this._masterSceneController.addScene(SceneKeys.SINGLE_TEXT_CHAT_VIEW_SCENE_KEY, textChatView)

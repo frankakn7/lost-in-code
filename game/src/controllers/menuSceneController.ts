@@ -33,6 +33,7 @@ export default class MenuSceneController {
 
     backToDocViewScene() {
         this._masterSceneController.sleepAllScenes();
+        this._masterSceneController.removeScene(SceneKeys.TEXT_VIEW_SCENE_KEY)
         this._masterSceneController.wakeScene(SceneKeys.DOC_VIEW_SCENE_KEY);
     }
 

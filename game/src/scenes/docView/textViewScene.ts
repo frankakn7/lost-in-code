@@ -4,11 +4,12 @@ import DocViewScene from "./docViewScene";
 import SpriteButton from "../../ui/SpriteButton";
 import {SceneKeys} from "../../types/sceneKeys";
 import {gameController} from "../../main";
+import ChapterTextContainer from "../../ui/chapterTextContainer";
 
 export default class TextViewScene extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite;
 
-    private _chatTextContainer;
+    private _chatTextContainer: ChapterTextContainer;
 
     private _textToDisplay;
 
@@ -45,8 +46,10 @@ export default class TextViewScene extends Phaser.Scene {
         ).setDepth(2);
         this.add.existing(this._resumeButton);
 
-        this._chatTextContainer = new ChatTextContainer(this, 0, this._resumeButton.y + this._resumeButton.height);
-        this._chatTextContainer.addFullRecievedText(this._textToDisplay);
+        // this._chatTextContainer = new ChatTextContainer(this, 0, this._resumeButton.y + this._resumeButton.height);
+        this._chatTextContainer = new ChapterTextContainer(this, 0, this._resumeButton.y + this._resumeButton.height);
+        // this._chatTextContainer.addFullRecievedText(this._textToDisplay);
+        this._chatTextContainer.addFullDocText(this._textToDisplay)
         // this.chatTextContainer.addAnswerText(this.textToDisplay);
     }
 }

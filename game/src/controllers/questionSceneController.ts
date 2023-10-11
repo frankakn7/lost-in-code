@@ -41,7 +41,8 @@ export default class QuestionSceneController {
         } else {
             gameController.gameStateManager.user.newChapter = false
             gameController.chapterManager.updateChapters().then((chapters: ChapterType[]) => {
-                gameController.chatSceneController.openTextChatView(chapters.find(chapter => chapter.order_position == gameController.gameStateManager.user.chapterNumber).material, () => {
+                // gameController.chatSceneController.openTextChatView(chapters.find(chapter => chapter.order_position == gameController.gameStateManager.user.chapterNumber).material, () => {
+                gameController.chatSceneController.openChapterTextView(chapters.find(chapter => chapter.order_position == gameController.gameStateManager.user.chapterNumber).material, () => {
                     gameController.chatSceneController.removeTextChatView();
                     if (this._masterSceneController.isSceneSleeping(SceneKeys.QUESTION_VIEW_SCENE_KEY)) {
                         this._masterSceneController.wakeScene(SceneKeys.QUESTION_VIEW_SCENE_KEY);
