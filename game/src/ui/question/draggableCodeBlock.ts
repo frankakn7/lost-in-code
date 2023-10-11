@@ -93,6 +93,11 @@ export default class DraggableCodeBlock extends Phaser.GameObjects.Container {
         dummyPre.style.padding = "20px";
         dummyPre.style.border = "10px solid #00c8ff";
 
+        dummyPre.style.whiteSpace = "pre-wrap";
+        dummyPre.style.maxWidth = `${
+            this.scene.cameras.main.displayWidth - 200
+        }px`;
+
         dummyPre.style.backgroundColor = "#1c1d21";
         dummyPre.style.color = "#c0c5ce";
         dummyPre.style.width = `${this.scene.cameras.main.width - 200}`;

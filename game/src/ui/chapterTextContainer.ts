@@ -4,17 +4,18 @@ import php from "highlight.js/lib/languages/php";
 import html2canvas from "html2canvas";
 import "highlight.js/styles/night-owl.css";
 import Phaser from "phaser";
-import {debugHelper} from "../helpers/debugHelper";
+import { debugHelper } from "../helpers/debugHelper";
 import ChatFlow from "../classes/chat/chatFlow";
 
 interface TextBlock {
-    type: 'text' | 'code';
+    type: "text" | "code";
     content: string;
 }
+
 export default class ChapterTextContainer extends ChatTextContainer {
     private _textureKeys: Array<String> = [];
 
-    constructor(scene: Phaser.Scene,x:number,y:number) {
+    constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y);
         // this.addCodeBlock("<?php function test(){} ?>").then(value => {
         //     debugHelper.logString("Added code block")
@@ -47,6 +48,9 @@ export default class ChapterTextContainer extends ChatTextContainer {
         dummyPre.style.padding = "20px";
         dummyPre.style.border = "10px solid #00c8ff";
 
+        dummyPre.style.whiteSpace = "pre-wrap";
+        dummyPre.style.maxWidth = `${this.scene.cameras.main.displayWidth - 200}px`;
+
         dummyPre.style.backgroundColor = "#1c1d21";
         dummyPre.style.color = "#c0c5ce";
         dummyPre.style.width = `${this.scene.cameras.main.width - 200}`;
@@ -69,15 +73,19 @@ export default class ChapterTextContainer extends ChatTextContainer {
         // Add the canvas as a texture
         let texturekey = "codeBlockTexture" + this._textureKeys.length;
         this.scene.textures.remove(texturekey);
-        this._textureKeys.push(texturekey)
+        this._textureKeys.push(texturekey);
 
         // let canvasTexture = this.scene.textures.addCanvas(texturekey, canvas);
         this.scene.textures.addCanvas(texturekey, canvas);
 
         // let codeBlockImage = this.scene.add.image(this.textSidePadding, this.calcNewTextY(), texturekey);
-        let codeBlockImage = this.scene.add.image(this.scene.cameras.main.displayWidth / 2, this.calcNewTextY(), texturekey);
-        codeBlockImage.setOrigin(0.5,0)
-        this.pushAndAdd(codeBlockImage)
+        let codeBlockImage = this.scene.add.image(
+            this.scene.cameras.main.displayWidth / 2,
+            this.calcNewTextY(),
+            texturekey,
+        );
+        codeBlockImage.setOrigin(0.5, 0);
+        this.pushAndAdd(codeBlockImage);
     }
 
     private createTextQueue(text: string): TextBlock[] {
@@ -92,20 +100,20 @@ export default class ChapterTextContainer extends ChatTextContainer {
             if (block.startsWith("###code###")) {
                 // Remove the ###code### and ###/code### markers
                 block = block.replace("###code###", "").replace("###/code###", "");
-                outputArray.push({ type: 'code', content: block.trim() });
+                outputArray.push({ type: "code", content: block.trim() });
             } else {
-                outputArray.push({ type: 'text', content: block.trim() });
+                outputArray.push({ type: "text", content: block.trim() });
             }
         }
 
         return outputArray;
     }
 
-    public async addFullDocText(text: string){
+    public async addFullDocText(text: string) {
         let textArray = this.createTextQueue(text);
 
         for (const block of textArray) {
-            if (block.type === 'code') {
+            if (block.type === "code") {
                 await this.addCodeBlock(block.content);
             } else {
                 this.addFullRecievedText(block.content);
