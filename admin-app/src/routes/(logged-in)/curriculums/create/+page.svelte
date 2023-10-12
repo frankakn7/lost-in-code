@@ -1,21 +1,14 @@
 <script lang="ts">
-    import type {PageData} from './$types';
     import {goto} from "$app/navigation";
-
-    export let data: PageData;
 
     let name = '';
     let description = '';
-    let curriculumId = 'null';
-    const curriculums = data.curriculums;
-
-    console.log(curriculums)
 
     function handleSubmit() {
-        const formData = {name, description, curriculumId: curriculumId === 'null' ? null : curriculumId};
+        const formData = {name, description};
         console.log(formData);
         const apiUrl = import.meta.env.VITE_API_URL;
-        fetch(`${apiUrl}/groups/`, {
+        fetch(`${apiUrl}/curriculums/`, {
             method: 'POST',
             credentials: "include",
             headers: {
@@ -28,12 +21,12 @@
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            response.json().then((responseData) => goto("/groups/" + responseData.insertId)).catch(error => console.error(error));
+            response.json().then((responseData) => goto("/curriculums/" + responseData.insertId)).catch(error => console.error(error));
         }).catch(error => console.error('There has been a problem with your fetch operation: ', error));
     }
 </script>
 
-<h1>Add Group</h1>
+<h1>Create a new Curriculum</h1>
 <form on:submit|preventDefault={handleSubmit}>
     <table>
         <tr>
@@ -52,24 +45,10 @@
                 <textarea id="description" bind:value={description} required></textarea>
             </td>
         </tr>
-        <tr>
-            <td>
-                <label for="curriculumId">Curriculum ID:</label>
-            </td>
-            <td>
-                <select id="curriculumId" bind:value={curriculumId} required>
-                    <option value="null" selected>None</option>
-                    {#each curriculums as curriculum (curriculum.id)}
-                        <option value={curriculum.id}>({curriculum.id}) {curriculum.name}</option>
-                    {/each}
-                </select>
-            </td>
-        </tr>
     </table>
     <button type="submit" class="click-button" id="submit-button">Submit</button>
     <button type="button" class="click-button" id="cancel-button" on:click={() => window.history.back()}>Cancel</button>
 </form>
-
 <style>
     table {
         text-align: left;
@@ -91,8 +70,7 @@
     }
 
     input,
-    textarea,
-    select {
+    textarea{
         font-size: 1rem;
         width: 80%;
     }

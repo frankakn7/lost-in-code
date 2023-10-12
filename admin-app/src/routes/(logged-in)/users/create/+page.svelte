@@ -109,7 +109,7 @@
         </tr>
     </table>
     <button type="submit" class="click-button" id="submit-button">Submit</button>
-    <button type="button" class="click-button" id="cancel-button" on:click={() => goto("/users")}>Cancel</button>
+    <button type="button" class="click-button" id="cancel-button" on:click={() => window.history.back()}>Cancel</button>
 </form>
 
 <style>
