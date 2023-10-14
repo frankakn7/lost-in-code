@@ -6,8 +6,15 @@ export const load = (async ({ params, fetch }: any) => {
 		method: 'GET',
 		credentials: "include"
 	});
-	console.log("Requesting")
+	console.log("Requesting Chapters")
 	// console.log(response)
 	const data = await response.json();
-	return {chapter: data};
+
+	const curriculumResponse = await fetch(`${apiUrl}/curriculums/`, {
+		method: 'GET',
+		credentials: "include"
+	});
+	console.log("Requesting Curriculum")
+	const curriculumData = await curriculumResponse.json();
+	return {chapter: data, curriculums: curriculumData};
 }) satisfies PageLoad;

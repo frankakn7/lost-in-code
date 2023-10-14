@@ -1,12 +1,23 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { goto } from '$app/navigation';
+	import MaterialPreview from "$lib/components/MaterialPreview.svelte";
 
 	export let data: PageData;
 
 	let sortBy = { col: 'id', ascending: true };
 
 	let questionsArray = data.chapter.questions;
+
+	let materialOpen = false;
+
+	let curriculums = data.curriculums
+
+	let currentCurriculum = curriculums.find(curriculum => curriculum.id == data.chapter.curriculum_id);
+
+	$: if (data.chapter.curriculum_id) {
+		currentCurriculum = curriculums.find(curriculum => curriculum.id == data.chapter.curriculum_id);
+	}
 
 	let sort = (column: string) => {
 		if (sortBy.col == column) {
@@ -27,9 +38,55 @@
 </script>
 
 <h1>Chapter: {data.chapter.name}</h1>
-<p>{data.chapter.material}</p>
+<!--<h2>Material</h2>-->
+<!--<p>{data.chapter.material}</p>-->
+<h2>Info</h2>
+<table class="info-table">
+	<tr>
+		<td>
+			Name:
+		</td>
+		<td>
+			{data.chapter.name}
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Curriculum:
+		</td>
+		<td>
+			<a href="/curriculums/{currentCurriculum.id}">{currentCurriculum.name} ({currentCurriculum.id})</a>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Order position:
+		</td>
+		<td>
+			{data.chapter.order_position}
+		</td>
+	</tr>
+</table>
+<div class="preview-container">
+	<button type="button" class="collapse-button" on:click={() => materialOpen = !materialOpen}>
+		<h2>Material</h2>
+		{#if materialOpen}
+			<h2><i class="fa fa-angle-down"/></h2>
+		{:else}
+			<h2><i class="fa fa-angle-up"/></h2>
+		{/if}
+	</button>
+
+	{#if materialOpen}
+		<div class="preview">
+			<!--{material}-->
+			<!--            <CodeBlock code={material}/>-->
+			<MaterialPreview text={data.chapter.material}/>
+		</div>
+	{/if}
+</div>
 <h2>Questions</h2>
-<table>
+<table class="question-table">
 	<tr>
 		<th on:click={() => sort('id')}>
 			<div class="table-header">
@@ -104,6 +161,16 @@
 </table>
 
 <style>
+
+	.info-table {
+		text-align: left;
+	}
+
+	/*.info-table tr:hover {*/
+	/*	pointer-events: none;*/
+	/*	!*background-color: inherit;*!*/
+	/*}*/
+
 	table {
 		text-align: center;
 		border-collapse: collapse;
@@ -133,8 +200,8 @@
 		background-color: rgba(var(--yinmn-blue-rgb), 0.2);
 	}
 
-	th:hover,
-	tr:not(:first-child):hover {
+	.question-table th:hover,
+	.question-table tr:not(:first-child):hover {
 		cursor: pointer;
 		background-color: rgba(var(--yinmn-blue-rgb), 0.4);
 	}
@@ -147,5 +214,34 @@
 	td,
 	th {
 		padding: 0.5rem;
+	}
+
+	.preview-container {
+		/*border: 2px solid var(--yinmn-blue);*/
+		margin-top: 2rem;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		/*align-items: center;*/
+	}
+
+	.collapse-button {
+		all: unset;
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		cursor: pointer;
+		padding: 0.5rem;
+		padding-left: 0;
+		box-sizing: border-box;
+	}
+
+	.collapse-button h2 {
+		margin: 0;
+	}
+
+	.collapse-button:hover {
+		background-color: rgba(1, 1, 1, 0.1);
 	}
 </style>
