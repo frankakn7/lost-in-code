@@ -65,23 +65,40 @@ router.get("/", (req: Request, res: Response) => {
  * Get all chapters from user curriculum
  */
 router.get("/me", (req: Request, res: Response) => {
-    const sql = 'SELECT `curriculum_id` FROM `user_game_curriculum` WHERE user_id = ?;'
+    const sql =
+        "SELECT `curriculum_id` FROM `user_game_curriculum` WHERE user_id = ?;";
     const userId = req.body.user.id;
-    const params = [userId]
-    db.query(sql,params)
-        .then((results:any) => {
-            const curriculum_id = results[0]?.curriculum_id;
-            const sql = "SELECT * FROM `chapter` WHERE `curriculum_id` = ?;";
-            const params = [curriculum_id];
-            db.query(sql,params)
-                .then((results) => {
-                    res.send(results);
-                })
-                .catch((error) => {
-                    console.error(error);
-                    return res.status(500).send("Server error");
-                });
+    const params = [userId];
+    db.query(sql, params).then((results: any) => {
+        const curriculum_id = results[0]?.curriculum_id;
+        const sql = "SELECT * FROM `chapter` WHERE `curriculum_id` = ?;";
+        const params = [curriculum_id];
+        db.query(sql, params)
+            .then((results) => {
+                res.send(results);
+            })
+            .catch((error) => {
+                console.error(error);
+                return res.status(500).send("Server error");
+            });
+    });
+});
+
+/**
+ * Get chapters for specific curriculum
+ */
+router.get("/curriculum/:id", (req: Request, res: Response) => {
+    const curriculum_id = req.params.id;
+    const sql = "SELECT * FROM `chapter` WHERE `curriculum_id` = ?;";
+    const params = [curriculum_id];
+    db.query(sql, params)
+        .then((results) => {
+            res.send(results);
         })
+        .catch((error) => {
+            console.error(error);
+            return res.status(500).send("Server error");
+        });
 });
 
 /**
@@ -112,8 +129,8 @@ router.get("/:id/full", (req: Request, res: Response) => {
                 const sql = "SELECT * FROM `chapter` WHERE `id` = ?;";
                 const params = [chapterId];
                 db.query(sql, params)
-                    .then((results:any) => {
-                        results[0].questions = []
+                    .then((results: any) => {
+                        results[0].questions = [];
                         // console.log(results[0])
                         res.send(results[0]);
                     })
@@ -121,7 +138,7 @@ router.get("/:id/full", (req: Request, res: Response) => {
                         console.error(error);
                         return res.status(500).send("Server error");
                     });
-            }else{
+            } else {
                 res.send(results);
             }
         })
@@ -135,14 +152,15 @@ router.get("/:id/full", (req: Request, res: Response) => {
  * update specific chapter
  */
 router.put("/:id", requireAdminRole, (req: Request, res: Response) => {
-    const chapterId = req.params.id;
+    const chapterId = +req.params.id;
     const chapter = req.body;
     const sql =
-        "UPDATE `chapter` SET `name` = ?, `material` = ?, `curriculum_id` = ? WHERE `id` = ?;";
+        "UPDATE `chapter` SET `name` = ?, `material` = ?, `curriculum_id` = ?, `order_position` = ? WHERE `id` = ?;";
     const params = [
         chapter.name,
         chapter.material,
         chapter.curriculum_id,
+        chapter.order_position,
         chapterId,
     ];
     db.query(sql, params)

@@ -127,6 +127,10 @@
 	{/each}
 </table>
 
+<div id="centered-button">
+	<a href="/chapters/create?curriculumId={data.curriculum.id}" class="click-button" id="add-button"><i class="fa fa-plus" /> Add Chapter</a>
+</div>
+
 <style>
 	table {
 		text-align: center;
@@ -173,6 +177,10 @@
 		padding: 0.5rem;
     }
 
+	a {
+		text-decoration: none;
+	}
+
 	#title-container {
 		display: flex;
 		justify-content: space-between;
@@ -206,5 +214,17 @@
 	#delete-button {
 		background-color: var(--imperial-red);
 		padding: 0.5rem;
+	}
+
+	#add-button {
+		background-color: var(--pigment-green);
+		margin-right: 1rem;
+	}
+
+	#centered-button{
+		margin-top: 2rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 </style>
