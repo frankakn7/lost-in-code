@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
 	import ConfirmModal from "$lib/components/ConfirmModal.svelte";
+	import {onMount} from "svelte";
 
     export let data: PageData;
 
@@ -45,6 +46,11 @@
 					console.error('There has been a problem with your fetch operation: ', error);
 				});
 	}
+
+	onMount(() => {
+		sortBy.ascending = false;
+		sort('order_position');
+	})
 </script>
 
 {#if showConfirm}
