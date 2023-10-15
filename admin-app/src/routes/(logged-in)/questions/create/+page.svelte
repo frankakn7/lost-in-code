@@ -6,6 +6,7 @@
     import {goto} from "$app/navigation";
     import type { PageData } from './$types';
     import Choice from "$lib/components/questionCreation/Choice.svelte";
+    import SelectOne from "$lib/components/questionCreation/SelectOne.svelte";
 
     export let data: PageData;
 
@@ -92,7 +93,7 @@
     {:else if newQuestion.type === QuestionType.DRAG_DROP}
         <!-- Your DragDrop component here -->
     {:else if newQuestion.type === QuestionType.SELECT_ONE}
-        <!-- Your SelectOne component here -->
+        <SelectOne bind:elements={newQuestion.elements} />
     {:else if newQuestion.type === QuestionType.CREATE}
         <!-- Your Create component here -->
     {/if}

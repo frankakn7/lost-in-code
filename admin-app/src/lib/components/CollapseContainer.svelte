@@ -30,6 +30,7 @@ export let open = false;
         padding: 0.5rem;
         padding-left: 0;
         box-sizing: border-box;
+        margin-top: 2rem;
     }
 
     .collapse-button h2 {
