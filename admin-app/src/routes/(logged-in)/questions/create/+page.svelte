@@ -5,16 +5,11 @@
     import {QuestionType} from "$lib/types/QuestionType";
     import {goto} from "$app/navigation";
     import type { PageData } from './$types';
+    import Choice from "$lib/components/questionCreation/Choice.svelte";
 
     export let data: PageData;
 
-    console.log(data)
-
     let newQuestion = new Question("", "", "", QuestionType.CHOICE, 1, [], data.chapterId);
-
-    // function handleSubmit(){
-    //     console.log(newQuestion)
-    // }
 
     function handleSubmit() {
         const formData: Question = {
@@ -89,7 +84,7 @@
     </table>
 
     {#if newQuestion.type === QuestionType.CHOICE}
-        <!--    Choice-->
+        <Choice bind:elements={newQuestion.elements} />
     {:else if newQuestion.type === QuestionType.SINGLE_INPUT}
         <SingleInput bind:code={newQuestion.code_text} bind:elements={newQuestion.elements}/>
     {:else if newQuestion.type === QuestionType.CLOZE}
