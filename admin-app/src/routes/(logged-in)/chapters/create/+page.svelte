@@ -3,6 +3,7 @@
     import {goto} from "$app/navigation";
     import CodeBlock from "$lib/components/CodeBlock.svelte";
     import MaterialPreview from "$lib/components/MaterialPreview.svelte";
+    import CollapseContainer from "$lib/components/CollapseContainer.svelte";
 
     export let data: PageData;
 
@@ -17,7 +18,6 @@
     let curriculumId = data.curriculumId ? +data.curriculumId : "null";
     const curriculums = data.curriculums;
 
-    let previewOpen = false
     let chapterOrderOpen = false
 
     console.log(curriculumId)
@@ -140,7 +140,6 @@
                 }
             }
             draggedIndex = index;
-            console.log(chapters)
         }
     }
 
@@ -184,15 +183,7 @@
             </td>
         </tr>
     </table>
-    <button type="button" class="collapse-button" on:click={() => chapterOrderOpen = !chapterOrderOpen}>
-        <h2>Chapter order</h2>
-        {#if chapterOrderOpen}
-            <h2><i class="fa fa-angle-down"/></h2>
-        {:else}
-            <h2><i class="fa fa-angle-up"/></h2>
-        {/if}
-    </button>
-    {#if chapterOrderOpen}
+    <CollapseContainer heading="Chapter Order">
         <div id="drag-container">
             {#each chapters as chapter, index (chapter.id)}
                 <div
@@ -207,32 +198,21 @@
                     {chapter.name}
                 </div>
             {/each}
-            <!-- Block for the current chapter being created -->
-            <!--        <div id="new-chapter" draggable="true" >New Chapter</div>-->
         </div>
-    {/if}
+    </CollapseContainer>
 
     <h2>Material</h2>
 
     <textarea id="description" bind:value={newChapter.material} required></textarea>
 
     <div class="preview-container">
-        <button type="button" class="collapse-button" on:click={() => previewOpen = !previewOpen}>
-            <h2>Preview</h2>
-            {#if previewOpen}
-                <h2><i class="fa fa-angle-down"/></h2>
-            {:else}
-                <h2><i class="fa fa-angle-up"/></h2>
-            {/if}
-        </button>
-
-        {#if previewOpen}
+        <CollapseContainer heading="Preview">
             <div class="preview">
                 <!--{material}-->
                 <!--            <CodeBlock code={material}/>-->
                 <MaterialPreview text={newChapter.material}/>
             </div>
-        {/if}
+        </CollapseContainer>
     </div>
 
     <div class="button-container">
@@ -296,25 +276,6 @@
         margin-top: 2rem;
     }
 
-    .collapse-button {
-        all: unset;
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        cursor: pointer;
-        padding: 0.5rem;
-        padding-left: 0;
-        box-sizing: border-box;
-    }
-
-    .collapse-button h2 {
-        margin: 0;
-    }
-
-    .collapse-button:hover {
-        background-color: rgba(1, 1, 1, 0.1);
-    }
 
     .click-button {
         padding: 0.4rem;

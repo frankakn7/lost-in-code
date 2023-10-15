@@ -159,7 +159,9 @@
 		</tr>
 	{/each}
 </table>
-
+<div id="centered-button">
+	<a href="/questions/create?chapterId={data.chapter.id}" class="click-button" id="add-button"><i class="fa fa-plus" /> Add Question</a>
+</div>
 <style>
 
 	.info-table {
@@ -243,5 +245,50 @@
 
 	.collapse-button:hover {
 		background-color: rgba(1, 1, 1, 0.1);
+	}
+
+	.click-button {
+		padding: 0.4rem;
+		cursor: pointer;
+		border-style: none;
+		border-radius: 0.2rem;
+		background-color: var(--yinmn-blue);
+		color: var(--timberwolf);
+		font-size: 1rem;
+		/* box-shadow: 2px 2px 2px gray; */
+		transition: all 0.2s;
+	}
+
+	.click-button:hover {
+		/* transform: translate(-2px,-2px); */
+		scale: 1.1;
+		/* box-shadow: 4px 4px 2px gray; */
+		transition: all 0.2s;
+	}
+
+	.click-button:active {
+		scale: 0.9;
+		transition: all 0.2s;
+	}
+
+	#delete-button {
+		background-color: var(--imperial-red);
+		padding: 0.5rem;
+	}
+
+	#add-button {
+		background-color: var(--pigment-green);
+		margin-right: 1rem;
+	}
+
+	#centered-button a {
+		text-decoration: none;
+	}
+
+	#centered-button{
+		margin-top: 2rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 </style>
