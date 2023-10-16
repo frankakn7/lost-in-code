@@ -137,7 +137,7 @@
 		<!-- <tr on:click={() => goto(`/elements/${element.id}`)}> -->
 		<tr>
 			<td>{element.id}</td>
-			<td>{element.content ?? '-'}</td>
+			<td>{element.content?.length ? element.content : '-'}</td>
 			<td>{element.element_identifier?.length ? element.element_identifier : '-'}</td>
 			<td>{element.correct_order_position ?? '-'}</td>
 			<td>{element.is_correct ?? '-'}</td>

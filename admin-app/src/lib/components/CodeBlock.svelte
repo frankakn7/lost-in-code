@@ -1,22 +1,40 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
+    import {onMount} from 'svelte';
     import "svelte-highlight/styles/night-owl.css";
     import hljs from 'highlight.js/lib/core';
     import php from 'highlight.js/lib/languages/php';
-    // import java from 'highlight.js/lib/languages/java';
 
     hljs.registerLanguage('php', php);
-    // hljs.registerLanguage('java',java)
 
     export let code: string;
     let preElement: HTMLPreElement;
 
+    const processCode = (rawCode: string) => {
+        let regex = /###INPUT\|(.+?)\|(.+?)\|(.+?)###/g;
+        let parts = rawCode.split(regex);
+        let processedParts = [];
+
+        for (let i = 0; i < parts.length; i += 4) {
+            processedParts.push(hljs.highlight(parts[i], {language: "php"}).value);
+
+            if (i + 1 < parts.length) {
+                let id = parts[i + 1];
+                let length = parts[i + 2];
+                let whitespace = parts[i + 3] === "true" ? "" : ' style="white-space: nowrap;"';
+                processedParts.push(`<input type='text' id='${id}' maxlength='${length}' style="font-family: 'forwardRegular'; font-size: inherit; padding: 5px; border: 2px solid #00c8ff; background-color: #3f414a; color: #d1d6e0"${whitespace}/>`);
+            }
+        }
+        return processedParts.join('');
+    }
+
     onMount(() => {
-        preElement.innerHTML = hljs.highlight(code, { language: "php" }).value;
+        if (preElement) {
+            preElement.innerHTML = processCode(code);
+        }
     });
 
-    $: if (preElement) {
-        preElement.innerHTML = hljs.highlight(code, { language: "php" }).value;
+    $: if (preElement && code) {
+        preElement.innerHTML = processCode(code);
     }
 </script>
 

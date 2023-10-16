@@ -8,6 +8,7 @@
     import Choice from "$lib/components/questionCreation/Choice.svelte";
     import SelectOne from "$lib/components/questionCreation/SelectOne.svelte";
     import DragDrop from "$lib/components/questionCreation/DragDrop.svelte";
+    import Cloze from "$lib/components/questionCreation/Cloze.svelte";
 
     export let data: PageData;
 
@@ -90,9 +91,8 @@
     {:else if newQuestion.type === QuestionType.SINGLE_INPUT}
         <SingleInput bind:code={newQuestion.code_text} bind:elements={newQuestion.elements}/>
     {:else if newQuestion.type === QuestionType.CLOZE}
-        <!-- Your Cloze component here -->
+        <Cloze bind:code={newQuestion.code_text} bind:elements={newQuestion.elements} />
     {:else if newQuestion.type === QuestionType.DRAG_DROP}
-        <!-- Your DragDrop component here -->
         <DragDrop bind:elements={newQuestion.elements} />
     {:else if newQuestion.type === QuestionType.SELECT_ONE}
         <SelectOne bind:elements={newQuestion.elements} />
