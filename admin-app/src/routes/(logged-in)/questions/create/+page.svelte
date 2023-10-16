@@ -7,6 +7,7 @@
     import type { PageData } from './$types';
     import Choice from "$lib/components/questionCreation/Choice.svelte";
     import SelectOne from "$lib/components/questionCreation/SelectOne.svelte";
+    import DragDrop from "$lib/components/questionCreation/DragDrop.svelte";
 
     export let data: PageData;
 
@@ -92,6 +93,7 @@
         <!-- Your Cloze component here -->
     {:else if newQuestion.type === QuestionType.DRAG_DROP}
         <!-- Your DragDrop component here -->
+        <DragDrop bind:elements={newQuestion.elements} />
     {:else if newQuestion.type === QuestionType.SELECT_ONE}
         <SelectOne bind:elements={newQuestion.elements} />
     {:else if newQuestion.type === QuestionType.CREATE}
