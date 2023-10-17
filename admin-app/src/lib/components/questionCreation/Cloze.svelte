@@ -7,13 +7,9 @@
 
     export let code = "";
 
-    // export let correctAnswers: string[] = [""];
-
     export let elements: Element[] = [];
 
     elements = [];
-    // elements.push(new Element("", "i1", null, false, [""]))
-    // elements.push(new Element("", "i2", null, false, [""]))
 
     const extractInputs = (rawCode: string) => {
         let regex = /###INPUT\|(.+?)\|(.+?)\|(.+?)###/g;

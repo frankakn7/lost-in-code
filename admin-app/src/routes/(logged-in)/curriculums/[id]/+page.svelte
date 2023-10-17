@@ -39,7 +39,7 @@
 					if (!response.ok) {
 						throw new Error('Network response was not ok');
 					}
-					console.log(`Group with id ${data.curriculum.id} has been deleted.`);
+					console.log(`Curriculum with id ${data.curriculum.id} has been deleted.`);
 					goto("/curriculums")
 				})
 				.catch((error) => {

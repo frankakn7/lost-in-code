@@ -4,5 +4,5 @@ export enum QuestionType{
     CLOZE = "CLOZE",
     DRAG_DROP = "DRAG_DROP",
     SELECT_ONE = "SELECT_ONE",
-    CREATE = "CREATE"
+    // CREATE = "CREATE"
 }

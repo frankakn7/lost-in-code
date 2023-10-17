@@ -2,8 +2,11 @@
 	import type { PageData } from './$types';
 	import { goto } from '$app/navigation';
 	import MaterialPreview from "$lib/components/MaterialPreview.svelte";
+	import ConfirmModal from "$lib/components/ConfirmModal.svelte";
 
 	export let data: PageData;
+
+	let showConfirm = false;
 
 	let sortBy = { col: 'id', ascending: true };
 
@@ -35,9 +38,70 @@
 
 		questionsArray = questionsArray.sort(sort);
 	};
+
+	function updateChapterOrderPosition(chapter){
+		const formData = {
+			...chapter
+		};
+		console.log("Updating chapter order position")
+		console.log(formData);
+		const apiUrl = import.meta.env.VITE_API_URL;
+		fetch(`${apiUrl}/chapters/${chapter.id}`, {
+			method: 'PUT',
+			credentials: "include",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(formData)
+		}).then((response) => {
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			return
+			// response.json().then((responseData) => goto("/chapters/" + responseData.insertId)).catch(error => console.error(error));
+		}).catch(error => console.error('There has been a problem with your fetch operation: ', error));
+	}
+
+	function handleDelete() {
+		const apiUrl = import.meta.env.VITE_API_URL;
+		fetch(`${apiUrl}/chapters/${data.chapter.id}`, {
+			method: 'DELETE',
+			credentials: "include"
+		})
+				.then((response) => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+					data.chapters.forEach((chapter, index) => {
+						if(chapter.id === data.chapter.id){
+							return;
+						}
+						if(chapter.order_position > data.chapter.order_position){
+							chapter.order_position -= 1;
+							updateChapterOrderPosition(chapter)
+						}
+					});
+					console.log(`Chapter with id ${data.chapter.id} has been deleted.`);
+					goto(`/curriculums/${data.chapter.curriculum_id}`)
+				})
+				.catch((error) => {
+					console.error('There has been a problem with your fetch operation: ', error);
+				});
+	}
 </script>
 
-<h1>Chapter: {data.chapter.name}</h1>
+{#if showConfirm}
+	<ConfirmModal on:close={() => showConfirm = false} on:confirm={handleDelete}>
+		Are you sure you want to delete the Chapter '{data.chapter.name}' with the id {data.chapter.id} ?
+	</ConfirmModal>
+{/if}
+
+<div id="title-container">
+	<h1>Chapter: {data.chapter.name}</h1>
+	<button class="click-button" id="delete-button" on:click={() => showConfirm = true}><i class="fa fa-trash-can"/>
+	</button>
+</div>
+
 <!--<h2>Material</h2>-->
 <!--<p>{data.chapter.material}</p>-->
 <h2>Info</h2>
@@ -289,6 +353,12 @@
 		margin-top: 2rem;
 		display: flex;
 		justify-content: center;
+		align-items: center;
+	}
+
+	#title-container {
+		display: flex;
+		justify-content: space-between;
 		align-items: center;
 	}
 </style>
