@@ -61,8 +61,11 @@
 
 <div id="title-container">
 	<h1>Curriculum: {data.curriculum.name}</h1>
-	<button class="click-button" id="delete-button" on:click={() => showConfirm = true}><i class="fa fa-trash-can"/>
-	</button>
+	<div class="button-container">
+		<a class="click-button" id="edit-button" href={`/curriculums/${data.curriculum.id}/edit`}><i class="fa fa-pencil"/></a>
+		<button class="click-button" id="delete-button" on:click={() => showConfirm = true}><i class="fa fa-trash-can"/>
+		</button>
+	</div>
 </div>
 <p>{data.curriculum.description}</p>
 
@@ -232,5 +235,9 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+	}
+
+	#edit-button:hover{
+		font-size: 115%;
 	}
 </style>
