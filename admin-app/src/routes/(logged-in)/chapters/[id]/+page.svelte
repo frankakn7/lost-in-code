@@ -98,8 +98,11 @@
 
 <div id="title-container">
 	<h1>Chapter: {data.chapter.name}</h1>
-	<button class="click-button" id="delete-button" on:click={() => showConfirm = true}><i class="fa fa-trash-can"/>
-	</button>
+	<div class="button-container">
+		<a class="click-button" id="edit-button" href={`/chapters/${data.chapter.id}/edit`}><i class="fa fa-pencil"/></a>
+		<button class="click-button" id="delete-button" on:click={() => showConfirm = true}><i class="fa fa-trash-can"/>
+		</button>
+	</div>
 </div>
 
 <!--<h2>Material</h2>-->
@@ -360,5 +363,9 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+	}
+
+	#edit-button:hover{
+		font-size: 115%;
 	}
 </style>
