@@ -10,8 +10,12 @@
 
     export let elements: Element[] = [];
 
-    elements = [];
-    elements.push(new Element("", "", null, false, []))
+    export let editing = false;
+
+    if(!editing){
+        elements = [];
+        elements.push(new Element("","",null,false,[]))
+    }
 
     function addCodeBlock() {
         elements.push(new Element("", "", null, false, []));

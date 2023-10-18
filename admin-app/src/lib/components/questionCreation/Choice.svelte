@@ -2,8 +2,12 @@
     import Element from "$lib/classes/Element";
 
     export let elements: Element[] = [];
-    elements = [];
-    elements.push(new Element("","",null,false,[]))
+    export let editing = false;
+
+    if(!editing){
+        elements = [];
+        elements.push(new Element("","",null,false,[]))
+    }
 
     function addChoice() {
         elements.push(new Element("","",null,false,[]));

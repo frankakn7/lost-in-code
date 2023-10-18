@@ -10,8 +10,12 @@
 
     export let elements: Element[] = [];
 
-    elements = [];
-    elements.push(new Element("","i1",null,null,[""]))
+    export let editing = false;
+
+    if(!editing){
+        elements = [];
+        elements.push(new Element("","i1",null,null,[""]))
+    }
 
     function addCorrectAnswer() {
         elements[0].correct_answers!.push("");

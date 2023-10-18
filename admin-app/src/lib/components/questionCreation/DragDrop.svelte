@@ -5,8 +5,12 @@
 
     export let elements: Element[] = [];
 
-    elements = [];
-    elements.push(new Element("", "", elements.length+1, false, []))
+    export let editing = false;
+
+    if(!editing){
+        elements = [];
+        elements.push(new Element("", "", elements.length+1, false, []))
+    }
 
     function addCodeBlock() {
         elements.push(new Element("", "", elements.length+1, false, []));
