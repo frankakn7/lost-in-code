@@ -1,0 +1,170 @@
+<script lang="ts">
+
+    import SingleInput from "$lib/components/questionCreation/SingleInput.svelte";
+    import Question from "$lib/classes/Question";
+    import {QuestionType} from "$lib/types/QuestionType";
+    import {goto} from "$app/navigation";
+    import Choice from "$lib/components/questionCreation/Choice.svelte";
+    import SelectOne from "$lib/components/questionCreation/SelectOne.svelte";
+    import DragDrop from "$lib/components/questionCreation/DragDrop.svelte";
+    import Cloze from "$lib/components/questionCreation/Cloze.svelte";
+    import type { PageData } from './$types';
+
+    export let data: PageData;
+
+    let editedQuestion:Question = {...data.question};
+
+    function handleSubmit() {
+        const formData: Question = {
+            ...editedQuestion
+        };
+        console.log(formData);
+        const apiUrl = import.meta.env.VITE_API_URL;
+        fetch(`${apiUrl}/questions/${data.question.id}/full`, {
+            method: 'PUT',
+            credentials: "include",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        }).then((response) => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            response.json().then((responseData) => {
+                goto("/questions/"+data.question.id)
+            }).catch(error => console.error(error));
+        }).catch(error => console.error('There has been a problem with your fetch operation: ', error));
+    }
+</script>
+
+<h1>Edit Question</h1>
+
+<form on:submit|preventDefault={handleSubmit}>
+    <table>
+        <tr>
+            <td>
+                Question Type
+            </td>
+            <td>
+                {editedQuestion.type}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="question">Question:</label>
+            </td>
+            <td>
+                <input id="question" bind:value={editedQuestion.question_text} type="text" required/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="difficulty">Difficulty:</label>
+            </td>
+            <td>
+                <select id="difficulty" bind:value={editedQuestion.difficulty} required>
+                    {#each [1, 2, 3, 4, 5] as num}
+                        <option value={num} selected={editedQuestion.difficulty === num}>{num}</option>
+                    {/each}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Chapter:
+            </td>
+            <td>
+                {data.chapter.name} ({data.chapter.id})
+            </td>
+        </tr>
+    </table>
+
+    {#if editedQuestion.type === QuestionType.CHOICE}
+        <Choice bind:elements={editedQuestion.elements} editing={true}/>
+    {:else if editedQuestion.type === QuestionType.SINGLE_INPUT}
+        <SingleInput bind:code={editedQuestion.code_text} bind:elements={editedQuestion.elements} editing={true}/>
+    {:else if editedQuestion.type === QuestionType.CLOZE}
+        <Cloze bind:code={editedQuestion.code_text} bind:elements={editedQuestion.elements} />
+    {:else if editedQuestion.type === QuestionType.DRAG_DROP}
+        <DragDrop bind:elements={editedQuestion.elements} editing={true}/>
+    {:else if editedQuestion.type === QuestionType.SELECT_ONE}
+        <SelectOne bind:elements={editedQuestion.elements} editing={true}/>
+    {:else if editedQuestion.type === QuestionType.CREATE}
+        <!-- Your Create component here -->
+    {/if}
+
+    <div class="button-container">
+        <button type="submit" class="click-button" id="submit-button">Submit</button>
+        <button type="button" class="click-button" id="cancel-button" on:click={() => window.history.back()}>Cancel
+        </button>
+    </div>
+</form>
+
+<style>
+    table {
+        text-align: left;
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 2rem;
+    }
+
+    tr:nth-child(even) {
+        background-color: rgba(var(--yinmn-blue-rgb), 0.2);
+    }
+
+    td:not(:last-child) {
+        border-right: 2px solid var(--yinmn-blue);
+    }
+
+    td {
+        padding: 0.5rem;
+    }
+
+    input {
+        font-size: 1rem;
+        width: 80%;
+    }
+
+    select {
+        font-size: 1rem;
+    }
+
+    .button-container {
+        margin-top: 2rem;
+    }
+
+
+    .click-button {
+        padding: 0.4rem;
+        cursor: pointer;
+        border-style: none;
+        border-radius: 0.2rem;
+        background-color: var(--yinmn-blue);
+        color: var(--timberwolf);
+        font-size: 1rem;
+        /* box-shadow: 2px 2px 2px gray; */
+        transition: all 0.2s;
+    }
+
+    .click-button:hover {
+        /* transform: translate(-2px,-2px); */
+        scale: 1.1;
+        /* box-shadow: 4px 4px 2px gray; */
+        transition: all 0.2s;
+    }
+
+    .click-button:active {
+        scale: 0.9;
+        transition: all 0.2s;
+    }
+
+    #submit-button {
+        background-color: var(--pigment-green);
+        margin-right: 1rem;
+    }
+
+    #cancel-button {
+        background-color: var(--imperial-red);
+    }
+</style>

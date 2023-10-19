@@ -4,6 +4,7 @@ import {
     createFullQuestion,
     createQuestion,
     getFullQuestion,
+    updateFullQuestion,
 } from "../handlers/questionHandler";
 import { requireAdminRole } from "../auth";
 
@@ -112,6 +113,23 @@ router.put("/:id", requireAdminRole, (req: Request, res: Response) => {
             return res.status(500).send("Server error");
         });
 });
+
+/**
+ * Update FULL question
+ */
+router.put("/:id/full", requireAdminRole, (req: Request, res: Response) => {
+    const question = req.body;
+    const questionId = req.params.id;
+    updateFullQuestion(questionId, question)
+        .then((results) => {
+            res.send(results);
+        })
+        .catch((error) => {
+            console.error(error);
+            return res.status(500).send("Server error");
+        });
+});
+
 
 /**
  * delete a specific question

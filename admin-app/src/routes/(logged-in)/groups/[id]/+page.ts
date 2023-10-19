@@ -13,7 +13,7 @@ export const load = (async ({ params, fetch }: any) => {
 		method: 'GET',
 		credentials: "include"
 	});
-	console.log("Requesting Group")
+	console.log("Requesting Curriculum")
 	const curriculumData = await curriculumResponse.json();
 
 	return {group: data, curriculums: curriculumData};

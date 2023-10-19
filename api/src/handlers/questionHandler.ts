@@ -1,6 +1,12 @@
 import db from "../db";
-import { createCorrectAnswer } from "./correctAnswerHandler";
-import { createQuestionElement } from "./questionElementHandler";
+import {
+    createCorrectAnswer,
+    deleteCorrectAnswersByElementId,
+} from "./correctAnswerHandler";
+import {
+    createQuestionElement,
+    updateQuestionElement,
+} from "./questionElementHandler";
 
 export type QuestionType =
     | "CHOICE"
@@ -51,6 +57,24 @@ export const createQuestion = (requestBody: any): Promise<any> => {
     return db.query(sql, params);
 };
 
+export const updateQuestion = (
+    questionId: string,
+    requestBody: any
+): Promise<any> => {
+    const sql =
+        "UPDATE `question` SET `question_text` = ?, `hint` = ?, `type` = ?, `difficulty` = ?, `code_text` = ?, `chapter_id` = ? WHERE `id` = ?;";
+    const params = [
+        requestBody.question_text,
+        requestBody.hint,
+        requestBody.type,
+        requestBody.difficulty,
+        requestBody.code_text,
+        requestBody.chapter_id,
+        questionId,
+    ];
+    return db.query(sql, params);
+};
+
 export const createFullQuestion = (
     requestBody: QuestionValues
 ): Promise<any> => {
@@ -96,6 +120,61 @@ export const createFullQuestion = (
             })
             .catch((error) => {
                 // console.log(error);
+                reject(error);
+            });
+    });
+};
+
+export const updateFullQuestion = (
+    questionId: string,
+    requestBody: QuestionValues
+): Promise<any> => {
+    return new Promise((resolve, reject) => {
+        updateQuestion(questionId, requestBody) // Update the most upper level => Question
+            .then((result) => {
+                const elementsPromises = requestBody.elements.map(
+                    (element: QuestionElementValues) => {
+                        // Assuming you have the question element ID already, if not you'll need to fetch or decide how to manage it
+                        return updateQuestionElement(questionId, element.id!, element) // Update all the Question elements contained in the question
+                            .then(() => {
+                                if (!element.correct_answers) {
+                                    return;
+                                }
+                                return deleteCorrectAnswersByElementId(
+                                    element.id!
+                                ).then(() => {
+                                    if (!element.correct_answers) {
+                                        return;
+                                    }
+                                    const answersPromises =
+                                        element.correct_answers.map(
+                                            (correctAnswer: string) => {
+                                                let newlyCreatedAnswer: CorrectAnswer =
+                                                    {
+                                                        answer: correctAnswer,
+                                                        question_element_id:
+                                                            element.id,
+                                                    };
+                                                return createCorrectAnswer(
+                                                    newlyCreatedAnswer
+                                                ); //Create all the correct answer objects contained in the question element
+                                            }
+                                        );
+                                    return Promise.all(answersPromises);
+                                });
+                            });
+                    }
+                );
+
+                Promise.all(elementsPromises)
+                    .then(() => {
+                        resolve(result);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            })
+            .catch((error) => {
                 reject(error);
             });
     });
@@ -165,14 +244,16 @@ export const getFullQuestion = (id: string): Promise<any> => {
         db.query(sql, params)
             .then((results: any) => {
                 if (!results.length) {
-                    getQuestion(id).then((questionResult:any) => {
-                        const question = questionResult[0]
-                        question.elements = []
-                        resolve(question)
-                    }).catch(error => {
-                        reject(error)
-                    })
-                }else{
+                    getQuestion(id)
+                        .then((questionResult: any) => {
+                            const question = questionResult[0];
+                            question.elements = [];
+                            resolve(question);
+                        })
+                        .catch((error) => {
+                            reject(error);
+                        });
+                } else {
                     const question = extractQuestionsFromRows(results)[0];
                     resolve(question);
                 }

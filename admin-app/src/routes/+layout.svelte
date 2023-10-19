@@ -30,4 +30,10 @@
 		$imperial-red: rgba(229, 75, 75, 1);
 		$pigment-green: rgba(74, 173, 82, 1); */
 	}
+
+	@font-face {
+		font-family: 'forwardRegular';
+		src: url('../assets/fonts/fff-forward.regular.ttf') format('truetype');
+	}
+
 </style>

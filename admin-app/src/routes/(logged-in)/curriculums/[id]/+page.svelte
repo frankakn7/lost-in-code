@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
 	import ConfirmModal from "$lib/components/ConfirmModal.svelte";
+	import {onMount} from "svelte";
 
     export let data: PageData;
 
@@ -38,13 +39,18 @@
 					if (!response.ok) {
 						throw new Error('Network response was not ok');
 					}
-					console.log(`Group with id ${data.curriculum.id} has been deleted.`);
+					console.log(`Curriculum with id ${data.curriculum.id} has been deleted.`);
 					goto("/curriculums")
 				})
 				.catch((error) => {
 					console.error('There has been a problem with your fetch operation: ', error);
 				});
 	}
+
+	onMount(() => {
+		sortBy.ascending = false;
+		sort('order_position');
+	})
 </script>
 
 {#if showConfirm}
@@ -55,8 +61,11 @@
 
 <div id="title-container">
 	<h1>Curriculum: {data.curriculum.name}</h1>
-	<button class="click-button" id="delete-button" on:click={() => showConfirm = true}><i class="fa fa-trash-can"/>
-	</button>
+	<div class="button-container">
+		<a class="click-button" id="edit-button" href={`/curriculums/${data.curriculum.id}/edit`}><i class="fa fa-pencil"/></a>
+		<button class="click-button" id="delete-button" on:click={() => showConfirm = true}><i class="fa fa-trash-can"/>
+		</button>
+	</div>
 </div>
 <p>{data.curriculum.description}</p>
 
@@ -127,6 +136,10 @@
 	{/each}
 </table>
 
+<div id="centered-button">
+	<a href="/chapters/create?curriculumId={data.curriculum.id}" class="click-button" id="add-button"><i class="fa fa-plus" /> Add Chapter</a>
+</div>
+
 <style>
 	table {
 		text-align: center;
@@ -173,6 +186,10 @@
 		padding: 0.5rem;
     }
 
+	a {
+		text-decoration: none;
+	}
+
 	#title-container {
 		display: flex;
 		justify-content: space-between;
@@ -206,5 +223,21 @@
 	#delete-button {
 		background-color: var(--imperial-red);
 		padding: 0.5rem;
+	}
+
+	#add-button {
+		background-color: var(--pigment-green);
+		margin-right: 1rem;
+	}
+
+	#centered-button{
+		margin-top: 2rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	#edit-button:hover{
+		font-size: 115%;
 	}
 </style>

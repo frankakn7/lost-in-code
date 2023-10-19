@@ -7,7 +7,6 @@ export const load = (async ({ params, fetch }: any) => {
 		credentials: "include"
 	});
 	console.log("Requesting Curriculum")
-	// console.log(response)
 	const data = await response.json();
 	return {curriculum: data};
 }) satisfies PageLoad;

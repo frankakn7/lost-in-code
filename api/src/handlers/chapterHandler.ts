@@ -54,7 +54,7 @@ export const extractChaptersFromRows = (rows: any): ChapterValue[] => {
         let chapter = chaptersMap.get(row.chapter_id);
 
         // If chapter doesn't exist, create a new one
-        if (!chapter) {
+        if (!chapter && row.chapter_id) {
             chapter = {
                 id: row.chapter_id,
                 name: row.chapter_name,

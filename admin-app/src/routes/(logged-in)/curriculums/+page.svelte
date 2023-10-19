@@ -75,7 +75,7 @@
 </table>
 
 <div id="centered-button">
-	<a href="/upload" class="click-button" id="add-button"><i class="fa fa-plus" /> Add Curriculum</a>
+	<a href="/curriculums/create" class="click-button" id="add-button"><i class="fa fa-plus" /> Add Curriculum</a>
 </div>
 
 <style>
