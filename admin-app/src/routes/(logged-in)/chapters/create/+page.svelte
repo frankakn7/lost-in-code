@@ -146,6 +146,10 @@
     function dragEndHandler() {
         // Maybe send the reordered chapters back to the server here
     }
+
+    function addInputField(){
+        newChapter.material += `###CODE### ###/CODE###`;
+    }
 </script>
 
 <h1>Add Chapter</h1>
@@ -201,7 +205,10 @@
         </div>
     </CollapseContainer>
 
-    <h2>Material</h2>
+    <div class="material-title-container">
+        <h2>Material</h2>
+        <button type="button" class="click-button" on:click={addInputField}><i class="fa fa-plus"></i> Code Block</button>
+    </div>
 
     <textarea id="description" bind:value={newChapter.material} required></textarea>
 
@@ -324,5 +331,11 @@
 
     .newChapterDragContainer {
         font-weight: bold;
+    }
+
+    .material-title-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 </style>

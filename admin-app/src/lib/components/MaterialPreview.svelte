@@ -5,13 +5,13 @@
     let blocks = [];
 
     $: {
-        const regex = /###code###[\s\S]*?###\/code###|[\s\S]+?(?=###code###|$)/g;
+        const regex = /###CODE###[\s\S]*?###\/CODE###|[\s\S]+?(?=###CODE###|$)/g;
         const matches = Array.from(text.matchAll(regex));
         blocks = matches.map(match => {
             let block = match[0];
 
-            if (block.startsWith("###code###")) {
-                block = block.replace("###code###", "").replace("###/code###", "");
+            if (block.startsWith("###CODE###")) {
+                block = block.replace("###CODE###", "").replace("###/CODE###", "");
                 return { type: "code", content: block.trim() };
             } else {
                 return { type: "text", content: block.trim() };

@@ -116,41 +116,6 @@
         });
     }
 
-    // function handleSubmit() {
-    //     const formData = {
-    //         // name: editedChapter.name,
-    //         // material: editedChapter.material,
-    //         // curriculum_id: curriculumId === 'null' ? null : curriculumId,
-    //         // order_position: editedChapter.order_position
-    //         ...editedChapter
-    //     };
-    //     console.log(formData);
-    //     const apiUrl = import.meta.env.VITE_API_URL;
-    //     fetch(`${apiUrl}/chapters/`, {
-    //         method: 'POST',
-    //         credentials: "include",
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify(formData)
-    //     }).then((response) => {
-    //         if (!response.ok) {
-    //             throw new Error('Network response was not ok');
-    //         }
-    //         response.json().then((responseData) => {
-    //             for(let chapter of chapters){
-    //                 if(chapter.id === "new"){
-    //                     continue;
-    //                 }
-    //                 updateChapterOrderPosition(chapter);
-    //             }
-    //             goto("/chapters/" + responseData.insertId)
-    //         }).catch(error => console.error(error));
-    //     }).catch(error => console.error('There has been a problem with your fetch operation: ', error));
-    //
-    //
-    // }
-
     let draggedIndex;
 
     function dragStartHandler(event, index) {
@@ -175,6 +140,10 @@
 
     function dragEndHandler() {
         // Maybe send the reordered chapters back to the server here
+    }
+
+    function addInputField(){
+        editedChapter.material += `###CODE### ###/CODE###`;
     }
 </script>
 
@@ -231,7 +200,10 @@
         </div>
     </CollapseContainer>
 
-    <h2>Material</h2>
+    <div class="material-title-container">
+        <h2>Material</h2>
+        <button type="button" class="click-button" on:click={addInputField}><i class="fa fa-plus"></i> Code Block</button>
+    </div>
 
     <textarea id="description" bind:value={editedChapter.material} required></textarea>
 
@@ -354,5 +326,11 @@
 
     .newChapterDragContainer {
         font-weight: bold;
+    }
+
+    .material-title-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 </style>
