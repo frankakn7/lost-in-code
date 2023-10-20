@@ -1,11 +1,14 @@
 <script lang="ts">
     import {goto} from "$app/navigation";
+    import {QuestionType} from "$lib/types/QuestionType";
+    import {SupportedProgLang} from "$lib/types/SupportedProgLang";
 
     let name = '';
     let description = '';
+    let prog_lang = SupportedProgLang.PHP;
 
     function handleSubmit() {
-        const formData = {name, description};
+        const formData = {name, description, prog_lang};
         console.log(formData);
         const apiUrl = import.meta.env.VITE_API_URL;
         fetch(`${apiUrl}/curriculums/`, {
@@ -43,6 +46,18 @@
             </td>
             <td>
                 <textarea id="description" bind:value={description} required></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="type">Programming Language</label>
+            </td>
+            <td>
+                <select id="type" bind:value={prog_lang} required>
+                    {#each Object.values(SupportedProgLang) as t }
+                        <option value={t} selected={prog_lang === t}>{t}</option>
+                    {/each}
+                </select>
             </td>
         </tr>
     </table>

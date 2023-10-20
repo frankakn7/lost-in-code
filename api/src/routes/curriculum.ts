@@ -14,8 +14,8 @@ const router = express.Router();
 router.post("/", requireAdminRole, (req: Request, res: Response) => {
     const curriculum = req.body;
     const sql =
-        "INSERT INTO `curriculum` (`name`, `description`) VALUES (?, ?);";
-    const params = [curriculum.name, curriculum.description];
+        "INSERT INTO `curriculum` (`name`, `description`,`prog_lang`) VALUES (?, ?, ?);";
+    const params = [curriculum.name, curriculum.description, curriculum.prog_lang];
     db.query(sql, params)
         .then((results) => {
             res.send(results);
@@ -122,16 +122,5 @@ router.delete("/:id", requireAdminRole, (req: Request, res: Response) => {
             return res.status(500).send("Server error");
         });
 });
-
-// router.delete(
-//     "/:curriculumId/groups/:groupId",
-//     (req: Request, res: Response) => {
-//         const curriculumId = req.params.curriculumId;
-//         const groupId = req.params.groupId;
-//         res.send(
-//             `Remove curriculum with ID ${curriculumId} from group with ID ${groupId}`
-//         );
-//     }
-// );
 
 export default router;
