@@ -15,7 +15,11 @@ router.post("/", requireAdminRole, (req: Request, res: Response) => {
     const curriculum = req.body;
     const sql =
         "INSERT INTO `curriculum` (`name`, `description`,`prog_lang`) VALUES (?, ?, ?);";
-    const params = [curriculum.name, curriculum.description, curriculum.prog_lang];
+    const params = [
+        curriculum.name,
+        curriculum.description,
+        curriculum.prog_lang,
+    ];
     db.query(sql, params)
         .then((results) => {
             res.send(results);
@@ -47,6 +51,24 @@ router.get("/", (req: Request, res: Response) => {
     const sql = "SELECT * FROM `curriculum`;";
     db.query(sql)
         .then((results) => {
+            res.send(results);
+        })
+        .catch((error) => {
+            console.error(error);
+            return res.status(500).send("Server error");
+        });
+});
+
+/**
+ * get sprogramming language via current user
+ */
+router.get("/me/prog-lang", (req: Request, res: Response) => {
+    const sql =
+        "SELECT `curriculum_prog_lang` FROM `user_game_curriculum` WHERE user_id = ?;";
+    const userId = req.body.user.id;
+    const params = [userId];
+    db.query(sql, params)
+        .then((results: any) => {
             res.send(results);
         })
         .catch((error) => {

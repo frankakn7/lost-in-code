@@ -2,11 +2,10 @@ import * as Phaser from "phaser";
 import Question from "../../classes/question/question";
 import hljs from "highlight.js/lib/core";
 import php from "highlight.js/lib/languages/php";
+import java from "highlight.js/lib/languages/java";
 import "highlight.js/styles/night-owl.css";
-import { ChoiceQuestionElement } from "../../classes/question/questionElement";
-import ChoiceButton from "../choiceButton";
-import {SceneKeys} from "../../types/sceneKeys";
-import {debugHelper} from "../../helpers/debugHelper";
+import {SupportedLanguages} from "../../types/supportedLanguages";
+import {gameController} from "../../main";
 
 export default class ClozeQuestionContainer extends Phaser.GameObjects.Container {
 
@@ -72,9 +71,8 @@ export default class ClozeQuestionContainer extends Phaser.GameObjects.Container
     }
 
     private displayCodeBlockCloze(code: string): Phaser.GameObjects.DOMElement {
-        hljs.registerLanguage("php", php);
-
-        hljs.registerLanguage("php", php);
+        hljs.registerLanguage(SupportedLanguages.PHP, php);
+        hljs.registerLanguage(SupportedLanguages.JAVA, java);
 
         let regex = /###INPUT\|(.+?)\|(.+?)\|(.+?)###/g;
         let parts = code.split(regex);
@@ -82,7 +80,7 @@ export default class ClozeQuestionContainer extends Phaser.GameObjects.Container
         let processedParts = [];
 
         for (let i = 0; i < parts.length; i += 4) {
-            processedParts.push(hljs.highlight(parts[i], { language: "php" }).value);
+            processedParts.push(hljs.highlight(parts[i], { language: gameController.gameStateManager.curriculum.progLang }).value);
 
             if (i + 1 < parts.length) {
                 let id = parts[i + 1];
@@ -94,8 +92,6 @@ export default class ClozeQuestionContainer extends Phaser.GameObjects.Container
         }
 
         let highlightedCode = processedParts.join("");
-
-        // let highlightedCode = hljs.highlight(code, { language: "php" }).value;
 
         // Create a dummy div and apply the highlighted code to it
         let dummyPre = document.createElement("pre");

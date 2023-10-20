@@ -1,13 +1,9 @@
 import * as Phaser from "phaser";
 import Question from "../../classes/question/question";
-import hljs from "highlight.js/lib/core";
-import php from "highlight.js/lib/languages/php";
 import "highlight.js/styles/night-owl.css";
-import { ChoiceQuestionElement, OrderQuestionElement } from "../../classes/question/questionElement";
+import { OrderQuestionElement } from "../../classes/question/questionElement";
 import ChoiceButton from "../choiceButton";
 import DraggableCodeBlock from "./draggableCodeBlock";
-import {SceneKeys} from "../../types/sceneKeys";
-import * as phaser from "phaser";
 
 export default class DragDropQuestionContainer extends Phaser.GameObjects.Container {
     private _currentQuestion: Question;

@@ -2,9 +2,12 @@ import * as Phaser from "phaser";
 import Question from "../../classes/question/question";
 import hljs from "highlight.js/lib/core";
 import php from "highlight.js/lib/languages/php";
+import java from "highlight.js/lib/languages/java";
 import "highlight.js/styles/night-owl.css";
 import {SceneKeys} from "../../types/sceneKeys";
 import {debugHelper} from "../../helpers/debugHelper";
+import {SupportedLanguages} from "../../types/supportedLanguages";
+import {gameController} from "../../main";
 
 export default class InputQuestionContainer extends Phaser.GameObjects.Container {
     private _currentQuestion: Question;
@@ -67,8 +70,9 @@ export default class InputQuestionContainer extends Phaser.GameObjects.Container
     }
 
     private displayCodeBlock(code: string): Phaser.GameObjects.DOMElement {
-        hljs.registerLanguage("php", php);
-        let highlightedCode = hljs.highlight(code, { language: "php" }).value;
+        hljs.registerLanguage(SupportedLanguages.PHP, php);
+        hljs.registerLanguage(SupportedLanguages.JAVA, java);
+        let highlightedCode = hljs.highlight(code, { language: gameController.gameStateManager.curriculum.progLang }).value;
 
         // Create a dummy div and apply the highlighted code to it
         let dummyPre = document.createElement("pre");

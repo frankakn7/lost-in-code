@@ -1,7 +1,9 @@
+import { SupportedLanguages } from "../types/supportedLanguages";
+
 export class GameState {
     gameFinished: boolean;
     room: {
-        id: string,
+        id: string;
         finishedTaskObjects: number[];
         doorUnlocked: boolean;
     };
@@ -25,20 +27,23 @@ export class GameState {
         newChapter: boolean;
         answeredQuestionIds: number[];
         chapterNumber: number;
-        maxChapterNumber: number;
         performanceIndex: number;
         repairedObjectsThisChapter: number;
         selectedHat: string;
         unlockedHats: string[];
         username: string;
     };
+    curriculum: {
+        maxChapterNumber: number;
+        progLang: SupportedLanguages;
+    };
 
     initialiseDefault() {
-        this.gameFinished = false
+        this.gameFinished = false;
         this.room = {
             id: "hangar",
             finishedTaskObjects: [],
-            doorUnlocked: false
+            doorUnlocked: false,
         };
         this.story = {
             hangar: [],
@@ -60,12 +65,15 @@ export class GameState {
             newChapter: false,
             answeredQuestionIds: [],
             chapterNumber: 1,
-            maxChapterNumber: 1,
             performanceIndex: 1,
             repairedObjectsThisChapter: 0,
             selectedHat: "None",
             unlockedHats: [],
-            username: "Peter"
+            username: "Peter",
+        };
+        this.curriculum = {
+            maxChapterNumber: 1,
+            progLang: SupportedLanguages.PHP,
         };
     }
 
@@ -78,7 +86,7 @@ export class GameState {
     //     this.user = existingGameState.user;
     // }
 
-    initialise(existingGameState?: GameState) {
+    initialise(progLang: SupportedLanguages, existingGameState?: GameState) {
         this.initialiseDefault();
         if (!existingGameState) return;
 
@@ -87,14 +95,14 @@ export class GameState {
         this.story = { ...this.story, ...existingGameState.story };
         this.achievements = { ...this.achievements, ...existingGameState.achievements };
         this.user = { ...this.user, ...existingGameState.user };
+        this.curriculum = { ...this.curriculum, ...existingGameState.curriculum, progLang: progLang};
     }
 
-
-    constructor(existingGameState?: GameState) {
-        this.initialise(existingGameState);
+    constructor(progLang: SupportedLanguages, existingGameState?: GameState) {
+        this.initialise(progLang, existingGameState);
     }
 
-    changeRoom(newRoomId: string){
+    changeRoom(newRoomId: string) {
         this.room.id = newRoomId;
         this.room.doorUnlocked = false;
         this.room.finishedTaskObjects = [];
@@ -105,22 +113,22 @@ export class GameState {
     }
 
     increaseRepairedObjectsThisChapter() {
-        this.user.repairedObjectsThisChapter ++;
+        this.user.repairedObjectsThisChapter++;
     }
 
     increaseChapterNumber() {
-        if(this.user.chapterNumber < this.user.maxChapterNumber){
-            this.user.chapterNumber ++;
+        if (this.user.chapterNumber < this.curriculum.maxChapterNumber) {
+            this.user.chapterNumber++;
         }
     }
 
     addAnsweredQuestionIds(id) {
-        if(!this.user.answeredQuestionIds.includes(id)){
+        if (!this.user.answeredQuestionIds.includes(id)) {
             this.user.answeredQuestionIds.push(id);
         }
     }
 
-    setDoorUnlocked(unlocked: boolean){
+    setDoorUnlocked(unlocked: boolean) {
         this.room.doorUnlocked = unlocked;
     }
 }

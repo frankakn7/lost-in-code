@@ -1,8 +1,11 @@
 import hljs from "highlight.js/lib/core";
 import php from "highlight.js/lib/languages/php";
+import java from "highlight.js/lib/languages/java";
 import "highlight.js/styles/night-owl.css";
 import html2canvas from "html2canvas";
 import * as Phaser from "phaser";
+import {SupportedLanguages} from "../../types/supportedLanguages";
+import {gameController} from "../../main";
 
 export default class SelectableCodeBlock extends Phaser.GameObjects.Container {
     private _elementId: number;
@@ -78,9 +81,10 @@ export default class SelectableCodeBlock extends Phaser.GameObjects.Container {
     }
 
     async createCodeBlockImage() {
-        hljs.registerLanguage("php", php);
+        hljs.registerLanguage(SupportedLanguages.PHP, php);
+        hljs.registerLanguage(SupportedLanguages.JAVA, java);
         let highlightedCode = hljs.highlight(this._code, {
-            language: "php",
+            language: gameController.gameStateManager.curriculum.progLang,
         }).value;
 
         // Create a dummy div and apply the highlighted code to it
