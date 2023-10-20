@@ -12,6 +12,8 @@
 
     export let data: PageData;
 
+    export let prog_lang = data.progLang;
+
     let editedQuestion:Question = {...data.question};
 
     function handleSubmit() {
@@ -81,15 +83,15 @@
     </table>
 
     {#if editedQuestion.type === QuestionType.CHOICE}
-        <Choice bind:elements={editedQuestion.elements} editing={true}/>
+        <Choice bind:elements={editedQuestion.elements} bind:code={editedQuestion.code_text} editing={true} prog_lang={prog_lang}/>
     {:else if editedQuestion.type === QuestionType.SINGLE_INPUT}
-        <SingleInput bind:code={editedQuestion.code_text} bind:elements={editedQuestion.elements} editing={true}/>
+        <SingleInput bind:code={editedQuestion.code_text} bind:elements={editedQuestion.elements} editing={true} prog_lang={prog_lang}/>
     {:else if editedQuestion.type === QuestionType.CLOZE}
-        <Cloze bind:code={editedQuestion.code_text} bind:elements={editedQuestion.elements} />
+        <Cloze bind:code={editedQuestion.code_text} bind:elements={editedQuestion.elements} prog_lang={prog_lang}/>
     {:else if editedQuestion.type === QuestionType.DRAG_DROP}
-        <DragDrop bind:elements={editedQuestion.elements} editing={true}/>
+        <DragDrop bind:elements={editedQuestion.elements} editing={true} prog_lang={prog_lang}/>
     {:else if editedQuestion.type === QuestionType.SELECT_ONE}
-        <SelectOne bind:elements={editedQuestion.elements} editing={true}/>
+        <SelectOne bind:elements={editedQuestion.elements} editing={true} prog_lang={prog_lang}/>
     {:else if editedQuestion.type === QuestionType.CREATE}
         <!-- Your Create component here -->
     {/if}

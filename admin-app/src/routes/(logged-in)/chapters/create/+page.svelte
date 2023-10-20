@@ -7,6 +7,8 @@
 
     export let data: PageData;
 
+    export let prog_lang = data.progLang
+
     console.log(data)
 
     //order position - 1 = index in chapters array
@@ -217,7 +219,7 @@
             <div class="preview">
                 <!--{material}-->
                 <!--            <CodeBlock code={material}/>-->
-                <MaterialPreview text={newChapter.material}/>
+                <MaterialPreview text={newChapter.material} prog_lang={prog_lang}/>
             </div>
         </CollapseContainer>
     </div>

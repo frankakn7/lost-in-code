@@ -73,6 +73,23 @@ router.get("/:id", (req: Request, res: Response) => {
 });
 
 /**
+ * get programming language from specific curriculum via curriculum id
+ */
+router.get("/:id/prog-lang", (req: Request, res: Response) => {
+    const curriculumId = req.params.id;
+    const sql = "SELECT `prog_lang` FROM `curriculum` WHERE `id` = ?;";
+    const params = [curriculumId];
+    db.query(sql, params)
+        .then((results) => {
+            res.send(results);
+        })
+        .catch((error) => {
+            console.error(error);
+            return res.status(500).send("Server error");
+        });
+});
+
+/**
  * get specific FULL curriculum via id
  */
 router.get("/:id/full", (req: Request, res: Response) => {

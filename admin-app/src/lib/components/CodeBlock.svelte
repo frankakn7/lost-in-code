@@ -3,10 +3,15 @@
     import "svelte-highlight/styles/night-owl.css";
     import hljs from 'highlight.js/lib/core';
     import php from 'highlight.js/lib/languages/php';
+    import java from 'highlight.js/lib/languages/java';
+    import {SupportedProgLang} from "$lib/types/SupportedProgLang";
 
     hljs.registerLanguage('php', php);
+    hljs.registerLanguage('java', java);
 
     export let code: string;
+    export let prog_lang: string = SupportedProgLang.PHP;
+
     let preElement: HTMLPreElement;
 
     const processCode = (rawCode: string) => {
@@ -15,7 +20,7 @@
         let processedParts = [];
 
         for (let i = 0; i < parts.length; i += 4) {
-            processedParts.push(hljs.highlight(parts[i], {language: "php"}).value);
+            processedParts.push(hljs.highlight(parts[i], {language: prog_lang}).value);
 
             if (i + 1 < parts.length) {
                 let id = parts[i + 1];

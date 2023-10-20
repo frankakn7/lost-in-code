@@ -1,8 +1,15 @@
 <script lang="ts">
     import Element from "$lib/classes/Element";
+    import CollapseContainer from "$lib/components/CollapseContainer.svelte";
+    import CodeBlock from "$lib/components/CodeBlock.svelte";
+    import {SupportedProgLang} from "$lib/types/SupportedProgLang";
 
     export let elements: Element[] = [];
     export let editing = false;
+
+    export let prog_lang = SupportedProgLang.PHP
+
+    export let code = "";
 
     if(!editing){
         elements = [];
@@ -20,6 +27,14 @@
     }
 
 </script>
+
+<CollapseContainer heading="Optional code to display">
+
+    <textarea id="code" bind:value={code}></textarea>
+    <CollapseContainer heading="Preview">
+        <CodeBlock code={code} prog_lang={prog_lang}/>
+    </CollapseContainer>
+</CollapseContainer>
 
 <h2>Possible Answers</h2>
 <table>
@@ -130,5 +145,10 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    textarea {
+        font-size: 1rem;
+        width: 100%;
     }
 </style>

@@ -1,6 +1,8 @@
 <script lang="ts">
     import CodeBlock from './CodeBlock.svelte';
+    import {SupportedProgLang} from "$lib/types/SupportedProgLang";
     export let text = '';
+    export let prog_lang = SupportedProgLang.PHP;
 
     let blocks = [];
 
@@ -22,7 +24,7 @@
 
 {#each blocks as block}
     {#if block.type === 'code'}
-        <CodeBlock code={block.content} />
+        <CodeBlock code={block.content} prog_lang={prog_lang}/>
     {:else}
         <p>{block.content}</p>
     {/if}

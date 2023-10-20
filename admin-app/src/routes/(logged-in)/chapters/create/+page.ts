@@ -10,10 +10,15 @@ export const load = (async ({ params, fetch, url }: any) => {
     });
     const curriculumData = await curriculumResponse.json();
 
-    console.log("Request all chapters")
-    //Rquest chapters using apiUrl/chapters/curriculum/[id] here
-
     const curriculumId = url.searchParams.get('curriculumId')
 
-    return {curriculums: curriculumData, curriculumId: curriculumId};
+    console.log("Requesting Programming Language")
+    const progLangResponse = await fetch(`${apiUrl}/curriculums/${curriculumId}/prog-lang`, {
+        method: 'GET',
+        credentials: "include"
+    });
+    const progLangData = await progLangResponse.json();
+
+
+    return {curriculums: curriculumData, curriculumId: curriculumId, progLang: progLangData[0].prog_lang};
 }) satisfies PageLoad;

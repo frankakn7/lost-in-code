@@ -3,12 +3,15 @@
     import CollapseContainer from "$lib/components/CollapseContainer.svelte";
     import CodeBlock from "$lib/components/CodeBlock.svelte";
     import Element from "$lib/classes/Element";
+    import {SupportedProgLang} from "$lib/types/SupportedProgLang";
 
     // export let code = "";
 
     // export let correctAnswers: string[] = [""];
 
     export let elements: Element[] = [];
+
+    export let prog_lang = SupportedProgLang.PHP;
 
     export let editing = false;
 
@@ -66,7 +69,7 @@
 
 <CollapseContainer heading="Preview">
     {#each elements as element, index}
-        <CodeBlock code={elements[index].content}/>
+        <CodeBlock code={elements[index].content} prog_lang={prog_lang}/>
     {/each}
 </CollapseContainer>
 

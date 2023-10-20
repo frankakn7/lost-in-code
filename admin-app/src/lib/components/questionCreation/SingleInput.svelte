@@ -3,12 +3,15 @@
     import CollapseContainer from "$lib/components/CollapseContainer.svelte";
     import CodeBlock from "$lib/components/CodeBlock.svelte";
     import Element from "$lib/classes/Element";
+    import {SupportedProgLang} from "$lib/types/SupportedProgLang";
 
     export let code = "";
 
     // export let correctAnswers: string[] = [""];
 
     export let elements: Element[] = [];
+
+    export let prog_lang = SupportedProgLang.PHP;
 
     export let editing = false;
 
@@ -33,7 +36,7 @@
 <textarea id="code" bind:value={code}></textarea>
 
 <CollapseContainer heading="Preview">
-    <CodeBlock code={code}/>
+    <CodeBlock code={code} prog_lang={prog_lang}/>
 </CollapseContainer>
 
 <h2>Correct answers</h2>

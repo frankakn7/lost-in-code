@@ -4,8 +4,11 @@
     import CodeBlock from "$lib/components/CodeBlock.svelte";
     import Element from "$lib/classes/Element";
     import hljs from "highlight.js/lib/core";
+    import {SupportedProgLang} from "$lib/types/SupportedProgLang";
 
     export let code = "";
+
+    export let prog_lang = SupportedProgLang.PHP;
 
     export let elements: Element[] = [];
 
@@ -66,7 +69,7 @@
 <textarea id="code" bind:value={code}></textarea>
 
 <CollapseContainer heading="Preview">
-    <CodeBlock code={code}/>
+    <CodeBlock code={code} prog_lang={prog_lang}/>
 </CollapseContainer>
 
 <h2>Correct answers</h2>

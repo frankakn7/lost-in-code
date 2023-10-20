@@ -84,7 +84,7 @@ export default class ChoiceQuestionContainer extends Phaser.GameObjects.Containe
 
     private displayChoiceQuestion(): void {
         let codeBlock;
-        if (this._currentQuestion.code_text) {
+        if (this._currentQuestion.code_text && this._currentQuestion.code_text.length > 0) {
             codeBlock = this.displayCodeBlock(this._currentQuestion.code_text);
         }
         this._currentQuestion.elements.forEach(
