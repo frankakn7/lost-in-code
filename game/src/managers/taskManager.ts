@@ -85,8 +85,16 @@ export default class TaskManager {
         this.currentTotalQuestions = this.currentQuestionSetForObject.length;
     }
 
+    private shuffleArray(array: []) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
     public getCurrentQuestionFromQuestionSet() {
         let question = this.currentQuestionSetForObject[0];
+        this.shuffleArray(question.elements);
         return question;
     }
 
@@ -94,7 +102,8 @@ export default class TaskManager {
         gameController.gameStateManager.increaseRepairedObjectsThisChapter();
         if (
             gameController.gameStateManager.user.repairedObjectsThisChapter == 2 &&
-            gameController.gameStateManager.user.chapterNumber < gameController.gameStateManager.curriculum.maxChapterNumber
+            gameController.gameStateManager.user.chapterNumber <
+                gameController.gameStateManager.curriculum.maxChapterNumber
         ) {
             gameController.gameStateManager.increaseChapterNumber();
             gameController.gameStateManager.user.repairedObjectsThisChapter = 0;

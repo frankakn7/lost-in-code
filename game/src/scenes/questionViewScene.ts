@@ -296,6 +296,5 @@ export default class QuestionViewScene extends Phaser.Scene {
     private deleteCurrentQuestionContainer(){
         this._currentQuestionContainer?.destroy();
         delete this._currentQuestionContainer;
-        console.log(this._currentQuestionContainer);
     }
 }
