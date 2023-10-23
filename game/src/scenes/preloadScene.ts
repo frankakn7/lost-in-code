@@ -54,6 +54,7 @@ import LogoutButtonTexture from "../assets/ui/Logout-Button.png";
 import AchievementsAppTexture from "../assets/ui/apps/Achievements-app-icon.png";
 import HatAppTexture from "../assets/ui/apps/Hat-app-icon.png";
 import ReturnButtonTexture from "../assets/ui/Return-Button.png";
+import deviceBackgroundTilePng from "../assets/Device-Background-Tile.png";
 
 export default class PreloadScene extends Phaser.Scene {
     constructor() {
@@ -114,6 +115,7 @@ export default class PreloadScene extends Phaser.Scene {
 
         this.load.image("paper", PaperTexture);
 
+        this.load.image("backgroundTile", deviceBackgroundTilePng);
         this.load.image("antennaAppTexture", AntennaAppTexture);
         this.load.image("knowledgeAppTexture", KnowledgeButtonTexture);
         this.load.image("settingsAppTexture", SettingsButtonTexture);

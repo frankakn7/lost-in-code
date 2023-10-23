@@ -60,7 +60,7 @@ export default class ChatTextContainer extends Phaser.GameObjects.Container {
         //Adding the container itself to the scene
         this.scene.add.existing(this)
         //Set the container interactive over the whole screen
-        this.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.displayWidth, this.scene.cameras.main.displayHeight), Phaser.Geom.Rectangle.Contains)
+        this.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.displayWidth, 0), Phaser.Geom.Rectangle.Contains)
         //Enable dragging (important for scrolling)
         this.scene.input.setDraggable(this, true);
 

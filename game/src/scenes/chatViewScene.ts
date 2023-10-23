@@ -43,7 +43,7 @@ export default class ChatViewScene extends Phaser.Scene {
     /**
      * The delay of each character in milliseconds
      */
-    private _characterDelayMilli = 50;
+    private _characterDelayMilli = 30;
 
     /**
      * Padding between choice buttons
