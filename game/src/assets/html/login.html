@@ -1,9 +1,7 @@
 <style>
     #loginFormContainer {
-        background: rgb(247, 243, 240);
-        border: 1px solid #42464b;
-        border-radius: 6px;
-        /* height: 257px; */
+        background-color: rgba(0,0,0,0.5);
+        border: 5px solid #00c8ff;
         padding: 1rem;
         margin: 20px auto 0;
         width: 400px;
@@ -11,33 +9,45 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-family: "forwardRegular";
         box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.4);
+    }
+
+    #loginFormContainer h3 {
+        color: #00c8ff;
+        font-size: 1.5rem;
     }
 
     #loginForm {
         display: flex;
         flex-direction: column;
         align-items: center;
+        font-family: "forwardRegular";
     }
 
     #email,
     #password {
         margin: 0.5rem;
-        font-size: 1.2rem;
+        font-size: 1rem;
+        padding: 0.5rem;
+        width: 100%;
+        font-family: "forwardRegular";
+        border: 4px solid #00c8ff;
+        background-color: transparent;
+        color: #00c8ff;
     }
 
     #submit {
         margin-top: 1rem;
         padding: 0.5rem;
         width: 40%;
-        font-size: 1.2rem;
-        background-color: #3e536dff;
-        border-style: none;
-        border-radius: 0.2rem;
-        color: rgb(247, 243, 240);
+        font-size: 1rem;
+        background-color: rgba(0,0,0,0.5);
+        border: 4px solid #00c8ff;
+        color: #00c8ff;
         box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
         transition: all 0.2s;
+        font-family: "forwardRegular";
     }
 
     #submit:hover {
@@ -55,7 +65,7 @@
 </style>
 
 <div id="loginFormContainer">
-    <h3>LOGIN</h3>
+    <h3>Lost in Code</h3>
     <h4 id="error"></h4>
     <form id="loginForm">
         <input type="email" id="email" placeholder="Email" />

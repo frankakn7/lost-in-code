@@ -8,9 +8,13 @@ import {gameController} from "../main";
 import {SceneKeys} from "../types/sceneKeys";
 import User from "../classes/user";
 
+import deviceBackgroundTilePng from "../assets/Device-Background-Tile.png";
+
 export default class LoginScene extends Phaser.Scene {
 
     private apiHelper: ApiHelper = new ApiHelper();
+
+    private _tilesprite: Phaser.GameObjects.TileSprite;
 
     constructor() {
         super(SceneKeys.LOGIN_VIEW_SCENE_KEY);
@@ -20,10 +24,21 @@ export default class LoginScene extends Phaser.Scene {
         this.apiHelper.checkLoginStatus()
             .then((response:any) => this.startGame(response.user))
             .catch((error) => console.error(error));
+
+        this.load.image("backgroundTile", deviceBackgroundTilePng);
     }
 
     create() {
-        this.cameras.main.setBackgroundColor("#3e536d");
+        this._tilesprite = this.add
+            .tileSprite(
+                0,
+                0,
+                this.cameras.main.displayWidth / 3,
+                this.cameras.main.displayHeight / 3,
+                "backgroundTile"
+            )
+            .setOrigin(0, 0)
+            .setScale(3);
 
         const element = this.add
             .dom(

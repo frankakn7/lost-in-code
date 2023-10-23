@@ -10,7 +10,6 @@ import ALevels2Texture from "../assets/achievements/badges_levels/badge_level_2.
 import ALevels3Texture from "../assets/achievements/badges_levels/badge_level_3.png";
 import ALevels4Texture from "../assets/achievements/badges_levels/badge_level_4.png";
 import ALevels5Texture from "../assets/achievements/badges_levels/badge_level_5.png";
-import deviceBackgroundTilePng from "../assets/Device-Background-Tile.png";
 import strawHatTexture from "../assets/hats/strawHat.png";
 import sorcerersHatTexture from "../assets/hats/redHat.png";
 import blackHatTexture from "../assets/hats/blackHat.png";
@@ -76,7 +75,6 @@ export default class PreloadScene extends Phaser.Scene {
         this.load.image("badge_levels_lab", ALevels4Texture);
         this.load.image("badge_levels_bridge", ALevels5Texture);
 
-        this.load.image("backgroundTile", deviceBackgroundTilePng);
         this.load.image("strawHat", strawHatTexture);
         this.load.image("sorcerersHat", sorcerersHatTexture);
         this.load.image("blackHat", blackHatTexture);
