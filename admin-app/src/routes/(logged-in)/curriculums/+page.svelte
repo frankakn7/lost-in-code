@@ -64,12 +64,25 @@
 				{/if}
 			</div>
 		</th>
+		<th on:click={() => sort('prog_lang')}>
+			<div class="table-header">
+				<div class="header-text">Programming Language</div>
+				{#if sortBy.col == 'prog_lang' && !sortBy.ascending}
+					<i class="fa fa-arrow-up" />
+				{:else if sortBy.col === 'prog_lang'}
+					<i class="fa fa-arrow-down" />
+				{:else}
+					<i class="fa fa-arrow-down" style="visibility: hidden;" />
+				{/if}
+			</div>
+		</th>
 	</tr>
 	{#each curriculumArray as curriculum}
 		<tr on:click={() => goto(`/curriculums/${curriculum.id}`)}>
 			<td>{curriculum.id}</td>
 			<td>{curriculum.name}</td>
 			<td>{curriculum.description}</td>
+			<td>{curriculum.prog_lang}</td>
 		</tr>
 	{/each}
 </table>

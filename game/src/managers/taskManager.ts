@@ -1,20 +1,8 @@
 import { globalEventBus } from "../helpers/globalEventBus";
-import { QuestionType } from "../types/questionType";
-import WorldViewScene from "../scenes/worldViewScene";
 import Question from "../classes/question/question";
-import {
-    ChoiceQuestionElement,
-    CreateQuestionElement,
-    InputQuestionElement,
-    OrderQuestionElement,
-} from "../classes/question/questionElement";
-import DocViewScene from "../scenes/docView/docViewScene";
-import { ChapterType } from "./chapterManager";
 import ApiHelper from "../helpers/apiHelper";
-import availableQuestions from "./availableQuestionsTestData";
 import { gameController } from "../main";
 import { GameEvents } from "../types/gameEvents";
-import { SceneKeys } from "../types/sceneKeys";
 import { debugHelper } from "../helpers/debugHelper";
 
 /**
@@ -32,16 +20,7 @@ export default class TaskManager {
     public currentDoneQuestions: number;
     public currentTotalQuestions: number;
 
-    // private _worldViewScene: WorldViewScene;
-
     private apiHandler = new ApiHelper();
-
-    // private defaultTaskManagerState: TaskManagerStateType = {
-    //     answeredQuestions: [],
-    //     currentChapterNumber: 1,
-    //     repairedObjectsThisChapter: 0,
-    //     currentPerformanceIndex: 1
-    // }
 
     private loadQuestions() {
         return new Promise((resolve, reject) => {
@@ -115,7 +94,7 @@ export default class TaskManager {
         gameController.gameStateManager.increaseRepairedObjectsThisChapter();
         if (
             gameController.gameStateManager.user.repairedObjectsThisChapter == 2 &&
-            gameController.gameStateManager.user.chapterNumber < gameController.gameStateManager.user.maxChapterNumber
+            gameController.gameStateManager.user.chapterNumber < gameController.gameStateManager.curriculum.maxChapterNumber
         ) {
             gameController.gameStateManager.increaseChapterNumber();
             gameController.gameStateManager.user.repairedObjectsThisChapter = 0;

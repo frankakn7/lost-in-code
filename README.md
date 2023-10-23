@@ -212,6 +212,7 @@ the following JSON-structures are used.
 {
     "name": "Name of the curriculum (Bsp. PHP)",
     "description": "Description of the curriculum",
+    "prog_lang": "php",
     "chapters": [...]      //The Chapters inside this curriculum
 }
 
@@ -223,6 +224,7 @@ the following JSON-structures are used.
 {
     "name": "PHP für einsteiger",
     "description": "Ein curriculum zum vermitteln von PHP basics",
+    "prog_lang": "php",
     "chapters": [
         {
             "name": "Einführung",

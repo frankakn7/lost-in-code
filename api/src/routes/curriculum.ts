@@ -14,8 +14,12 @@ const router = express.Router();
 router.post("/", requireAdminRole, (req: Request, res: Response) => {
     const curriculum = req.body;
     const sql =
-        "INSERT INTO `curriculum` (`name`, `description`) VALUES (?, ?);";
-    const params = [curriculum.name, curriculum.description];
+        "INSERT INTO `curriculum` (`name`, `description`,`prog_lang`) VALUES (?, ?, ?);";
+    const params = [
+        curriculum.name,
+        curriculum.description,
+        curriculum.prog_lang,
+    ];
     db.query(sql, params)
         .then((results) => {
             res.send(results);
@@ -56,11 +60,46 @@ router.get("/", (req: Request, res: Response) => {
 });
 
 /**
+ * get sprogramming language via current user
+ */
+router.get("/me/prog-lang", (req: Request, res: Response) => {
+    const sql =
+        "SELECT `curriculum_prog_lang` FROM `user_game_curriculum` WHERE user_id = ?;";
+    const userId = req.body.user.id;
+    const params = [userId];
+    db.query(sql, params)
+        .then((results: any) => {
+            res.send(results);
+        })
+        .catch((error) => {
+            console.error(error);
+            return res.status(500).send("Server error");
+        });
+});
+
+/**
  * get specific curriculum via id
  */
 router.get("/:id", (req: Request, res: Response) => {
     const curriculumId = req.params.id;
     const sql = "SELECT * FROM `curriculum` WHERE `id` = ?;";
+    const params = [curriculumId];
+    db.query(sql, params)
+        .then((results) => {
+            res.send(results);
+        })
+        .catch((error) => {
+            console.error(error);
+            return res.status(500).send("Server error");
+        });
+});
+
+/**
+ * get programming language from specific curriculum via curriculum id
+ */
+router.get("/:id/prog-lang", (req: Request, res: Response) => {
+    const curriculumId = req.params.id;
+    const sql = "SELECT `prog_lang` FROM `curriculum` WHERE `id` = ?;";
     const params = [curriculumId];
     db.query(sql, params)
         .then((results) => {
@@ -122,16 +161,5 @@ router.delete("/:id", requireAdminRole, (req: Request, res: Response) => {
             return res.status(500).send("Server error");
         });
 });
-
-// router.delete(
-//     "/:curriculumId/groups/:groupId",
-//     (req: Request, res: Response) => {
-//         const curriculumId = req.params.curriculumId;
-//         const groupId = req.params.groupId;
-//         res.send(
-//             `Remove curriculum with ID ${curriculumId} from group with ID ${groupId}`
-//         );
-//     }
-// );
 
 export default router;

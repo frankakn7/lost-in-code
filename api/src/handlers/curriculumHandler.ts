@@ -6,13 +6,14 @@ type CurriculumValue = {
     id: number,
     name: string,
     description: string,
+    prog_lang: string,
     chapters: ChapterValue[]
 }
 
 export const createFullCurriculum = (requestBody: any): Promise<any> => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO `curriculum` (`name`, `description`) VALUES (?, ?);'
-        const params = [requestBody.name, requestBody.description]
+        const sql = 'INSERT INTO `curriculum` (`name`, `description`, `prog_lang`) VALUES (?, ?, ?);'
+        const params = [requestBody.name, requestBody.description, requestBody.prog_lang]
         db.query(sql,params).then((results:any) => {
             const chapterPromises = requestBody.chapters.map((chapter: ChapterValue) => {
                 const okPacket = <OkPacket>results;
@@ -44,6 +45,7 @@ export const extractCurriculumFromRows = (rows: any): CurriculumValue[] => {
                 id: row.curriculum_id,
                 name: row.curriculum_name,
                 description: row.curriculum_description, // assuming it's in the rows
+                prog_lang: row.curriculum_prog_lang,
                 chapters: [],
             };
             curriculumMap.set(row.curriculum_id, curriculum);

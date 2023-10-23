@@ -18,6 +18,8 @@
 
 	let currentCurriculum = curriculums.find(curriculum => curriculum.id == data.chapter.curriculum_id);
 
+	let prog_lang = data.progLang;
+
 	$: if (data.chapter.curriculum_id) {
 		currentCurriculum = curriculums.find(curriculum => curriculum.id == data.chapter.curriculum_id);
 	}
@@ -148,7 +150,7 @@
 		<div class="preview">
 			<!--{material}-->
 			<!--            <CodeBlock code={material}/>-->
-			<MaterialPreview text={data.chapter.material}/>
+			<MaterialPreview text={data.chapter.material} prog_lang={prog_lang}/>
 		</div>
 	{/if}
 </div>

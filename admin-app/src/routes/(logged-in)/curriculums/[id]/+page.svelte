@@ -60,13 +60,14 @@
 {/if}
 
 <div id="title-container">
-	<h1>Curriculum: {data.curriculum.name}</h1>
+	<h1>Curriculum: {data.curriculum.name} ({data.curriculum.prog_lang})</h1>
 	<div class="button-container">
 		<a class="click-button" id="edit-button" href={`/curriculums/${data.curriculum.id}/edit`}><i class="fa fa-pencil"/></a>
 		<button class="click-button" id="delete-button" on:click={() => showConfirm = true}><i class="fa fa-trash-can"/>
 		</button>
 	</div>
 </div>
+<h2>Description</h2>
 <p>{data.curriculum.description}</p>
 
 <h2>Chapters</h2>

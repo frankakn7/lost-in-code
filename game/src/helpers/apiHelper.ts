@@ -84,7 +84,7 @@ export default class ApiHelper {
             const chaptersResponse = await this.getIncludingCredentials(chaptersUrl);
             const chaptersData: any = await chaptersResponse.json();
 
-            gameController.gameStateManager.user.maxChapterNumber = chaptersData[chaptersData.length - 1].order_position;
+            gameController.gameStateManager.curriculum.maxChapterNumber = chaptersData[chaptersData.length - 1].order_position;
 
             //find current chapter id
             const chapter = chaptersData.find((chapter: any) => chapter.order_position == chapterNumber && chapter.curriculum_id == curriculumData.curriculum_id);
@@ -126,6 +126,24 @@ export default class ApiHelper {
         });
     }
 
+    public getProgLang(){
+        const url = this.apiUrl + "/curriculums/me/prog-lang";
+        console.log(this.apiUrl)
+        return new Promise((resolve, reject) => {
+            fetch(url, {method: "GET", credentials: "include"})
+                .then((response) => {
+                    response
+                        .json()
+                        .then((data) => {
+                                resolve(data[0].curriculum_prog_lang)
+                            }
+                        )
+                        .catch((error) => reject(error));
+                })
+                .catch((error) => reject(error));
+        });
+    }
+
     /**
      * Update the game state data for the current user.
      * @param {GameStateType} state_data - The new game state data to be updated.
@@ -136,7 +154,7 @@ export default class ApiHelper {
     ) {
         debugHelper.logValue("saving gamestate data", state_data)
         const gameState = {game_state: state_data}
-        debugHelper.logValue("json stringified gamestate", JSON.stringify(gameState))
+        // debugHelper.logValue("json gamestate", JSON.stringify(gameState))
         const url = this.apiUrl + "/gamestates/me";
         return new Promise((resolve, reject) => {
             fetch(url, {

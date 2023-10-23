@@ -26,6 +26,13 @@ export const load = (async ({ params, fetch, url }: any) => {
     });
     const curriculumChaptersData = await curriculumChaptersResponse.json();
 
+    console.log("Requesting Programming Language")
+    const progLangResponse = await fetch(`${apiUrl}/curriculums/${chapterData[0].curriculum_id}/prog-lang`, {
+        method: 'GET',
+        credentials: "include"
+    });
+    const progLangData = await progLangResponse.json();
 
-    return {chapter: chapterData[0], question: questionData, chapters: curriculumChaptersData};
+
+    return {chapter: chapterData[0], question: questionData, chapters: curriculumChaptersData, progLang: progLangData};
 }) satisfies PageLoad;

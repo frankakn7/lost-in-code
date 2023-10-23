@@ -9,8 +9,11 @@
     import SelectOne from "$lib/components/questionCreation/SelectOne.svelte";
     import DragDrop from "$lib/components/questionCreation/DragDrop.svelte";
     import Cloze from "$lib/components/questionCreation/Cloze.svelte";
+    import {SupportedProgLang} from "$lib/types/SupportedProgLang";
 
     export let data: PageData;
+
+    export let prog_lang = data.progLang;
 
     let newQuestion = new Question("", "", "", QuestionType.CHOICE, 1, [], data.chapterId);
 
@@ -87,15 +90,15 @@
     </table>
 
     {#if newQuestion.type === QuestionType.CHOICE}
-        <Choice bind:elements={newQuestion.elements} />
+        <Choice bind:elements={newQuestion.elements} bind:code={newQuestion.code_text} bind:prog_lang={prog_lang}/>
     {:else if newQuestion.type === QuestionType.SINGLE_INPUT}
-        <SingleInput bind:code={newQuestion.code_text} bind:elements={newQuestion.elements}/>
+        <SingleInput bind:code={newQuestion.code_text} bind:elements={newQuestion.elements} bind:prog_lang={prog_lang}/>
     {:else if newQuestion.type === QuestionType.CLOZE}
-        <Cloze bind:code={newQuestion.code_text} bind:elements={newQuestion.elements} />
+        <Cloze bind:code={newQuestion.code_text} bind:elements={newQuestion.elements} bind:prog_lang={prog_lang}/>
     {:else if newQuestion.type === QuestionType.DRAG_DROP}
-        <DragDrop bind:elements={newQuestion.elements} />
+        <DragDrop bind:elements={newQuestion.elements} bind:prog_lang={prog_lang}/>
     {:else if newQuestion.type === QuestionType.SELECT_ONE}
-        <SelectOne bind:elements={newQuestion.elements} />
+        <SelectOne bind:elements={newQuestion.elements} bind:prog_lang={prog_lang}/>
     {:else if newQuestion.type === QuestionType.CREATE}
         <!-- Your Create component here -->
     {/if}

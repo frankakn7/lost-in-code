@@ -1,10 +1,8 @@
 import * as Phaser from "phaser";
-import WorldViewScene from "./scenes/worldViewScene";
 import LoginScene from "./scenes/loginScene";
 import PreloadScene from "./scenes/preloadScene";
 import "./font.css";
 import { GameState } from "./managers/gameState";
-import Center = Phaser.Scale.Center;
 import StoryManager from "./managers/story_management/storyManager";
 import MasterSceneController from "./controllers/masterSceneController";
 import ChatSceneController from "./controllers/chatSceneController";
@@ -25,6 +23,8 @@ import QuestionSceneController from "./controllers/questionSceneController";
 import { SceneKeys } from "./types/sceneKeys";
 import WorldSceneController from "./controllers/worldSceneController";
 import EventBusController from "./controllers/eventBusController";
+import { SupportedLanguages } from "./types/supportedLanguages";
+import Center = Phaser.Scale.Center;
 
 class GameController {
     private _gameConfig: Phaser.Types.Core.GameConfig;
@@ -142,7 +142,7 @@ class GameController {
     }
 
     initManagersAndHelpers() {
-        this._gameStateManager = new GameState();
+        this._gameStateManager = new GameState(SupportedLanguages.PHP);
         this._storyManager = new StoryManager();
         this._acheivementManager = new AchievementManager();
         this._hatManager = new HatManager();
@@ -173,24 +173,25 @@ class GameController {
 
     startGame(userData: any) {
         //Preload scene is not tracked by masterSceneController
-        this.loadGameState(userData).then(res => {
+        this.loadGameState(userData).then((res) => {
             this.initialiseManagerData();
             this.runScene(SceneKeys.PRELOAD_SCENE_KEY);
-        })
+        });
     }
 
-    private initialiseManagerData(){
+    private initialiseManagerData() {
         this._storyManager.initialiseStoryEvents();
         this._taskManager.initialiseQuestionSet();
         this.chapterManager.initialiseChapterData();
     }
 
     private async loadGameState(userData: any) {
-        try{
+        try {
             const data: any = await this.apiHelper.getStateData();
+            const progLang: any = await this.apiHelper.getProgLang();
 
             if (data.state_data) {
-                this._gameStateManager.initialise(data.state_data);
+                this._gameStateManager.initialise(progLang,data.state_data);
             }
             if (userData) {
                 this.user = new User(userData);
@@ -198,8 +199,8 @@ class GameController {
                 this.user = new User();
             }
             return;
-        }catch (error) {
-            throw new Error(error)
+        } catch (error) {
+            throw new Error(error);
         }
     }
 

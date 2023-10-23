@@ -1,11 +1,12 @@
 import ChatTextContainer from "./chatTextContainer";
 import hljs from "highlight.js/lib/core";
 import php from "highlight.js/lib/languages/php";
+import java from "highlight.js/lib/languages/java";
 import html2canvas from "html2canvas";
 import "highlight.js/styles/night-owl.css";
 import Phaser from "phaser";
-import { debugHelper } from "../helpers/debugHelper";
-import ChatFlow from "../classes/chat/chatFlow";
+import {SupportedLanguages} from "../types/supportedLanguages";
+import {gameController} from "../main";
 
 interface TextBlock {
     type: "text" | "code";
@@ -23,9 +24,10 @@ export default class ChapterTextContainer extends ChatTextContainer {
     }
 
     async addCodeBlock(code: string) {
-        hljs.registerLanguage("php", php);
+        hljs.registerLanguage(SupportedLanguages.PHP, php);
+        hljs.registerLanguage(SupportedLanguages.JAVA, java);
         let highlightedCode = hljs.highlight(code, {
-            language: "php",
+            language: gameController.gameStateManager.curriculum.progLang,
         }).value;
 
         // Create a dummy div and apply the highlighted code to it
