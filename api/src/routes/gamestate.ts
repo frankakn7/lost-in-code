@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import db from "../db";
-import {createGamestate, getGameState, updateGameState} from "../handlers/gamestateHandler";
+import {createGamestate, deleteGamestatesFromGroup, getGameState, updateGameState} from "../handlers/gamestateHandler";
 
 const router = express.Router();
 
@@ -56,6 +56,12 @@ router.delete("/:userId", (req, res) => {
             console.error("Error deleting from the database:", error);
             return res.status(500).send("Server error");
         });
+});
+
+router.delete("/group/:groupId", (req, res) => {
+    const groupId = req.params.groupId;
+
+    deleteGamestatesFromGroup(req,res,groupId);
 });
 
 

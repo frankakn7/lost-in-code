@@ -1,4 +1,6 @@
 import db from "../db";
+import { getUsersFromGroup } from "./groupHandler";
+import {RowDataPacket} from "mysql2";
 
 export const createGamestate = (req: any, res: any, userId: any, gameState: any) => {
     const sql = "INSERT INTO `game_state` (`state_data`, `user_id`) VALUES (?, ?);";
@@ -6,7 +8,7 @@ export const createGamestate = (req: any, res: any, userId: any, gameState: any)
 
     db.query(sql, params)
         .then((results) => {
-            res.send(`New game state created for user ID ${userId}.`);
+            res.json({message: `New game state created for user ID ${userId}.`});
         })
         .catch((error) => {
             console.error("Error inserting into the database:", error);
@@ -40,4 +42,22 @@ export const updateGameState = (req: any, res: any, userId: any, game_state:any)
             console.error("Error updating the database:", error);
             return res.status(500).send("Server error");
         });
+}
+
+export const deleteGamestatesFromGroup = async (req: any, res: any, groupId: any) => {
+    try {
+        const users: RowDataPacket[] = await getUsersFromGroup(groupId) as RowDataPacket[];
+        if (!users || users.length === 0) {
+            return res.status(404).send("No users found in the group");
+        }
+
+        const userIds = users.map(user => user.id);
+        const sql = `DELETE FROM game_state WHERE user_id IN (${userIds.map(() => '?').join(',')});`;
+
+        await db.query(sql, userIds);
+        res.json({message: `Game states for group ID ${groupId} deleted.`});
+    } catch (error) {
+        console.error("Error:", error);
+        return res.status(500).json({error: "Could not delete gamestates"});
+    }
 }

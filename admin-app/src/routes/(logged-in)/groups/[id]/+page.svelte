@@ -9,10 +9,13 @@
     let userArray = data.group.users;
 
     let showConfirm = false;
+    let showConfirmCurriculumChange = false;
 
     let group = {...data.group};
     let originalGroup = {...data.group};
     let editing = false;
+
+    let oldCurriculumId = group.curriculum_id
 
     let curriculums = data.curriculums
 
@@ -70,9 +73,32 @@
                 .then(() => {
                     originalGroup = {...group};
                     editing = false;
+                    showConfirmCurriculumChange = false;
                 })
                 .catch(error => console.error(error));
         }).catch(error => console.error('There has been a problem with your fetch operation: ', error));
+    }
+
+    function deleteGamestates(){
+        const apiUrl = import.meta.env.VITE_API_URL;
+        fetch(`${apiUrl}/gamestates/group/${data.group.id}`, {
+            method: 'DELETE',
+            credentials: "include"
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                console.log(`Gamestates for users in group with id ${data.group.id} have been deleted.`);
+            })
+            .catch((error) => {
+                console.error('There has been a problem with your fetch operation: ', error);
+            });
+    }
+
+    function deleteGamestatesThenSave(){
+        deleteGamestates();
+        handleSave();
     }
 
 
@@ -81,6 +107,16 @@
 {#if showConfirm}
     <ConfirmModal on:close={() => showConfirm = false} on:confirm={handleDelete}>
         Are you sure you want to delete the group '{data.group.name}' with the id {data.group.id} ?
+    </ConfirmModal>
+{/if}
+
+{#if showConfirmCurriculumChange}
+    <ConfirmModal on:close={() => showConfirmCurriculumChange = false} on:confirm={deleteGamestatesThenSave}>
+        <div style="text-align: center">
+            Are you sure you want to change the curriculum for the group '{data.group.name}' with the id {data.group.id} ?
+            <br />
+            (This will delete the gamestates for <b>all</b> the users inside the group)
+        </div>
     </ConfirmModal>
 {/if}
 
@@ -110,7 +146,7 @@
 <div>
     {#if editing}
         <select bind:value={group.curriculum_id} required>
-            <option value="null" selected>None</option>
+            <option value={null} selected>None</option>
             {#each curriculums as curriculum (curriculum.id)}
                 <option value={curriculum.id}>{curriculum.name} ({curriculum.id})</option>
             {/each}
@@ -126,7 +162,7 @@
 
 <div id="button-container">
     {#if editing}
-        <button class="click-button" id="save-button" on:click={handleSave}>Save</button>
+        <button class="click-button" id="save-button" on:click={() => group.curriculum_id != oldCurriculumId ? showConfirmCurriculumChange = true : handleSave()}>Save</button>
         <button class="click-button" id="cancel-button" on:click={handleCancel}>Cancel</button>
     {:else}
     {/if}
