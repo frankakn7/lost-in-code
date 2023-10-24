@@ -60,7 +60,7 @@ router.get("/", (req: Request, res: Response) => {
 });
 
 /**
- * get sprogramming language via current user
+ * get programming language via current user
  */
 router.get("/me/prog-lang", (req: Request, res: Response) => {
     const sql =
@@ -81,6 +81,7 @@ router.get("/me/prog-lang", (req: Request, res: Response) => {
  * get specific curriculum via id
  */
 router.get("/:id", (req: Request, res: Response) => {
+    console.log("Hit /:id/prog-lang with ID:", req.params.id);
     const curriculumId = req.params.id;
     const sql = "SELECT * FROM `curriculum` WHERE `id` = ?;";
     const params = [curriculumId];

@@ -2,11 +2,11 @@ version: '3'
 services:
   admin_app:
     build: ./admin-app
-    image: docker.gitlab.gwdg.de/m.strzebkowski/lost-in-code/admin_app:latest
+    # image: docker.gitlab.gwdg.de/m.strzebkowski/lost-in-code/admin_app:latest
   
   api:
     build: ./api
-    image: docker.gitlab.gwdg.de/m.strzebkowski/lost-in-code/api:latest
+    # image: docker.gitlab.gwdg.de/m.strzebkowski/lost-in-code/api:latest
     environment:
       - DB_HOST=mysql
       - DB_PORT=3306
@@ -15,16 +15,16 @@ services:
   
   game:
     build: ./game
-    image: docker.gitlab.gwdg.de/m.strzebkowski/lost-in-code/game:latest
+    # image: docker.gitlab.gwdg.de/m.strzebkowski/lost-in-code/game:latest
     
   php_executor:
     build: ./php-server
-    image: docker.gitlab.gwdg.de/m.strzebkowski/lost-in-code/php_executor:latest
+    # image: docker.gitlab.gwdg.de/m.strzebkowski/lost-in-code/php_executor:latest
     
   
   nginx:
     build: ./nginx-proxy
-    image: docker.gitlab.gwdg.de/m.strzebkowski/lost-in-code/nginx:latest
+    # image: docker.gitlab.gwdg.de/m.strzebkowski/lost-in-code/nginx:latest
     ports:
       - "80:80"
     depends_on:

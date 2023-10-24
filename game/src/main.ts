@@ -33,7 +33,7 @@ class GameController {
 
     private _gameStateManager: GameState;
     private _storyManager: StoryManager;
-    private _acheivementManager: AchievementManager;
+    private _achievementManager: AchievementManager;
     private _hatManager: HatManager;
     private _chapterManager: ChapterManager;
     private _taskManager: TaskManager;
@@ -52,6 +52,8 @@ class GameController {
     private _worldSceneController: WorldSceneController;
 
     private _eventBusController: EventBusController;
+
+    private _timestampSinceLastSaveOrReload = Date.now();
 
     readonly SIZE_WIDTH_SCREEN = 375 * 2.5;
     readonly SIZE_HEIGHT_SCREEN = 812 * 2.5;
@@ -88,8 +90,8 @@ class GameController {
         return this._popupSceneController;
     }
 
-    get acheivementManager(): AchievementManager {
-        return this._acheivementManager;
+    get achievementManager(): AchievementManager {
+        return this._achievementManager;
     }
 
     get apiHelper(): ApiHelper {
@@ -136,6 +138,14 @@ class GameController {
         return this._worldSceneController;
     }
 
+    get timestampSinceLastSaveOrReload(): number {
+        return this._timestampSinceLastSaveOrReload;
+    }
+
+    public resetTimeSinceLastSaveOrReload() {
+        this._timestampSinceLastSaveOrReload = Date.now();
+    }
+
     constructor() {
         this.configureGame();
         this._game = new Phaser.Game(this._gameConfig);
@@ -144,7 +154,7 @@ class GameController {
     initManagersAndHelpers() {
         this._gameStateManager = new GameState(SupportedLanguages.PHP);
         this._storyManager = new StoryManager();
-        this._acheivementManager = new AchievementManager();
+        this._achievementManager = new AchievementManager();
         this._hatManager = new HatManager();
         this._chapterManager = new ChapterManager();
         this._taskManager = new TaskManager();
@@ -235,8 +245,8 @@ class GameController {
                 // Fit to window
                 // width: window.innerWidth,
                 // height: window.innerHeight,
-                mode: Phaser.Scale.FIT,
-                // mode: Phaser.Scale.RESIZE,
+                // mode: Phaser.Scale.FIT,
+                mode: Phaser.Scale.RESIZE,
                 parent: "game",
                 width: this.SIZE_WIDTH_SCREEN,
                 height: this.SIZE_HEIGHT_SCREEN,

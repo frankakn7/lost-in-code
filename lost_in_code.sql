@@ -4,7 +4,7 @@ USE `db_lost_in_code`;
 --
 -- Host: localhost    Database: db_lost_in_code
 -- ------------------------------------------------------
--- Server version	8.0.33
+-- Server version	8.1.0
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -33,17 +33,8 @@ CREATE TABLE `chapter` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `curriculum_id_idx` (`curriculum_id`),
   CONSTRAINT `curriculum_chapter` FOREIGN KEY (`curriculum_id`) REFERENCES `curriculum` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `chapter`
---
-
-LOCK TABLES `chapter` WRITE;
-/*!40000 ALTER TABLE `chapter` DISABLE KEYS */;
-/*!40000 ALTER TABLE `chapter` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Temporary view structure for view `chapter_questions`
@@ -89,17 +80,8 @@ CREATE TABLE `correct_answer` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `question_element_correct_answer_idx` (`question_element_id`),
   CONSTRAINT `question_element_correct_answer` FOREIGN KEY (`question_element_id`) REFERENCES `question_element` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=215 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `correct_answer`
---
-
-LOCK TABLES `correct_answer` WRITE;
-/*!40000 ALTER TABLE `correct_answer` DISABLE KEYS */;
-/*!40000 ALTER TABLE `correct_answer` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `curriculum`
@@ -112,19 +94,11 @@ CREATE TABLE `curriculum` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(45) DEFAULT NULL,
   `description` text,
+  `prog_lang` varchar(45) NOT NULL DEFAULT 'php',
   PRIMARY KEY (`id`),
   UNIQUE KEY `ID_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `curriculum`
---
-
-LOCK TABLES `curriculum` WRITE;
-/*!40000 ALTER TABLE `curriculum` DISABLE KEYS */;
-/*!40000 ALTER TABLE `curriculum` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Temporary view structure for view `curriculum_chapters`
@@ -138,10 +112,12 @@ SET @saved_cs_client     = @@character_set_client;
  1 AS `curriculum_id`,
  1 AS `curriculum_name`,
  1 AS `curriculum_description`,
+ 1 AS `curriculum_prog_lang`,
  1 AS `chapter_id`,
  1 AS `chapter_name`,
  1 AS `chapter_material`,
  1 AS `chapter_order_position`,
+ 1 AS `chapter_curriculum_id`,
  1 AS `question_id`,
  1 AS `question_text`,
  1 AS `hint`,
@@ -172,6 +148,7 @@ SET @saved_cs_client     = @@character_set_client;
  1 AS `type`,
  1 AS `difficulty`,
  1 AS `code_text`,
+ 1 AS `chapter_id`,
  1 AS `question_element_id`,
  1 AS `question_element_content`,
  1 AS `question_element_element_identifier`,
@@ -197,17 +174,8 @@ CREATE TABLE `game_state` (
   UNIQUE KEY `user_id_UNIQUE` (`user_id`),
   KEY `game_state_user_idx` (`user_id`),
   CONSTRAINT `user_game_state` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `game_state`
---
-
-LOCK TABLES `game_state` WRITE;
-/*!40000 ALTER TABLE `game_state` DISABLE KEYS */;
-/*!40000 ALTER TABLE `game_state` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `group`
@@ -225,17 +193,8 @@ CREATE TABLE `group` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `curriculum_group_idx` (`curriculum_id`),
   CONSTRAINT `curriculum_group` FOREIGN KEY (`curriculum_id`) REFERENCES `curriculum` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `group`
---
-
-LOCK TABLES `group` WRITE;
-/*!40000 ALTER TABLE `group` DISABLE KEYS */;
-/*!40000 ALTER TABLE `group` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `question`
@@ -256,17 +215,8 @@ CREATE TABLE `question` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `chapter_question_idx` (`chapter_id`),
   CONSTRAINT `chapter_question` FOREIGN KEY (`chapter_id`) REFERENCES `chapter` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=371 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `question`
---
-
-LOCK TABLES `question` WRITE;
-/*!40000 ALTER TABLE `question` DISABLE KEYS */;
-/*!40000 ALTER TABLE `question` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `question_element`
@@ -286,17 +236,8 @@ CREATE TABLE `question_element` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `question_question_element_idx` (`question_id`),
   CONSTRAINT `question_question_element` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1144 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `question_element`
---
-
-LOCK TABLES `question_element` WRITE;
-/*!40000 ALTER TABLE `question_element` DISABLE KEYS */;
-/*!40000 ALTER TABLE `question_element` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `user`
@@ -317,7 +258,7 @@ CREATE TABLE `user` (
   UNIQUE KEY `email_UNIQUE` (`email`),
   KEY `group_user_idx` (`group_id`),
   CONSTRAINT `group_user` FOREIGN KEY (`group_id`) REFERENCES `group` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -326,7 +267,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (10,'admin','admin@admin','$2b$10$nzqtgyBVJC3mJReLVcitU.rphDfJJzGyxi8ZdQi8DatdmYuCoUsuq',NULL,'ADMIN');
+INSERT INTO `user` VALUES (1,'admin','admin@admin','$2b$10$nzqtgyBVJC3mJReLVcitU.rphDfJJzGyxi8ZdQi8DatdmYuCoUsuq',NULL,'ADMIN');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -348,7 +289,8 @@ SET @saved_cs_client     = @@character_set_client;
  1 AS `group_name`,
  1 AS `curriculum_id`,
  1 AS `curriculum_name`,
- 1 AS `curriculum_description`*/;
+ 1 AS `curriculum_description`,
+ 1 AS `curriculum_prog_lang`*/;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -382,7 +324,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `curriculum_chapters` AS select `curriculum`.`id` AS `curriculum_id`,`curriculum`.`name` AS `curriculum_name`,`curriculum`.`description` AS `curriculum_description`,`chapter_questions`.`chapter_id` AS `chapter_id`,`chapter_questions`.`chapter_name` AS `chapter_name`,`chapter_questions`.`chapter_material` AS `chapter_material`,`chapter_questions`.`chapter_order_position` AS `chapter_order_position`,`chapter_questions`.`question_id` AS `question_id`,`chapter_questions`.`question_text` AS `question_text`,`chapter_questions`.`hint` AS `hint`,`chapter_questions`.`type` AS `type`,`chapter_questions`.`difficulty` AS `difficulty`,`chapter_questions`.`code_text` AS `code_text`,`chapter_questions`.`question_element_id` AS `question_element_id`,`chapter_questions`.`question_element_content` AS `question_element_content`,`chapter_questions`.`question_element_element_identifier` AS `question_element_element_identifier`,`chapter_questions`.`question_element_correct_order_position` AS `question_element_correct_order_position`,`chapter_questions`.`question_element_is_correct` AS `question_element_is_correct`,`chapter_questions`.`correct_answer_id` AS `correct_answer_id`,`chapter_questions`.`answer` AS `answer` from (`curriculum` left join `chapter_questions` on((`curriculum`.`id` = `chapter_questions`.`chapter_curriculum_id`))) */;
+/*!50001 VIEW `curriculum_chapters` AS select `curriculum`.`id` AS `curriculum_id`,`curriculum`.`name` AS `curriculum_name`,`curriculum`.`description` AS `curriculum_description`,`curriculum`.`prog_lang` AS `curriculum_prog_lang`,`chapter`.`id` AS `chapter_id`,`chapter`.`name` AS `chapter_name`,`chapter`.`material` AS `chapter_material`,`chapter`.`order_position` AS `chapter_order_position`,`chapter`.`curriculum_id` AS `chapter_curriculum_id`,`chapter_questions`.`question_id` AS `question_id`,`chapter_questions`.`question_text` AS `question_text`,`chapter_questions`.`hint` AS `hint`,`chapter_questions`.`type` AS `type`,`chapter_questions`.`difficulty` AS `difficulty`,`chapter_questions`.`code_text` AS `code_text`,`chapter_questions`.`question_element_id` AS `question_element_id`,`chapter_questions`.`question_element_content` AS `question_element_content`,`chapter_questions`.`question_element_element_identifier` AS `question_element_element_identifier`,`chapter_questions`.`question_element_correct_order_position` AS `question_element_correct_order_position`,`chapter_questions`.`question_element_is_correct` AS `question_element_is_correct`,`chapter_questions`.`correct_answer_id` AS `correct_answer_id`,`chapter_questions`.`answer` AS `answer` from ((`curriculum` left join `chapter` on((`curriculum`.`id` = `chapter`.`curriculum_id`))) left join `chapter_questions` on((`chapter`.`id` = `chapter_questions`.`chapter_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -400,7 +342,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `full_question` AS select `question`.`id` AS `question_id`,`question`.`question_text` AS `question_text`,`question`.`hint` AS `hint`,`question`.`type` AS `type`,`question`.`difficulty` AS `difficulty`,`question`.`code_text` AS `code_text`,`question_element`.`id` AS `question_element_id`,`question_element`.`content` AS `question_element_content`,`question_element`.`element_identifier` AS `question_element_element_identifier`,`question_element`.`correct_order_position` AS `question_element_correct_order_position`,`question_element`.`is_correct` AS `question_element_is_correct`,`correct_answer`.`id` AS `correct_answer_id`,`correct_answer`.`answer` AS `answer` from ((`question` join `question_element` on((`question`.`id` = `question_element`.`question_id`))) left join `correct_answer` on((`question_element`.`id` = `correct_answer`.`question_element_id`))) */;
+/*!50001 VIEW `full_question` AS select `question`.`id` AS `question_id`,`question`.`question_text` AS `question_text`,`question`.`hint` AS `hint`,`question`.`type` AS `type`,`question`.`difficulty` AS `difficulty`,`question`.`code_text` AS `code_text`,`question`.`chapter_id` AS `chapter_id`,`question_element`.`id` AS `question_element_id`,`question_element`.`content` AS `question_element_content`,`question_element`.`element_identifier` AS `question_element_element_identifier`,`question_element`.`correct_order_position` AS `question_element_correct_order_position`,`question_element`.`is_correct` AS `question_element_is_correct`,`correct_answer`.`id` AS `correct_answer_id`,`correct_answer`.`answer` AS `answer` from ((`question` join `question_element` on((`question`.`id` = `question_element`.`question_id`))) left join `correct_answer` on((`question_element`.`id` = `correct_answer`.`question_element_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -418,7 +360,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `user_game_curriculum` AS select `u`.`id` AS `user_id`,`u`.`username` AS `username`,`u`.`email` AS `email`,`u`.`role` AS `role`,`gs`.`state_data` AS `game_state`,`g`.`id` AS `group_id`,`g`.`name` AS `group_name`,`c`.`id` AS `curriculum_id`,`c`.`name` AS `curriculum_name`,`c`.`description` AS `curriculum_description` from (((`user` `u` left join `game_state` `gs` on((`u`.`id` = `gs`.`user_id`))) join `group` `g` on((`u`.`group_id` = `g`.`id`))) join `curriculum` `c` on((`g`.`curriculum_id` = `c`.`id`))) */;
+/*!50001 VIEW `user_game_curriculum` AS select `u`.`id` AS `user_id`,`u`.`username` AS `username`,`u`.`email` AS `email`,`u`.`role` AS `role`,`gs`.`state_data` AS `game_state`,`g`.`id` AS `group_id`,`g`.`name` AS `group_name`,`c`.`id` AS `curriculum_id`,`c`.`name` AS `curriculum_name`,`c`.`description` AS `curriculum_description`,`c`.`prog_lang` AS `curriculum_prog_lang` from (((`user` `u` left join `game_state` `gs` on((`u`.`id` = `gs`.`user_id`))) join `group` `g` on((`u`.`group_id` = `g`.`id`))) join `curriculum` `c` on((`g`.`curriculum_id` = `c`.`id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -432,4 +374,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-26  9:45:29
+-- Dump completed on 2023-10-23 20:03:24

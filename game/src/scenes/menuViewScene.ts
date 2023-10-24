@@ -10,7 +10,12 @@ import {SceneKeys} from "../types/sceneKeys";
 export default class MenuViewScene extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite;
 
-    private _columns = 2;
+    private _settings = {
+        columns: 2,
+        buttonPadding: 50,
+        buttonWidth: 180,
+        buttonHeight: 180,
+    }
 
     private apiHelper: ApiHelper = new ApiHelper();
 
@@ -37,7 +42,7 @@ export default class MenuViewScene extends Phaser.Scene {
             225,
             () => {
                 gameController.worldSceneController.resumeWorldViewScenes();
-            }
+            },
         );
         this.add.existing(resumeButton);
 
@@ -50,7 +55,7 @@ export default class MenuViewScene extends Phaser.Scene {
                 this.apiHelper.logout().then((response) => {
                     location.reload();
                 });
-            }
+            },
         );
         this.add.existing(logoutButton);
 
@@ -58,33 +63,39 @@ export default class MenuViewScene extends Phaser.Scene {
         const chatButton = new SpriteButton(
             this,
             "antennaAppTexture",
-            (this.scale.width / (this._columns + 1)) * 1,
-            1000,
+            (this.cameras.main.displayWidth / (this._settings.columns + 1)) * 1,
+            (this.cameras.main.displayHeight / 2) - (this._settings.buttonHeight / 2) - this._settings.buttonPadding,
             () => {
                 gameController.chatSceneController.openStoryChatViewWithoutPulling()
-            }
+            },
+            this._settings.buttonHeight,
+            this._settings.buttonWidth
         ).setScale(1.25);
         this.add.existing(chatButton);
 
         const knowledgeButton = new SpriteButton(
             this,
             "knowledgeAppTexture",
-            (this.scale.width / (this._columns + 1)) * 2,
-            1000,
+            (this.cameras.main.displayWidth / (this._settings.columns + 1)) * 2,
+            (this.cameras.main.displayHeight / 2) - (this._settings.buttonHeight / 2) - this._settings.buttonPadding,
             () => {
                 gameController.menuSceneController.openDocViewScene();
-            }
+            },
+            this._settings.buttonHeight,
+            this._settings.buttonWidth
         ).setScale(1.25);
         this.add.existing(knowledgeButton);
 
         const hatButton = new SpriteButton(
             this,
             "hatAppTexture",
-            (this.scale.width / (this._columns + 1)) * 2,
-            1300,
+            (this.cameras.main.displayWidth / (this._settings.columns + 1)) * 2,
+            (this.cameras.main.displayHeight / 2) + (this._settings.buttonHeight / 2) + this._settings.buttonPadding,
             () => {
                 gameController.menuSceneController.openHatViewScene();
-            }
+            },
+            this._settings.buttonHeight,
+            this._settings.buttonWidth
         ).setScale(1.25);
         this.add.existing(hatButton);
 
@@ -92,22 +103,14 @@ export default class MenuViewScene extends Phaser.Scene {
         const achievementsButton = new SpriteButton(
             this,
             "achievementsAppTexture",
-            (this.scale.width / (this._columns + 1)) * 1,
-            1300,
+            (this.cameras.main.displayWidth / (this._settings.columns + 1)) * 1,
+            (this.cameras.main.displayHeight / 2) + (this._settings.buttonHeight / 2) + this._settings.buttonPadding,
             () => {
                 gameController.menuSceneController.openAcheivementViewScene();
-            }
+            },
+            this._settings.buttonHeight,
+            this._settings.buttonWidth
         ).setScale(1.25);
         this.add.existing(achievementsButton);
     }
-
-    // private _resumeGame() {
-    //     this.scene.sleep(this);
-    //     this._worldViewScene.pauseOrResumeGame(false);
-    // }
-
-    // private openSubMenu(menu) {
-    //     this.scene.launch(menu);
-    //     this.scene.pause();
-    // }
 }

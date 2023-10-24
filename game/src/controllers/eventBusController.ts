@@ -5,6 +5,8 @@ import PopupSceneController from "./popupSceneController";
 import {GameState} from "../managers/gameState";
 import ApiHelper from "../helpers/apiHelper";
 import WorldSceneController from "./worldSceneController";
+import AchievementManager from "../managers/achievementManager";
+import {gameController} from "../main";
 
 export default class EventBusController {
 
@@ -49,6 +51,7 @@ export default class EventBusController {
 
         // Set up event listener to save the game state when 'save_game' event is emitted.
         globalEventBus.on(GameEvents.SAVE_GAME, () => {
+            this._gameState.calculateNewPlayTime();
             this._apiHelper.updateStateData(this._gameState).catch((error) => {
                 console.error(error);
             })

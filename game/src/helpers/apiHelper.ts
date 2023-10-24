@@ -1,7 +1,7 @@
-import {GameStateType} from "../types/gameStateType";
-import {GameState} from "../managers/gameState";
-import {debugHelper} from "./debugHelper";
-import {gameController} from "../main";
+import { GameStateType } from "../types/gameStateType";
+import { GameState } from "../managers/gameState";
+import { debugHelper } from "./debugHelper";
+import { gameController } from "../main";
 
 /**
  * Helper class for making API requests related to the game.
@@ -28,9 +28,9 @@ export default class ApiHelper {
      */
     public evaluateCode(code: string) {
         // const url = this.phpUrl;
-        const url=  "http://localhost:6500";
+        const url = "http://localhost:6500";
         const formData = new FormData();
-        debugHelper.logValue("php url",url)
+        debugHelper.logValue("php url", url);
         formData.append("code", code);
         debugHelper.logValue("form data", formData);
         return new Promise((resolve, reject) => {
@@ -47,8 +47,8 @@ export default class ApiHelper {
                     }
                 })
                 .catch((error) => {
-                    console.error(error)
-                    reject(error)
+                    console.error(error);
+                    reject(error);
                 });
         });
     }
@@ -57,19 +57,19 @@ export default class ApiHelper {
      * Get chapters specific to the current user.
      * @returns {Promise} - A Promise that resolves with the user's chapters data or rejects with an error message.
      */
-    public getChapters(){
+    public getChapters() {
         const url = this.apiUrl + "/chapters/me";
         return new Promise((resolve, reject) => {
-            fetch(url, {method: "GET", credentials: "include"})
+            fetch(url, { method: "GET", credentials: "include" })
                 .then((response) => {
                     response.json().then((data) => {
-                        resolve(data)
-                    })
+                        resolve(data);
+                    });
                 })
                 .catch((error) => {
-                    reject(error)
-                })
-        })
+                    reject(error);
+                });
+        });
     }
 
     public async getFullChapter(chapterNumber: number) {
@@ -84,13 +84,17 @@ export default class ApiHelper {
             const chaptersResponse = await this.getIncludingCredentials(chaptersUrl);
             const chaptersData: any = await chaptersResponse.json();
 
-            gameController.gameStateManager.curriculum.maxChapterNumber = chaptersData[chaptersData.length - 1].order_position;
+            gameController.gameStateManager.curriculum.maxChapterNumber =
+                chaptersData[chaptersData.length - 1].order_position;
 
             //find current chapter id
-            const chapter = chaptersData.find((chapter: any) => chapter.order_position == chapterNumber && chapter.curriculum_id == curriculumData.curriculum_id);
+            const chapter = chaptersData.find(
+                (chapter: any) =>
+                    chapter.order_position == chapterNumber && chapter.curriculum_id == curriculumData.curriculum_id,
+            );
 
             if (!chapter) {
-                throw new Error('Chapter not found');
+                throw new Error("Chapter not found");
             }
 
             //Get full chapter using id
@@ -104,7 +108,6 @@ export default class ApiHelper {
         }
     }
 
-
     /**
      * Get the game state data for the current user.
      * @returns {Promise} - A Promise that resolves with the user's game state data or rejects with an error message.
@@ -112,32 +115,29 @@ export default class ApiHelper {
     public getStateData() {
         const url = this.apiUrl + "/gamestates/me";
         return new Promise((resolve, reject) => {
-            fetch(url, {method: "GET", credentials: "include"})
+            fetch(url, { method: "GET", credentials: "include" })
                 .then((response) => {
                     response
                         .json()
                         .then((data) => {
-                                resolve(data)
-                            }
-                        )
+                            resolve(data);
+                        })
                         .catch((error) => reject(error));
                 })
                 .catch((error) => reject(error));
         });
     }
 
-    public getProgLang(){
+    public getProgLang() {
         const url = this.apiUrl + "/curriculums/me/prog-lang";
-        console.log(this.apiUrl)
         return new Promise((resolve, reject) => {
-            fetch(url, {method: "GET", credentials: "include"})
+            fetch(url, { method: "GET", credentials: "include" })
                 .then((response) => {
                     response
                         .json()
                         .then((data) => {
-                                resolve(data[0].curriculum_prog_lang)
-                            }
-                        )
+                            resolve(data[0].curriculum_prog_lang);
+                        })
                         .catch((error) => reject(error));
                 })
                 .catch((error) => reject(error));
@@ -150,25 +150,48 @@ export default class ApiHelper {
      * @returns {Promise} - A Promise that resolves with the updated game state data or rejects with an error message.
      */
     // public updateStateData(state_data: GameStateType
-    public updateStateData(state_data: GameState
-    ) {
-        debugHelper.logValue("saving gamestate data", state_data)
-        const gameState = {game_state: state_data}
+    public updateStateData(state_data: GameState) {
+        const gameState = { game_state: state_data };
         // debugHelper.logValue("json gamestate", JSON.stringify(gameState))
         const url = this.apiUrl + "/gamestates/me";
         return new Promise((resolve, reject) => {
             fetch(url, {
-                method: "PUT", headers: {
+                method: "PUT",
+                headers: {
                     "Content-Type": "application/json",
-                }, credentials: "include", body: JSON.stringify(gameState)
+                },
+                credentials: "include",
+                body: JSON.stringify(gameState),
             })
                 .then((response) => {
                     response
                         .json()
-                        .then((data) =>
-                            resolve(data)
-                        )
+                        .then((data) => resolve(data))
                         .catch((error) => reject(error));
+                })
+                .catch((error) => reject(error));
+        });
+    }
+
+    /**
+     * Update the game state data for the current user.
+     * @param {GameStateType} state_data - The new game state data to be updated.
+     * @returns {Promise} - A Promise that resolves with the updated game state data or rejects with an error message.
+     */
+    // public updateStateData(state_data: GameStateType
+    public deleteGameStateData() {
+        // debugHelper.logValue("json gamestate", JSON.stringify(gameState))
+        const url = this.apiUrl + "/gamestates/me";
+        return new Promise((resolve, reject) => {
+            fetch(url, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+            })
+                .then((response) => {
+                    resolve(response);
                 })
                 .catch((error) => reject(error));
         });
@@ -181,19 +204,16 @@ export default class ApiHelper {
     public checkLoginStatus() {
         const url = this.apiUrl + "/me";
         return new Promise((resolve, reject) => {
-            fetch(url, {method: "GET", credentials: "include"})
+            fetch(url, { method: "GET", credentials: "include" })
                 .then((response) => {
                     debugHelper.logValue("api/me response", response);
                     if (response.status == 200) {
                         response
                             .json()
                             .then((data) => {
-                                    debugHelper.logValue("user data", data.user)
-                                    data.user
-                                        ? resolve(data)
-                                        : reject("not logged in")
-                                }
-                            )
+                                debugHelper.logValue("user data", data.user);
+                                data.user ? resolve(data) : reject("not logged in");
+                            })
                             .catch((error) => reject(error));
                     } else {
                         reject("response status not 200");
@@ -218,19 +238,16 @@ export default class ApiHelper {
                     "Content-Type": "application/json",
                 },
                 credentials: "include",
-                body: JSON.stringify({email, password}),
+                body: JSON.stringify({ email, password }),
             })
                 .then((response) => {
                     if (response.ok) {
                         response
                             .json()
                             .then((data) => {
-                                debugHelper.logValue("login response data",data)
-                                    data.user
-                                        ? resolve(data)
-                                        : reject("no user data")
-                                }
-                            )
+                                debugHelper.logValue("login response data", data);
+                                data.user ? resolve(data) : reject("no user data");
+                            })
                             .catch((error) => reject(error));
                     } else {
                         reject("login failed");
@@ -247,7 +264,7 @@ export default class ApiHelper {
     public logout() {
         const url = this.apiUrl + "/logout";
         return new Promise((resolve, reject) => {
-            fetch(url, {method: "POST", credentials: "include"})
+            fetch(url, { method: "POST", credentials: "include" })
                 .then((response) => {
                     if (response.status == 200) {
                         resolve(response);
@@ -259,7 +276,7 @@ export default class ApiHelper {
         });
     }
 
-    private async getIncludingCredentials(url: string){
+    private async getIncludingCredentials(url: string) {
         return fetch(url, { method: "GET", credentials: "include" });
     }
 }

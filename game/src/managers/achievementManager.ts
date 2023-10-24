@@ -12,23 +12,15 @@ import {debugHelper} from "../helpers/debugHelper";
  */
 export default class AchievementManager {
 
-    private _tasksCounter = 0; // Stores the number of tasks completed.
-    private _incorrectCounter = 0; // Stores the number of incorrectly answered tasks.
-    private _currentStreak = 0; // Stores the current streak of correct tasks.
-    private _longestStreak = 0; // Stores the longest streak of correct tasks.
-    private _fastestTaskTime = 0; // Stores the fastest time to complete a task.
-    public unlocked = []; // Stores the IDs of the unlocked achievements.
-
     private _achievements = achievements;  // Stores the achievements from the 'achievements' file.
+
+    private _sessionStartDate = Date.now();
 
     /**
      * Creates an instance of the Achievement Manager.
      * @param {WorldViewScene} worldViewScene - The WorldViewScene instance that serves as the root of the game scene hierarchy.
      */
     constructor() {
-        this.loadData();
-
-
         // Listen for the "taskmanager_task_correct" event emitted by the Task Manager.
         // When a task is correctly completed, call the _onTaskmanagerCorrect method.
         globalEventBus.on(GameEvents.TASKMANAGER_TASK_CORRECT, ((duration) => {
@@ -54,18 +46,20 @@ export default class AchievementManager {
      */
     private _onTaskmanagerCorrect(duration) {
         // Increment the total number of tasks completed.
-        this._tasksCounter++;
+        gameController.gameStateManager.achievements.taskCounter++;
 
         // Increment the current streak of correctly completed tasks.
-        this._currentStreak++;
+        gameController.gameStateManager.achievements.currentStreak++;
 
         // Update the longest streak of correctly completed tasks, if applicable.
-        if (this._currentStreak > this._longestStreak) this._longestStreak = this._currentStreak;
+        if (gameController.gameStateManager.achievements.currentStreak > gameController.gameStateManager.achievements.longestStreak) gameController.gameStateManager.achievements.longestStreak = gameController.gameStateManager.achievements.currentStreak;
 
         // If the task completion duration is greater than zero, update the fastest task completion time.
+        console.log("### DURATION")
+        console.log(duration)
         if (duration > 0) {
-            if (duration < this._fastestTaskTime) {
-                this._fastestTaskTime = duration;
+            if (duration < gameController.gameStateManager.achievements.fastestTaskTimeInMilli) {
+                gameController.gameStateManager.achievements.fastestTaskTimeInMilli = duration;
             }
         }
 
@@ -74,14 +68,14 @@ export default class AchievementManager {
     }
 
     private _onTaskManagerIncorrect() {
-        this._currentStreak = 0;
-        this._incorrectCounter++;
+        gameController.gameStateManager.achievements.currentStreak = 0;
+        gameController.gameStateManager.achievements.incorrectCounter++;
     }
 
     private _checkForTaskAchievement() {
-        let key = "tasks_" + this._tasksCounter.toString();
+        let key = "tasks_" + gameController.gameStateManager.achievements.taskCounter.toString();
         if (achievements[key]) {
-            if (this.unlocked.includes(key)) return;
+            if (gameController.gameStateManager.achievements.unlocked.includes(key)) return;
             this._unlock(key);
         }
     }
@@ -89,59 +83,26 @@ export default class AchievementManager {
     private _checkForLevelAchievement(roomId: string) {
         let key = "level_" + roomId;
         if (achievements[key]) {
-            if (this.unlocked.includes(key)) return;
+            if (gameController.gameStateManager.achievements.unlocked.includes(key)) return;
             this._unlock(key);
         }
     }
 
     private _unlock(achievementKey) {
-        if (this.unlocked.includes(achievementKey)) return;
+        if (gameController.gameStateManager.achievements.unlocked.includes(achievementKey)) return;
         let achievement = achievements[achievementKey];
-        globalEventBus.emit("broadcast_news", achievement.text)
-        globalEventBus.emit("broadcast_achievement", achievements[achievementKey]);
+        globalEventBus.emit(GameEvents.BROADCAST_NEWS, achievement.text)
+        globalEventBus.emit(GameEvents.BROADCAST_ACHIEVEMENT, achievements[achievementKey]);
 
-        this.unlocked.push(achievementKey);
+        gameController.gameStateManager.achievements.unlocked.push(achievementKey);
         debugHelper.logString("earned achievement: "+achievementKey)
     }
 
-    public saveAll() {
-        return {
-            taskCounter: this._tasksCounter,
-            incorrectCounter: this._incorrectCounter,
-            currentStreak: this._currentStreak,
-            longestStreak: this._longestStreak,
-            fastestTaskTime: this._fastestTaskTime,
-            unlocked: this.unlocked,
-        }
-    }
-
-
-    public loadData() {
-        this.unlocked = gameController.gameStateManager.achievements.unlocked;
-        this._tasksCounter = gameController.gameStateManager.achievements.taskCounter;
-        this._incorrectCounter = gameController.gameStateManager.achievements.incorrectCounter;
-        this._currentStreak = gameController.gameStateManager.achievements.currentStreak;
-        this._longestStreak = gameController.gameStateManager.achievements.longestStreak;
-        this._fastestTaskTime = gameController.gameStateManager.achievements.fastestTaskTime;
-    }
-
-    get tasksCounter(): number {
-        return this._tasksCounter;
-    }
-
-    get longestStreak(): number {
-        return this._longestStreak;
-    }
-
-    get incorrectCounter(): number {
-        return this._incorrectCounter;
-    }
-
     get badgesEarned(): number {
-        return this.unlocked.length;
+        return gameController.gameStateManager.achievements.unlocked.length;
     }
 
-    get fastestTaskTime(): number {
-        return this._fastestTaskTime;
+    get sessionStartDate(): number {
+        return this._sessionStartDate;
     }
 }

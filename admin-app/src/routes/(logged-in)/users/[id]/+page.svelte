@@ -179,7 +179,6 @@
 					>
 				</td>
 			</tr>
-			<tr />
 			<tr>
 				<td> Group </td>
 				<td>

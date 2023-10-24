@@ -53,6 +53,7 @@ export default class WorldSceneController {
     }
 
     startEvaluationScene(){
+        this._masterSceneController.sleepAllScenes();
         this._masterSceneController.addScene(SceneKeys.EVALUATION_VIEW_SCENE_KEY,this._evaluationViewScene);
         this._masterSceneController.runScene(SceneKeys.EVALUATION_VIEW_SCENE_KEY);
     }

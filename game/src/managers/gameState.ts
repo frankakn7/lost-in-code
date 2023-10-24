@@ -1,4 +1,5 @@
 import { SupportedLanguages } from "../types/supportedLanguages";
+import {gameController} from "../main";
 
 export class GameState {
     gameFinished: boolean;
@@ -20,7 +21,8 @@ export class GameState {
         incorrectCounter: number;
         currentStreak: number;
         longestStreak: number;
-        fastestTaskTime: number;
+        fastestTaskTimeInMilli: number;
+        totalPlayTimeInMilli: number;
         unlocked: string[];
     };
     user: {
@@ -58,7 +60,8 @@ export class GameState {
             incorrectCounter: 0,
             currentStreak: 0,
             longestStreak: 0,
-            fastestTaskTime: 0,
+            fastestTaskTimeInMilli: 6000 * 1000, //100 minutes
+            totalPlayTimeInMilli: 0,
             unlocked: [],
         };
         this.user = {
@@ -76,15 +79,6 @@ export class GameState {
             progLang: SupportedLanguages.PHP,
         };
     }
-
-    // initialiseExisting(existingGameState: GameState) {
-    //     // this.currentRoomId = existingGameState.currentRoomId;
-    //     this.gameFinished = existingGameState.gameFinished;
-    //     this.room = existingGameState.room;
-    //     this.story = existingGameState.story;
-    //     this.achievements = existingGameState.achievements;
-    //     this.user = existingGameState.user;
-    // }
 
     initialise(progLang: SupportedLanguages, existingGameState?: GameState) {
         this.initialiseDefault();
@@ -130,5 +124,10 @@ export class GameState {
 
     setDoorUnlocked(unlocked: boolean) {
         this.room.doorUnlocked = unlocked;
+    }
+
+    calculateNewPlayTime(){
+        this.achievements.totalPlayTimeInMilli += Date.now() - gameController.timestampSinceLastSaveOrReload;
+        gameController.resetTimeSinceLastSaveOrReload();
     }
 }

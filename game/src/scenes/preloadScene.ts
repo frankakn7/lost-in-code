@@ -1,4 +1,5 @@
 // PreloadScene.js
+import TrophyTexture from "../assets/achievements/trophy.png";
 import ATask5Texture from "../assets/achievements/badges_tasks/badge_tasks_5.png";
 import ATask10Texture from "../assets/achievements/badges_tasks/badge_tasks_10.png";
 import ATask20Texture from "../assets/achievements/badges_tasks/badge_tasks_20.png";
@@ -62,6 +63,8 @@ export default class PreloadScene extends Phaser.Scene {
     }
 
     preload() {
+
+        this.load.image("trophy", TrophyTexture);
 
         this.load.image("badge_tasks_5", ATask5Texture);
         this.load.image("badge_tasks_10", ATask10Texture);

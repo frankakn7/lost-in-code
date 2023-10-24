@@ -361,6 +361,7 @@ export default class ChatViewScene extends Phaser.Scene {
 
         this._textToSave = [];
 
+        console.log("CHAT CLOSED EMITTED")
         globalEventBus.emit(GameEvents.SAVE_GAME);
         globalEventBus.emit(GameEvents.CHAT_CLOSED);
 

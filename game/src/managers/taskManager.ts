@@ -94,7 +94,7 @@ export default class TaskManager {
 
     public getCurrentQuestionFromQuestionSet() {
         let question = this.currentQuestionSetForObject[0];
-        this.shuffleArray(question.elements);
+        question ? this.shuffleArray(question.elements) : null;
         return question;
     }
 
