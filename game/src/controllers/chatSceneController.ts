@@ -127,4 +127,12 @@ export default class ChatSceneController {
             this._masterSceneController.removeScene(sceneKey)
         }
     }
+
+    public resumeWorldViewOrEvaluationScene(){
+        if(gameController.gameStateManager.gameFinished){
+            gameController.worldSceneController.startEvaluationScene();
+        }else{
+            gameController.worldSceneController.resumeWorldViewScenes();
+        }
+    }
 }

@@ -352,7 +352,6 @@ export default class ChatViewScene extends Phaser.Scene {
         return this._textToSave;
     }
 
-    //TODO remove this function
     /**
      * Sends this scene to sleep and reawakes all the other scenes
      */
@@ -361,11 +360,9 @@ export default class ChatViewScene extends Phaser.Scene {
 
         this._textToSave = [];
 
-        console.log("CHAT CLOSED EMITTED")
         globalEventBus.emit(GameEvents.SAVE_GAME);
-        globalEventBus.emit(GameEvents.CHAT_CLOSED);
 
         gameController.chatSceneController.exitChat(this._sceneKey, this._destroyOnExit);
-        gameController.worldSceneController.resumeWorldViewScenes();
+        gameController.chatSceneController.resumeWorldViewOrEvaluationScene();
     }
 }

@@ -10,5 +10,4 @@ export enum GameEvents {
     OBJECT_REPAIRED = "object_repaired",
     DOOR_UNLOCKED = "door_was_unlocked",
     ROOM_ENTERED = "room_entered",
-    CHAT_CLOSED = "chat_closed"
 }

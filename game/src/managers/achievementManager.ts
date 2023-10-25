@@ -55,8 +55,6 @@ export default class AchievementManager {
         if (gameController.gameStateManager.achievements.currentStreak > gameController.gameStateManager.achievements.longestStreak) gameController.gameStateManager.achievements.longestStreak = gameController.gameStateManager.achievements.currentStreak;
 
         // If the task completion duration is greater than zero, update the fastest task completion time.
-        console.log("### DURATION")
-        console.log(duration)
         if (duration > 0) {
             if (duration < gameController.gameStateManager.achievements.fastestTaskTimeInMilli) {
                 gameController.gameStateManager.achievements.fastestTaskTimeInMilli = duration;

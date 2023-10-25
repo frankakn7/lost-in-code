@@ -42,13 +42,6 @@ export default class EventBusController {
             globalEventBus.emit(GameEvents.SAVE_GAME);
         }))
 
-        // Set up an event listener for the 'chat_closed' event to open the evaluation view when the game is finished.
-        globalEventBus.on(GameEvents.CHAT_CLOSED, (() => {
-            if (this._gameState.gameFinished) {
-                this._worldSceneController.startEvaluationScene();
-            }
-        }));
-
         // Set up event listener to save the game state when 'save_game' event is emitted.
         globalEventBus.on(GameEvents.SAVE_GAME, () => {
             this._gameState.calculateNewPlayTime();
