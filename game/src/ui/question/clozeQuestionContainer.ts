@@ -87,7 +87,7 @@ export default class ClozeQuestionContainer extends Phaser.GameObjects.Container
                 let length = parts[i + 2];
                 let whitespace = parts[i + 3] === "true" ? "" : ' style="white-space: nowrap;"';
 
-                processedParts.push(`<input type='text' id='${id}' maxlength='${length}' style="font-family: 'forwardRegular'; font-size: 25px; padding: 10px; border: 5px solid #00c8ff; background-color: #3f414a; color: #d1d6e0"${whitespace}/>`);
+                processedParts.push(`<input type='text' id='${id}' maxlength='${length}' style="width: ${length}ch; font-family: 'forwardRegular'; font-size: 25px; padding: 10px; border: 5px solid #00c8ff; background-color: #3f414a; color: #d1d6e0"${whitespace}/>`);
             }
         }
 

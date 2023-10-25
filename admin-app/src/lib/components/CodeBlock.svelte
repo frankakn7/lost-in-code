@@ -20,13 +20,15 @@
         let processedParts = [];
 
         for (let i = 0; i < parts.length; i += 4) {
+            console.log(parts[i]);
+            console.log(prog_lang)
             processedParts.push(hljs.highlight(parts[i], {language: prog_lang}).value);
 
             if (i + 1 < parts.length) {
                 let id = parts[i + 1];
                 let length = parts[i + 2];
                 let whitespace = parts[i + 3] === "true" ? "" : ' style="white-space: nowrap;"';
-                processedParts.push(`<input type='text' id='${id}' maxlength='${length}' style="font-family: 'forwardRegular'; font-size: inherit; padding: 5px; border: 2px solid #00c8ff; background-color: #3f414a; color: #d1d6e0"${whitespace}/>`);
+                processedParts.push(`<input type='text' id='${id}' maxlength='${length}' style="width: ${length}ch; font-family: 'forwardRegular'; font-size: inherit; padding: 5px; border: 2px solid #00c8ff; background-color: #3f414a; color: #d1d6e0"${whitespace}/>`);
             }
         }
         return processedParts.join('');

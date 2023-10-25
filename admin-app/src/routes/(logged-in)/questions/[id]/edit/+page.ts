@@ -34,5 +34,5 @@ export const load = (async ({ params, fetch, url }: any) => {
     const progLangData = await progLangResponse.json();
 
 
-    return {chapter: chapterData[0], question: questionData, chapters: curriculumChaptersData, progLang: progLangData};
+    return {chapter: chapterData[0], question: questionData, chapters: curriculumChaptersData, progLang: progLangData[0].prog_lang};
 }) satisfies PageLoad;
