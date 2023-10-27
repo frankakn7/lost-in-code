@@ -1,15 +1,15 @@
 {
-    "name": "peter-hacking-pan",
-    "version": "1.0.0",
+    "name": "lost-in-code",
+    "version": "2.4.0",
     "description": "A Game for learning the PHP scripting language",
     "private": true,
     "scripts": {
-        "build": "webpack",
+        "build": "webpack --progress",
         "dev": "webpack serve --mode development"
     },
     "repository": {
         "type": "git",
-        "url": "git@gitlab.gwdg.de:ps-mob-sose23/gruppe-3-funktionsmethoden-textbaustein-anwendung/peter-hacking-pan.git"
+        "url": "git@gitlab.gwdg.de:m.strzebkowski/lost-in-code.git"
     },
     "keywords": [
         "PHP",
