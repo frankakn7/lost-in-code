@@ -91,7 +91,7 @@ export default class ChapterTextContainer extends ChatTextContainer {
     }
 
     private createTextQueue(text: string): TextBlock[] {
-        const regex = /###code###[\s\S]*?###\/code###|[\s\S]+?(?=###code###|$)/g;
+        const regex = /###CODE###[\s\S]*?###\/CODE###|[\s\S]+?(?=###CODE###|$)/g;
 
         const matches = text.matchAll(regex);
         const outputArray: TextBlock[] = [];
@@ -99,9 +99,9 @@ export default class ChapterTextContainer extends ChatTextContainer {
         for (const match of matches) {
             let block = match[0];
 
-            if (block.startsWith("###code###")) {
+            if (block.startsWith("###CODE###")) {
                 // Remove the ###code### and ###/code### markers
-                block = block.replace("###code###", "").replace("###/code###", "");
+                block = block.replace("###CODE###", "").replace("###/CODE###", "");
                 outputArray.push({ type: "code", content: block.trim() });
             } else {
                 outputArray.push({ type: "text", content: block.trim() });
