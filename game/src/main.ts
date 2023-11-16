@@ -252,9 +252,9 @@ class GameController {
                 // autoRound: true
             },
             autoCenter: Center.CENTER_BOTH,
-            // scene: new WorldViewScene(),
+            scene: [PreloadScene],
             // scene: new LoginScene(),
-            scene: [LoginScene, PreloadScene],
+            // scene: [LoginScene, PreloadScene],
             // scene: new ChatViewScene(),
             parent: "game",
             dom: {
