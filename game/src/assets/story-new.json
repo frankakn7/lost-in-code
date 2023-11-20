@@ -1,0 +1,142 @@
+{
+    "hangar": {
+        "end": {
+            "optionText": "> ./deactivate_communications_relay",
+            "text": "...<Communications Relay going into Standby>..."
+        },
+
+        "0": {
+            "optionText": "Start the chat",
+            "text": "...",
+            "choices": ["0a"]
+        },
+
+        "0a": {
+            "optionText": "> ./activate_communications_relay",
+            "text": "...krkrkrkr... test ...krkrkr... Astronaut ... do you hear me krzkrkr ... oh wait no this is just text why am I doing that static thing...! Sup Astronaut this is mission control. I don't think we've met yet. I just got this case assigned so let me go through the file. In the mean time would you be so nice to confirm that these messages are actually reaching you? Over.",
+            "choices": ["0aa"]
+        },
+
+        "0aa": {
+            "optionText": "I copy",
+            "text": "Oh noo you're one of those!?? 'I copy', 'I copy', haha do you hear yourself? Come on dude this is not the military, this is 'Space Sanitation and Plumbing Limited' and im your designated Mission Control call center guide calm down! Over.",
+            "choices": ["0aaa", "0aab"]
+        },
+
+        "0aaa": {
+            "optionText": "Wait.. call center??",
+            "text": "Yes im sitting in a call center right now, yes dad was right about that 'Deep Space Anthropology B.Sc.' degree going nowhere, no need to rub it in my face!",
+            "choices": ["0aaaa", "0aab"]
+        },
+
+        "0aaaa": {
+            "optionText": "Deep space anthropology?",
+            "text": "Yea turns out there is no Deep Space Anthropology, Harvard punked me dude... but are you okay man? You've been repeating every word I said for the past 3 minutes?",
+            "choices": ["0aaaaa", "0aab"]
+        },
+
+        "0aaaaa": {
+            "optionText": "Yes yes im fine sorry.",
+            "text": "No worries, lets actually get started then alright?",
+            "choices": ["0aab"]
+        },
+
+        "0aab": {
+            "optionText": "Yea sure",
+            "text": "..so I went through the files, so lets see...the frigate seems to have stranded last week... no response from the crew. The ships telemetry reported a bunch of critical system failures left and right. You're supposed to get it up and running.",
+            "choices": ["0aaba", "0aabb"]
+        },
+        
+        "0aaba": {
+            "optionText": "What happened to the crew?",
+            "text": "Weell, you're the first one to board the ship since it stranded so if you have it in your heart you could try to piece together what happened to them. It's not specifically in your contract but we could show some Deep-Space-Minimal-Wage-Employee-Solidarity anyways.",
+            "choices": ["0aabb"]
+        },
+        "0aabb": {
+            "optionText": "Anything else I need to know?",
+            "text": "So your objective is to fix all the broken devices you see to get to the next room. As you probably know they are running PHP, which in a spectacular turn off events became the mostly used programming language in deep space after the great Pythongate scandal of 2223. No worries we will teach you as you go. You will be fixing the equipment by solving some exercises which vary in difficulty (which is as you know, exactly how space plumbing works). The better you perform, the fewer exercises you will encounter. You will be thrown into a room and once you fix all the stuff inside, the door will unlock, allowing you to head further in. As you sift through this room we will be evaluating your current PHP proficiency and fine-tune your tools accordingly. You ready? Over.",
+            "choices": ["0aabba", "0aabbb"]
+        },
+        "0aabba": {
+            "optionText": "Copy that.",
+            "text": "Come on man stop saying that its embarrassing... Anyways you have just arrived at the hangar. Good luck fixing stuff dear Astronaut!",
+            "choices": ["end"]
+        },
+        "0aabbb": {
+            "optionText": "Ready as can be!",
+            "text": "Thats the spirit chief. Alright perfect you just arrived at the hangar! Good luck fixing stuff dear Astronaut!",
+            "choices": ["end"]
+        },
+        "1": {
+            "optionText": "Start the chat",
+            "text": "Huh astronaut. I've just received visual data indicating a complete breakdown of the ship's machinery... That is insane what could have caused such extensive failure? Seen anyone of the crew yet?"
+        },
+        "1a": {
+            "optionText": "Nope",
+            "text": "Huh weird... well I mean I would also boycott everything and run off if I had to go through this while only making a 1000000th bitcoin per our. Also isn't it crazy that bitcoin is still a thing? Last week my great granddad told me that in his 'days people used to count money up by increasing the number in front of the currency instead of decreasing it by removing zeroes' but I told him to stop making stuff up and go back to cryosleep, I sure do hate old people! Anyways, proceed with your mission! Over."
+        },
+        "1b": {
+            "optionText": "Well there is a bus stop nearby",
+            "text": "Oh yea maybe they did just take a deep space bus home. I mean I wouldn't wait days for the deep space plumber to come either if I had to go through this while only making a 1000000th bitcoin per our. Also isn't it crazy that bitcoin is still a thing? Last week my great granddad told me that in 'his days' 'people used to count money up by increasing the number in front of the currency instead of decreasing it by removing zeroes' but I told him to stop making stuff up and go back to cryosleep, I sure do hate old people! Anyways, proceed with your mission! Over."
+        },
+        "2": {
+            "optionText": "Start the chat",
+            "text": "...just wanted to let you know that you're doing great - no you shut up!! I did not just message you because I feel alone when not constantly having someone to talk to... stop making stuff up!"
+        }
+    },
+    "commonRoom": {
+        "end": {
+            "optionText": "> ./deactivate_communications_relay",
+            "text": "...<Communications Relay going into Standby>..."
+        },
+        "0": {
+            "optionText": "Start the chat",
+            "text": "Huh, I did a scan and the common room appears to be empty. No crew here either. Well if you would be so kind as to continue with fixing stuff that would be grand. You really seem to have a talent for this whole PHP thing. Anyways, back to work, I will hit you up if theres anything important you have to know. Over.",
+            "choices":["0a", "0b"]
+        },
+        "0a":{
+            "optionText": "Copy that.",
+            "text": "Good god man you really ought to stop this. Are you ready to get going?",
+            "choices": ["0ab"]
+        },
+        "0ab": {
+            "optionText": "Ready as can be!",
+            "text": "You really ought to give your best! If you don't they might also reduce my pay and we wouldn't want me to not be able to afford my quarter-yearly deep space Disneyland visit wouldn't we? You know its one of those things that makes all of this worth it."
+        },
+        "0b": {
+            "optionText": "I will try my best!",
+            "text": "I sure hope so! If you don't they might also reduce my pay and we wouldn't want me to not be able to afford my quarter-yearly deep space Disneyland visit wouldn't we? You know its one of those things that makes all of this worth it."
+        },
+        "1":{
+            "optionText": "Start the chat",
+            "text": "Just got off the phone with my wife, she told me to say hi to you so I wanted to say 'hi' to you from my wife. 'hi' - from my wife!",
+            "choices": ["1a"]
+        },
+        "1a":{
+            "optionText": "Hi!",
+            "text": "Dude are you using me as a middle man to hit on my wife?! Super unprofessional! Back off! How about you get back to your plumbing thing alright!"
+        },
+        "1aa": {
+            "optionText": "Sorry!",
+            "text": "Huh... alright its cool, im sorry I actually do respect deep space PHP plumbing im just deeply insecure about this relationship with my wife, its just the way I like relationships to go. Anyways I wont text her 'hi' back from you.",
+            "choices": ["end"]
+        },
+        "1b": {
+            "optionText": "Thats sweet",
+            "text": "I know right? Shes very worried about me messing up again, losing my cut of the pay for a job AGAIN and then not being able to afford our next quarter-yearly trip to deep space disneyland AGAIN, so shes been checking up on my behavior every 30 minutes.",
+            "choices": ["1ba", "end"]
+        },
+        "1ba": {
+            "optionText": "Deep Space Disneyland?",
+            "text": "Yea man its getting hard, they've been pushing up the prices since the great finance crisis of 2208 basically, everything has been going downhill since. What a catastrophic event that finance crisis was! Something humanity surely has never had happen to it before! Also very sad that we lost most of written history by USB becoming incompatible with modern computers in 2150, so we'll never know.",
+            "choices": ["end"]
+        },
+        "2": {
+            "optionText": "Start the chat",
+            "text": "I sure do wonder what this vessel was used for. Theres absolutely nothing about its purpose to be found in the case files. I will look up the ships model number and let you know what I find.",
+            "choices": ["end"]
+        }
+    }
+}
+
+
