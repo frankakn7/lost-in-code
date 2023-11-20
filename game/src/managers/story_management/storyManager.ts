@@ -1,10 +1,9 @@
 import * as Phaser from "phaser";
 import ChatFlow from "../../classes/chat/chatFlow";
-import storyJson from "../../assets/story-new.json";
+import storyJson from "../../assets/story.json";
 import { ChatFlowNode } from "../../classes/chat/chatFlowNode";
 import { json } from "express";
 import {gameController} from "../../main";
-import {debugHelper} from "../../helpers/debugHelper";
 
 
 /**
@@ -29,7 +28,6 @@ export default class StoryManager {
     // }
 
     public initialiseStoryEvents(){
-        debugHelper.logValue("Hello there", this._storyEvents);
         // Iterate over each 'room' in the 'storyJson' object.
         for(let room in storyJson) {
             // If the '_storyEvents' map does not have an entry for the current 'room',
