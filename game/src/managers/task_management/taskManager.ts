@@ -1,9 +1,9 @@
-import { globalEventBus } from "../helpers/globalEventBus";
-import Question from "../classes/question/question";
-import ApiHelper from "../helpers/apiHelper";
-import { gameController } from "../main";
-import { GameEvents } from "../types/gameEvents";
-import { debugHelper } from "../helpers/debugHelper";
+import { globalEventBus } from "../../helpers/globalEventBus";
+import Question from "../../classes/question/question";
+import ApiHelper from "../../helpers/apiHelper";
+import { gameController } from "../../main";
+import { GameEvents } from "../../types/gameEvents";
+import { debugHelper } from "../../helpers/debugHelper";
 
 /**
  * Manages tasks and questions for the game.

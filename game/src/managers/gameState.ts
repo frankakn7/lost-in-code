@@ -1,5 +1,5 @@
 import { SupportedLanguages } from "../types/supportedLanguages";
-import {gameController} from "../main";
+import { gameController } from "../main";
 
 export class GameState {
     gameFinished: boolean;
@@ -38,6 +38,12 @@ export class GameState {
     curriculum: {
         maxChapterNumber: number;
         progLang: SupportedLanguages;
+    };
+    bkt: {
+        guessProbability: number; // Probability of guessing
+        slipProbability: number; // Probability of slipping
+        transitionProbability: number; // Probability of learning / transition
+        masteryProbability: number; // Initial probability of mastery
     };
 
     initialiseDefault() {
@@ -78,6 +84,12 @@ export class GameState {
             maxChapterNumber: 1,
             progLang: SupportedLanguages.PHP,
         };
+        this.bkt = {
+            guessProbability: 0.2, // Probability of guessing
+            slipProbability: 0.1, // Probability of slipping
+            transitionProbability: 0.1, // Probability of learning / transition
+            masteryProbability: 0.5, // Initial probability of mastery
+        };
     }
 
     initialise(progLang: SupportedLanguages, existingGameState?: GameState) {
@@ -89,7 +101,7 @@ export class GameState {
         this.story = { ...this.story, ...existingGameState.story };
         this.achievements = { ...this.achievements, ...existingGameState.achievements };
         this.user = { ...this.user, ...existingGameState.user };
-        this.curriculum = { ...this.curriculum, ...existingGameState.curriculum, progLang: progLang};
+        this.curriculum = { ...this.curriculum, ...existingGameState.curriculum, progLang: progLang };
     }
 
     constructor(progLang: SupportedLanguages, existingGameState?: GameState) {
@@ -126,8 +138,12 @@ export class GameState {
         this.room.doorUnlocked = unlocked;
     }
 
-    calculateNewPlayTime(){
+    calculateNewPlayTime() {
         this.achievements.totalPlayTimeInMilli += Date.now() - gameController.timestampSinceLastSaveOrReload;
         gameController.resetTimeSinceLastSaveOrReload();
+    }
+
+    updateBktMasteryProbability(newProbability: number) {
+        this.bkt.masteryProbability = newProbability;
     }
 }
