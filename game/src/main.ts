@@ -251,8 +251,8 @@ class GameController {
                 // Fit to window
                 // width: window.innerWidth,
                 // height: window.innerHeight,
-                // mode: Phaser.Scale.FIT,
-                mode: Phaser.Scale.RESIZE,
+                mode: Phaser.Scale.FIT,
+                // mode: Phaser.Scale.RESIZE,
                 parent: "game",
                 width: this.SIZE_WIDTH_SCREEN,
                 height: this.SIZE_HEIGHT_SCREEN,
