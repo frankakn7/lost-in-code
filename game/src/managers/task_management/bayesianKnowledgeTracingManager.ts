@@ -54,7 +54,7 @@ export default class BayesianKnowledgeTracingManager {
             newP_L = (P_L * P_S) / (P_L * P_S + (1 - P_L) * (1 - P_G));
         }
         // Update probability of mastery to include transition probability
-        newP_L = P_L + (1 - P_L) * P_T;
+        newP_L = newP_L + (1 - newP_L) * P_T;
 
         gameController.gameStateManager.updateBktMasteryProbability(newP_L);
     }

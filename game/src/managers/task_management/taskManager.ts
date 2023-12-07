@@ -4,6 +4,7 @@ import ApiHelper from "../../helpers/apiHelper";
 import { gameController } from "../../main";
 import { GameEvents } from "../../types/gameEvents";
 import { debugHelper } from "../../helpers/debugHelper";
+import BayesianKnowledgeTracingManager from "./bayesianKnowledgeTracingManager";
 
 /**
  * Manages tasks and questions for the game.
@@ -13,22 +14,35 @@ export default class TaskManager {
 
     private answeredQuestions: Question[] = [];
 
-    private currentChapterMaxDifficulty: number = 5;
+    private currentQuestion: Question;
 
-    private currentQuestionSetForObject = [];
+    public currentDoneQuestions: number = 0;
+    public currentCorrectQuestions: number = 0;
+    public finished = false;
+    public failed = false;
 
-    public currentDoneQuestions: number;
-    public currentTotalQuestions: number;
+    private bktManager = new BayesianKnowledgeTracingManager();
 
-    private apiHandler = new ApiHelper();
+    readonly correctQuestionsNeeded: number = 3;
+    readonly maxQuestionsAllowed: number = 5;
 
+    public resetStatus() {
+        this.currentDoneQuestions = 0;
+        this.currentCorrectQuestions = 0;
+        this.finished = false;
+        this.failed = false;
+    }
+
+    /**
+     * Load the questions from the current chapter through the api and pull out the difficulties array
+     * @private
+     */
     private loadQuestions() {
         return new Promise((resolve, reject) => {
-            this.apiHandler
+            gameController.apiHelper
                 .getFullChapter(gameController.gameStateManager.user.chapterNumber)
                 .then((response: any) => {
                     this.availableQuestions = response.questions;
-                    this.currentChapterMaxDifficulty = Math.max(...this.availableQuestions.map((q) => q.difficulty));
                     resolve(null);
                 })
                 .catch((error) => reject(error));
@@ -43,46 +57,52 @@ export default class TaskManager {
         }
     }
 
-    public populateNewQuestionSet() {
+    /**
+     * Gets the next question based on bkt values and available questions
+     */
+    public getNextQuestion() {
         this.shuffleQuestions(this.availableQuestions);
         this.shuffleQuestions(this.answeredQuestions);
 
-        this.currentQuestionSetForObject = [];
-
-        const availableQuestionsMap = this.availableQuestions.reduce((map, question) => {
+        const availableQuestionsMap: { [key: number]: Question[] } = this.availableQuestions.reduce((map, question) => {
             if (!map[question.difficulty]) map[question.difficulty] = [];
             map[question.difficulty].push(question);
             return map;
         }, {});
 
-        const answeredQuestionsMap = this.answeredQuestions.reduce((map, question) => {
+        const answeredQuestionsMap: { [key: number]: Question[] } = this.answeredQuestions.reduce((map, question) => {
             if (!map[question.difficulty]) map[question.difficulty] = [];
             map[question.difficulty].push(question);
             return map;
         }, {});
 
-        for (
-            let i = gameController.gameStateManager.user.performanceIndex;
-            i <= this.currentChapterMaxDifficulty;
-            i++
-        ) {
-            let questionsWithDifficulty = availableQuestionsMap[i];
-            let j = 0;
-            let increasing = true;
-            while ((!questionsWithDifficulty || questionsWithDifficulty.length <= 0) && j >= 0) {
-                questionsWithDifficulty = availableQuestionsMap[i + j];
-                if (!questionsWithDifficulty || questionsWithDifficulty.length <= 0) {
-                    questionsWithDifficulty = answeredQuestionsMap[i + j];
-                }
-                increasing ? j++ : j--;
-                j >= this.currentChapterMaxDifficulty ? (increasing = false) : null;
+        //Get available difficulties from map where questions are available and put it into number array
+        let availableDifficulties = (
+            Object.keys(availableQuestionsMap).length
+                ? Object.keys(availableQuestionsMap)
+                : Object.keys(answeredQuestionsMap)
+        ).map((key) => parseInt(key));
+
+        const nextDifficulty = this.bktManager.getNextQuestionDifficulty(availableDifficulties);
+
+        console.log(gameController.gameStateManager.bkt.masteryProbability);
+
+        const questionsAtNextDifficulty =
+            availableQuestionsMap[nextDifficulty] || answeredQuestionsMap[nextDifficulty] || [];
+        let nextQuestion = questionsAtNextDifficulty.length > 0 ? questionsAtNextDifficulty[0] : null;
+
+        //If the next question is the same one again, pick a different one or a different difficulty
+        if (this.currentQuestion === nextQuestion) {
+            if (questionsAtNextDifficulty.length > 1) {
+                nextQuestion = questionsAtNextDifficulty[1];
+            } else {
+                let otherDifficulties = availableDifficulties.filter((difficulty) => difficulty != nextDifficulty);
+                const otherDifficulty = this.bktManager.getNextQuestionDifficulty(availableDifficulties);
+                nextQuestion = questionsAtNextDifficulty.length > 0 ? questionsAtNextDifficulty[0] : null;
             }
-            const question = questionsWithDifficulty.pop();
-            this.currentQuestionSetForObject.push(question);
         }
-
-        this.currentDoneQuestions = 0;
-        this.currentTotalQuestions = this.currentQuestionSetForObject.length;
+        this.currentQuestion = nextQuestion;
+        return nextQuestion;
     }
 
     private shuffleArray(array: []) {
@@ -90,12 +110,6 @@ export default class TaskManager {
             const j = Math.floor(Math.random() * (i + 1));
             [array[i], array[j]] = [array[j], array[i]];
         }
-    }
-
-    public getCurrentQuestionFromQuestionSet() {
-        let question = this.currentQuestionSetForObject[0];
-        question ? this.shuffleArray(question.elements) : null;
-        return question;
     }
 
     private checkNextChapter() {
@@ -118,12 +132,14 @@ export default class TaskManager {
 
     private onObjectFailed() {
         debugHelper.logString("failed");
+        this.failed = true;
         gameController.worldSceneController.queueWorldViewTask(() => {
             globalEventBus.emit(GameEvents.TASKMANAGER_OBJECT_FAILED);
         });
     }
 
     private onObjectRepaired() {
+        this.finished = true;
         gameController.worldSceneController.queueWorldViewTask(() => {
             globalEventBus.emit(GameEvents.TASKMANAGER_OBJECT_FINISHED);
         });
@@ -131,30 +147,43 @@ export default class TaskManager {
     }
 
     public questionAnsweredCorrectly(duration: number) {
-        const currentQuestion = this.getCurrentQuestionFromQuestionSet();
-        const index = this.availableQuestions.indexOf(currentQuestion);
+        // const currentQuestion = this.getCurrentQuestionFromQuestionSet();
+        const index = this.availableQuestions.indexOf(this.currentQuestion);
         if (index > -1) {
             this.availableQuestions.splice(index, 1);
         }
-        console.log(currentQuestion);
-        this.answeredQuestions.push(currentQuestion);
-        gameController.gameStateManager.addAnsweredQuestionIds(currentQuestion.id);
-        this.currentQuestionSetForObject.shift();
+        // console.log(currentQuestion);
+        this.answeredQuestions.push(this.currentQuestion);
+        gameController.gameStateManager.addAnsweredQuestionIds(this.currentQuestion.id);
+        // this.currentQuestionSetForObject.shift();
         this.currentDoneQuestions++;
-        if (this.currentQuestionSetForObject.length === 0) {
+        this.currentCorrectQuestions++;
+        // if (this.currentQuestionSetForObject.length === 0) {
+        if (this.currentCorrectQuestions >= this.correctQuestionsNeeded) {
             this.onObjectRepaired();
-        } else {
-            gameController.gameStateManager.user.performanceIndex = currentQuestion.difficulty + 1;
         }
+        // else {
+        //     gameController.gameStateManager.user.performanceIndex = currentQuestion.difficulty + 1;
+        // }
+
+        this.bktManager.calcAndUpdateMasteryProbability(true);
 
         globalEventBus.emit(GameEvents.TASKMANAGER_TASK_CORRECT, duration);
     }
 
     public questionAnsweredIncorrectly() {
-        gameController.gameStateManager.user.performanceIndex > 1
-            ? gameController.gameStateManager.user.performanceIndex--
-            : null;
-        this.onObjectFailed();
+        // gameController.gameStateManager.user.performanceIndex > 1
+        //     ? gameController.gameStateManager.user.performanceIndex--
+        //     : null;
+        this.currentDoneQuestions++;
+        this.bktManager.calcAndUpdateMasteryProbability(false);
+        // If its not possible anymore to get the correct questions needed
+        if (
+            this.maxQuestionsAllowed - this.currentDoneQuestions + this.currentCorrectQuestions <
+            this.correctQuestionsNeeded
+        ) {
+            this.onObjectFailed();
+        }
         globalEventBus.emit(GameEvents.TASKMANAGER_TASK_INCORRECT);
     }
 
@@ -171,7 +200,7 @@ export default class TaskManager {
         this.loadQuestions()
             .then((result) => {
                 this.loadState(gameController.gameStateManager.user.answeredQuestionIds);
-                this.populateNewQuestionSet();
+                // this.populateNewQuestionSet();
             })
             .catch((error) => console.error(error));
     }

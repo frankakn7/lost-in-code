@@ -85,10 +85,10 @@ export class GameState {
             progLang: SupportedLanguages.PHP,
         };
         this.bkt = {
-            guessProbability: 0.2, // Probability of guessing
-            slipProbability: 0.1, // Probability of slipping
+            guessProbability: 0.3, // Probability of guessing
+            slipProbability: 0.2, // Probability of slipping
             transitionProbability: 0.1, // Probability of learning / transition
-            masteryProbability: 0.5, // Initial probability of mastery
+            masteryProbability: 0.3, // Initial probability of mastery
         };
     }
 
