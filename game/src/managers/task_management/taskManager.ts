@@ -26,6 +26,10 @@ export default class TaskManager {
     readonly correctQuestionsNeeded: number = 3;
     readonly maxQuestionsAllowed: number = 5;
 
+    private minRepairedObjectsPerChapter = 2;
+    private maxRepairedObjectsPerChapter = this.minRepairedObjectsPerChapter + 1;
+    private minPLPerChapter = 0.6; //the minimum required mastery probability to continue to the next chapter
+
     public resetStatus() {
         this.currentDoneQuestions = 0;
         this.currentCorrectQuestions = 0;
@@ -114,11 +118,40 @@ export default class TaskManager {
 
     private checkNextChapter() {
         gameController.gameStateManager.increaseRepairedObjectsThisChapter();
+        console.log(gameController.gameStateManager.user.chapterNumber);
+        console.log(gameController.gameStateManager.curriculum.maxChapterNumber);
+        console.log(gameController.gameStateManager.user.repairedObjectsThisChapter);
+        console.log(this.minRepairedObjectsPerChapter);
+        console.log(
+            gameController.gameStateManager.user.repairedObjectsThisChapter >= this.minRepairedObjectsPerChapter,
+        );
+        console.log(
+            gameController.gameStateManager.user.repairedObjectsThisChapter >= this.minRepairedObjectsPerChapter &&
+                gameController.gameStateManager.bkt.masteryProbability >= this.minPLPerChapter,
+        );
+        console.log(
+            gameController.gameStateManager.user.repairedObjectsThisChapter >= this.maxRepairedObjectsPerChapter,
+        );
+        console.log(
+            (gameController.gameStateManager.user.repairedObjectsThisChapter >= this.minRepairedObjectsPerChapter &&
+                gameController.gameStateManager.bkt.masteryProbability >= this.minPLPerChapter) ||
+                gameController.gameStateManager.user.repairedObjectsThisChapter >= this.maxRepairedObjectsPerChapter,
+        );
+        console.log(
+            ((gameController.gameStateManager.user.repairedObjectsThisChapter >= this.minRepairedObjectsPerChapter &&
+                gameController.gameStateManager.bkt.masteryProbability >= this.minPLPerChapter) ||
+                gameController.gameStateManager.user.repairedObjectsThisChapter >= this.maxRepairedObjectsPerChapter) &&
+                gameController.gameStateManager.user.chapterNumber <
+                    gameController.gameStateManager.curriculum.maxChapterNumber,
+        );
         if (
-            gameController.gameStateManager.user.repairedObjectsThisChapter == 2 &&
+            ((gameController.gameStateManager.user.repairedObjectsThisChapter >= this.minRepairedObjectsPerChapter &&
+                gameController.gameStateManager.bkt.masteryProbability >= this.minPLPerChapter) ||
+                gameController.gameStateManager.user.repairedObjectsThisChapter >= this.maxRepairedObjectsPerChapter) &&
             gameController.gameStateManager.user.chapterNumber <
                 gameController.gameStateManager.curriculum.maxChapterNumber
         ) {
+            console.log("New Chapter unlocked");
             gameController.gameStateManager.increaseChapterNumber();
             gameController.gameStateManager.user.repairedObjectsThisChapter = 0;
             gameController.gameStateManager.user.newChapter = true;

@@ -1,18 +1,17 @@
-import {globalEventBus} from "../helpers/globalEventBus";
-import {achievements} from "../constants/achievements";
+import { globalEventBus } from "../helpers/globalEventBus";
+import { achievements } from "../constants/achievements";
 import WorldViewScene from "../scenes/worldViewScene";
 
-import {gameController} from "../main";
+import { gameController } from "../main";
 import * as Events from "events";
-import {GameEvents} from "../types/gameEvents";
-import {debugHelper} from "../helpers/debugHelper";
+import { GameEvents } from "../types/gameEvents";
+import { debugHelper } from "../helpers/debugHelper";
 
 /**
  * Achievement manager, handles the achievement flow, loading from json, saving to game state,
  */
 export default class AchievementManager {
-
-    private _achievements = achievements;  // Stores the achievements from the 'achievements' file.
+    private _achievements = achievements; // Stores the achievements from the 'achievements' file.
 
     private _sessionStartDate = Date.now();
 
@@ -23,20 +22,25 @@ export default class AchievementManager {
     constructor() {
         // Listen for the "taskmanager_task_correct" event emitted by the Task Manager.
         // When a task is correctly completed, call the _onTaskmanagerCorrect method.
-        globalEventBus.on(GameEvents.TASKMANAGER_TASK_CORRECT, ((duration) => {
-            this._onTaskmanagerCorrect(duration)
-        }).bind(this));
+        globalEventBus.on(
+            GameEvents.TASKMANAGER_TASK_CORRECT,
+            ((duration) => {
+                this._onTaskmanagerCorrect(duration);
+            }).bind(this),
+        );
 
         // Listen for the "taskmanager_task_incorrect" event emitted by the Task Manager.
         // When a task is answered incorrectly, call the _onTaskManagerIncorrect method.
-        globalEventBus.on(GameEvents.TASKMANAGER_TASK_INCORRECT,
-            this._onTaskManagerIncorrect.bind(this));
+        globalEventBus.on(GameEvents.TASKMANAGER_TASK_INCORRECT, this._onTaskManagerIncorrect.bind(this));
 
         // Listen for the "door_was_unlocked" event emitted when a door is unlocked in a room.
         // Call the _checkForLevelAchievement method to check for level-related achievements.
-        globalEventBus.on(GameEvents.DOOR_UNLOCKED, ((room) => {
-            this._checkForLevelAchievement(room)
-        }).bind(this));
+        globalEventBus.on(
+            GameEvents.DOOR_UNLOCKED,
+            ((room) => {
+                this._checkForLevelAchievement(room);
+            }).bind(this),
+        );
     }
 
     /**
@@ -52,7 +56,12 @@ export default class AchievementManager {
         gameController.gameStateManager.achievements.currentStreak++;
 
         // Update the longest streak of correctly completed tasks, if applicable.
-        if (gameController.gameStateManager.achievements.currentStreak > gameController.gameStateManager.achievements.longestStreak) gameController.gameStateManager.achievements.longestStreak = gameController.gameStateManager.achievements.currentStreak;
+        if (
+            gameController.gameStateManager.achievements.currentStreak >
+            gameController.gameStateManager.achievements.longestStreak
+        )
+            gameController.gameStateManager.achievements.longestStreak =
+                gameController.gameStateManager.achievements.currentStreak;
 
         // If the task completion duration is greater than zero, update the fastest task completion time.
         if (duration > 0) {
@@ -89,11 +98,11 @@ export default class AchievementManager {
     private _unlock(achievementKey) {
         if (gameController.gameStateManager.achievements.unlocked.includes(achievementKey)) return;
         let achievement = achievements[achievementKey];
-        globalEventBus.emit(GameEvents.BROADCAST_NEWS, achievement.text)
+        globalEventBus.emit(GameEvents.BROADCAST_NEWS, achievement.text);
         globalEventBus.emit(GameEvents.BROADCAST_ACHIEVEMENT, achievements[achievementKey]);
 
         gameController.gameStateManager.achievements.unlocked.push(achievementKey);
-        debugHelper.logString("earned achievement: "+achievementKey)
+        debugHelper.logString("earned achievement: " + achievementKey);
     }
 
     get badgesEarned(): number {

@@ -1,22 +1,26 @@
-import {globalEventBus} from "../helpers/globalEventBus";
+import { globalEventBus } from "../helpers/globalEventBus";
 
-import {GameEvents} from "../types/gameEvents";
+import { GameEvents } from "../types/gameEvents";
 import PopupSceneController from "./popupSceneController";
-import {GameState} from "../managers/gameState";
+import { GameState } from "../managers/gameState";
 import ApiHelper from "../helpers/apiHelper";
 import WorldSceneController from "./worldSceneController";
 import AchievementManager from "../managers/achievementManager";
-import {gameController} from "../main";
+import { gameController } from "../main";
 
 export default class EventBusController {
-
     private _popupSceneController: PopupSceneController;
     private _worldSceneController: WorldSceneController;
 
     private _gameState: GameState;
     private _apiHelper: ApiHelper;
 
-    constructor(popupSceneController: PopupSceneController, worldSceneController: WorldSceneController, gameStateManager: GameState, apiHelper: ApiHelper) {
+    constructor(
+        popupSceneController: PopupSceneController,
+        worldSceneController: WorldSceneController,
+        gameStateManager: GameState,
+        apiHelper: ApiHelper,
+    ) {
         this._popupSceneController = popupSceneController;
         this._worldSceneController = worldSceneController;
         this._gameState = gameStateManager;

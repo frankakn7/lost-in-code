@@ -1,10 +1,9 @@
 import NewsPopupScene from "../scenes/newsPopupScene";
-import {gameController} from "../main";
-import {AchievementType} from "../types/achievementType";
+import { gameController } from "../main";
+import { AchievementType } from "../types/achievementType";
 import MasterSceneController from "./masterSceneController";
 
 export default class PopupSceneController {
-
     private _newsCounter: number = 0;
     private _currentlyDisplayedNews: NewsPopupScene[] = [];
 
@@ -20,9 +19,10 @@ export default class PopupSceneController {
      * @param {string} texture - a texture to be displayed in the popup as well
      */
     public broadcastNews(message: string, texture?: string) {
+        // console.log("Broadcasting message! :" + message);
         let newsId = "newsPopup" + (this._newsCounter++).toString();
         let newsPopup = new NewsPopupScene(newsId, message, 2500, texture);
-        this.addNewsPopupScene(newsId,newsPopup);
+        this.addNewsPopupScene(newsId, newsPopup);
     }
 
     /**
@@ -30,7 +30,7 @@ export default class PopupSceneController {
      * @param {AchievementType} achievement - achievement to be broadcast
      */
     public broadcastAchievement(achievement: AchievementType) {
-        this.broadcastNews(achievement.text,achievement.texture);
+        this.broadcastNews(achievement.text, achievement.texture);
     }
 
     /**
@@ -40,15 +40,15 @@ export default class PopupSceneController {
      * @param {NewsPopupScene} newsPopup - the newsPopup scene to be displayed
      * @private
      */
-    private addNewsPopupScene(newsId: string, newsPopup: NewsPopupScene){
+    private addNewsPopupScene(newsId: string, newsPopup: NewsPopupScene) {
         this._masterSceneController.addScene(newsId, newsPopup);
         this._masterSceneController.runScene(newsId);
 
         if (this._currentlyDisplayedNews.length > 0) {
             this._currentlyDisplayedNews.forEach((n) => {
                 n.kill();
-            })
+            });
         }
-        this._currentlyDisplayedNews.push(newsPopup)
+        this._currentlyDisplayedNews.push(newsPopup);
     }
 }
