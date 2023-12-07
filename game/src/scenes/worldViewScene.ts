@@ -1,14 +1,12 @@
 import * as Phaser from "phaser";
-import {GameStateType} from "../types/gameStateType";
-import {gameController} from "../main";
-import {SceneKeys} from "../types/sceneKeys";
-
+import { GameStateType } from "../types/gameStateType";
+import { gameController } from "../main";
+import { SceneKeys } from "../types/sceneKeys";
 
 /**
  * Represents the view in which the rooms and player are explorable (default playing view)
  */
 export default class WorldViewScene extends Phaser.Scene {
-
     private taskQueue: Array<() => void> = [];
 
     // /**
@@ -40,7 +38,6 @@ export default class WorldViewScene extends Phaser.Scene {
         // this.events.on('wake', this.onWake, this);
     }
 
-
     /**
      * Update function called every frame during the game loop.
      * @param time - The current game time in milliseconds.
@@ -51,7 +48,7 @@ export default class WorldViewScene extends Phaser.Scene {
         if (gameController.buttonStates.phonePressed) {
             gameController.buttonStates.phonePressed = false;
 
-            // Launch the menu scene and pause the game.
+            // Launch the menu scene and pause the game
             gameController.menuSceneController.startMenuScene();
         }
 

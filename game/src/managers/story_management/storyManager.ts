@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
 import ChatFlow from "../../classes/chat/chatFlow";
-import storyJson from "../../assets/story.json";
+import storyJson from "../../assets/story-new.json";
 import { ChatFlowNode } from "../../classes/chat/chatFlowNode";
 import { json } from "express";
 import {gameController} from "../../main";
@@ -12,20 +12,6 @@ import {gameController} from "../../main";
  */
 export default class StoryManager {
     private _storyEvents: {[room: string]: Map<string,ChatFlow>} = {}; // Stores ChatFlow objects for each room and event.
-
-    // private _textHistory: string[][] = []; // Stores the text history for the current game or application.
-
-
-    /**
-     * Constructs a new instance of the class.
-     */
-    // constructor() {
-    //
-    //     // Load potential data from the game state.
-    //     // this.loadData();
-    //
-    //
-    // }
 
     public initialiseStoryEvents(){
         // Iterate over each 'room' in the 'storyJson' object.
@@ -143,22 +129,6 @@ export default class StoryManager {
     public addTextHistory(newTexts: string[][]){
         gameController.gameStateManager.story.history = gameController.gameStateManager.story.history.concat(newTexts);
     }
-
-    /**
-     * Load data from the game state.
-     */
-    // public loadData() {
-    //     let {history, ...finishedStuff} = gameController.gameStateManager.story;
-    //     this._finishedStuff = finishedStuff;
-    //     this._textHistory = history ?? [];
-    // }
-
-    /**
-     * Return saveable data for game state.
-     */
-    // public saveAll() {
-    //     return {...this._finishedStuff, history: this._textHistory};
-    // }
 
     /**
      * Check if the entry story bit for a given room has been played.

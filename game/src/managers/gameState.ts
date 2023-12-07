@@ -65,7 +65,7 @@ export class GameState {
             unlocked: [],
         };
         this.user = {
-            newChapter: false,
+            newChapter: true,
             answeredQuestionIds: [],
             chapterNumber: 1,
             performanceIndex: 1,

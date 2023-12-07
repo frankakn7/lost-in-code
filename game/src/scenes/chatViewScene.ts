@@ -127,6 +127,8 @@ export default class ChatViewScene extends Phaser.Scene {
 
         //start the new chat flow
         this._currentChatFlow ? this.startNewChatFlow(this._currentChatFlow) : this.showExitButton();
+
+        this._buttonWidth = this.cameras.main.displayWidth * 0.8;
     }
 
     private applyChatHistory() {
@@ -146,6 +148,7 @@ export default class ChatViewScene extends Phaser.Scene {
             this._textToAnimate.setText(this._currentChatFlow.getCurrentText());
 
             this._chatTextContainer.calculateNewInputHitArea();
+            this._chatTextContainer.scrollToBottom();
 
             // Display the choices
             this.removeSkipButton();
@@ -166,9 +169,41 @@ export default class ChatViewScene extends Phaser.Scene {
             this._exitButton.destroy();
         }
         if (this._isChapterView) {
-            this._chapterTextContainer.addFullDocText(this._currentChatFlow.getCurrentText()).then(value => {
-                this.showChoices(this._currentChatFlow.getCurrentChoices());
-            });
+            this._textToAnimate = this._chapterTextContainer.addReceivedText();
+            this.startTextAnimation(
+                this._textToAnimate,
+                "<Incoming Transmission>",
+                this._chapterTextContainer,
+                () => {
+                    this._textToAnimate = this._chapterTextContainer.addReceivedText();
+                    this.startTextAnimation(
+                        this._textToAnimate,
+                        "<:/ Downloading new Knowledge",
+                        this._chapterTextContainer,
+                        () => {
+                            this._textToAnimate = this._chapterTextContainer.addReceivedText();
+                            const defaultCharacterDelay = this._characterDelayMilli;
+                            this._characterDelayMilli = 90;
+                            this.startTextAnimation(
+                                this._textToAnimate,
+                                "[------------------] Success",
+                                this._chapterTextContainer,
+                                () => {
+                                    this._characterDelayMilli = defaultCharacterDelay;
+                                    this._chapterTextContainer
+                                        .addFullDocText(this._currentChatFlow.getCurrentText())
+                                        .then((value) => {
+                                            this.showChoices(this._currentChatFlow.getCurrentChoices());
+                                        });
+                                },
+                                false,
+                            );
+                        },
+                        false,
+                    );
+                },
+                false,
+            );
         } else {
             //Add a new text element for animation
             this._textToAnimate = this._chatTextContainer.addReceivedText();
@@ -176,6 +211,7 @@ export default class ChatViewScene extends Phaser.Scene {
             //Animate the text then show the choices
             this.showTextThenChoices(
                 this._textToAnimate,
+                this._chatTextContainer,
                 this._currentChatFlow.getCurrentText(),
                 this._currentChatFlow.getCurrentChoices(),
             );
@@ -188,19 +224,27 @@ export default class ChatViewScene extends Phaser.Scene {
      * @param fullText the whole text string that should be animated
      * @param onAnimationEnd function to call when the animation is done (usually function displaying the choices)
      */
-    private startTextAnimation(textToAnimate: Phaser.GameObjects.Text, fullText: string, onAnimationEnd: Function) {
+    private startTextAnimation(
+        textToAnimate: Phaser.GameObjects.Text,
+        fullText: string,
+        textContainer: ChatTextContainer,
+        onAnimationEnd: Function,
+        showSkipButton: Boolean = true,
+    ) {
         //remaining text has to be an object to be able to pass it by reference
         let remainingText = { text: fullText };
         //create a new timer event for the animation
         this._updateTextAnimationEvent = this.time.addEvent({
             delay: this._characterDelayMilli, //delay is the defined characterDelay
             callback: this.onAnimateTextEvent, //calls the onAnimateTextEvent function
-            args: [textToAnimate, remainingText, onAnimationEnd], //the arguments that need to be passed to the function
+            args: [textToAnimate, remainingText, textContainer, onAnimationEnd], //the arguments that need to be passed to the function
             repeat: this._currentChatFlow.getCurrentText().length - 1, //repeat it exactly as often as there are characters in the string to be animated
             callbackScope: this,
         });
         //Show skip button
-        this.showSkipButton();
+        if (showSkipButton) {
+            this.showSkipButton();
+        }
     }
 
     /**
@@ -213,10 +257,13 @@ export default class ChatViewScene extends Phaser.Scene {
     private onAnimateTextEvent(
         text: Phaser.GameObjects.Text,
         remainingText: { text: string },
+        textContainer: ChatTextContainer,
         onAnimationEnd: Function,
     ) {
         //append the character to the text element
         text.appendText(remainingText.text[0], false);
+        // this._chatTextContainer.calculateNewInputHitArea();
+        textContainer.calculateNewInputHitArea();
         //remove character from remaining text
         remainingText.text = remainingText.text.substring(1);
         //if remaining text is empty
@@ -234,10 +281,15 @@ export default class ChatViewScene extends Phaser.Scene {
      * @param text the whole string that should be displayed
      * @param choices the choices that should be displayed as buttons
      */
-    private showTextThenChoices(textObject: Phaser.GameObjects.Text, text: string, choices: Array<string>) {
+    private showTextThenChoices(
+        textObject: Phaser.GameObjects.Text,
+        textContainer: ChatTextContainer,
+        text: string,
+        choices: Array<string>,
+    ) {
         this._textToSave.push(["M", text]);
         //start the animation
-        this.startTextAnimation(textObject, text, () => {
+        this.startTextAnimation(textObject, text, textContainer, () => {
             //when animation is over show the choices as buttons
             this.removeSkipButton();
             this.showChoices(choices);
@@ -318,6 +370,8 @@ export default class ChatViewScene extends Phaser.Scene {
     }
 
     /**
+     * **Warning**: hardcoded **this._chatTextContainer**
+     *
      * Function to be executed when a choice is clicked
      * Handles:
      * - the selection of a new choice in the {@link _currentChatFlow}
@@ -343,6 +397,7 @@ export default class ChatViewScene extends Phaser.Scene {
         //Start a new loop sequence
         this.showTextThenChoices(
             this._textToAnimate,
+            this._chatTextContainer,
             this._currentChatFlow.getCurrentText(),
             this._currentChatFlow.getCurrentChoices(),
         );

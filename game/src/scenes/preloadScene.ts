@@ -24,8 +24,8 @@ import crownTexture from "../assets/hats/crown.png";
 import pirateHat from "../assets/hats/pirateHat.png";
 import flaresPng from "../assets/particles/flares.png";
 import flaresJson from "../assets/particles/flares.json";
-import {gameController} from "../main";
-import {SceneKeys} from "../types/sceneKeys";
+import { gameController } from "../main";
+import { SceneKeys } from "../types/sceneKeys";
 import PlayerTexture from "../assets/player.png";
 import ShadowTexture from "../assets/shadow.png";
 import Mask from "../assets/mask.png";
@@ -52,7 +52,7 @@ import KnowledgeButtonTexture from "../assets/ui/apps/knowledge-app-icon.png";
 import SettingsButtonTexture from "../assets/ui/apps/Settings-app-icon.png";
 import ResumeButtonTexture from "../assets/ui/Resume-Button.png";
 import LogoutButtonTexture from "../assets/ui/Logout-Button.png";
-import AchievementsAppTexture from "../assets/ui/apps/Achievements-app-icon.png";
+import AchievementsAppTexture from "../assets/ui/apps/Achievements-app-icon-v2.png";
 import HatAppTexture from "../assets/ui/apps/Hat-app-icon.png";
 import ReturnButtonTexture from "../assets/ui/Return-Button.png";
 import deviceBackgroundTilePng from "../assets/Device-Background-Tile.png";
@@ -63,7 +63,6 @@ export default class PreloadScene extends Phaser.Scene {
     }
 
     preload() {
-
         this.load.image("trophy", TrophyTexture);
 
         this.load.image("badge_tasks_5", ATask5Texture);
@@ -127,10 +126,10 @@ export default class PreloadScene extends Phaser.Scene {
         this.load.image("achievementsAppTexture", AchievementsAppTexture);
         this.load.image("hatAppTexture", HatAppTexture);
 
-        this.load.image("returnButtonTexture", ReturnButtonTexture)
+        this.load.image("returnButtonTexture", ReturnButtonTexture);
     }
 
     create() {
-        gameController.initialWorldViewStart()
+        gameController.initialWorldViewStart();
     }
 }

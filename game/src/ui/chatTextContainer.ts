@@ -44,9 +44,7 @@ export default class ChatTextContainer extends Phaser.GameObjects.Container {
             fontFamily: "forwardRegular",
             color: "#00c8ff",
             wordWrap: {
-                width:
-                    this.scene.cameras.main.displayWidth -
-                    this.textSidePadding * 2,
+                width: this.scene.cameras.main.displayWidth - this.textSidePadding * 2,
                 useAdvancedWrap: true,
             },
         };
@@ -58,16 +56,23 @@ export default class ChatTextContainer extends Phaser.GameObjects.Container {
             align: "right",
         };
         //Adding the container itself to the scene
-        this.scene.add.existing(this)
+        this.scene.add.existing(this);
         //Set the container interactive over the whole screen
-        this.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.displayWidth, 0), Phaser.Geom.Rectangle.Contains)
+        this.setInteractive(
+            new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.displayWidth, 0),
+            Phaser.Geom.Rectangle.Contains,
+        );
         //Enable dragging (important for scrolling)
         this.scene.input.setDraggable(this, true);
 
-        this.on('drag', (pointer, dragX, dragY) => {
+        this.on("drag", (pointer, dragX, dragY) => {
             //Ensure that the container can only go to 0 (first text at the very top) or have the last text be at half the display height
-            this.y = Phaser.Math.Clamp(dragY, Math.min(this.scene.cameras.main.displayHeight / 2 - this.input.hitArea.height, 0), this.maxY);
-        })
+            this.y = Phaser.Math.Clamp(
+                dragY,
+                Math.min(this.scene.cameras.main.displayHeight / 2 - this.input.hitArea.height, 0),
+                this.maxY,
+            );
+        });
     }
 
     /**
@@ -75,18 +80,18 @@ export default class ChatTextContainer extends Phaser.GameObjects.Container {
      * Additionally sets the hitarea to be as high as all the texts in the container (up until the last text)
      * @param text the text to be added
      */
-    protected pushAndAdd(text: Phaser.GameObjects.Text |Phaser.GameObjects.Image): void {
+    protected pushAndAdd(text: Phaser.GameObjects.Text | Phaser.GameObjects.Image): void {
         this.texts.push(text);
         this.add(text);
         this.calculateNewInputHitArea();
     }
 
-    public calculateNewInputHitArea(){
-        this.input.hitArea = new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.displayWidth, this.calcNewTextY())
+    public calculateNewInputHitArea() {
+        this.input.hitArea = new Phaser.Geom.Rectangle(0, 0, this.scene.cameras.main.displayWidth, this.calcNewTextY());
     }
 
-    public scrollToBottom(){
-        this.y = Math.min(this.scene.cameras.main.displayHeight / 2 - this.input.hitArea.height, 0)
+    public scrollToBottom() {
+        this.y = Math.min(this.scene.cameras.main.displayHeight / 2 - this.input.hitArea.height, 0);
     }
 
     /**
@@ -95,9 +100,7 @@ export default class ChatTextContainer extends Phaser.GameObjects.Container {
      */
     protected calcNewTextY(): number {
         return this.texts.length
-            ? this.texts[this.texts.length - 1].y +
-            this.texts[this.texts.length - 1].height +
-            this.textTopPadding
+            ? this.texts[this.texts.length - 1].y + this.texts[this.texts.length - 1].height + this.textTopPadding
             : this.textTopPadding;
     }
 
@@ -106,23 +109,13 @@ export default class ChatTextContainer extends Phaser.GameObjects.Container {
      * @returns the created text
      */
     public addReceivedText(): Phaser.GameObjects.Text {
-        let text = this.scene.add.text(
-            this.textSidePadding,
-            this.calcNewTextY(),
-            "",
-            this.textStyle
-        );
+        let text = this.scene.add.text(this.textSidePadding, this.calcNewTextY(), "", this.textStyle);
         this.pushAndAdd(text);
         return text;
     }
 
     public addFullRecievedText(fullText: string): Phaser.GameObjects.Text {
-        let text = this.scene.add.text(
-            this.textSidePadding,
-            this.calcNewTextY(),
-            fullText,
-            this.textStyle
-        );
+        let text = this.scene.add.text(this.textSidePadding, this.calcNewTextY(), fullText, this.textStyle);
         this.pushAndAdd(text);
         return text;
     }
@@ -138,7 +131,7 @@ export default class ChatTextContainer extends Phaser.GameObjects.Container {
                 this.scene.cameras.main.displayWidth - this.textSidePadding,
                 this.calcNewTextY(),
                 text,
-                this.answerStyle
+                this.answerStyle,
             )
             .setOrigin(1, 0);
         this.pushAndAdd(answer);

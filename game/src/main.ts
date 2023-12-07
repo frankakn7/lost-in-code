@@ -42,6 +42,8 @@ class GameController {
 
     private _user: User;
 
+    private _savingEnabled: boolean = false;
+
     private _masterSceneController: MasterSceneController;
     private _chatSceneController: ChatSceneController;
     private _popupSceneController: PopupSceneController;
@@ -140,6 +142,10 @@ class GameController {
 
     get timestampSinceLastSaveOrReload(): number {
         return this._timestampSinceLastSaveOrReload;
+    }
+
+    get savingEnabled(): boolean {
+        return this._savingEnabled;
     }
 
     public resetTimeSinceLastSaveOrReload() {

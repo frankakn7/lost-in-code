@@ -5,8 +5,8 @@ import java from "highlight.js/lib/languages/java";
 import html2canvas from "html2canvas";
 import "highlight.js/styles/night-owl.css";
 import Phaser from "phaser";
-import {SupportedLanguages} from "../types/supportedLanguages";
-import {gameController} from "../main";
+import { SupportedLanguages } from "../types/supportedLanguages";
+import { gameController } from "../main";
 
 interface TextBlock {
     type: "text" | "code";

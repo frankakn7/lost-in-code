@@ -1,8 +1,8 @@
-import {gameController} from "../main";
+import { gameController } from "../main";
 import MasterSceneController from "./masterSceneController";
-import {SceneKeys} from "../types/sceneKeys";
+import { SceneKeys } from "../types/sceneKeys";
 import QuestionViewScene from "../scenes/questionViewScene";
-import {ChapterType} from "../managers/chapterManager";
+import { ChapterType } from "../managers/chapterManager";
 import ChoiceQuestionContainer from "../ui/question/choiceQuestionContainer";
 import InputQuestionContainer from "../ui/question/inputQuestionContainer";
 import DragDropQuestionContainer from "../ui/question/dragDropQuestionContainer";
@@ -11,7 +11,6 @@ import SelectOneQuestionContainer from "../ui/question/selectOneQuestionContaine
 import CreateQuestionContainer from "../ui/question/createQuestionContainer";
 
 export default class QuestionSceneController {
-
     private _masterSceneController: MasterSceneController;
     private _questionView: QuestionViewScene;
 
@@ -39,27 +38,31 @@ export default class QuestionSceneController {
                 gameController.masterSceneController.runScene(SceneKeys.QUESTION_VIEW_SCENE_KEY);
             }
         } else {
-            gameController.gameStateManager.user.newChapter = false
+            gameController.gameStateManager.user.newChapter = false;
             gameController.chapterManager.updateChapters().then((chapters: ChapterType[]) => {
-                // gameController.chatSceneController.openTextChatView(chapters.find(chapter => chapter.order_position == gameController.gameStateManager.user.chapterNumber).material, () => {
-                gameController.chatSceneController.openChapterTextView(chapters.find(chapter => chapter.order_position == gameController.gameStateManager.user.chapterNumber).material, () => {
-                    gameController.chatSceneController.removeTextChatView();
-                    if (this._masterSceneController.isSceneSleeping(SceneKeys.QUESTION_VIEW_SCENE_KEY)) {
-                        this._masterSceneController.wakeScene(SceneKeys.QUESTION_VIEW_SCENE_KEY);
-                    } else {
-                        //create a new question view
-                        this._questionView = new QuestionViewScene();
-                        //add question view to the scene
-                        this._masterSceneController.addScene(SceneKeys.QUESTION_VIEW_SCENE_KEY, this._questionView)
-                        //launch the question view
-                        this._masterSceneController.runScene(SceneKeys.QUESTION_VIEW_SCENE_KEY);
-                    }
-                })
+                gameController.chatSceneController.openChapterTextView(
+                    chapters.find(
+                        (chapter) => chapter.order_position == gameController.gameStateManager.user.chapterNumber,
+                    ).material,
+                    () => {
+                        gameController.chatSceneController.removeTextChatView();
+                        if (this._masterSceneController.isSceneSleeping(SceneKeys.QUESTION_VIEW_SCENE_KEY)) {
+                            this._masterSceneController.wakeScene(SceneKeys.QUESTION_VIEW_SCENE_KEY);
+                        } else {
+                            //create a new question view
+                            this._questionView = new QuestionViewScene();
+                            //add question view to the scene
+                            this._masterSceneController.addScene(SceneKeys.QUESTION_VIEW_SCENE_KEY, this._questionView);
+                            //launch the question view
+                            this._masterSceneController.runScene(SceneKeys.QUESTION_VIEW_SCENE_KEY);
+                        }
+                    },
+                );
             });
         }
     }
-    public exitQuestionView(){
+    public exitQuestionView() {
         // this.removeAllQuestionScenes()
-        this._masterSceneController.removeScene(SceneKeys.QUESTION_VIEW_SCENE_KEY)
+        this._masterSceneController.removeScene(SceneKeys.QUESTION_VIEW_SCENE_KEY);
     }
 }
