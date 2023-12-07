@@ -91,7 +91,8 @@ export default class ChapterTextContainer extends ChatTextContainer {
     }
 
     private createTextQueue(text: string): TextBlock[] {
-        const regex = /###CODE###[\s\S]*?###\/CODE###|[\s\S]+?(?=###CODE###|$)/g;
+        // Use 'i' flag for case-insensitive matching
+        const regex = /###code###[\s\S]*?###\/code###|[\s\S]+?(?=###code###|$)/gi;
 
         const matches = text.matchAll(regex);
         const outputArray: TextBlock[] = [];
@@ -99,9 +100,10 @@ export default class ChapterTextContainer extends ChatTextContainer {
         for (const match of matches) {
             let block = match[0];
 
-            if (block.startsWith("###CODE###")) {
-                // Remove the ###code### and ###/code### markers
-                block = block.replace("###CODE###", "").replace("###/CODE###", "");
+            if (/###code###/i.test(block)) {
+                // Check for 'code' block in a case-insensitive manner
+                // Remove the ###code### and ###/code### markers, regardless of their case
+                block = block.replace(/###code###/i, "").replace(/###\/code###/i, "");
                 outputArray.push({ type: "code", content: block.trim() });
             } else {
                 outputArray.push({ type: "text", content: block.trim() });

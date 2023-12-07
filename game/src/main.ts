@@ -18,7 +18,7 @@ import ChapterManager from "./managers/chapterManager";
 import DocSceneController from "./controllers/docSceneController";
 import MenuSceneController from "./controllers/menuSceneController";
 import RoomSceneController from "./controllers/roomSceneController";
-import TaskManager from "./managers/taskManager";
+import TaskManager from "./managers/task_management/taskManager";
 import QuestionSceneController from "./controllers/questionSceneController";
 import { SceneKeys } from "./types/sceneKeys";
 import WorldSceneController from "./controllers/worldSceneController";
@@ -207,7 +207,7 @@ class GameController {
             const progLang: any = await this.apiHelper.getProgLang();
 
             if (data.state_data) {
-                this._gameStateManager.initialise(progLang,data.state_data);
+                this._gameStateManager.initialise(progLang, data.state_data);
             }
             if (userData) {
                 this.user = new User(userData);
@@ -251,8 +251,8 @@ class GameController {
                 // Fit to window
                 // width: window.innerWidth,
                 // height: window.innerHeight,
-                // mode: Phaser.Scale.FIT,
-                mode: Phaser.Scale.RESIZE,
+                mode: Phaser.Scale.FIT,
+                // mode: Phaser.Scale.RESIZE,
                 parent: "game",
                 width: this.SIZE_WIDTH_SCREEN,
                 height: this.SIZE_HEIGHT_SCREEN,
