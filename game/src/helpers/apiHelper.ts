@@ -125,7 +125,7 @@ export default class ApiHelper {
         });
     }
 
-    public getProgLang() {
+    public getProgLang(): Promise<string> {
         const url = this.apiUrl + "/curriculums/me/prog-lang";
         return new Promise((resolve, reject) => {
             fetch(url, { method: "GET", credentials: "include" })

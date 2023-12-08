@@ -46,7 +46,7 @@ export class GameState {
         masteryProbability: number; // Initial probability of mastery
     };
 
-    initialiseDefault() {
+    initialiseDefault(progLang: SupportedLanguages) {
         this.gameFinished = false;
         this.room = {
             id: "hangar",
@@ -82,7 +82,7 @@ export class GameState {
         };
         this.curriculum = {
             maxChapterNumber: 1,
-            progLang: SupportedLanguages.PHP,
+            progLang: progLang,
         };
         this.bkt = {
             guessProbability: 0.3, // Probability of guessing
@@ -93,8 +93,10 @@ export class GameState {
     }
 
     initialise(progLang: SupportedLanguages, existingGameState?: GameState) {
-        this.initialiseDefault();
-        if (!existingGameState) return;
+        this.initialiseDefault(progLang);
+        if (!existingGameState) {
+            return;
+        }
 
         this.gameFinished = existingGameState.gameFinished ?? this.gameFinished;
         this.room = { ...this.room, ...existingGameState.room };

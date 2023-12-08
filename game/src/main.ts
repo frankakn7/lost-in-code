@@ -217,6 +217,8 @@ class GameController {
 
             if (data.state_data) {
                 this._gameStateManager.initialise(progLang, data.state_data);
+            } else if (progLang) {
+                this.gameStateManager.initialise(progLang);
             }
             if (userData) {
                 this.user = new User(userData);

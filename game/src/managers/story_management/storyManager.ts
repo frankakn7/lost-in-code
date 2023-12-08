@@ -3,19 +3,19 @@ import ChatFlow from "../../classes/chat/chatFlow";
 import storyJson from "../../assets/story-new.json";
 import { ChatFlowNode } from "../../classes/chat/chatFlowNode";
 import { json } from "express";
-import {gameController} from "../../main";
-
+import { gameController } from "../../main";
+import ApiHelper from "../../helpers/apiHelper";
 
 /**
  * Story manager, handles the story flow, loading from json, saving to game state,
  * reconstructing the chat flow tree from json, etc
  */
 export default class StoryManager {
-    private _storyEvents: {[room: string]: Map<string,ChatFlow>} = {}; // Stores ChatFlow objects for each room and event.
+    private _storyEvents: { [room: string]: Map<string, ChatFlow> } = {}; // Stores ChatFlow objects for each room and event.
 
-    public initialiseStoryEvents(){
+    public initialiseStoryEvents() {
         // Iterate over each 'room' in the 'storyJson' object.
-        for(let room in storyJson) {
+        for (let room in storyJson) {
             // If the '_storyEvents' map does not have an entry for the current 'room',
             // create a new entry with an empty Map to store ChatFlow objects.
             if (!(room in this._storyEvents)) this._storyEvents[room] = new Map<string, ChatFlow>();
@@ -33,15 +33,12 @@ export default class StoryManager {
                 // If the 'i' key is present in the 'storyJson[room]', create a new ChatFlow object ('cf').
                 // This involves reconstructing the ChatNode tree recursively for the specified 'room' and 'i'.
                 if (i.toString() in storyJson[room]) {
-                    let cf : ChatFlow = new ChatFlow(this.reconstructChatNodeTreeRecursively(
-                        room,
-                        storyJson,
-                        i.toString()
-                    ));
+                    let cf: ChatFlow = new ChatFlow(
+                        this.reconstructChatNodeTreeRecursively(room, storyJson, i.toString()),
+                    );
 
                     this._storyEvents[room].set(i.toString(), cf);
-                }
-                else break;
+                } else break;
             }
         }
     }
@@ -59,7 +56,6 @@ export default class StoryManager {
         // Check if the provided 'eventId' is a valid key in 'storyJson[roomId]'.
         // If it is a valid key, the event is available.
         return !!storyJson[roomId][eventId];
-
     }
 
     /**
@@ -81,26 +77,30 @@ export default class StoryManager {
      * @param {string} nodeId - The ID of the node for which to reconstruct the chat node tree.
      * @returns {ChatFlowNode} The root node of the reconstructed chat node tree.
      */
-    public reconstructChatNodeTreeRecursively(room : string, json : JSON, nodeId: string) {
+    public reconstructChatNodeTreeRecursively(room: string, json: JSON, nodeId: string) {
         // Create an empty Map to store choices and their respective child nodes.
         let choices = new Map();
 
         // Check if the "choices" key exists in the JSON data for the given room and nodeId.
         // If it exists, process each choice recursively to reconstruct the child nodes.
         if ("choices" in json[room][nodeId]) {
-            json[room][nodeId]["choices"].forEach(c => {
-                let childNode : ChatFlowNode = this.reconstructChatNodeTreeRecursively(room, json, c);
+            json[room][nodeId]["choices"].forEach((c) => {
+                let childNode: ChatFlowNode = this.reconstructChatNodeTreeRecursively(room, json, c);
                 choices.set(childNode.optionText, childNode);
             });
         }
 
         // Create a new ChatFlowNode object for the current room and nodeId.
         // This node will include the optionText, text, and the choices Map created above.
-        let newNode : ChatFlowNode = {
+        let newNode: ChatFlowNode = {
             optionText: json[room][nodeId]["optionText"],
-            text: json[room][nodeId]["text"].replace("astronaut", "astronaut " + gameController.gameStateManager.user.username).replace("Astronaut", "Astronaut " + gameController.gameStateManager.user.username),
-            choices: choices
-        }
+            text: json[room][nodeId]["text"]
+                .replace(/php/gi, gameController.gameStateManager.curriculum.progLang)
+                .replace(/astronaut/gi, (match) => {
+                    return match + " " + gameController.gameStateManager.user.username;
+                }),
+            choices: choices,
+        };
 
         return newNode;
     }
@@ -126,7 +126,7 @@ export default class StoryManager {
      * Appends new text entries to the existing text history.
      * @param {string[][]} newTexts - An array of text entries to be added to the text history.
      */
-    public addTextHistory(newTexts: string[][]){
+    public addTextHistory(newTexts: string[][]) {
         gameController.gameStateManager.story.history = gameController.gameStateManager.story.history.concat(newTexts);
     }
 
