@@ -9,6 +9,8 @@ export const load = (async ({ fetch }: any) => {
             const data = await response.json();
             if (!data.user) {
                 throw new Error('User not logged in');
+            }else if(data.user.role != "ADMIN"){
+                throw new Error('Access Forbidden')
             }
             // If user is logged in, return the props you need for your component
             return { props: { user: data.user } };
@@ -16,7 +18,7 @@ export const load = (async ({ fetch }: any) => {
             throw new Error('Response not 200');
         }
     } catch (error) {
-        console.log("User not logged in");
+        console.log("User not logged in: "+error);
         throw redirect(307, '/login');
         return {}
     }
