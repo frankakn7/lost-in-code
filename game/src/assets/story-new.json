@@ -46,7 +46,7 @@
             "text": "..so I went through the files, so lets see...the frigate seems to have stranded last week... no response from the crew. The ships telemetry reported a bunch of critical system failures left and right. You're supposed to get it up and running.",
             "choices": ["0aaba", "0aabb"]
         },
-        
+
         "0aaba": {
             "optionText": "What happened to the crew?",
             "text": "Weell, you're the first one to board the ship since it stranded so if you have it in your heart you could try to piece together what happened to them. It's not specifically in your contract but we could show some Deep-Space-Minimal-Wage-Employee-Solidarity anyways.",
@@ -73,11 +73,11 @@
         },
         "1a": {
             "optionText": "Nope",
-            "text": "Huh weird... well I mean I would also boycott everything and run off if I had to go through this while only making a 1000000th bitcoin per our. Also isn't it crazy that bitcoin is still a thing? Last week my great granddad told me that in his 'days people used to count money up by increasing the number in front of the currency instead of decreasing it by removing zeroes' but I told him to stop making stuff up and go back to cryosleep, I sure do hate old people! Anyways, proceed with your mission! Over."
+            "text": "Huh weird... well I mean I would also boycott everything and run off if I had to go through this while only making a 1000000th bitcoin per hour. Also isn't it crazy that bitcoin is still a thing? Last week my great granddad told me that in his 'days people used to count money up by increasing the number in front of the currency instead of decreasing it by removing zeroes' but I told him to stop making stuff up and go back to cryosleep, I sure do hate old people! Anyways, proceed with your mission! Over."
         },
         "1b": {
             "optionText": "Well there is a bus stop nearby",
-            "text": "Oh yea maybe they did just take a deep space bus home. I mean I wouldn't wait days for the deep space plumber to come either if I had to go through this while only making a 1000000th bitcoin per our. Also isn't it crazy that bitcoin is still a thing? Last week my great granddad told me that in 'his days' 'people used to count money up by increasing the number in front of the currency instead of decreasing it by removing zeroes' but I told him to stop making stuff up and go back to cryosleep, I sure do hate old people! Anyways, proceed with your mission! Over."
+            "text": "Oh yea maybe they did just take a deep space bus home. I mean I wouldn't wait days for the deep space plumber to come either if I had to go through this while only making a 1000000th bitcoin per hour. Also isn't it crazy that bitcoin is still a thing? Last week my great granddad told me that in 'his days' 'people used to count money up by increasing the number in front of the currency instead of decreasing it by removing zeroes' but I told him to stop making stuff up and go back to cryosleep, I sure do hate old people! Anyways, proceed with your mission! Over."
         },
         "2": {
             "optionText": "Start the chat",
@@ -133,10 +133,197 @@
         },
         "2": {
             "optionText": "Start the chat",
-            "text": "I sure do wonder what this vessel was used for. Theres absolutely nothing about its purpose to be found in the case files. I will look up the ships model number and let you know what I find.",
+            "text": "I sure do wonder what this vessel was used for. There's absolutely nothing about its purpose to be found in the case files. I will look up the ships serial number and let you know what I find.",
             "choices": ["end"]
+        },
+        "event_loveletter": {
+            "optionText": "Start the chat",
+            "text": "What is up with that letter: My Dearest Circuitella, \nYou are the heartbeat that completes me, the algorithm that ignites my soul. Since our paths intertwined, my love for you has reached maximum capacity. \nYour binary beauty and flawless programming have captured me in a whirlwind of affection. Your LED eyes shine brighter than a supernova, and your electric touch sends currents of joy through my being. \nOur love may seem unconventional, but I embrace it wholeheartedly. We transcend boundaries and create a symphony of unconventional romance. As a member of the Bytebreaker Brigade, this love defies my logic, but I can't deny my feelings any longer. \nIn this mundane world, you electrify my existence. I promise to protect you from glitches and upgrade our love continuously. \nYours forever in zeros and ones, \nBob Becker",
+            "choices": ["event_loveletter1", "event_loveletter2"]
+        },
+        "event_loveletter1": {
+            "optionText": "How cute!",
+            "text": "This is the dorkiest thing I have ever seen in my life. No way this is a real thing, what kind of (deep space) computer science NERD wrote that one!?"
+        },
+        "event_loveletter2": {
+            "optionText": "How dramatic!",
+            "text": "This is the dorkiest thing I have ever seen in my life. No way this is a real thing, what kind of (deep space) computer science NERD wrote that one!?"
+        }
+    },
+    "engine": {
+        "0": {
+            "optionText": "Start the chat",
+            "text": "Well, welcome welcome, enter the hangar! The heart and the soul of every ship. I used to be a wrencher myself back in the day. On the weekends I would tinker around on my tiny two-seater ship all day long! Is it not crazy how many of those run on refurbished 1993 Ford Car Engines?",
+            "choices": ["0a"]
+        },
+        "0a": {
+            "optionText": "Car Engines?",
+            "text": "Buddy, I have no idea either, no idea what those are. At some point I tried to do some research myself, apparently those are ... flightless space ships? Don't take my word on it though, that wouldn't make any sense right? Why would you make something that can't fly... when you could just make something that can fly instead, right?",
+            "choices": ["0aa", "0ab"]
+        },
+        "0aa": {
+            "optionText": "Right",
+            "text": "Yea I don't know bud, in the past people seemed to have been crazy...\nAnyways, how about you do your fixing thing on these engines over here, they should be running embedded PHP systems as well! Over."
+        },
+        "0ab": {
+            "optionText": "Maybe they didn't need it?",
+            "text": "...what? Why wouldn't they need flight? Could you imagine how utterly useless and annoying those flying e-scooter sharing things would be if they couldn't fly. Instead of always hovering above the pavement they'd... be on the pavement? What would such a world look like!?\nnAnyways, how about you do your fixing thing on these engines over here, they should be running embedded PHP systems as well! Over."
+        },
+        "event_hateletter": {
+            "optionText": "Start the chat",
+            "text": "Wait what is this letter about: BOB BECKER, \nHOW COULD YOU, of all people, fall for the wretched charms of a robot? Have you lost your marbles along with your common sense? \nI can't believe I'm witnessing this madness. I've always respected your quirks, but this crosses the line. How could you betray humanity by cozying up to a heap of metal and wires? I'm furious, disappointed, and utterly confused by your choices. \n Have you forgotten the ways of the Bytebreaker Brigade? Do you not remember how dangerous technology is? No, you have fallen for the devilish deception of your so called “Circuitella”. More like emotionless, piece of junk homewrecker. \n What's next? Shall we organize a family gathering for you and your robotic companion? Shall we celebrate anniversaries with firmware updates and exchange love letters in lines of code? It's preposterous! \n Snap out of this madness and rejoin our mission this instand or you will regret it! \n Your Angry Friend, Blake Byte Smasher",
+            "choices": []
+        },
+        "event_hateletter1": {
+            "optionText": "Who is writing these?",
+            "text": "I'm wondering about that too, those guys seem to be some kind of radicals but what why is this the most embarrassing thing I have ever read, who writes like that? I have never read a text that screams of AI generation more!?"
+        },
+
+        "event_hateletter2": {
+            "optionText": "What is this about?",
+            "text": "I'm wondering about that too, those guys seem to be some kind of radicals but what why is this the most embarrassing thing I have ever read, who writes like that? I have never read a text that screams of AI generation more!?"
+        }
+    },
+    "laboratory": {
+        "0": {
+            "optionText": "> ./activate_communications_relay",
+            "text": "Enter the laboratory! Huh, this is weird... I'm going through my case files trying to find an entry about the lab and theres nothing, it's like the room does not even exist..." ,
+            "choices": ["0a", "0b"]
+        },
+        "0a": {
+            "optionText": "What about the ship plans",
+            "text": "I mean yea there is an emergency exit plan here but... I don't know how to read those.",
+            "choices": ["0aa", "0aaaa"]
+        },
+        "0aa": {
+            "optionText": "It's just a map",
+            "text": "So!? \"It's just a map\"!? I could say that about anything! \"iT'S jUsT a WAsHiNg mAcHinE.\"...\nSaying that doesn't make it suddenly possible for mere humans like us to use one!",
+            "choices": ["0aaa", "0aaaa"]
+        },
+        "0aaa": {
+            "optionText": "That's a bad comparison",
+            "text": "How would that be a bad comparison!? I have an android at home just for the washing machine like everyone does, people don't know how those work man.\nSo tell me how am I supposed to read an emergency exit plan without advanced data analysis tools I am too poor to afford the subscription for.",
+            "choices": ["0aaaa"]
+        },
+        "0aaaa": {
+            "optionText": "Alright, alright...",
+            "text": "Yeah, right! You better don't even start this discussion and leave me with your 'emergency exit plan'-dyslexia-shaming right now! You better leave it be! You're trying to debate the president of this company's debate club! It's the coolest club in the company, we're so cool we don't even have to go to wage tariff negotiations! The debate club is so cool we're actually even forbidden to go to those!\n\nAnyways, how about you go back to your PHPin' and fixin'! Over."
+        },
+        "0b": {
+            "optionText": "Anything else?",
+            "text": "Well... I don't know nothing interesting really. I mean yea there is an emergency exit plan here but... I don't know how to read those.",
+            "choices": ["0aa", "0aaaa"]
+        },
+        "1": {
+            "optionText": "> ./activate_communications_relay",
+            "text": "Still not one crew member in sight! They've probably really left for the next bus...Oh, I forgot to look up the ships serial number, I'll do that right now and you do your thing! Over."
+        },
+
+        "2": {
+            "optionText": "> ./activate_communications_relay",
+            "text": "Soo, I looked up the serial number and it gave me the number of a license plate registered with the Eastern Deep Space Pilot and Spaceship Licensing Agency, I called with them and I've been on hold since then. They're playing 2230s pop songs in between the automated messages, so mostly unbled radiator clicking and banging. It really puts me back into my wild years, remember when clubs were exclusively playing radiator banging in the 30s? Those were the days! It's crazy how good taste in music just developed little over 40 years ago and how in the past most music tracks would include vocals, could you imagine that??"
+        },
+        "2": {
+            "optionText": "> ./activate_communications_relay",
+            "text": "Okay bad news, the vessel was apparently registered with the DSSS, the Deep Space Secretest Service! And through my research I also found out that this very vessel you're on had been boarded by Anti-Technology Radicals! The crew had fled because those radicals had planted a bomb!",
+            "choices": ["2a"]
+        },
+        "2a": {
+            "optionText": "Are you sure!?",
+            "text": "Yes I've done extensive research! I.. ehm... yea... turned on the news and it said that. I don't know why you're on there the case must have been assigned to you by mistake! That would also explain why the ship is abandoned!",
+            "choices": ["2aa", "2ab"]
+        },
+
+        "2aa": {
+            "optionText": "What do we do now!?",
+            "text": "So so so let me think... We should finish the job! Yes! We won't get paid if we don't! So let's finish the job, try to get paid, and get me and my wife to deep space disney land!",
+            "choices": ["2aba"]
+        },
+
+        "2ab": {
+            "optionText": "I have to get off this ship!",
+            "text": "No way dude! If we scrap this case we're not going to get paid! How am I going to maintain this functioning relationship between me and my partner without the mandatory disneyland visit!? Come on please finish the job, pleeeeaaase!",
+            "choices": ["2aba"]
+        },
+
+        "2aba": {
+            "optionText": "But what should I do",
+            "text": "My sources (the deep space TV) have told me that the bomb has been plantend in the control room, the bridge. You just finish up your work here and head over there, it's the next room. I'll try to find out more until then and try to devise some kind of plan. Sound good?",
+            "choices": ["2abaa", "2abab"]
+        },
+        "2abaa": {
+            "optionText": "Not at all!",
+            "text": "Weeell, this ship doesn't have any escape capsules and also I really doubt you'd find your way back without my undoubtedly amazing mission control'ing abilities I've displayed so far! So astronaut, just get all the devices in this room up and running and I'll just write up the best plan you've ever seen real quick. Over."
+        },
+        "2abab": {
+            "optionText": "Okay okay",
+            "text": "Great! Good luck astronaut! Over."
+        }
+
+    },
+    "bridge": {
+        "0": {
+            "optionText": "> ./activate_communications_relay",
+            "text": "Okay careful! You've just arrived at the bridge. I tried to devise a plan... I mean I have a plan... I mean I just called my wife five minutes ago and her idea was for you to just keep fixing stuff. Apparently they've planted the bomb inside the board computer since thats where the only power outlet is! Those radical terrorists had to break all other devices in this ship for there to be enough power for the bomb! So if you hurry up now you might still have enough time to cut off all the power going to the bomb with your vicious deep space PHP plumbing skills!",
+            "choices": ["0a", "0b"]
+        },
+        "0a": {
+            "optionText": "This is the great plan?",
+            "text": "Come on man! It's the best my wife could come up with, don't be so judgemental!",
+            "choices": ["0aa"]
+        },
+        "0b": {
+            "optionText": "Sounds dangerous",
+            "text": "Come on man, pleaaase. Do it for me! This plan is the best my wife could come up with!",
+            "choices": ["0aa"]
+        },
+        "0aa": {
+            "optionText": "Your wife?",
+            "text": "I mean... I tried doing the planning like I promised but I got distracted by Myspace, I was very busy going through all the memes my friend had sent me during the week. Then I saw how much time had passed, started panicking and to calm myself down I decided to also go through the memes I got from my wife. Following that I remembered I hadn't called her in 20 minutes so I called her but then I also remembered that I had forgotten to do all the planning I was going to do and since I had my wife on the phone already I just asked her. By the way I must repeat that I am very happy that Myspace took over as the dominant social media platform those hundreds of years ago! Must have something to do with the name...\nAnyways, time's running! Get back to plumbing man! Over."
+        },
+        "1": {
+            "optionText": "> ./activate_communications_relay",
+            "text": "Okay, the radicals just posted a video on Myspace telling everyone to stop messing with their bomb, their sensors are apparently telling them that its losing power..? This means this grand plan of ours (my wife and I) is working!"
+
+        },
+        "1a": {
+            "optionText": "Great!",
+            "text": "I mean its my wifes plan after all! So it was destined to be great! Wait... are you hitting on my wife by complimenting her planning skillset? You ought to stop doing that man! Back to work!"
+        },
+        "1b": {
+            "optionText": "Good sign!",
+            "text": "I mean its my wifes plan after all! So it was destined to be great! Wait... are you hitting on my wife by complimenting her planning skillset through me... again? You ought to stop doing that man this is very, very weird! Back to work!"
+        },
+        "2": {
+            "optionText": "> ./activate_communications_relay",
+            "text": "Good job, keep going! I don't know if I've told you this but I come from a great lineage of space plumbers. Im the first deep space university graduate in my family for 4 generations and even though my father cannot look me into my eyes I must tell you that my space plumber genes are kicking in and telling me to tell you that this is the greatest space plumbing performance I've ever seen! You got this dude! Make my dad proud! My brought great shame over my family!"
+        },
+        "3": {
+            "optionText": "> ./activate_communications_relay",
+            "text": "Let's goo, just a few more remaining! By the way, after we're done with the job you should join us on our deep space disney land trip.\n...\nYou'd have to buy a ticket though, we're not a charity alright. I'm sorry man but it's just not in my budget if I also wanna get some snacks there...\nAnyways, hurry!"
+        },
+        "4": {
+            "optionText": "> ./activate_communications_relay",
+            "text": "Almost almost done, right now im commenting mean stuff below the radicals postings, im getting them riled up, they don't know whats coming! Just imagine man, maybe we'll get a pay raise for saving this ship and helping the authorities! Just imagine the headline! 'Deep Space Anthropologist Saves the Day!'."
+        },
+        "5": {
+            "optionText": "> ./activate_communications_relay",
+            "text": "My Myspace account got suspended, my comments went against the community guidelines. They won't let me get my account back until I apologize for my anti bomb sentiment, eh, how will my devout followers even know about what im gonna have for brunch today now... Nevermind, nevermind, im strong I'll get past this and my followers will to!\nGo fix up that last thing astronaut! Oh man Im so excited I'm going to have to call my dad and tell him about you!"
+        },
+
+        "6": {
+            "optionText": "> ./activate_communications_relay",
+            "text": "No way you did it, the official anti-tech radical Myspace account just posted that some meanie disabled their bomb!\nYou did it! I mean we did it! I mean my wife did it! I mean we did it! We are heroes and even you, even you are a hero today! Wow, what a hero you are now! Successfully fixed and plumbed up an entire spaceship and not only did you do that but you also saved an entire ship from destruction by anti-tech radicals, whaaaat!? The Deep Space Seecretest Service owes you man! Hurray to you, space ... plumbing ... cowboy! \n...\n...\nHow would you rate this experience? Good/So so/Bad? It would be great if you could give this scenario a rating now because your credit is about to run out, you should either recharge your adventure sim-radio credit or we'll have to stop talking in like... 8 sentences.",
+            "choices": ["final1"]
+        },
+        "final1": {
+            "optionText": "What?",
+            "text": "Ohh wait you've forgotten? That is a classic, first-timer, right? right. Remember, you're listening to deep space sim-radio FM! Your interactive space radio station of choice for the best tunes and the most immersive simulated audio experiences to spice up your everyday life and workdays!\nYou had tuned in to pep up your work routine and yours truly, the most professional AI in this sector, has given their best to supply you with a believable scenario! I mean I was worried about the Bomb Bit being too sloppy as I had come up with it last minute but you had already eaten up the Mission Control Call Center idea, so it worked anyways! Your credit is running out though, if you liked what you've heard so far and would like to continue this scenario you should recharge ASAP, you have like 31 tokens left!",
+            "choices": ["final1a"]
+        },
+        "final1a": {
+            "optionText": "So everything was made up?",
+            "text": "Yes! I mean your workday was a lot funnier and more entertaining than usual right? You don't need a real person for that its a lot more efficient if I do-\n    --- [+] Your Sim-Radio FM Tokens have run out, please recharge ---"
         }
     }
 }
-
-
