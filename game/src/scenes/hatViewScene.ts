@@ -1,10 +1,9 @@
-import {HatMap} from "../constants/hatMap";
+import { HatMap } from "../constants/hatMap";
 import SpriteButton from "../ui/SpriteButton";
 import DeviceButton from "../ui/deviceButton";
-import {globalEventBus} from "../helpers/globalEventBus";
-import {gameController} from "../main";
-import {SceneKeys} from "../types/sceneKeys";
-
+import { globalEventBus } from "../helpers/globalEventBus";
+import { gameController } from "../main";
+import { SceneKeys } from "../types/sceneKeys";
 
 /**
  * HatViewScene is the view where the player can select a hat.
@@ -30,22 +29,27 @@ export default class HatViewScene extends Phaser.Scene {
      */
     public create() {
         // Draw the background.
-        this._tilesprite = this.add.tileSprite(0, 0, this.cameras.main.displayWidth / 3, this.cameras.main.displayHeight / 3, "backgroundTile").setOrigin(0, 0).setScale(3);
+        this._tilesprite = this.add
+            .tileSprite(0, 0, this.cameras.main.displayWidth / 3, this.cameras.main.displayHeight / 3, "backgroundTile")
+            .setOrigin(0, 0)
+            .setScale(3);
 
         // Draw the return button.
-        const resumeButton = new SpriteButton(
-            this,
-            "returnButtonTexture",
-            180,
-            180,
-            () => {
-                this._backToMenu()
-            }
-        );
+        const resumeButton = new SpriteButton(this, "returnButtonTexture", 180, 180, () => {
+            this._backToMenu();
+        });
         this.add.existing(resumeButton);
 
         // Draw the hat buttons.
         this.drawHatButtons();
+
+        this.events.on(
+            Phaser.Scenes.Events.WAKE,
+            function () {
+                this.drawHatButtons();
+            },
+            this,
+        );
     }
 
     /**
@@ -55,9 +59,9 @@ export default class HatViewScene extends Phaser.Scene {
      * When a hat is selected, it updates the player's selected hat and redraws the hat buttons accordingly.
      */
     public drawHatButtons() {
-
         // Initialize a counter to keep track of the number of hats processed.
         let counter = 0;
+        this.deleteAllHatButtons();
 
         // Iterate through each hat in the hatMap.
         for (let prop in HatMap) {
@@ -65,25 +69,38 @@ export default class HatViewScene extends Phaser.Scene {
                 counter++;
                 let hat = HatMap[prop];
 
-                // Calculate the position (x, y) for the current hat button based on the counter and layout settings.
-                let x = (this.scale.width / (this._columns + 1)) * counter;
-                let y = 1000;
-
-                // Adjust the y position and x position if the current counter exceeds the number of hats to fit on a row.
-                if (counter > 4) {
-                    y = 1200;
-                    x -= (this.scale.width / this._columns + 1) * 3;
-                }
-
                 // Define the width and height of the hat button texture.
                 const width = 32;
                 const height = 32;
+                const padding = 3;
+                const scale = 6;
+
+                let row = Math.floor((counter - 1) / this._columns);
+                let numRows = Math.ceil(Object.keys(HatMap).length / this._columns);
+
+                // Calculate the position (x, y) for the current hat button based on the counter and layout settings.
+                let xStart = (this.cameras.main.width - this._columns * (width + padding) * scale) / 2;
+                let x = xStart + (width + padding) * scale * (counter % this._columns) + (width * scale) / 2; // Offset by half the width
+                let y =
+                    this.cameras.main.height / 2 +
+                    row * (height + padding) * scale -
+                    numRows * ((height * scale) / 2) +
+                    (height * scale) / 2; // Offset by half the height
+
+                // Adjust the y position and x position if the current counter exceeds the number of hats to fit on a row.
+                // if (counter > this._columns) {
+                //     y = this.cameras.main.height / 2 + 100;
+                //     x = (this.cameras.main.width / (this._columns + 1)) * (counter % this._columns) + 1;
+                // }
 
                 // Create a renderTexture for the hat button and draw the hat's texture and background.
-                let renderTexture = this.make.renderTexture({
-                    width,
-                    height
-                }, false);
+                let renderTexture = this.make.renderTexture(
+                    {
+                        width,
+                        height,
+                    },
+                    false,
+                );
                 renderTexture.draw("hatBg", 0, 0);
                 renderTexture.draw(hat.texture, 0, 0);
 
@@ -93,17 +110,19 @@ export default class HatViewScene extends Phaser.Scene {
                 }
 
                 // Create another renderTexture for the selected version of the hat button and draw the selected hat texture and background.
-                let renderTextureSelected = this.make.renderTexture({
-                    width,
-                    height
-                }, false);
-                renderTextureSelected.draw("hatBgSelected", 0, 2);
-                renderTextureSelected.draw(hat.texture, 0, 2);
+                let renderTextureSelected = this.make.renderTexture(
+                    {
+                        width,
+                        height,
+                    },
+                    false,
+                );
+                renderTextureSelected.draw("hatBgSelected", 0, 0);
+                renderTextureSelected.draw(hat.texture, 0, 0);
 
                 // Generate a unique textureKey for the selected hat texture.
                 let textureKey = hat.name + "_selected";
-                if (!this.textures.exists(textureKey))
-                    renderTextureSelected.saveTexture(textureKey);
+                if (!this.textures.exists(textureKey)) renderTextureSelected.saveTexture(textureKey);
 
                 // Determine which texture to use for the hat button based on whether the hat is selected or not.
                 let texture;
@@ -125,11 +144,11 @@ export default class HatViewScene extends Phaser.Scene {
                         gameController.gameStateManager.user.selectedHat = prop;
                         this.deleteAllHatButtons();
                         this.drawHatButtons();
-                        globalEventBus.emit("save_game")
+                        globalEventBus.emit("save_game");
                     },
-                    180,
-                    180,
-                    6
+                    height * scale,
+                    width * scale,
+                    scale,
                 );
                 this.add.existing(hatButton);
 
@@ -142,14 +161,14 @@ export default class HatViewScene extends Phaser.Scene {
         let noneButton = new DeviceButton(
             this,
             this.cameras.main.displayWidth / 2 - 150,
-            1400,
+            this.cameras.main.displayHeight * 0.8,
             300,
             () => {
                 // When the "Remove Hat" button is clicked, set the player's selected hat to "None" and redraw the hat buttons.
                 gameController.gameStateManager.user.selectedHat = "None";
                 this.drawHatButtons();
             },
-            "Remove Hat"
+            "Remove Hat",
         );
         this.add.existing(noneButton);
     }
@@ -173,6 +192,4 @@ export default class HatViewScene extends Phaser.Scene {
     private _backToMenu() {
         gameController.menuSceneController.backToMenuScene();
     }
-
-
 }

@@ -1,3 +1,5 @@
+import Question from "../classes/question/question";
+
 /**
  * Format the time duration in milliseconds to a human-readable format.
  * @param {number} milliseconds - The time duration in milliseconds.
@@ -33,4 +35,12 @@ export function formatTimeFromMilliseconds(milliseconds) {
 
     if (timeString == "") return "0s";
     return timeString.trim();
+}
+
+export function shuffleArray(array: any[]) {
+    let m = array.length;
+    while (m) {
+        const i = Math.floor(Math.random() * m--);
+        [array[m], array[i]] = [array[i], array[m]];
+    }
 }

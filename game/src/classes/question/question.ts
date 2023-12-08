@@ -1,5 +1,6 @@
 import { QuestionType } from "../../types/questionType";
 import { QuestionElement } from "./questionElement";
+import { shuffleArray } from "../../helpers/helperFunctions";
 
 /**
  * A class representing a question
@@ -34,7 +35,15 @@ export default class Question {
      */
     difficulty: number;
 
-    constructor(id: number, questionText: string, hint: string, type: QuestionType, elements: QuestionElement[], difficulty: number, codeText?: string) {
+    constructor(
+        id: number,
+        questionText: string,
+        hint: string,
+        type: QuestionType,
+        elements: QuestionElement[],
+        difficulty: number,
+        codeText?: string,
+    ) {
         this.id = id;
         this.question_text = questionText;
         this.hint = hint;

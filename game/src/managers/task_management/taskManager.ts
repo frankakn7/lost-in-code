@@ -5,6 +5,7 @@ import { gameController } from "../../main";
 import { GameEvents } from "../../types/gameEvents";
 import { debugHelper } from "../../helpers/debugHelper";
 import BayesianKnowledgeTracingManager from "./bayesianKnowledgeTracingManager";
+import { shuffleArray } from "../../helpers/helperFunctions";
 
 /**
  * Manages tasks and questions for the game.
@@ -53,20 +54,12 @@ export default class TaskManager {
         });
     }
 
-    private shuffleQuestions(questions: Question[]) {
-        let m = questions.length;
-        while (m) {
-            const i = Math.floor(Math.random() * m--);
-            [questions[m], questions[i]] = [questions[i], questions[m]];
-        }
-    }
-
     /**
      * Gets the next question based on bkt values and available questions
      */
     public getNextQuestion() {
-        this.shuffleQuestions(this.availableQuestions);
-        this.shuffleQuestions(this.answeredQuestions);
+        shuffleArray(this.availableQuestions);
+        shuffleArray(this.answeredQuestions);
 
         const availableQuestionsMap: { [key: number]: Question[] } = this.availableQuestions.reduce((map, question) => {
             if (!map[question.difficulty]) map[question.difficulty] = [];
@@ -91,8 +84,11 @@ export default class TaskManager {
 
         console.log(gameController.gameStateManager.bkt.masteryProbability);
 
-        const questionsAtNextDifficulty =
-            availableQuestionsMap[nextDifficulty] || answeredQuestionsMap[nextDifficulty] || [];
+        const questionsAtNextDifficulty = this.getQuestionsAtDifficulty(
+            nextDifficulty,
+            availableQuestionsMap,
+            answeredQuestionsMap,
+        );
         let nextQuestion = questionsAtNextDifficulty.length > 0 ? questionsAtNextDifficulty[0] : null;
 
         //If the next question is the same one again, pick a different one or a different difficulty
@@ -101,19 +97,36 @@ export default class TaskManager {
                 nextQuestion = questionsAtNextDifficulty[1];
             } else {
                 let otherDifficulties = availableDifficulties.filter((difficulty) => difficulty != nextDifficulty);
-                const otherDifficulty = this.bktManager.getNextQuestionDifficulty(availableDifficulties);
-                nextQuestion = questionsAtNextDifficulty.length > 0 ? questionsAtNextDifficulty[0] : null;
+                if (otherDifficulties.length > 0) {
+                    const otherDifficulty = this.bktManager.getNextQuestionDifficulty(otherDifficulties);
+                    const questionsAtOtherDifficulty = this.getQuestionsAtDifficulty(
+                        otherDifficulty,
+                        availableQuestionsMap,
+                        answeredQuestionsMap,
+                    );
+                    nextQuestion =
+                        questionsAtOtherDifficulty.length > 0 ? questionsAtOtherDifficulty[0] : this.currentQuestion;
+                } else {
+                    const questionsAtSameDifficulty = this.getQuestionsAtDifficulty(
+                        nextDifficulty,
+                        availableQuestionsMap,
+                        answeredQuestionsMap,
+                    );
+                    nextQuestion =
+                        questionsAtSameDifficulty.length > 0 ? questionsAtSameDifficulty[0] : this.currentQuestion;
+                }
             }
         }
         this.currentQuestion = nextQuestion;
         return nextQuestion;
     }
 
-    private shuffleArray(array: []) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
+    private getQuestionsAtDifficulty(
+        difficulty: number,
+        availableQuestionsMap: { [key: number]: Question[] },
+        answeredQuestionsMap: { [key: number]: Question[] },
+    ) {
+        return availableQuestionsMap[difficulty] || answeredQuestionsMap[difficulty] || [];
     }
 
     private checkNextChapter() {

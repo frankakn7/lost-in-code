@@ -15,6 +15,7 @@ import { SceneKeys } from "../types/sceneKeys";
 import { gameController } from "../main";
 import { GameEvents } from "../types/gameEvents";
 import { debugHelper } from "../helpers/debugHelper";
+import { shuffleArray } from "../helpers/helperFunctions";
 
 export default class QuestionViewScene extends Phaser.Scene {
     private currentQuestion: Question;
@@ -147,6 +148,7 @@ export default class QuestionViewScene extends Phaser.Scene {
             .setOrigin(0.5, 0);
         // gameController.questionSceneController.removeAllQuestionScenes();
         this.deleteCurrentQuestionContainer();
+        shuffleArray(this.currentQuestion.elements);
         switch (this.currentQuestion.type) {
             case QuestionType.CHOICE:
                 this._currentQuestionContainer = new ChoiceQuestionContainer(
