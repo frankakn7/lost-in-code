@@ -98,8 +98,10 @@ export default class AchievementManager {
     private _unlock(achievementKey) {
         if (gameController.gameStateManager.achievements.unlocked.includes(achievementKey)) return;
         let achievement = achievements[achievementKey];
-        globalEventBus.emit(GameEvents.BROADCAST_NEWS, achievement.text);
-        globalEventBus.emit(GameEvents.BROADCAST_ACHIEVEMENT, achievements[achievementKey]);
+        gameController.worldSceneController.queueWorldViewTask(() => {
+            // globalEventBus.emit(GameEvents.BROADCAST_NEWS, achievement.text);
+            globalEventBus.emit(GameEvents.BROADCAST_ACHIEVEMENT, achievements[achievementKey]);
+        });
 
         gameController.gameStateManager.achievements.unlocked.push(achievementKey);
         debugHelper.logString("earned achievement: " + achievementKey);

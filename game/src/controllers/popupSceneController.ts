@@ -5,12 +5,21 @@ import MasterSceneController from "./masterSceneController";
 
 export default class PopupSceneController {
     private _newsCounter: number = 0;
-    private _currentlyDisplayedNews: NewsPopupScene[] = [];
+    private _currentlyDisplayedNews: NewsPopupScene;
+
+    private _newsToDisplay: NewsPopupScene[] = [];
 
     private _masterSceneController: MasterSceneController;
 
+    private _runningDisplayNewsTimer: boolean = false;
+
     constructor(masterSceneController: MasterSceneController) {
         this._masterSceneController = masterSceneController;
+    }
+
+    public removeCurrentlyDisplayedNews() {
+        // this._currentlyDisplayedNews.kill();
+        this._currentlyDisplayedNews = null;
     }
 
     /**
@@ -21,7 +30,7 @@ export default class PopupSceneController {
     public broadcastNews(message: string, texture?: string) {
         // console.log("Broadcasting message! :" + message);
         let newsId = "newsPopup" + (this._newsCounter++).toString();
-        let newsPopup = new NewsPopupScene(newsId, message, 2500, texture);
+        let newsPopup = new NewsPopupScene(this, newsId, message, 2500, texture);
         this.addNewsPopupScene(newsId, newsPopup);
     }
 
@@ -41,14 +50,39 @@ export default class PopupSceneController {
      * @private
      */
     private addNewsPopupScene(newsId: string, newsPopup: NewsPopupScene) {
-        this._masterSceneController.addScene(newsId, newsPopup);
-        this._masterSceneController.runScene(newsId);
+        // this._masterSceneController.addScene(newsId, newsPopup);
+        // this._masterSceneController.runScene(newsId);
+        // console.log("### NEWS");
+        // console.log(this._currentlyDisplayedNews);
+        // if (this._currentlyDisplayedNews.length > 0) {
+        //     this._currentlyDisplayedNews.forEach((n) => {
+        //         // n.kill();
+        //     });
+        // }
+        // this._currentlyDisplayedNews.push(newsPopup);
 
-        if (this._currentlyDisplayedNews.length > 0) {
-            this._currentlyDisplayedNews.forEach((n) => {
-                n.kill();
-            });
+        this._masterSceneController.addScene(newsId, newsPopup);
+        this._newsToDisplay.push(newsPopup);
+        if (!this._runningDisplayNewsTimer) {
+            this.displayNews(6);
         }
-        this._currentlyDisplayedNews.push(newsPopup);
+    }
+
+    /**
+     * Displayes the news and uses a counter as preventative measure agains infinite loop
+     * @param counter
+     * @private
+     */
+    private displayNews(counter: number) {
+        console.log("Displaying news: " + counter);
+        if (this._newsToDisplay.length > 0) {
+            if (!this._currentlyDisplayedNews) {
+                this._currentlyDisplayedNews = this._newsToDisplay.pop();
+                this._masterSceneController.runScene(this._currentlyDisplayedNews.sceneId);
+                this.displayNews(6);
+            } else if (counter > 0) {
+                setTimeout(this.displayNews.bind(this, counter - 1), 500);
+            }
+        }
     }
 }
