@@ -57,12 +57,21 @@ class GameController {
 
     private _timestampSinceLastSaveOrReload = Date.now();
 
-    readonly SIZE_WIDTH_SCREEN = 375 * 2.5;
-    readonly SIZE_HEIGHT_SCREEN = 812 * 2.5;
-    readonly MAX_SIZE_WIDTH_SCREEN = 750 * 2;
-    readonly MAX_SIZE_HEIGHT_SCREEN = 1624 * 2;
-    readonly MIN_SIZE_WIDTH_SCREEN = 375 * 2;
-    readonly MIN_SIZE_HEIGHT_SCREEN = 812 * 2;
+    // readonly SIZE_WIDTH_SCREEN = 375 * 2.5;
+    // readonly SIZE_HEIGHT_SCREEN = 812 * 2.5;
+    // readonly MAX_SIZE_WIDTH_SCREEN = 750 * 2;
+    // readonly MAX_SIZE_HEIGHT_SCREEN = 1624 * 2;
+    // readonly MIN_SIZE_WIDTH_SCREEN = 375 * 2;
+    // readonly MIN_SIZE_HEIGHT_SCREEN = 812 * 2;
+    readonly WIDTH_RATIO = 3;
+    readonly HEIGHT_RATIO = 5;
+    readonly RATIO_PIXEL_MULTIPLIER = 350;
+    readonly SIZE_WIDTH_SCREEN = this.WIDTH_RATIO * this.RATIO_PIXEL_MULTIPLIER;
+    readonly SIZE_HEIGHT_SCREEN = this.HEIGHT_RATIO * this.RATIO_PIXEL_MULTIPLIER;
+    readonly MAX_SIZE_WIDTH_SCREEN = this.SIZE_WIDTH_SCREEN;
+    readonly MAX_SIZE_HEIGHT_SCREEN = this.SIZE_HEIGHT_SCREEN;
+    readonly MIN_SIZE_WIDTH_SCREEN = this.SIZE_WIDTH_SCREEN;
+    readonly MIN_SIZE_HEIGHT_SCREEN = this.SIZE_HEIGHT_SCREEN;
 
     public buttonStates: Record<string, boolean> = {
         leftPress: false,
@@ -233,8 +242,8 @@ class GameController {
     private configureGame() {
         this._gameConfig = {
             type: Phaser.WEBGL,
-            width: 375,
-            height: 812,
+            width: this.SIZE_WIDTH_SCREEN,
+            height: this.SIZE_HEIGHT_SCREEN,
             pixelArt: true,
             physics: {
                 default: "arcade",
@@ -253,22 +262,23 @@ class GameController {
                 // height: window.innerHeight,
                 mode: Phaser.Scale.FIT,
                 // mode: Phaser.Scale.RESIZE,
-                parent: "game",
-                width: this.SIZE_WIDTH_SCREEN,
-                height: this.SIZE_HEIGHT_SCREEN,
-                min: {
-                    width: this.MIN_SIZE_WIDTH_SCREEN,
-                    height: this.MIN_SIZE_HEIGHT_SCREEN,
-                },
-                max: {
-                    width: this.MAX_SIZE_WIDTH_SCREEN,
-                    height: this.MAX_SIZE_HEIGHT_SCREEN,
-                },
+                // parent: "game",
+                // width: this.SIZE_WIDTH_SCREEN * 2.5,
+                // height: this.SIZE_HEIGHT_SCREEN * 2.5,
+                // min: {
+                //     width: this.MIN_SIZE_WIDTH_SCREEN,
+                //     height: this.MIN_SIZE_HEIGHT_SCREEN,
+                // },
+                // max: {
+                //     width: this.MAX_SIZE_WIDTH_SCREEN,
+                //     height: this.MAX_SIZE_HEIGHT_SCREEN,
+                // },
                 // Center vertically and horizontally
                 // autoCenter: Phaser.Scale.CENTER_BOTH,
                 // autoRound: true
+                // zoom: 2,
+                autoCenter: Center.CENTER_BOTH,
             },
-            autoCenter: Center.CENTER_BOTH,
             // scene: new WorldViewScene(),
             // scene: new LoginScene(),
             scene: [LoginScene, PreloadScene],
