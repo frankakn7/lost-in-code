@@ -85,9 +85,9 @@ export class GameState {
             progLang: progLang,
         };
         this.bkt = {
-            guessProbability: 0.3, // Probability of guessing
-            slipProbability: 0.2, // Probability of slipping
-            transitionProbability: 0.1, // Probability of learning / transition
+            guessProbability: 0.55, // Probability of guessing
+            slipProbability: 0.3, // Probability of slipping
+            transitionProbability: 0.05, // Probability of learning / transition
             masteryProbability: 0.3, // Initial probability of mastery
         };
     }
