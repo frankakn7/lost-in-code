@@ -104,6 +104,7 @@ export default class AchievementManager {
         });
 
         gameController.gameStateManager.achievements.unlocked.push(achievementKey);
+        gameController.gameStateManager.addPoints(5); //5 points per achievement
         debugHelper.logString("earned achievement: " + achievementKey);
     }
 

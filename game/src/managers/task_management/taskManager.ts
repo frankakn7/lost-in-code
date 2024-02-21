@@ -6,6 +6,7 @@ import { GameEvents } from "../../types/gameEvents";
 import { debugHelper } from "../../helpers/debugHelper";
 import BayesianKnowledgeTracingManager from "./bayesianKnowledgeTracingManager";
 import { shuffleArray } from "../../helpers/helperFunctions";
+import { achievements } from "../../constants/achievements";
 
 /**
  * Manages tasks and questions for the game.
@@ -26,6 +27,8 @@ export default class TaskManager {
 
     readonly correctQuestionsNeeded: number = 3;
     readonly maxQuestionsAllowed: number = 5;
+
+    private points: number = this.maxQuestionsAllowed;
 
     private minRepairedObjectsPerChapter = 2;
     private maxRepairedObjectsPerChapter = this.minRepairedObjectsPerChapter + 1;
@@ -138,6 +141,11 @@ export default class TaskManager {
             gameController.gameStateManager.user.chapterNumber <
                 gameController.gameStateManager.curriculum.maxChapterNumber
         ) {
+            gameController.worldSceneController.queueWorldViewTask(() => {
+                // globalEventBus.emit(GameEvents.BROADCAST_NEWS, achievement.text);
+                globalEventBus.emit(GameEvents.BROADCAST_NEWS, "New Knowledge Unlocked");
+            });
+            this.points += Math.floor(20 / gameController.gameStateManager.user.repairedObjectsThisChapter);
             gameController.gameStateManager.increaseChapterNumber();
             gameController.gameStateManager.user.repairedObjectsThisChapter = 0;
             gameController.gameStateManager.user.newChapter = true;
@@ -149,6 +157,7 @@ export default class TaskManager {
             // this._worldViewScene.docView.chapterManager.updateChapters()
             gameController.chapterManager.updateChapters();
         }
+        gameController.gameStateManager.addPoints(this.points);
     }
 
     private onObjectFailed() {
@@ -189,9 +198,8 @@ export default class TaskManager {
     }
 
     public questionAnsweredIncorrectly() {
-        // gameController.gameStateManager.user.performanceIndex > 1
-        //     ? gameController.gameStateManager.user.performanceIndex--
-        //     : null;
+        //Every incorrect question removes a point
+        this.points -= 1;
         this.currentDoneQuestions++;
         this.bktManager.calcAndUpdateMasteryProbability(false);
         // If its not possible anymore to get the correct questions needed

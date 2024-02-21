@@ -1,5 +1,8 @@
 import { SupportedLanguages } from "../types/supportedLanguages";
 import { gameController } from "../main";
+import { globalEventBus } from "../helpers/globalEventBus";
+import { GameEvents } from "../types/gameEvents";
+import { achievements } from "../constants/achievements";
 
 export class GameState {
     gameFinished: boolean;
@@ -34,6 +37,7 @@ export class GameState {
         selectedHat: string;
         unlockedHats: string[];
         username: string;
+        points: number;
     };
     curriculum: {
         maxChapterNumber: number;
@@ -79,6 +83,7 @@ export class GameState {
             selectedHat: "None",
             unlockedHats: [],
             username: "Peter",
+            points: 0,
         };
         this.curriculum = {
             maxChapterNumber: 1,
@@ -147,5 +152,14 @@ export class GameState {
 
     updateBktMasteryProbability(newProbability: number) {
         this.bkt.masteryProbability = newProbability;
+    }
+
+    addPoints(points: number) {
+        this.user.points += points;
+        console.log("Points: " + this.user.points);
+        gameController.worldSceneController.queueWorldViewTask(() => {
+            // globalEventBus.emit(GameEvents.BROADCAST_NEWS, achievement.text);
+            globalEventBus.emit(GameEvents.POINTS_EARNED, points);
+        });
     }
 }
