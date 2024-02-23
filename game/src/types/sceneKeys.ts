@@ -7,6 +7,7 @@ export enum SceneKeys {
     MENU_VIEW_SCENE_KEY = "MenuViewScene",
     DOC_VIEW_SCENE_KEY = "DocViewScene",
     TEXT_VIEW_SCENE_KEY = "TextViewScene",
+    LEADERBOARD_VIEW_SCENE_KEY = "LeaderboardViewScene",
 
     QUESTION_VIEW_SCENE_KEY = "QuestionViewScene",
     CHOICE_QUESTION_SCENE_KEY = "ChoiceQuestionScene",
@@ -24,5 +25,5 @@ export enum SceneKeys {
     EVALUATION_VIEW_SCENE_KEY = "EvaluationViewScene",
 
     PRELOAD_SCENE_KEY = "PreloadScene",
-    LOGIN_VIEW_SCENE_KEY = "LoginViewScene"
+    LOGIN_VIEW_SCENE_KEY = "LoginViewScene",
 }

@@ -14,7 +14,7 @@ import PointsMessage from "../ui/pointsMessage";
 // export class Player extends Phaser.Physics.Arcade.Sprite {
 export class Player extends Phaser.GameObjects.Container {
     private _config = {
-        movementSpeed: 10,
+        movementSpeed: 150,
         breathSpeed: 300,
         breathScope: 30,
         wobbleSpeed: 40,
@@ -182,6 +182,7 @@ export class Player extends Phaser.GameObjects.Container {
     }
 
     private updateMovement(delta: number) {
+        let deltaDevided = delta / 1000;
         // Create a new object 'new_velocity' to store the updated x and y velocities of the player.
         let new_velocity = { x: 0, y: 0 };
 
@@ -193,9 +194,9 @@ export class Player extends Phaser.GameObjects.Container {
             gameController.buttonStates.downPress
         ) {
             if (this._keys.up.isDown || gameController.buttonStates.upPress)
-                new_velocity.y -= this._config.movementSpeed * delta;
+                new_velocity.y -= this._config.movementSpeed; //* delta;
             if (this._keys.down.isDown || gameController.buttonStates.downPress)
-                new_velocity.y += this._config.movementSpeed * delta;
+                new_velocity.y += this._config.movementSpeed; //* delta;
         } else if (
             this._keys.left.isDown ||
             this._keys.right.isDown ||
@@ -203,9 +204,9 @@ export class Player extends Phaser.GameObjects.Container {
             gameController.buttonStates.leftPress
         ) {
             if (this._keys.left.isDown || gameController.buttonStates.leftPress)
-                new_velocity.x -= this._config.movementSpeed * delta;
+                new_velocity.x -= this._config.movementSpeed; //* delta;
             if (this._keys.right.isDown || gameController.buttonStates.rightPress)
-                new_velocity.x += this._config.movementSpeed * delta;
+                new_velocity.x += this._config.movementSpeed; //* delta;
         }
 
         // Set the players velocity

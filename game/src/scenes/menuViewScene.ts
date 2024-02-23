@@ -4,8 +4,8 @@ import SpriteButton from "../ui/SpriteButton";
 
 import ApiHelper from "../helpers/apiHelper";
 
-import {gameController} from "../main";
-import {SceneKeys} from "../types/sceneKeys";
+import { gameController } from "../main";
+import { SceneKeys } from "../types/sceneKeys";
 
 export default class MenuViewScene extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite;
@@ -15,7 +15,7 @@ export default class MenuViewScene extends Phaser.Scene {
         buttonPadding: 50,
         buttonWidth: 180,
         buttonHeight: 180,
-    }
+    };
 
     private apiHelper: ApiHelper = new ApiHelper();
 
@@ -25,25 +25,13 @@ export default class MenuViewScene extends Phaser.Scene {
 
     create() {
         this._tilesprite = this.add
-            .tileSprite(
-                0,
-                0,
-                this.cameras.main.displayWidth / 3,
-                this.cameras.main.displayHeight / 3,
-                "backgroundTile"
-            )
+            .tileSprite(0, 0, this.cameras.main.displayWidth / 3, this.cameras.main.displayHeight / 3, "backgroundTile")
             .setOrigin(0, 0)
             .setScale(3);
 
-        const resumeButton = new SpriteButton(
-            this,
-            "resumeButtonTexture",
-            180,
-            225,
-            () => {
-                gameController.worldSceneController.resumeWorldViewScenes();
-            },
-        );
+        const resumeButton = new SpriteButton(this, "resumeButtonTexture", 180, 225, () => {
+            gameController.worldSceneController.resumeWorldViewScenes();
+        });
         this.add.existing(resumeButton);
 
         const logoutButton = new SpriteButton(
@@ -64,12 +52,12 @@ export default class MenuViewScene extends Phaser.Scene {
             this,
             "antennaAppTexture",
             (this.cameras.main.displayWidth / (this._settings.columns + 1)) * 1,
-            (this.cameras.main.displayHeight / 2) - (this._settings.buttonHeight / 2) - this._settings.buttonPadding,
+            this.cameras.main.displayHeight / 2 - this._settings.buttonHeight / 2 - this._settings.buttonPadding,
             () => {
-                gameController.chatSceneController.openStoryChatViewWithoutPulling()
+                gameController.chatSceneController.openStoryChatViewWithoutPulling();
             },
             this._settings.buttonHeight,
-            this._settings.buttonWidth
+            this._settings.buttonWidth,
         ).setScale(1.25);
         this.add.existing(chatButton);
 
@@ -77,12 +65,12 @@ export default class MenuViewScene extends Phaser.Scene {
             this,
             "knowledgeAppTexture",
             (this.cameras.main.displayWidth / (this._settings.columns + 1)) * 2,
-            (this.cameras.main.displayHeight / 2) - (this._settings.buttonHeight / 2) - this._settings.buttonPadding,
+            this.cameras.main.displayHeight / 2 - this._settings.buttonHeight / 2 - this._settings.buttonPadding,
             () => {
                 gameController.menuSceneController.openDocViewScene();
             },
             this._settings.buttonHeight,
-            this._settings.buttonWidth
+            this._settings.buttonWidth,
         ).setScale(1.25);
         this.add.existing(knowledgeButton);
 
@@ -90,27 +78,42 @@ export default class MenuViewScene extends Phaser.Scene {
             this,
             "hatAppTexture",
             (this.cameras.main.displayWidth / (this._settings.columns + 1)) * 2,
-            (this.cameras.main.displayHeight / 2) + (this._settings.buttonHeight / 2) + this._settings.buttonPadding,
+            this.cameras.main.displayHeight / 2 + this._settings.buttonHeight / 2 + this._settings.buttonPadding,
             () => {
                 gameController.menuSceneController.openHatViewScene();
             },
             this._settings.buttonHeight,
-            this._settings.buttonWidth
+            this._settings.buttonWidth,
         ).setScale(1.25);
         this.add.existing(hatButton);
-
 
         const achievementsButton = new SpriteButton(
             this,
             "achievementsAppTexture",
             (this.cameras.main.displayWidth / (this._settings.columns + 1)) * 1,
-            (this.cameras.main.displayHeight / 2) + (this._settings.buttonHeight / 2) + this._settings.buttonPadding,
+            this.cameras.main.displayHeight / 2 + this._settings.buttonHeight / 2 + this._settings.buttonPadding,
             () => {
                 gameController.menuSceneController.openAcheivementViewScene();
             },
             this._settings.buttonHeight,
-            this._settings.buttonWidth
+            this._settings.buttonWidth,
         ).setScale(1.25);
         this.add.existing(achievementsButton);
+
+        const leaderboardButton = new SpriteButton(
+            this,
+            "leaderboardAppTexture",
+            (this.cameras.main.displayWidth / (this._settings.columns + 1)) * 1,
+            this.cameras.main.displayHeight / 2 +
+                this._settings.buttonHeight / 2 +
+                this._settings.buttonPadding * 3 +
+                this._settings.buttonHeight,
+            () => {
+                gameController.menuSceneController.openLeaderboardViewScene();
+            },
+            this._settings.buttonHeight,
+            this._settings.buttonWidth,
+        ).setScale(1.25);
+        this.add.existing(leaderboardButton);
     }
 }
