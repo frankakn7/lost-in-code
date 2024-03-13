@@ -1,28 +1,34 @@
-import {text} from "express";
-import {BodyType, Vector} from "matter";
+import { text } from "express";
+import { BodyType, Vector } from "matter";
 import WorldViewScene from "../scenes/worldViewScene";
-import {gameController} from "../main";
-import {HatMap} from "../constants/hatMap";
+import { gameController } from "../main";
+import { HatMap } from "../constants/hatMap";
 import StaticBody = Phaser.Physics.Arcade.StaticBody;
+import { globalEventBus } from "../helpers/globalEventBus";
+import { GameEvents } from "../types/gameEvents";
+import PointsMessage from "../ui/pointsMessage";
 
 /**
  * The Player class. This represents the player on the map and contains all the logic for movement, animations etc.
  */
 // export class Player extends Phaser.Physics.Arcade.Sprite {
 export class Player extends Phaser.GameObjects.Container {
-
     private _config = {
-        movementSpeed: 10,
+        movementSpeed: 150,
         breathSpeed: 300,
         breathScope: 30,
         wobbleSpeed: 40,
-        wobbleScope: 10
-    }
+        wobbleScope: 10,
+    };
 
     private _breathCalcHelperVar = 0; // Helper variable for the breathing animation
     private _walkingRotationHelperVar = 0; // Helper variable for the walking animation
 
     private _isMoving = false; // Is the player currently moving?
+
+    private pointsMessagesQueue: number[] = [];
+    private isMessageBeingDisplayed: boolean = false;
+    // private currentDisplayedMessage: PointsMessage = null;
 
     private _playerFeetOffset = -3;
     private _hatYOffset = -16; // The offset of the hat from the player
@@ -31,6 +37,8 @@ export class Player extends Phaser.GameObjects.Container {
 
     private _playerSprite: Phaser.GameObjects.Sprite;
     private _shadowSprite: Phaser.GameObjects.Sprite;
+
+    // private _pointsMessage: Phaser.GameObjects.Text;
 
     body: Phaser.Physics.Arcade.Body;
 
@@ -48,26 +56,41 @@ export class Player extends Phaser.GameObjects.Container {
         this.scene.physics.world.enable(this);
 
         this.body.setCollideWorldBounds(true);
-        this.body.setSize(16, 10)
+        this.body.setSize(16, 10);
         this.setDepth(4);
 
-        this._playerSprite = this.scene.add.sprite(this.body.width / 2, this.body.height + this._playerFeetOffset, texture);
-        this._shadowSprite = this.scene.add.sprite(this.body.width / 2, this.body.height, "shadowTexture")
+        this._playerSprite = this.scene.add.sprite(
+            this.body.width / 2,
+            this.body.height + this._playerFeetOffset,
+            texture,
+        );
+        this._shadowSprite = this.scene.add.sprite(this.body.width / 2, this.body.height, "shadowTexture");
 
         this.add(this._shadowSprite);
         this.add(this._playerSprite);
 
+        // this.addPointsMessage(5);
+
         // Animation and graphics setup
         this._playerSprite.flipX = false;
         this._playerSprite.setOrigin(0.5, 1);
-        this._shadowSprite.setOrigin(0.5, 1)
+        this._shadowSprite.setOrigin(0.5, 1);
 
         // Input setup
-        this._keys = this.scene.input.keyboard.addKeys({
-            'up': Phaser.Input.Keyboard.KeyCodes.W, 'down': Phaser.Input.Keyboard.KeyCodes.S,
-            'left': Phaser.Input.Keyboard.KeyCodes.A, 'right': Phaser.Input.Keyboard.KeyCodes.D
-        }, false);
+        this._keys = this.scene.input.keyboard.addKeys(
+            {
+                up: Phaser.Input.Keyboard.KeyCodes.W,
+                down: Phaser.Input.Keyboard.KeyCodes.S,
+                left: Phaser.Input.Keyboard.KeyCodes.A,
+                right: Phaser.Input.Keyboard.KeyCodes.D,
+            },
+            false,
+        );
 
+        const addPointsMessage = this.addPointsMessage.bind(this);
+        globalEventBus.on(GameEvents.POINTS_EARNED, (points) => {
+            addPointsMessage(points);
+        });
     }
 
     /**
@@ -76,7 +99,6 @@ export class Player extends Phaser.GameObjects.Container {
      * @param delta
      */
     preUpdate(time, delta) {
-
         // Movement
         this.updateMovement(delta);
 
@@ -87,6 +109,9 @@ export class Player extends Phaser.GameObjects.Container {
         // Hat update
         this.updateHat();
 
+        // if (!this.currentDisplayedMessage?.active) {
+        //     this.currentDisplayedMessage = null;
+        // }
     }
 
     /**
@@ -105,7 +130,7 @@ export class Player extends Phaser.GameObjects.Container {
             // Calculate the scaling factor for the breathing animation using sine wave.
             // The factor fac is derived from the sine value of _breathCalcHelperVar divided by breathScope.
             // breathScope determines the amplitude of the breathing animation.
-            let fac = (Math.sin(this._breathCalcHelperVar) / breathScope);
+            let fac = Math.sin(this._breathCalcHelperVar) / breathScope;
 
             // Adjust the scaleY (vertical scale) of the object based on the calculated factor fac.
             // The object will oscillate between 1 - breathScope and 1 + breathScope.
@@ -157,16 +182,31 @@ export class Player extends Phaser.GameObjects.Container {
     }
 
     private updateMovement(delta: number) {
+        let deltaDevided = delta / 1000;
         // Create a new object 'new_velocity' to store the updated x and y velocities of the player.
-        let new_velocity = {x: 0, y: 0};
+        let new_velocity = { x: 0, y: 0 };
 
         // Check if the 'up' or 'down' keys are pressed or any custom 'upPress' or 'downPress' flags are set.
-        if (this._keys.up.isDown || this._keys.down.isDown || gameController.buttonStates.upPress || gameController.buttonStates.downPress) {
-            if (this._keys.up.isDown || gameController.buttonStates.upPress) new_velocity.y -= this._config.movementSpeed * delta;
-            if (this._keys.down.isDown || gameController.buttonStates.downPress) new_velocity.y += this._config.movementSpeed * delta;
-        } else if (this._keys.left.isDown || this._keys.right.isDown || gameController.buttonStates.rightPress || gameController.buttonStates.leftPress) {
-            if (this._keys.left.isDown || gameController.buttonStates.leftPress) new_velocity.x -= this._config.movementSpeed * delta;
-            if (this._keys.right.isDown || gameController.buttonStates.rightPress) new_velocity.x += this._config.movementSpeed * delta;
+        if (
+            this._keys.up.isDown ||
+            this._keys.down.isDown ||
+            gameController.buttonStates.upPress ||
+            gameController.buttonStates.downPress
+        ) {
+            if (this._keys.up.isDown || gameController.buttonStates.upPress)
+                new_velocity.y -= this._config.movementSpeed; //* delta;
+            if (this._keys.down.isDown || gameController.buttonStates.downPress)
+                new_velocity.y += this._config.movementSpeed; //* delta;
+        } else if (
+            this._keys.left.isDown ||
+            this._keys.right.isDown ||
+            gameController.buttonStates.rightPress ||
+            gameController.buttonStates.leftPress
+        ) {
+            if (this._keys.left.isDown || gameController.buttonStates.leftPress)
+                new_velocity.x -= this._config.movementSpeed; //* delta;
+            if (this._keys.right.isDown || gameController.buttonStates.rightPress)
+                new_velocity.x += this._config.movementSpeed; //* delta;
         }
 
         // Set the players velocity
@@ -174,9 +214,9 @@ export class Player extends Phaser.GameObjects.Container {
         this.body.setVelocityX(new_velocity.x);
 
         if (new_velocity.x != 0 || new_velocity.y != 0) {
-            this._isMoving = true
+            this._isMoving = true;
         } else {
-            this._isMoving = false
+            this._isMoving = false;
         }
     }
 
@@ -186,7 +226,6 @@ export class Player extends Phaser.GameObjects.Container {
      * If no hat is selected ("None"), the player's default appearance will be used.
      */
     public updateHat() {
-
         const hatId = gameController.gameStateManager.user.selectedHat;
 
         // Check if a hat is selected (hatId is not "None").
@@ -197,7 +236,7 @@ export class Player extends Phaser.GameObjects.Container {
             const width = 32;
             const height = 64;
 
-            let renderTexture = this.scene.make.renderTexture({width, height}, false);
+            let renderTexture = this.scene.make.renderTexture({ width, height }, false);
             renderTexture.draw("playerTexture", 0, 32);
             renderTexture.draw(HatMap[hatId].texture, 0, 32 + this._hatYOffset);
 
@@ -215,4 +254,46 @@ export class Player extends Phaser.GameObjects.Container {
         }
     }
 
+    addPointsMessage(points) {
+        // Add the points message to the queue
+        this.pointsMessagesQueue.push(points);
+
+        // Try to display the next message if none is currently being displayed
+        if (!this.isMessageBeingDisplayed) {
+            this.displayNextPointsMessage();
+        }
+    }
+
+    displayNextPointsMessage() {
+        if (this.pointsMessagesQueue.length > 0) {
+            const points = this.pointsMessagesQueue.shift(); // Remove the first element from the queue
+            let message = new PointsMessage(
+                this.scene,
+                this._playerSprite.width / 4,
+                -this._playerSprite.height,
+                points,
+            );
+            this.scene.add.existing(message);
+            this.add(message);
+            // this.currentDisplayedMessage = message;
+            this.isMessageBeingDisplayed = true;
+            setTimeout(() => {
+                this.isMessageBeingDisplayed = false;
+                if (this.pointsMessagesQueue.length > 0) {
+                    this.displayNextPointsMessage(); // Display the next message, if any
+                }
+            }, 500); // Assuming 'lifespan' is in milliseconds, adjust the delay here
+        }
+    }
+
+    // private updatePointsMessage() {
+    //     if (this._frames > 0 && this._pointsMessage) {
+    //         this._frames--;
+    //         this._pointsMessage.y -= 0.1;
+    //     } else if (this._frames <= 0) {
+    //         this._frames = 60;
+    //         this._pointsMessage.destroy(false);
+    //         this._pointsMessage = null;
+    //     }
+    // }
 }

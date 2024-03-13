@@ -50,6 +50,7 @@ export default class EventBusController {
         globalEventBus.on(GameEvents.SAVE_GAME, () => {
             this._gameState.calculateNewPlayTime();
             if (gameController.savingEnabled) {
+                console.log("Saving");
                 this._apiHelper.updateStateData(this._gameState).catch((error) => {
                     console.error(error);
                 });

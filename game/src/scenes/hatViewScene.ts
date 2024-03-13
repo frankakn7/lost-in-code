@@ -4,6 +4,7 @@ import DeviceButton from "../ui/deviceButton";
 import { globalEventBus } from "../helpers/globalEventBus";
 import { gameController } from "../main";
 import { SceneKeys } from "../types/sceneKeys";
+import { GameEvents } from "../types/gameEvents";
 
 /**
  * HatViewScene is the view where the player can select a hat.
@@ -144,7 +145,7 @@ export default class HatViewScene extends Phaser.Scene {
                         gameController.gameStateManager.user.selectedHat = prop;
                         this.deleteAllHatButtons();
                         this.drawHatButtons();
-                        globalEventBus.emit("save_game");
+                        globalEventBus.emit(GameEvents.SAVE_GAME);
                     },
                     height * scale,
                     width * scale,

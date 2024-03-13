@@ -12,6 +12,7 @@ export default class HatManager {
     // Unlock a hat.
     public unlock(hatId) {
         gameController.gameStateManager.addUnlockedHats(hatId);
+        gameController.gameStateManager.addPoints(10); //10 points per unlocked hat!
         globalEventBus.emit(GameEvents.SAVE_GAME);
     }
 }

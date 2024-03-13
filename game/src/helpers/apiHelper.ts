@@ -2,6 +2,7 @@ import { GameStateType } from "../types/gameStateType";
 import { GameState } from "../managers/gameState";
 import { debugHelper } from "./debugHelper";
 import { gameController } from "../main";
+import {LeaderboardUserType} from "../types/leaderboardUserType";
 
 /**
  * Helper class for making API requests related to the game.
@@ -101,7 +102,23 @@ export default class ApiHelper {
 
             return fullChapter;
         } catch (error) {
-            throw new Error(error);
+            console.error(error);
+            // throw new Error(error);
+        }
+    }
+
+    public async getGroupLeaderboard(): Promise<LeaderboardUserType[]> {
+        try {
+            const url = this.apiUrl + "/groups/me/leaderboard";
+            const response = await this.getIncludingCredentials(url);
+            const leaderboardData = await response.json();
+
+            // return leaderboardData;
+            // console.log(leaderboardData);
+            return leaderboardData;
+        } catch (error) {
+            console.error(error);
+            // throw new Error(error);
         }
     }
 

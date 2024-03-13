@@ -42,7 +42,7 @@ class GameController {
 
     private _user: User;
 
-    private _savingEnabled: boolean = false;
+    private _savingEnabled: boolean = true;
 
     private _masterSceneController: MasterSceneController;
     private _chatSceneController: ChatSceneController;
@@ -250,7 +250,7 @@ class GameController {
             physics: {
                 default: "arcade",
                 arcade: {
-                    gravity: { y: 0 },
+                    gravity: { x: 0, y: 0 },
                     debug: false,
                 },
             },
