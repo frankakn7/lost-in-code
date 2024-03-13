@@ -1,14 +1,14 @@
 import * as Phaser from "phaser";
-import { ChatFlowNode } from "../classes/chat/chatFlowNode";
+import {ChatFlowNode} from "../classes/chat/chatFlowNode";
 import ChatFlow from "../classes/chat/chatFlow";
 import DeviceButton from "../ui/deviceButton";
 import ChatTextContainer from "../ui/chatTextContainer";
 import deviceBackgroundTilePng from "../assets/Device-Background-Tile.png";
-import { globalEventBus } from "../helpers/globalEventBus";
+import {globalEventBus} from "../helpers/globalEventBus";
 import WorldViewScene from "./worldViewScene";
-import { gameController } from "../main";
-import { GameEvents } from "../types/gameEvents";
-import { SceneKeys } from "../types/sceneKeys";
+import {gameController} from "../main";
+import {GameEvents} from "../types/gameEvents";
+import {SceneKeys} from "../types/sceneKeys";
 import SpriteButton from "../ui/SpriteButton";
 import ChapterTextContainer from "../ui/chapterTextContainer";
 
@@ -64,7 +64,7 @@ export default class ChatViewScene extends Phaser.Scene {
     /**
      * The exit button for the chat view
      */
-    // private _exitButton: DeviceButton;
+        // private _exitButton: DeviceButton;
     private _exitButton: SpriteButton;
 
     private _skipButton: DeviceButton;
@@ -232,7 +232,7 @@ export default class ChatViewScene extends Phaser.Scene {
         showSkipButton: Boolean = true,
     ) {
         //remaining text has to be an object to be able to pass it by reference
-        let remainingText = { text: fullText };
+        let remainingText = {text: fullText};
         //create a new timer event for the animation
         this._updateTextAnimationEvent = this.time.addEvent({
             delay: this._characterDelayMilli, //delay is the defined characterDelay

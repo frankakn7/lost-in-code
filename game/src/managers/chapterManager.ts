@@ -32,8 +32,6 @@ export default class ChapterManager {
                 this.apiHelper
                     .getChapters()
                     .then((chapters: ChapterType[]) => {
-                        console.log("#### CHAPTERS");
-                        console.log(chapters);
                         gameController.gameStateManager.curriculum.maxChapterNumber =
                             chapters[chapters.length - 1].order_position;
                         this._chapters = chapters.filter(

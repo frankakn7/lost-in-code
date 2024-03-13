@@ -28,7 +28,8 @@ export default class TaskManager {
     readonly correctQuestionsNeeded: number = 3;
     readonly maxQuestionsAllowed: number = 5;
 
-    private points: number = this.maxQuestionsAllowed;
+    private _pointsFactor: number = 10;
+    private points: number = this.maxQuestionsAllowed * this._pointsFactor;
 
     private minRepairedObjectsPerChapter = 2;
     private maxRepairedObjectsPerChapter = this.minRepairedObjectsPerChapter + 1;
@@ -84,8 +85,6 @@ export default class TaskManager {
         ).map((key) => parseInt(key));
 
         const nextDifficulty = this.bktManager.getNextQuestionDifficulty(availableDifficulties);
-
-        console.log(gameController.gameStateManager.bkt.masteryProbability);
 
         const questionsAtNextDifficulty = this.getQuestionsAtDifficulty(
             nextDifficulty,
@@ -145,7 +144,7 @@ export default class TaskManager {
                 // globalEventBus.emit(GameEvents.BROADCAST_NEWS, achievement.text);
                 globalEventBus.emit(GameEvents.BROADCAST_NEWS, "New Knowledge Unlocked");
             });
-            this.points += Math.floor(20 / gameController.gameStateManager.user.repairedObjectsThisChapter);
+            this.points += Math.floor(50 / gameController.gameStateManager.user.repairedObjectsThisChapter);
             gameController.gameStateManager.increaseChapterNumber();
             gameController.gameStateManager.user.repairedObjectsThisChapter = 0;
             gameController.gameStateManager.user.newChapter = true;
@@ -199,7 +198,7 @@ export default class TaskManager {
 
     public questionAnsweredIncorrectly() {
         //Every incorrect question removes a point
-        this.points -= 1;
+        this.points -= this._pointsFactor;
         this.currentDoneQuestions++;
         this.bktManager.calcAndUpdateMasteryProbability(false);
         // If its not possible anymore to get the correct questions needed

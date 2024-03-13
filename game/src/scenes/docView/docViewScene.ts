@@ -67,8 +67,6 @@ export default class DocViewScene extends Phaser.Scene {
     }
 
     public redrawButtons() {
-        console.log("Redrawing Buttons");
-
         this.deleteAllChapterButtons();
         this.createChapterButtons();
     }

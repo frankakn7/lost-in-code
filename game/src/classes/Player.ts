@@ -257,7 +257,6 @@ export class Player extends Phaser.GameObjects.Container {
     addPointsMessage(points) {
         // Add the points message to the queue
         this.pointsMessagesQueue.push(points);
-        console.log(this.pointsMessagesQueue);
 
         // Try to display the next message if none is currently being displayed
         if (!this.isMessageBeingDisplayed) {
@@ -278,7 +277,6 @@ export class Player extends Phaser.GameObjects.Container {
             this.add(message);
             // this.currentDisplayedMessage = message;
             this.isMessageBeingDisplayed = true;
-            console.log(message);
             setTimeout(() => {
                 this.isMessageBeingDisplayed = false;
                 if (this.pointsMessagesQueue.length > 0) {

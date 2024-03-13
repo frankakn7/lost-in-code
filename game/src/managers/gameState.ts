@@ -156,7 +156,6 @@ export class GameState {
 
     addPoints(points: number) {
         this.user.points += points;
-        console.log("Points: " + this.user.points);
         gameController.worldSceneController.queueWorldViewTask(() => {
             // globalEventBus.emit(GameEvents.BROADCAST_NEWS, achievement.text);
             globalEventBus.emit(GameEvents.POINTS_EARNED, points);

@@ -2,9 +2,23 @@ import * as Phaser from "phaser";
 import { SceneKeys } from "../types/sceneKeys";
 import { gameController } from "../main";
 import SpriteButton from "../ui/SpriteButton";
+import ApiHelper from "../helpers/apiHelper";
+import TopThreeContainer from "../ui/Leaderboard/topThreeContainer";
+import RestLeaderboardContainer from "../ui/Leaderboard/restLeaderboardContainer";
 
 export default class LeaderboardViewScene extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite; // Background
+
+    private _apiHelper = new ApiHelper();
+
+    private _topThreeList: TopThreeContainer;
+    private _restList: RestLeaderboardContainer;
+
+    private _textStyle = {
+        fontSize: "50px",
+        fontFamily: "forwardRegular",
+        color: "#00c8ff",
+    }
 
     constructor() {
         super(SceneKeys.LEADERBOARD_VIEW_SCENE_KEY);
@@ -28,6 +42,33 @@ export default class LeaderboardViewScene extends Phaser.Scene {
         this.add.existing(resumeButton);
 
         //TODO Create table of players and their rankings
+        // let leaderboard = this.getGroupLeaderboard();
+        this.drawLeaderboard();
+        // this.events.on("resume", this.getGroupLeaderboard.bind(this));
+        // this.events.on("wake", this.getGroupLeaderboard.bind(this));
+        this.events.on("resume", this.drawLeaderboard.bind(this));
+        this.events.on("wake", this.drawLeaderboard.bind(this));
+    }
+
+    private drawLeaderboard() {
+        this.getGroupLeaderboard().then((leaderBoard) => {
+            // leaderBoard.forEach((user,index) => {
+            //     this.add.text(100,50 + 75 * index, index+" | "+user.username + ": "+ user.points, this._textStyle);
+            // })
+            this._topThreeList ? this._topThreeList.destroy() : null;
+            this._topThreeList = new TopThreeContainer(this,0,0, leaderBoard.slice(0,3));
+            this.add.existing(this._topThreeList);
+
+            this._restList ? this._restList.destroy() : null;
+            this._restList = new RestLeaderboardContainer(this,0,0,leaderBoard);
+            this.add.existing(this._restList);
+        });
+    }
+
+    private async getGroupLeaderboard() {
+        const leaderBoard = await this._apiHelper.getGroupLeaderboard();
+        leaderBoard.sort((a,b) => b.points - a.points);
+        return leaderBoard;
     }
 
     /**

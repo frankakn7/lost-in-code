@@ -26,16 +26,19 @@ export default class PointsMessage extends Phaser.GameObjects.Text {
         return 1 - Math.cos((x * Math.PI) / 2);
     }
 
-    preUpdate() {
+    preUpdate(time: number, delta: number) {
+        const deltaTimeFactor = delta / (1000 / 60);
+
         let progress = (this._initialLifespan - this._lifespan) / this._initialLifespan;
-        this.y -= this._moveAmount * this.easeInSine(1 - progress) * 2;
+        this.y -= this._moveAmount * this.easeInSine(1 - progress) * 2 * deltaTimeFactor;
         let startFadeAt = 0.75;
         if (progress >= startFadeAt) {
             let normalizedProgress = (progress - startFadeAt) / (1 - startFadeAt);
-            this.alpha = this.easeInSine(1 - normalizedProgress);
+            this.alpha = this.easeInSine(1 - normalizedProgress) * deltaTimeFactor;
         }
 
-        this._lifespan--;
+        // this._lifespan--;
+        this._lifespan -= deltaTimeFactor;
         if (this._lifespan <= 0) {
             this.destroy();
         }

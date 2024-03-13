@@ -74,7 +74,6 @@ export default class PopupSceneController {
      * @private
      */
     private displayNews(counter: number) {
-        console.log("Displaying news: " + counter);
         if (this._newsToDisplay.length > 0) {
             if (!this._currentlyDisplayedNews) {
                 this._currentlyDisplayedNews = this._newsToDisplay.pop();
