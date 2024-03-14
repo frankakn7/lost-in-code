@@ -1,5 +1,5 @@
 class DebugHelper {
-    private _debugging = true;
+    private _debugging = false;
 
     /**
      * Console logs the identifyingMessage in all caps with prefaced ### and the value seperately

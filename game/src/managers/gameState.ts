@@ -1,8 +1,8 @@
-import { SupportedLanguages } from "../types/supportedLanguages";
-import { gameController } from "../main";
-import { globalEventBus } from "../helpers/globalEventBus";
-import { GameEvents } from "../types/gameEvents";
-import { achievements } from "../constants/achievements";
+import { SupportedLanguages } from '../types/supportedLanguages';
+import { gameController } from '../main';
+import { globalEventBus } from '../helpers/globalEventBus';
+import { GameEvents } from '../types/gameEvents';
+import { achievements } from '../constants/achievements';
 
 export class GameState {
     gameFinished: boolean;
@@ -38,6 +38,8 @@ export class GameState {
         unlockedHats: string[];
         username: string;
         points: number;
+        totalRepairedObjects: number;
+        allChaptersDone: boolean;
     };
     curriculum: {
         maxChapterNumber: number;
@@ -53,7 +55,7 @@ export class GameState {
     initialiseDefault(progLang: SupportedLanguages) {
         this.gameFinished = false;
         this.room = {
-            id: "hangar",
+            id: 'hangar',
             finishedTaskObjects: [],
             doorUnlocked: false,
         };
@@ -80,10 +82,12 @@ export class GameState {
             chapterNumber: 1,
             performanceIndex: 1,
             repairedObjectsThisChapter: 0,
-            selectedHat: "None",
+            selectedHat: 'None',
             unlockedHats: [],
-            username: "Peter",
+            username: 'Peter',
             points: 0,
+            totalRepairedObjects: 0,
+            allChaptersDone: false,
         };
         this.curriculum = {
             maxChapterNumber: 1,
@@ -106,9 +110,16 @@ export class GameState {
         this.gameFinished = existingGameState.gameFinished ?? this.gameFinished;
         this.room = { ...this.room, ...existingGameState.room };
         this.story = { ...this.story, ...existingGameState.story };
-        this.achievements = { ...this.achievements, ...existingGameState.achievements };
+        this.achievements = {
+            ...this.achievements,
+            ...existingGameState.achievements,
+        };
         this.user = { ...this.user, ...existingGameState.user };
-        this.curriculum = { ...this.curriculum, ...existingGameState.curriculum, progLang: progLang };
+        this.curriculum = {
+            ...this.curriculum,
+            ...existingGameState.curriculum,
+            progLang: progLang,
+        };
     }
 
     constructor(progLang: SupportedLanguages, existingGameState?: GameState) {
@@ -129,6 +140,10 @@ export class GameState {
         this.user.repairedObjectsThisChapter++;
     }
 
+    increaseTotalRepairedObjects() {
+        this.user.totalRepairedObjects++;
+    }
+
     increaseChapterNumber() {
         if (this.user.chapterNumber < this.curriculum.maxChapterNumber) {
             this.user.chapterNumber++;
@@ -146,7 +161,8 @@ export class GameState {
     }
 
     calculateNewPlayTime() {
-        this.achievements.totalPlayTimeInMilli += Date.now() - gameController.timestampSinceLastSaveOrReload;
+        this.achievements.totalPlayTimeInMilli +=
+            Date.now() - gameController.timestampSinceLastSaveOrReload;
         gameController.resetTimeSinceLastSaveOrReload();
     }
 

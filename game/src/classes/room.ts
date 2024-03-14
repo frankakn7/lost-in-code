@@ -27,6 +27,8 @@ export default class RoomScene extends Phaser.Scene {
 
     private _nextRoom = "hangar"; // The next room to load
 
+    private _numberOfObjects = 0;
+
     private _timeUntilStoryStartsInRoom = 2500; // The time until the story starts in the room
     private _timeSinceRoomEnter = 0; // The time since the room was entered
 
@@ -40,11 +42,13 @@ export default class RoomScene extends Phaser.Scene {
      * @param tilemapConfig config for loading the tilemaps
      * @param roomId the room id of this room
      */
-    constructor(tilemapConfig: TilemapConfig, roomId: string) {
+    constructor(tilemapConfig: TilemapConfig, roomId: string, numberOfObjects: number) {
         super(SceneKeys.ROOM_SCENE_KEY_IDENTIFIER + roomId);
         this._tilemapConfig = tilemapConfig;
 
         this._roomId = roomId;
+
+        this._numberOfObjects = numberOfObjects;
 
         this._roomManager = new RoomManager(this, this._roomId);
     }
@@ -164,6 +168,10 @@ export default class RoomScene extends Phaser.Scene {
 
     get roomManager(): RoomManager {
         return this._roomManager;
+    }
+
+    get numberOfObjects(): number {
+        return this._numberOfObjects;
     }
 
     deleteRoomManager() {

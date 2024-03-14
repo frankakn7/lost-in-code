@@ -47,7 +47,11 @@ export default class ChapterManager {
         });
     }
 
-    initialiseChapterData() {
-        this.updateChapters().catch((error) => console.error(error));
+    async initialiseChapterData() {
+        try{
+            await this.updateChapters();
+        }catch(error){
+            console.error(error)
+        }
     }
 }
