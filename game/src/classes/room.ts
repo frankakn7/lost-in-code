@@ -22,6 +22,8 @@ export default class RoomScene extends Phaser.Scene {
 
     private _roomId; // The id of the room
 
+    private _roomName; // The name of the room
+
     private _playerDefaultX = 32 * 4; // The default x position of the player
     private _playerDefaultY = 32 * 4; // The default y position of the player
 
@@ -42,11 +44,13 @@ export default class RoomScene extends Phaser.Scene {
      * @param tilemapConfig config for loading the tilemaps
      * @param roomId the room id of this room
      */
-    constructor(tilemapConfig: TilemapConfig, roomId: string, numberOfObjects: number) {
+    constructor(tilemapConfig: TilemapConfig, roomId: string, roomName: string, numberOfObjects: number) {
         super(SceneKeys.ROOM_SCENE_KEY_IDENTIFIER + roomId);
         this._tilemapConfig = tilemapConfig;
 
         this._roomId = roomId;
+
+        this._roomName = roomName;
 
         this._numberOfObjects = numberOfObjects;
 
@@ -172,6 +176,10 @@ export default class RoomScene extends Phaser.Scene {
 
     get numberOfObjects(): number {
         return this._numberOfObjects;
+    }
+
+    get roomName() {
+        return this._roomName;
     }
 
     deleteRoomManager() {

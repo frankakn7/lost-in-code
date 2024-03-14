@@ -6,6 +6,8 @@ import ApiHelper from "../helpers/apiHelper";
 
 import { gameController } from "../main";
 import { SceneKeys } from "../types/sceneKeys";
+import ProgressBarContainer from '../ui/progressBarContainer';
+import { roomMap } from '../constants/roomMap';
 
 export default class MenuViewScene extends Phaser.Scene {
     private _tilesprite: Phaser.GameObjects.TileSprite;
@@ -17,7 +19,15 @@ export default class MenuViewScene extends Phaser.Scene {
         buttonHeight: 180,
     };
 
+    private textStyle = {
+        fontSize: "40px",
+        fontFamily: "forwardRegular",
+        // color: "#00c8ff",
+        color: "white"
+    }
+
     private apiHelper: ApiHelper = new ApiHelper();
+    private progressBarContainer: ProgressBarContainer;
 
     constructor() {
         super(SceneKeys.MENU_VIEW_SCENE_KEY);
@@ -29,10 +39,14 @@ export default class MenuViewScene extends Phaser.Scene {
             .setOrigin(0, 0)
             .setScale(3);
 
+        this.progressBarContainer = new ProgressBarContainer(this);
+
         const resumeButton = new SpriteButton(this, "resumeButtonTexture", 180, 225, () => {
             gameController.worldSceneController.resumeWorldViewScenes();
         });
         this.add.existing(resumeButton);
+
+        const roomName = this.add.text((this.cameras.main.displayWidth) / 2, 210, roomMap.get(gameController.gameStateManager.room.id).roomName, this.textStyle).setOrigin(0.5,0)
 
         const logoutButton = new SpriteButton(
             this,

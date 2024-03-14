@@ -15,7 +15,7 @@ roomMap.set("hangar", new RoomScene({
     floorLayer: "Floor",
     collisionLayer: "Walls",
     objectsLayer: "Objects"
-}, "hangar", 4).setNextRoom("commonRoom").setPlayerPosition(32 * 12, 32 * 3));
+}, "hangar","Hangar", 4).setNextRoom("commonRoom").setPlayerPosition(32 * 12, 32 * 3));
 roomMap.set("commonRoom", new RoomScene({
     tilesetImage: tilesetPng,
     tilesetName: "spac2",
@@ -23,7 +23,7 @@ roomMap.set("commonRoom", new RoomScene({
     floorLayer: "Floor",
     collisionLayer: "Walls",
     objectsLayer: "Objects"
-}, "commonRoom", 8).setNextRoom("engine").setPlayerPosition(32 * 2, 32 * 10));
+}, "commonRoom","Common Room", 8).setNextRoom("engine").setPlayerPosition(32 * 2, 32 * 10));
 roomMap.set("engine", new RoomScene({
     tilesetImage: tilesetPng,
     tilesetName: "spac2",
@@ -31,7 +31,7 @@ roomMap.set("engine", new RoomScene({
     floorLayer: "Floor",
     collisionLayer: "Walls",
     objectsLayer: "Objects"
-}, "engine", 6).setNextRoom("laboratory").setPlayerPosition(32 * 2, 32 * 10));
+}, "engine","Engine Room", 6).setNextRoom("laboratory").setPlayerPosition(32 * 2, 32 * 10));
 roomMap.set("laboratory", new RoomScene({
     tilesetImage: tilesetPng,
     tilesetName: "spac2",
@@ -39,7 +39,7 @@ roomMap.set("laboratory", new RoomScene({
     floorLayer: "Floor",
     collisionLayer: "Walls",
     objectsLayer: "Objects"
-}, "laboratory", 4).setNextRoom("bridge").setPlayerPosition(32 * 2, 32 * 10));
+}, "laboratory","Laboratory", 4).setNextRoom("bridge").setPlayerPosition(32 * 2, 32 * 10));
 roomMap.set("bridge", new RoomScene({
     tilesetImage: tilesetPng,
     tilesetName: "spac2",
@@ -47,4 +47,4 @@ roomMap.set("bridge", new RoomScene({
     floorLayer: "Floor",
     collisionLayer: "Walls",
     objectsLayer: "Objects"
-}, "bridge",6).setPlayerPosition(32 * 2, 32 * 10));
+}, "bridge","Bridge",6).setPlayerPosition(32 * 2, 32 * 10));
