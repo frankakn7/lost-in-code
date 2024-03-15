@@ -19,8 +19,15 @@ export default class MenuViewScene extends Phaser.Scene {
         buttonHeight: 180,
     };
 
-    private textStyle = {
+    private roomNameStyle = {
         fontSize: "40px",
+        fontFamily: "forwardRegular",
+        // color: "#00c8ff",
+        color: "white"
+    }
+
+    private textStyle = {
+        fontSize: "35px",
         fontFamily: "forwardRegular",
         // color: "#00c8ff",
         color: "white"
@@ -28,6 +35,12 @@ export default class MenuViewScene extends Phaser.Scene {
 
     private apiHelper: ApiHelper = new ApiHelper();
     private progressBarContainer: ProgressBarContainer;
+
+    private roomName: Phaser.GameObjects.Text;
+    private repaired: Phaser.GameObjects.Text;
+    private repairedNum: Phaser.GameObjects.Text;
+    private points: Phaser.GameObjects.Text;
+    private pointsNum: Phaser.GameObjects.Text;
 
     constructor() {
         super(SceneKeys.MENU_VIEW_SCENE_KEY);
@@ -46,7 +59,6 @@ export default class MenuViewScene extends Phaser.Scene {
         });
         this.add.existing(resumeButton);
 
-        const roomName = this.add.text((this.cameras.main.displayWidth) / 2, 210, roomMap.get(gameController.gameStateManager.room.id).roomName, this.textStyle).setOrigin(0.5,0)
 
         const logoutButton = new SpriteButton(
             this,
@@ -60,6 +72,19 @@ export default class MenuViewScene extends Phaser.Scene {
             },
         );
         this.add.existing(logoutButton);
+
+
+        this.roomName = this.add.text((this.cameras.main.displayWidth) / 2, 210, roomMap.get(gameController.gameStateManager.room.id).roomName, this.roomNameStyle).setOrigin(0.5,0)
+
+        this.repaired = this.add.text((this.cameras.main.displayWidth) / 6, 370, "Repaired Objects: ", this.textStyle).setOrigin(0,0)
+        this.repairedNum = this.add.text((this.cameras.main.displayWidth) * 4 / 6, 370, gameController.gameStateManager.room.finishedTaskObjects.length+" / "+roomMap.get(gameController.gameStateManager.room.id).numberOfObjects, this.textStyle).setOrigin(0,0)
+
+        this.points = this.add.text((this.cameras.main.displayWidth) / 6, 370 + this.repaired.height + 30, "Total Points: ", this.textStyle).setOrigin(0,0)
+        this.pointsNum = this.add.text((this.cameras.main.displayWidth) * 4 / 6, 370 + this.repaired.height + 30, gameController.gameStateManager.user.points+"", this.textStyle).setOrigin(0,0)
+
+        this.events.on("resume", this.updateText.bind(this));
+        this.events.on("wake", this.updateText.bind(this));
+
 
         // Oder was auch immer das dann repräsentieren soll
         const chatButton = new SpriteButton(
@@ -129,5 +154,11 @@ export default class MenuViewScene extends Phaser.Scene {
             this._settings.buttonWidth,
         ).setScale(1.25);
         this.add.existing(leaderboardButton);
+    }
+
+    private updateText () {
+        this.roomName.setText(roomMap.get(gameController.gameStateManager.room.id).roomName);
+        this.repairedNum.setText(gameController.gameStateManager.room.finishedTaskObjects.length+" / "+roomMap.get(gameController.gameStateManager.room.id).numberOfObjects);
+        this.pointsNum.setText(gameController.gameStateManager.user.points+"");
     }
 }
