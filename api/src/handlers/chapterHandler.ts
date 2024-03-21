@@ -1,10 +1,10 @@
-import { OkPacket } from "mysql";
-import db from "../db";
+import { OkPacket } from 'mysql';
+import db from '../db';
 import {
     QuestionValues,
     createFullQuestion,
     extractQuestionsFromRows,
-} from "./questionHandler";
+} from './questionHandler';
 
 export type ChapterValue = {
     id?: number;
@@ -18,20 +18,22 @@ export type ChapterValue = {
 export const createChapterWithQuestions = (requestBody: any): Promise<any> => {
     return new Promise((resolve, reject) => {
         const sql =
-            "INSERT INTO `chapter` (`name`, `material`, `curriculum_id`, `order_position`) VALUES (?, ?, ?, ?);";
+            'INSERT INTO `chapter` (`name`, `material`, `curriculum_id`, `order_position`) VALUES (?, ?, ?, ?);';
         const params = [
             requestBody.name,
             requestBody.material,
             requestBody.curriculum_id,
-            requestBody.order_position
+            requestBody.order_position,
         ];
         db.query(sql, params)
             .then((result: any) => {
-                const questionPromises = requestBody.questions.map((question: QuestionValues) => {
-                    const okPacket = <OkPacket>result;
-                    question.chapter_id = result.insertId;
-                    return createFullQuestion(question);
-                });
+                const questionPromises = requestBody.questions.map(
+                    (question: QuestionValues) => {
+                        const okPacket = <OkPacket>result;
+                        question.chapter_id = result.insertId;
+                        return createFullQuestion(question);
+                    }
+                );
 
                 Promise.all(questionPromises)
                     .then(() => {
@@ -82,7 +84,7 @@ export const extractChaptersFromRows = (rows: any): ChapterValue[] => {
 
 export const getChapterWithQuestions = (id: string): Promise<any> => {
     return new Promise((resolve, reject) => {
-        const sql = "SELECT * FROM `chapter_questions` WHERE `chapter_id` = ?;";
+        const sql = 'SELECT * FROM `chapter_questions` WHERE `chapter_id` = ?;';
         const params = [id];
         db.query(sql, params)
             .then((results) => {

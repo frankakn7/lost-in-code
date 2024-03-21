@@ -1,45 +1,45 @@
-import express, { Request, Response } from "express";
-import db from "../db";
-import { createQuestionElement } from "../handlers/questionElementHandler";
-import { requireAdminRole } from "../auth";
+import express, { Request, Response } from 'express';
+import db from '../db';
+import { createQuestionElement } from '../handlers/questionElementHandler';
+import { requireAdminRole } from '../auth';
 
 const router = express.Router();
 
 /**
  * Create new question element
  */
-router.post("/", requireAdminRole, (req: Request, res: Response) => {
+router.post('/', requireAdminRole, (req: Request, res: Response) => {
     createQuestionElement(req.body)
         .then((results) => {
             res.send(results);
         })
         .catch((error) => {
             console.error(error);
-            return res.status(500).send("Server error");
+            return res.status(500).send('Server error');
         });
 });
 
 /**
  * get all question elements
  */
-router.get("/", (req: Request, res: Response) => {
-    const sql = "SELECT * FROM `question_element`;";
+router.get('/', (req: Request, res: Response) => {
+    const sql = 'SELECT * FROM `question_element`;';
     db.query(sql)
         .then((results) => {
             res.send(results);
         })
         .catch((error) => {
             console.error(error);
-            return res.status(500).send("Server error");
+            return res.status(500).send('Server error');
         });
 });
 
 /**
  * get a specific question element
  */
-router.get("/:id", (req: Request, res: Response) => {
+router.get('/:id', (req: Request, res: Response) => {
     const questionElementId = req.params.id;
-    const sql = "SELECT * FROM `question_element` WHERE `id` = ?;";
+    const sql = 'SELECT * FROM `question_element` WHERE `id` = ?;';
     const params = [questionElementId];
     db.query(sql, params)
         .then((results) => {
@@ -47,18 +47,18 @@ router.get("/:id", (req: Request, res: Response) => {
         })
         .catch((error) => {
             console.error(error);
-            return res.status(500).send("Server error");
+            return res.status(500).send('Server error');
         });
 });
 
 /**
  * Update a question
  */
-router.put("/:id", requireAdminRole, (req: Request, res: Response) => {
+router.put('/:id', requireAdminRole, (req: Request, res: Response) => {
     const questionElementId = req.params.id;
     const questionElement = req.body;
     const sql =
-        "UPDATE `question_element` SET `content` = ?, `element_identifier` = ?, `correct_order_position` = ?, `is_correct` = ?, `question_id` = ? WHERE `id` = ?;";
+        'UPDATE `question_element` SET `content` = ?, `element_identifier` = ?, `correct_order_position` = ?, `is_correct` = ?, `question_id` = ? WHERE `id` = ?;';
     const params = [
         questionElement.content,
         questionElement.element_identifier,
@@ -73,16 +73,16 @@ router.put("/:id", requireAdminRole, (req: Request, res: Response) => {
         })
         .catch((error) => {
             console.error(error);
-            return res.status(500).send("Server error");
+            return res.status(500).send('Server error');
         });
 });
 
 /**
  * delete a specific question_element
  */
-router.delete("/:id", requireAdminRole, (req: Request, res: Response) => {
+router.delete('/:id', requireAdminRole, (req: Request, res: Response) => {
     const questionElement = req.params.id;
-    const sql = "DELETE FROM `question_element` WHERE `id` = ?;";
+    const sql = 'DELETE FROM `question_element` WHERE `id` = ?;';
     const params = [questionElement];
     db.query(sql, params)
         .then((results) => {
@@ -90,7 +90,7 @@ router.delete("/:id", requireAdminRole, (req: Request, res: Response) => {
         })
         .catch((error) => {
             console.error(error);
-            return res.status(500).send("Server error");
+            return res.status(500).send('Server error');
         });
 });
 
@@ -98,13 +98,13 @@ router.delete("/:id", requireAdminRole, (req: Request, res: Response) => {
  * Change question chapter
  */
 router.post(
-    "/:questionElementId/question/:questionId",
+    '/:questionElementId/question/:questionId',
     requireAdminRole,
     (req: Request, res: Response) => {
         const questionId = req.params.questionId;
         const questionElementId = req.params.questionElementId;
         const sql =
-            "UPDATE `question_element` SET `question_id` = ? WHERE `id` = ?;";
+            'UPDATE `question_element` SET `question_id` = ? WHERE `id` = ?;';
         const params = [questionElementId, questionId];
         db.query(sql, params)
             .then((results) => {
@@ -112,7 +112,7 @@ router.post(
             })
             .catch((error) => {
                 console.error(error);
-                return res.status(500).send("Server error");
+                return res.status(500).send('Server error');
             });
     }
 );

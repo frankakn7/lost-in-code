@@ -1,37 +1,51 @@
-import { OkPacket } from "mysql";
-import db from "../db";
-import { ChapterValue, createChapterWithQuestions, extractChaptersFromRows } from "./chapterHandler";
+import { OkPacket } from 'mysql';
+import db from '../db';
+import {
+    ChapterValue,
+    createChapterWithQuestions,
+    extractChaptersFromRows,
+} from './chapterHandler';
 
 type CurriculumValue = {
-    id: number,
-    name: string,
-    description: string,
-    prog_lang: string,
-    chapters: ChapterValue[]
-}
+    id: number;
+    name: string;
+    description: string;
+    prog_lang: string;
+    chapters: ChapterValue[];
+};
 
 export const createFullCurriculum = (requestBody: any): Promise<any> => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO `curriculum` (`name`, `description`, `prog_lang`) VALUES (?, ?, ?);'
-        const params = [requestBody.name, requestBody.description, requestBody.prog_lang]
-        db.query(sql,params).then((results:any) => {
-            const chapterPromises = requestBody.chapters.map((chapter: ChapterValue) => {
-                const okPacket = <OkPacket>results;
-                chapter.curriculum_id = results.insertId;
-                return createChapterWithQuestions(chapter);
+        const sql =
+            'INSERT INTO `curriculum` (`name`, `description`, `prog_lang`) VALUES (?, ?, ?);';
+        const params = [
+            requestBody.name,
+            requestBody.description,
+            requestBody.prog_lang,
+        ];
+        db.query(sql, params)
+            .then((results: any) => {
+                const chapterPromises = requestBody.chapters.map(
+                    (chapter: ChapterValue) => {
+                        const okPacket = <OkPacket>results;
+                        chapter.curriculum_id = results.insertId;
+                        return createChapterWithQuestions(chapter);
+                    }
+                );
+
+                Promise.all(chapterPromises)
+                    .then(() => {
+                        resolve(results);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            })
+            .catch((error) => {
+                reject(error);
             });
-
-            Promise.all(chapterPromises)
-                .then(() => {
-                    resolve(results);
-                })
-                .catch(error => {
-                    reject(error);
-                });
-
-        }).catch(error => {reject(error)})
-    })
-}
+    });
+};
 
 export const extractCurriculumFromRows = (rows: any): CurriculumValue[] => {
     const curriculumMap = new Map<number, CurriculumValue>();
@@ -67,7 +81,8 @@ export const extractCurriculumFromRows = (rows: any): CurriculumValue[] => {
 
 export const getFullCurriculum = (id: string): Promise<any> => {
     return new Promise((resolve, reject) => {
-        const sql = "SELECT * FROM `curriculum_chapters` WHERE `curriculum_id` = ?;";
+        const sql =
+            'SELECT * FROM `curriculum_chapters` WHERE `curriculum_id` = ?;';
         const params = [id];
         db.query(sql, params)
             .then((results) => {

@@ -1,4 +1,4 @@
-import mysql from "mysql2/promise";
+import mysql from 'mysql2/promise';
 
 class ConnectionError extends Error {
     constructor(message?: string) {
@@ -35,7 +35,9 @@ class Database {
                 console.log('Retrying in 5 seconds...');
                 setTimeout(() => this.connectWithRetry(retryCount - 1), 5000);
             } else {
-                console.error('Could not connect to database after multiple retries, exiting...');
+                console.error(
+                    'Could not connect to database after multiple retries, exiting...'
+                );
                 process.exit(1); // Exit the process with an error code
             }
         }
@@ -54,7 +56,9 @@ class Database {
             await this.connectWithRetry();
         }
         if (!this.connection) {
-            throw new ConnectionError("Failed to establish database connection after retrying.");
+            throw new ConnectionError(
+                'Failed to establish database connection after retrying.'
+            );
         }
         return this.connection;
     }
@@ -62,7 +66,7 @@ class Database {
     async query(sql: string, args?: any[]) {
         try {
             const connection = await this.getConnection();
-            const [results,] = await connection.query(sql, args);
+            const [results] = await connection.query(sql, args);
             return results;
         } catch (error) {
             if (error instanceof ConnectionError) {

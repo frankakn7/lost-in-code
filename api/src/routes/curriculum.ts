@@ -1,20 +1,20 @@
-import express, { Request, Response } from "express";
-import db from "../db";
+import express, { Request, Response } from 'express';
+import db from '../db';
 import {
     createFullCurriculum,
     getFullCurriculum,
-} from "../handlers/curriculumHandler";
-import { requireAdminRole } from "../auth";
+} from '../handlers/curriculumHandler';
+import { requireAdminRole } from '../auth';
 
 const router = express.Router();
 
 /**
  * create new curriculum
  */
-router.post("/", requireAdminRole, (req: Request, res: Response) => {
+router.post('/', requireAdminRole, (req: Request, res: Response) => {
     const curriculum = req.body;
     const sql =
-        "INSERT INTO `curriculum` (`name`, `description`,`prog_lang`) VALUES (?, ?, ?);";
+        'INSERT INTO `curriculum` (`name`, `description`,`prog_lang`) VALUES (?, ?, ?);';
     const params = [
         curriculum.name,
         curriculum.description,
@@ -26,45 +26,45 @@ router.post("/", requireAdminRole, (req: Request, res: Response) => {
         })
         .catch((error) => {
             console.error(error);
-            return res.status(500).send("Server error");
+            return res.status(500).send('Server error');
         });
 });
 
 /**
  * create new FULL curriculum
  */
-router.post("/full", requireAdminRole, (req: Request, res: Response) => {
+router.post('/full', requireAdminRole, (req: Request, res: Response) => {
     createFullCurriculum(req.body)
         .then((results) => {
             res.send(results);
         })
         .catch((error) => {
             console.error(error);
-            return res.status(500).send("Server error");
+            return res.status(500).send('Server error');
         });
 });
 
 /**
  * Get all curriculums
  */
-router.get("/", (req: Request, res: Response) => {
-    const sql = "SELECT * FROM `curriculum`;";
+router.get('/', (req: Request, res: Response) => {
+    const sql = 'SELECT * FROM `curriculum`;';
     db.query(sql)
         .then((results) => {
             res.send(results);
         })
         .catch((error) => {
             console.error(error);
-            return res.status(500).send("Server error");
+            return res.status(500).send('Server error');
         });
 });
 
 /**
  * get programming language via current user
  */
-router.get("/me/prog-lang", (req: Request, res: Response) => {
+router.get('/me/prog-lang', (req: Request, res: Response) => {
     const sql =
-        "SELECT `curriculum_prog_lang` FROM `user_game_curriculum` WHERE user_id = ?;";
+        'SELECT `curriculum_prog_lang` FROM `user_game_curriculum` WHERE user_id = ?;';
     const userId = req.body.user.id;
     const params = [userId];
     db.query(sql, params)
@@ -73,17 +73,17 @@ router.get("/me/prog-lang", (req: Request, res: Response) => {
         })
         .catch((error) => {
             console.error(error);
-            return res.status(500).send("Server error");
+            return res.status(500).send('Server error');
         });
 });
 
 /**
  * get specific curriculum via id
  */
-router.get("/:id", (req: Request, res: Response) => {
-    console.log("Hit /:id/prog-lang with ID:", req.params.id);
+router.get('/:id', (req: Request, res: Response) => {
+    console.log('Hit /:id/prog-lang with ID:', req.params.id);
     const curriculumId = req.params.id;
-    const sql = "SELECT * FROM `curriculum` WHERE `id` = ?;";
+    const sql = 'SELECT * FROM `curriculum` WHERE `id` = ?;';
     const params = [curriculumId];
     db.query(sql, params)
         .then((results) => {
@@ -91,16 +91,16 @@ router.get("/:id", (req: Request, res: Response) => {
         })
         .catch((error) => {
             console.error(error);
-            return res.status(500).send("Server error");
+            return res.status(500).send('Server error');
         });
 });
 
 /**
  * get programming language from specific curriculum via curriculum id
  */
-router.get("/:id/prog-lang", (req: Request, res: Response) => {
+router.get('/:id/prog-lang', (req: Request, res: Response) => {
     const curriculumId = req.params.id;
-    const sql = "SELECT `prog_lang` FROM `curriculum` WHERE `id` = ?;";
+    const sql = 'SELECT `prog_lang` FROM `curriculum` WHERE `id` = ?;';
     const params = [curriculumId];
     db.query(sql, params)
         .then((results) => {
@@ -108,14 +108,14 @@ router.get("/:id/prog-lang", (req: Request, res: Response) => {
         })
         .catch((error) => {
             console.error(error);
-            return res.status(500).send("Server error");
+            return res.status(500).send('Server error');
         });
 });
 
 /**
  * get specific FULL curriculum via id
  */
-router.get("/:id/full", (req: Request, res: Response) => {
+router.get('/:id/full', (req: Request, res: Response) => {
     const curriculumId = req.params.id;
     getFullCurriculum(curriculumId)
         .then((results) => {
@@ -123,18 +123,18 @@ router.get("/:id/full", (req: Request, res: Response) => {
         })
         .catch((error) => {
             console.error(error);
-            return res.status(500).send("Server error");
+            return res.status(500).send('Server error');
         });
 });
 
 /**
  * Update specific curriculum
  */
-router.put("/:id", requireAdminRole, (req: Request, res: Response) => {
+router.put('/:id', requireAdminRole, (req: Request, res: Response) => {
     const curriculumId = req.params.id;
     const curriculum = req.body;
     const sql =
-        "UPDATE `curriculum` SET `name` = ?, `description` = ? WHERE `id` = ?;";
+        'UPDATE `curriculum` SET `name` = ?, `description` = ? WHERE `id` = ?;';
     const params = [curriculum.name, curriculum.description, curriculumId];
     db.query(sql, params)
         .then((results) => {
@@ -142,16 +142,16 @@ router.put("/:id", requireAdminRole, (req: Request, res: Response) => {
         })
         .catch((error) => {
             console.error(error);
-            return res.status(500).send("Server error");
+            return res.status(500).send('Server error');
         });
 });
 
 /**
  * Delete specific curriculum
  */
-router.delete("/:id", requireAdminRole, (req: Request, res: Response) => {
+router.delete('/:id', requireAdminRole, (req: Request, res: Response) => {
     const curriculumId = req.params.id;
-    const sql = "DELETE FROM `curriculum` WHERE `id` = ?;";
+    const sql = 'DELETE FROM `curriculum` WHERE `id` = ?;';
     const params = [curriculumId];
     db.query(sql, params)
         .then((results) => {
@@ -159,7 +159,7 @@ router.delete("/:id", requireAdminRole, (req: Request, res: Response) => {
         })
         .catch((error) => {
             console.error(error);
-            return res.status(500).send("Server error");
+            return res.status(500).send('Server error');
         });
 });
 

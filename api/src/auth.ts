@@ -1,20 +1,25 @@
-import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 
 export enum role {
-    ADMIN = "ADMIN",
-    USER = "USER",
+    ADMIN = 'ADMIN',
+    USER = 'USER',
 }
 
-export const generateAuthToken = (id: string, role: string, username: string, res: Response) => {
+export const generateAuthToken = (
+    id: string,
+    role: string,
+    username: string,
+    res: Response
+) => {
     const token = jwt.sign(
-        { id, role, username},
-        process.env.JWT_SECRET || "your-secret-key",
-        { expiresIn: "1d" }
+        { id, role, username },
+        process.env.JWT_SECRET || 'your-secret-key',
+        { expiresIn: '1d' }
     );
 
     // Set the JWT in an HttpOnly cookie
-    res.cookie("token", token, {
+    res.cookie('token', token, {
         httpOnly: true,
         path: '/',
         // secure: true, // Uncomment this line if you're on HTTPS
@@ -29,17 +34,19 @@ export const authenticateToken = (
 ) => {
     const token = req.cookies.token;
 
-    if (token == null){
+    if (token == null) {
         // return res.sendStatus(401); // if there isn't any token
-        return res.status(401).json({error: "Unauthorized: no token was given"}); // if there isn't any token
-    } 
+        return res
+            .status(401)
+            .json({ error: 'Unauthorized: no token was given' }); // if there isn't any token
+    }
 
     jwt.verify(
         token,
-        process.env.JWT_SECRET || "your-secret-key",
+        process.env.JWT_SECRET || 'your-secret-key',
         (err: any, user: any) => {
             // if (err) return res.sendStatus(403);
-            if (err) return res.status(403).json({error: "Forbidden"});
+            if (err) return res.status(403).json({ error: 'Forbidden' });
             req.body.user = user;
             next();
         }
@@ -51,11 +58,12 @@ export const requireAdminRole = (
     res: Response,
     next: NextFunction
 ) => {
-
     if (req.body.user.role !== role.ADMIN) {
         return res
             .status(403)
-            .json({error: "Forbidden: you don't have access to this resource"});
+            .json({
+                error: "Forbidden: you don't have access to this resource",
+            });
     }
     next();
 };
@@ -71,7 +79,9 @@ export const onlyAllowSelf = (
     ) {
         return res
             .status(403)
-            .json({error: "Forbidden: you don't have access to this resource"});
+            .json({
+                error: "Forbidden: you don't have access to this resource",
+            });
     }
     next();
 };
@@ -81,14 +91,17 @@ export const loginCheck = (req: Request, res: Response) => {
     const token = req.cookies.token;
 
     // if (token == null) return res.sendStatus(401); // if there isn't any token
-    if (token == null) return res.status(401).json({error: "Unauthorized: no token was given"})
+    if (token == null)
+        return res
+            .status(401)
+            .json({ error: 'Unauthorized: no token was given' });
 
     jwt.verify(
         token,
-        process.env.JWT_SECRET || "your-secret-key",
+        process.env.JWT_SECRET || 'your-secret-key',
         (err: any, user: any) => {
             // if (err) return res.sendStatus(403);
-            if (err) return res.status(403).json({error: "Forbidden"});
+            if (err) return res.status(403).json({ error: 'Forbidden' });
 
             // If token is valid, return user details
             res.json({ user });

@@ -1,20 +1,20 @@
-import db from "../db";
+import db from '../db';
 import {
     createCorrectAnswer,
     deleteCorrectAnswersByElementId,
-} from "./correctAnswerHandler";
+} from './correctAnswerHandler';
 import {
     createQuestionElement,
     updateQuestionElement,
-} from "./questionElementHandler";
+} from './questionElementHandler';
 
 export type QuestionType =
-    | "CHOICE"
-    | "SINGLE_INPUT"
-    | "CLOZE"
-    | "DRAG_DROP"
-    | "SELECT_ONE"
-    | "CREATE";
+    | 'CHOICE'
+    | 'SINGLE_INPUT'
+    | 'CLOZE'
+    | 'DRAG_DROP'
+    | 'SELECT_ONE'
+    | 'CREATE';
 
 export type QuestionValues = {
     id?: number; //id also only set at upload
@@ -45,7 +45,7 @@ export type CorrectAnswer = {
 
 export const createQuestion = (requestBody: any): Promise<any> => {
     const sql =
-        "INSERT INTO `question` (`question_text`, `hint`, `type`, `difficulty`, `code_text`, `chapter_id`) VALUES (?, ?, ?, ?, ?, ?);";
+        'INSERT INTO `question` (`question_text`, `hint`, `type`, `difficulty`, `code_text`, `chapter_id`) VALUES (?, ?, ?, ?, ?, ?);';
     const params = [
         requestBody.question_text,
         requestBody.hint,
@@ -62,7 +62,7 @@ export const updateQuestion = (
     requestBody: any
 ): Promise<any> => {
     const sql =
-        "UPDATE `question` SET `question_text` = ?, `hint` = ?, `type` = ?, `difficulty` = ?, `code_text` = ?, `chapter_id` = ? WHERE `id` = ?;";
+        'UPDATE `question` SET `question_text` = ?, `hint` = ?, `type` = ?, `difficulty` = ?, `code_text` = ?, `chapter_id` = ? WHERE `id` = ?;';
     const params = [
         requestBody.question_text,
         requestBody.hint,
@@ -135,7 +135,11 @@ export const updateFullQuestion = (
                 const elementsPromises = requestBody.elements.map(
                     (element: QuestionElementValues) => {
                         // Assuming you have the question element ID already, if not you'll need to fetch or decide how to manage it
-                        return updateQuestionElement(questionId, element.id!, element) // Update all the Question elements contained in the question
+                        return updateQuestionElement(
+                            questionId,
+                            element.id!,
+                            element
+                        ) // Update all the Question elements contained in the question
                             .then(() => {
                                 if (!element.correct_answers) {
                                     return;
@@ -232,14 +236,14 @@ export const extractQuestionsFromRows = (results: any): QuestionValues[] => {
 };
 
 export const getQuestion = (id: string) => {
-    const sql = "SELECT * FROM question WHERE id = ?";
+    const sql = 'SELECT * FROM question WHERE id = ?';
     const params = [id];
     return db.query(sql, params);
 };
 
 export const getFullQuestion = (id: string): Promise<any> => {
     return new Promise((resolve, reject) => {
-        const sql = "SELECT * FROM full_question WHERE question_id = ?";
+        const sql = 'SELECT * FROM full_question WHERE question_id = ?';
         const params = [id];
         db.query(sql, params)
             .then((results: any) => {
